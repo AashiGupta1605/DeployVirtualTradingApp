@@ -7,8 +7,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // Components
 import AdminNavbar from "../components/Admin/Navbars/AdminNavbar";
-// import Sidebar from "../components/Admin/Sidebar/Sidebar";
-import Sidebar from "../components/Organization/Sidebar";
+import Sidebar from "../components/Admin/Sidebar/Sidebar";
+// import Sidebar from "../components/Organization/Sidebar";
 import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 
 // Views
@@ -20,6 +20,7 @@ import StudentList from "../views/Organization/StudentList";
 import Dashboard from "../views/Organization/Dashboard";
 import Register from "../views/auth/Register";
 // import Login from "views/Organization/auth/Login";
+
 
 export default function Org() {
   const [sidebarExpanded, setSidebarExpanded] = React.useState(false);
