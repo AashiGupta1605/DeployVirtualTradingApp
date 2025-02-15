@@ -7,8 +7,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // Components
 import AdminNavbar from "../components/Admin/Navbars/AdminNavbar";
-import Sidebar from "../components/Admin/Sidebar/Sidebar";
-// import Sidebar from "../components/Organization/Sidebar";
+// import Sidebar from "../components/Admin/Sidebar/Sidebar";
+import Sidebar from "../components/Organization/Sidebar";
 import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 
 // Views
