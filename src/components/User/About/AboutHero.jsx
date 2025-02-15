@@ -8,7 +8,7 @@ const AboutHero = () => {
       <IndexNavbar />
 
       {/* About Us Section */}
-      <div className="bg-[#0e1628] min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
+      <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
         {/* Left - Content */}
         <div className="text-black md:w-1/2 px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">

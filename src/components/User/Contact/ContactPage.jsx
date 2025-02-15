@@ -13,7 +13,7 @@ const ContactPage = () => {
       <IndexNavbar />
 
       {/* Contact Section */}
-      <div className="bg-[#0e1628] min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">
+      <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">
         {/* Left - Content */}
         <div className="text-black md:w-1/2 px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
@@ -37,7 +37,7 @@ const ContactPage = () => {
           <div className="flex gap-4 mt-6">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-blue-500 hover:bg-blue-600 text-black px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
+              className="bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700  px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
             >
               CONTACT US
             </button>
@@ -178,7 +178,7 @@ const ContactModal = ({ onClose }) => {
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700">
+            <button type="submit" className="w-full font-bold py-2 px-4 rounded-lg bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500/20">
               Submit
             </button>
 
