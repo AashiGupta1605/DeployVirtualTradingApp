@@ -1047,27 +1047,11 @@ export default function Navbar() {
               >
                 Services
               </li>
-              {isAuthenticated ? (
-                <li className="flex items-center">
-                  <div
-                    className="text-gray-700 hover:text-blueGray-600 text-2xl mr-4 cursor-pointer"
-                    onClick={() => handleNavigation("/profile")}
-                  >
-                    <i className="fas fa-user-circle"></i>
-                  </div>
-                  <button
-                    className="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={handleLogout}
-                  >
-                    <i className="fas fa-sign-out-alt"></i> Logout
-                  </button>
-                </li>
-              ) : (
+              
                 <>
                   <li className="relative flex items-center" ref={loginDropdownRef}>
                     <button
-                      className="bg-red-500 text-white active:bg-green-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-green-700 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
+                      className="bg-lightBlue-500 text-white active:bg-blue-950 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-blue-950 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
                       type="button"
                       onClick={toggleLoginDropdown}
                     >
@@ -1128,7 +1112,7 @@ export default function Navbar() {
                     )}
                   </li>
                 </>
-              )}
+             
             </ul>
           </div>
         </div>

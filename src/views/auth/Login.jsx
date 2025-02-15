@@ -159,6 +159,7 @@ const LoginForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
 
     try {
       const response = await fetch("http://localhost:5000/api/auth/login", {
