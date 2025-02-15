@@ -34,6 +34,7 @@ const LoginForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
 
     // Hardcoded Admin Login
     if (formData.email === "admin@example.com" && formData.password === "admin") {
