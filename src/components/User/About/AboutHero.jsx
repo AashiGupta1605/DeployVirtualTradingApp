@@ -7,7 +7,7 @@ const AboutHero = () => {
     <>
       <IndexNavbar />
 
-      {/* About Us Section */}
+      {/* About Us hell Section */}
       <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
         {/* Left - Content */}
         <div className="text-black md:w-1/2 px-6">
