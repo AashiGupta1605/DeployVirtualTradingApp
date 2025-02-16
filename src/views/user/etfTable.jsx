@@ -5,8 +5,8 @@ import StockTable from "../../components/Common/StockTable";
 export default function etfTable() {
   return (
     <>
-      <div className="flex flex-wrap mt-24">
-        <div className="w-full mb-12 px-4 mt-24">
+     <div className="flex flex-wrap ">
+        <div className="w-full mb-12 px-4">
           <StockTable />
         </div>
       </div>
