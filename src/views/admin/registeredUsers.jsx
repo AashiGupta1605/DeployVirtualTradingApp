@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { ChevronDown, ChevronRight, Trash2, Filter, PlusCircle, Edit } from "lucide-react";
 import CardStats from "../../components/Admin/Cards/CardStats";
-import RegistrationForm from "../auth/Register"; // Import the updated RegistrationForm
+import RegisterModal from "../auth/Register"; // Updated import to use RegisterModal
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
 
 const RegisterUserList = () => {
@@ -273,7 +273,7 @@ const RegisterUserList = () => {
       </div>
 
       {/* Register/Edit Modal */}
-      <RegistrationForm
+      <RegisterModal
         isOpen={isRegisterModalOpen}
         onClose={closeRegisterModal}
         initialValues={selectedUser} // Pass selected user data for editing
@@ -284,6 +284,7 @@ const RegisterUserList = () => {
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         onConfirm={() => handleDelete(selectedUserId)}
+        title="Confirm Deletion"
         message="Are you sure you want to delete this user?"
       />
 
