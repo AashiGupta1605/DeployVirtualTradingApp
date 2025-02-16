@@ -1,7 +1,4 @@
-
 import React from "react";
-
-// components
 
 import CardSettings from "../../components/Admin/Cards/CardSettings";
 import CardProfile from "../../components/Admin/Cards/CardProfile";

@@ -1,42 +1,32 @@
-import React, { useState, useEffect } from "react"; // Import useState and useEffect
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import CardTable from "../../components/Common/CardTable";
-import CardStats from "../../components/Admin/Cards/CardStats"; // Import CardStats component
+import CardStats from "../../components/Admin/Cards/CardStats";
 
 export default function TablesPage() {
-  const [userCount, setUserCount] = useState(0); // State for user count
-  const [orgCount, setOrgCount] = useState(0); // State for organization count
+  const [users, setUsers] = useState([]);
+  const [orgCount, setOrgCount] = useState(0);
 
-  // Fetch user and organization counts
   useEffect(() => {
-    const fetchUserCount = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setUserCount(data.length);
+        const [usersResponse, orgResponse, orgRegisterResponse] = await Promise.all([
+          axios.get("http://localhost:5000/api/auth/admin/users"),
+          axios.get("http://localhost:5000/api/organizations"),
+          axios.get("http://localhost:5000/api/orgRegister"),
+        ]);
+
+        setUsers(usersResponse.data);
+        setOrgCount(orgResponse.data.length + orgRegisterResponse.data.length);
       } catch (error) {
-        console.error("Error fetching user count:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    const fetchOrgCount = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/organizations");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setOrgCount(data.length);
-      } catch (error) {
-        console.error("Error fetching organization count:", error);
-      }
-    };
+    fetchData();
+  }, []);
 
-    fetchUserCount();
-    fetchOrgCount();
-  }, []); // Empty dependency array to run only once
+  const userCount = users.length; // Calculate user count
 
   return (
     <>
@@ -47,7 +37,7 @@ export default function TablesPage() {
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
               <CardStats
                 statSubtitle="REGISTERED USERS"
-                statTitle={userCount.toString()}
+                statTitle={userCount.toString()} // Use userCount here
                 statArrow="up"
                 statPercent="100"
                 statPercentColor="text-emerald-500"
@@ -74,7 +64,7 @@ export default function TablesPage() {
 
       {/* CardTable Section */}
       <div className="flex flex-wrap mt-24">
-        <div className="w-full mb-12 px-4 -mt-20"> {/* Adjusted margin to align with CardStats */}
+        <div className="w-full mb-12 px-4 -mt-20">
           <CardTable />
         </div>
       </div>

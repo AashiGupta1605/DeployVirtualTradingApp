@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Components
@@ -16,7 +16,7 @@ import RegisteredUsers from "../views/admin/registeredUsers";
 import Queries from "../views/admin/queries";
 
 export default function Admin() {
-  const [sidebarExpanded, setSidebarExpanded] = React.useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-blueGray-100">
