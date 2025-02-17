@@ -16,8 +16,8 @@ import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 // import Dashboard from "./views/Organization/Dashboard";
 // import Register from "./views/Organization/auth/Register";
 
-import StudentList from "../views/Organization/StudentList";
-import Dashboard from "../views/Organization/Dashboard";
+import StudentList from "../views/Organization/OrganizationUsers";
+import Dashboard from "../views/Organization/OrganizationDashboard";
 import Register from "../views/auth/Register";
 // import Login from "views/Organization/auth/Login";
 

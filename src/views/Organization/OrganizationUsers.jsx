@@ -1606,25 +1606,25 @@
 
 // adding loader
 import {
-  ChevronDown,
-  ChevronRight,
+  // ChevronDown,
+  // ChevronRight,
   Edit,
   Trash2,
-  PlusCircle,
-  Filter,
-  MoreVertical,
-  Check,
+  // PlusCircle,
+  // Filter,
+  // MoreVertical,
+  // Check,
   // X,
 } from "lucide-react"; 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import RegistrationForm from "../../views/Organization/auth/Register";
-import Dashboard from "./Dashboard";
+import OrganizationUserRegistration from "./auth/OrganizationUserRegistration";
+import Dashboard from "./OrganizationDashboard";
 import ConfirmationModal from "../../components/Organization/ConfirmationModal";
 import Loader from "../../components/Common/Loader"; // Import the loader component
 
-const StudentList = () => {
+const OrganizationUsers = () => {
   const [studentList, setStudentList] = useState([]);
   const [filter, setFilter] = useState("all");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -1640,7 +1640,7 @@ const StudentList = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/students/get-students");
+      const response = await axios.get("http://localhost:5000/api/organization/user/display-all-users");
       setStudentList(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -1652,7 +1652,7 @@ const StudentList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/students/${id}`);
+      await axios.delete(`http://localhost:5000/api/organization/user/${id}`);
       setStudentList(studentList.filter((student) => student._id !== id));
       toast.success("Student deleted successfully!");
       setConfirmationModalOpen(false);
@@ -1721,13 +1721,16 @@ const StudentList = () => {
                     Date of Birth
                   </th>
                   <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                    Organization Name
+                    Added By
                   </th>
                   <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                    Organization Type
+                    Status
                   </th>
                   <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                     Created Date
+                  </th>
+                  <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                    Updated Date
                   </th>
                   <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                     Actions
@@ -1750,16 +1753,20 @@ const StudentList = () => {
                       {student.gender}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {student.dob}
+                      {new Date(student.dob).toISOString().split('T')[0]}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {student.orgName}
+                      {student.addedby}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      {student.orgtype}
+                      {/* {student.status} */}
+                      true
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       {new Date(student.createdDate).toLocaleDateString("en-US")}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {new Date(student.updatedDate).toLocaleDateString("en-US")}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                       <button
@@ -1785,7 +1792,7 @@ const StudentList = () => {
         )}
 
         {/* Organization Registration Modal */}
-        <RegistrationForm
+        <OrganizationUserRegistration
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           initialValues={selectedStudent}
@@ -1803,4 +1810,4 @@ const StudentList = () => {
   );
 };
 
-export default StudentList;
+export default OrganizationUsers;

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import NotificationDropdown from "../Admin/Dropdowns/NotificationDropdown";
 import UserDropdown from "../Admin/Dropdowns/UserDropdown";
-import OrganizationRegistrationForm from "../../views/Organization/auth/Register";
+import OrganizationRegistrationForm from "../../views/Organization/auth/OrganizationUserRegistration";
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [collapseShow, setCollapseShow] = useState("hidden");

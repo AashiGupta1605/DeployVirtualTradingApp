@@ -382,7 +382,7 @@ import CardStats from "../../components/Admin/Cards/CardStats";
 import axios from "axios";
 import Loader from "../../components/Common/Loader";
 
-export default function Dashboard({ type }) {
+export default function OrganizationDashboard({ type }) {
   const [totalUsers, setTotalUsers] = useState(0);
   const [newUsersLastWeek, setNewUsersLastWeek] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -391,7 +391,7 @@ export default function Dashboard({ type }) {
     // Fetch the total user count from the backend
     const fetchTotalUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/students/count/total");
+        const response = await axios.get("http://localhost:5000/api/organization/user/count/total");
         setTotalUsers(response.data.count);
       } catch (error) {
         console.error("Error fetching total user count:", error);
@@ -401,7 +401,7 @@ export default function Dashboard({ type }) {
     // Fetch the new users count from the last week
     const fetchNewUsersLastWeek = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/students/count/new-week");
+        const response = await axios.get("http://localhost:5000/api/organization/user/count/new-week");
         setNewUsersLastWeek(response.data.count);
       } catch (error) {
         console.error("Error fetching new users count from last week:", error);
