@@ -30,8 +30,8 @@ const OrganizationList = () => {
   const fetchOrganizations = async () => {
     try {
       const [orgsResponse, orgRegisterResponse] = await Promise.all([
-        axios.get("http://localhost:5000/api/organizations"),
-        axios.get("http://localhost:5000/api/orgRegister"),
+        axios.get("http://localhost:5000/api/org/display-all-org"),
+        axios.get("http://localhost:5000/api/admin/display"),
       ]);
 
       const organizationsData = orgsResponse.data.map((org) => ({ ...org, collection: "organizations" }));
@@ -71,9 +71,9 @@ const OrganizationList = () => {
   const handleDelete = async (id, collection) => {
     try {
       if (collection === "organizations") {
-        await axios.put(`http://localhost:5000/api/organizations/${id}`, { status: false });
+        await axios.put(`http://localhost:5000/api/org/${id}`, { status: false });
       } else if (collection === "orgRegister") {
-        await axios.delete(`http://localhost:5000/api/orgRegister/${id}`);
+        await axios.delete(`http://localhost:5000/api/admin/${id}`);
       }
       setRefresh((prev) => !prev);
       setIsDeleteModalOpen(false);
@@ -86,8 +86,8 @@ const OrganizationList = () => {
   const handleApproval = async (id, status, collection) => {
     try {
       const endpoint = collection === "organizations"
-        ? `http://localhost:5000/api/organizations/${id}/approval`
-        : `http://localhost:5000/api/orgRegister/${id}/approve`;
+        ? `http://localhost:5000/api/org/${id}/approval`
+        : `http://localhost:5000/api/admin/${id}/approve`;
       await axios.patch(endpoint, { status });
       setRefresh((prev) => !prev);
       setDropdownOpen(null);

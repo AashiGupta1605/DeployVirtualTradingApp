@@ -11,9 +11,9 @@ export default function OrgRegister() {
     const fetchData = async () => {
       try {
         const [usersResponse, orgResponse, orgRegisterResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/auth/admin/users"),
-          axios.get("http://localhost:5000/api/organizations"),
-          axios.get("http://localhost:5000/api/orgRegister"),
+          axios.get(""),
+          axios.get("http://localhost:5000/api/org/display-all-org"),
+          axios.get(""),
         ]);
 
         setUsers(usersResponse.data);

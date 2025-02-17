@@ -19,7 +19,7 @@ const StockTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/data/stocks");
+        const response = await axios.get("http://localhost:5000/api/admin/etfdata");
         console.log("Fetched stock data:", response.data);
         
         if (Array.isArray(response.data)) {
