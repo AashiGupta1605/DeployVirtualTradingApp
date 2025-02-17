@@ -16,7 +16,7 @@ const UpdateProfileForm = ({ isOpen, onClose, userId, onUpdate }) => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No token found");
   
-        const response = await fetch("http://localhost:5000/api/auth/user", {
+        const response = await fetch("http://localhost:5000/api/user/profile", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -54,7 +54,7 @@ const UpdateProfileForm = ({ isOpen, onClose, userId, onUpdate }) => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token found");
   
-      const response = await fetch("http://localhost:5000/api/auth/update", {
+      const response = await fetch("http://localhost:5000/api/user/update", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
