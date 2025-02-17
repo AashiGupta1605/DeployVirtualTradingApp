@@ -294,7 +294,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
-        const response = await axios.post("http://localhost:5000/api/organizations/login", values);
+        const response = await axios.post("http://localhost:5000/api/organization/login", values);
         if(response && response.data.success){
           toast.success(response.data.message);
           navigate("/organization/dashboard");

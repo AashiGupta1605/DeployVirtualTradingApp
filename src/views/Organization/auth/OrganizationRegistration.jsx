@@ -293,7 +293,7 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await axios.post("http://localhost:5000/api/organizations/register", values);
+        const response = await axios.post("http://localhost:5000/api/organization/register", values);
         toast.success("Organization registered successfully!");
         resetForm(); // Reset form values
         onClose(); // Close the modal after successful submission
