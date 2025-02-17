@@ -14,11 +14,6 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
     createdBy: "",
   });
 
-  // Debug: Log selectedOrg to verify it's being passed correctly
-  useEffect(() => {
-    console.log("Selected Org:", selectedOrg);
-  }, [selectedOrg]);
-
   // Pre-fill form data when selectedOrg changes
   useEffect(() => {
     if (selectedOrg) {

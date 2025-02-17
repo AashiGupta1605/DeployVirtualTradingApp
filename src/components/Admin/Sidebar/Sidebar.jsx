@@ -1,23 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import NotificationDropdown from "../Dropdowns/NotificationDropdown";
-import UserDropdown from "../Dropdowns/UserDropdown";
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
-  const [collapseShow, setCollapseShow] = React.useState("hidden");
-  const [activeMenu, setActiveMenu] = React.useState(null);
+  const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
 
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
-    setCollapseShow("hidden");
     setActiveMenu(null);
   };
 
   const toggleMenu = (menuName) => {
-    if (!sidebarExpanded) {
-      setSidebarExpanded(true);
-    }
+    if (!sidebarExpanded) setSidebarExpanded(true);
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
@@ -44,38 +38,25 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
 
   return (
     <nav
-      className={`${
-        sidebarExpanded ? "md:w-64" : "md:w-20"
-      } fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}
+      className={`${sidebarExpanded ? "md:w-64" : "md:w-20"} fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}
     >
       <div className="flex flex-col h-full">
         {/* Logo Section */}
         <div className="flex items-center justify-between w-full h-20 px-6 border-b border-gray-200">
-  {/* Logo and Brand Name */}
-  <Link
-    to="/"
-    className={`flex items-center text-black space-x-2 ${
-      !sidebarExpanded && "md:hidden"
-    }`}
-  >
-    <i className="fas fa-briefcase text-xl text-gray-800"></i>
-    <span className="text-lg font-bold leading-relaxed uppercase">
-      StockSphere
-    </span>
-  </Link>
-
-  {/* Toggle Sidebar Button */}
-  <button
-    onClick={toggleSidebar}
-    className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
-  >
-    <i
-      className={`fas fa-${
-        sidebarExpanded ? "times" : "bars"
-      } text-gray-400 text-base`}
-    ></i>
-  </button>
-</div>
+          <Link
+            to="/"
+            className={`flex items-center text-black space-x-2 ${!sidebarExpanded && "md:hidden"}`}
+          >
+            <i className="fas fa-briefcase text-xl text-gray-800"></i>
+            <span className="text-lg font-bold leading-relaxed uppercase">StockSphere</span>
+          </Link>
+          <button
+            onClick={toggleSidebar}
+            className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
+          >
+            <i className={`fas fa-${sidebarExpanded ? "times" : "bars"} text-gray-400 text-base`}></i>
+          </button>
+        </div>
 
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
@@ -90,27 +71,13 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
                 }`}
               >
                 <div className="flex items-center space-x-2">
-                  <div
-                    className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${
-                      activeMenu === section ? "bg-white/20" : "bg-lightBlue-100"
-                    }`}
-                  >
-                    <i
-                      className={`fas fa-${getSectionIcon(section)} ${
-                        activeMenu === section ? "text-gray-500" : "text-gray-500"
-                      }`}
-                    ></i>
+                  <div className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${activeMenu === section ? "bg-white/20" : "bg-lightBlue-100"}`}>
+                    <i className={`fas fa-${getSectionIcon(section)} ${activeMenu === section ? "text-gray-500" : "text-gray-500"}`}></i>
                   </div>
-                  {sidebarExpanded && (
-                    <span className="font-medium capitalize">{section}</span>
-                  )}
+                  {sidebarExpanded && <span className="font-medium capitalize">{section}</span>}
                 </div>
                 {sidebarExpanded && (
-                  <i
-                    className={`fas fa-chevron-${
-                      activeMenu === section ? "down" : "right"
-                    } transition-transform duration-200 text-sm`}
-                  ></i>
+                  <i className={`fas fa-chevron-${activeMenu === section ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
                 )}
               </button>
 
@@ -159,21 +126,11 @@ const MenuLink = ({ to, icon, label, isActive }) => {
     <Link
       to={to}
       className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-        isActive
-          ? "bg-lightBlue-50 text-lightBlue-600"
-          : "text-gray-600 hover:bg-gray-100"
+        isActive ? "bg-lightBlue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"
       }`}
     >
-      <div
-        className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-          isActive ? "bg-lightBlue-100" : "bg-gray-100"
-        }`}
-      >
-        <i
-          className={`${icon} ${
-            isActive ? "text-lightBlue-600" : "text-gray-500"
-          }`}
-        ></i>
+      <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isActive ? "bg-lightBlue-100" : "bg-gray-100"}`}>
+        <i className={`${icon} ${isActive ? "text-lightBlue-600" : "text-gray-500"}`}></i>
       </div>
       <span className="text-sm font-medium">{label}</span>
     </Link>

@@ -26,7 +26,7 @@ const RegisterUserList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/users");
+      const response = await axios.get("http://localhost:5000/api/auth/admin/users");
       setContacts(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -45,7 +45,7 @@ const RegisterUserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/users");
+      const response = await axios.get("http://localhost:5000/api/auth/admin/users");
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -54,7 +54,7 @@ const RegisterUserList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await axios.delete(`http://localhost:5000/api/auth/admin/users/${id}`);
       setRefresh((prev) => !prev);
       setIsDeleteModalOpen(false);
       setIsSuccessModalOpen(true); // Show success modal after deletion
