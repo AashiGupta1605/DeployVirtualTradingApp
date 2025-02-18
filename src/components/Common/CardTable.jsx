@@ -40,37 +40,6 @@ const CardTable = () => {
     fetchData();
   }, []);
 
-  // Fetch user and organization counts
-  useEffect(() => {
-    const fetchUserCount = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/users');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setUserCount(data.length);
-      } catch (error) {
-        console.error('Error fetching user count:', error);
-      }
-    };
-
-    const fetchOrgCount = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/organizations');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setOrgCount(data.length);
-      } catch (error) {
-        console.error('Error fetching organization count:', error);
-      }
-    };
-
-    fetchUserCount();
-    fetchOrgCount();
-  }, []);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -133,6 +102,7 @@ const CardTable = () => {
     <>
       <div className="">
         {/* CardStats Section */}
+
 
         {/* CardTable Section */}
         <div className="mx-2 overflow-hidden -mt-20">

@@ -29,15 +29,8 @@ const OrganizationList = () => {
   // Fetch organizations from the API
   const fetchOrganizations = async () => {
     try {
-      const [orgsResponse, orgRegisterResponse] = await Promise.all([
-        axios.get("http://localhost:5000/api/org/display-all-org"),
-        axios.get("http://localhost:5000/api/admin/display"),
-      ]);
-
-      const organizationsData = orgsResponse.data.map((org) => ({ ...org, collection: "organizations" }));
-      const orgRegisterData = orgRegisterResponse.data.map((org) => ({ ...org, collection: "orgRegister" }));
-
-      setOrganizations([...organizationsData, ...orgRegisterData]);
+      const response = await axios.get("http://localhost:5000/api/org/display-all-org");
+      setOrganizations(response.data);
     } catch (error) {
       console.error("Error fetching organizations:", error);
     }
@@ -46,13 +39,14 @@ const OrganizationList = () => {
   const handleOrgNameClick = async (org, e) => {
     e.stopPropagation();
     setSelectedOrg(org);
-    await fetchStudentsByOrgName("MITS"); // Hardcode the correct orgName for testing
+    await fetchStudentsByOrgName(org.name); // Use the organization's name dynamically
   };
 
-  const fetchStudentsByOrgName = async (orgName) => {
+  const fetchStudentsByOrgName = async () => {
     setLoadingStudents(true);
     try {
-      const response = await axios.get(`http://localhost:5000/students/by-org/${encodeURIComponent(orgName)}`);
+      // Call the endpoint without passing the organization name
+      const response = await axios.get(`http://localhost:5000/api/org/users/mits`);
       setStudents(response.data);
       setIsStudentModalOpen(true);
     } catch (error) {
@@ -68,32 +62,25 @@ const OrganizationList = () => {
     setStudents([]);
   };
 
-  const handleDelete = async (id, collection) => {
+  const handleDelete = async (id) => {
     try {
-      if (collection === "organizations") {
-        await axios.put(`http://localhost:5000/api/org/${id}`, { status: false });
-      } else if (collection === "orgRegister") {
-        await axios.delete(`http://localhost:5000/api/admin/${id}`);
-      }
+      await axios.delete(`http://localhost:5000/api/org/${id}`);
       setRefresh((prev) => !prev);
       setIsDeleteModalOpen(false);
       setIsSuccessModalOpen(true);
     } catch (error) {
-      console.error("Error disabling organization:", error);
+      console.error("Error deleting organization:", error);
     }
   };
 
-  const handleApproval = async (id, status, collection) => {
+  const handleApproval = async (id, status) => {
     try {
-      const endpoint = collection === "organizations"
-        ? `http://localhost:5000/api/org/${id}/approval`
-        : `http://localhost:5000/api/admin/${id}/approve`;
-      await axios.patch(endpoint, { status });
+      await axios.put(`http://localhost:5000/api/org/${id}/approval-status`, { status });
       setRefresh((prev) => !prev);
       setDropdownOpen(null);
       setIsActionModalOpen(false);
     } catch (error) {
-      console.error(`Error ${status} organization:`, error);
+      console.error(`Error updating approval status:`, error);
     }
   };
 
@@ -201,7 +188,7 @@ const OrganizationList = () => {
                   <td className="px-6 py-4">{org.contactPerson}</td>
                   <td className="px-6 py-4">{org.email}</td>
                   <td className="px-6 py-4">{org.mobile}</td>
-                  <td className="px-6 py-4">{new Date(org.createDate).toLocaleDateString()}</td>
+                  <td className="px-6 py-4">{new Date(org.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(org.approvalStatus)}`}>
                       {org.approvalStatus}
@@ -264,7 +251,7 @@ const OrganizationList = () => {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-600 mb-1">Last Updated</p>
-                          <p className="text-sm text-gray-800">{new Date(org.updateDate).toLocaleDateString()}</p>
+                          <p className="text-sm text-gray-800">{new Date(org.updatedAt).toLocaleDateString()}</p>
                         </div>
                       </div>
                     </td>
@@ -278,8 +265,8 @@ const OrganizationList = () => {
 
       {/* Modals */}
       <StudentListModal isOpen={isStudentModalOpen} onClose={handleCloseStudentModal} students={students} loading={loadingStudents} />
-      <ConfirmationModal isOpen={isActionModalOpen} onClose={() => setIsActionModalOpen(false)} onConfirm={() => handleApproval(selectedOrg._id, pendingAction, selectedOrg.collection)} title={`Confirm ${pendingAction === "approved" ? "Approval" : "Rejection"}`} message={`Are you sure you want to ${pendingAction} this organization?`} />
-      <ConfirmationModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={() => handleDelete(selectedOrg._id, selectedOrg.collection)} title="Confirm Deletion" message="Are you sure you want to delete this organization?" />
+      <ConfirmationModal isOpen={isActionModalOpen} onClose={() => setIsActionModalOpen(false)} onConfirm={() => handleApproval(selectedOrg._id, pendingAction)} title={`Confirm ${pendingAction === "approved" ? "Approval" : "Rejection"}`} message={`Are you sure you want to ${pendingAction} this organization?`} />
+      <ConfirmationModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={() => handleDelete(selectedOrg._id)} title="Confirm Deletion" message="Are you sure you want to delete this organization?" />
       <ConfirmationModal isOpen={isSuccessModalOpen} onClose={() => setIsSuccessModalOpen(false)} onConfirm={() => setIsSuccessModalOpen(false)} title="Success" message="Organization deleted successfully!" />
       <OrganizationRegistrationForm isOpen={isFormOpen} onClose={handleCloseForm} selectedOrg={selectedOrg} />
     </div>
