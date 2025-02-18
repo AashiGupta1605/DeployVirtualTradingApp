@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -23,67 +25,73 @@ const LoginModal = ({ isOpen, onClose }) => {
 
 const LoginForm = ({ onClose }) => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = React.useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      setMessage("");
+      try {
+        // Hardcoded Admin Login
+        if (values.email === "admin@example.com" && values.password === "admin") {
+          setMessage(" Admin login successful! Redirecting...");
+          localStorage.setItem("token", "admin-token");
+          localStorage.setItem("user", JSON.stringify({ name: "Admin", role: "admin" }));
+          setTimeout(() => {
+            setSubmitting(false);
+            navigate("/admin");
+            onClose();
+          }, 2000);
+          return;
+        }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
+        const response = await fetch("http://localhost:5000/api/user/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
 
-    // Hardcoded Admin Login
-    if (formData.email === "admin@example.com" && formData.password === "admin") {
-      setMessage("✅ Admin login successful! Redirecting...");
-      localStorage.setItem("token", "admin-token");
-      localStorage.setItem("user", JSON.stringify({ name: "Admin", role: "admin" }));
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/admin");
-        onClose();
-      }, 2000);
-      return;
-    }
+        const data = await response.json();
 
-    try {
-      const response = await fetch("http://localhost:5000/api/user/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("✅ Login successful! Redirecting...");
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ name: data.user.name, role: data.user.role })
-        );
-
-        setTimeout(() => {
-          setLoading(false);
-          navigate("/user");
-          onClose();
-        }, 2000);
-      } else {
-        setMessage(data.message || "❌ Invalid email or password.");
-        setLoading(false);
+        if (response.ok) {
+          setMessage(" Login successful! Redirecting...");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({ name: data.user.name, role: data.user.role })
+          );
+          setTimeout(() => {
+            setSubmitting(false);
+            navigate("/user");
+            onClose();
+          }, 2000);
+        } else {
+          setMessage(data.message || "Invalid email or password.");
+          setSubmitting(false);
+        }
+      } catch (error) {
+        setMessage(" Something went wrong. Please try again.");
+        setSubmitting(false);
       }
-    } catch (error) {
-      setMessage("❌ Something went wrong. Please try again.");
-      setLoading(false);
-    }
-  };
+    },
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-      {loading && <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>}
+      {formik.isSubmitting && (
+        <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
+      )}
       <div
         style={{ width: "100%", maxWidth: "40%" }}
         className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50"
@@ -104,7 +112,7 @@ const LoginForm = ({ onClose }) => {
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[80vh] relative">
-          {loading ? (
+          {formik.isSubmitting ? (
             <div className="flex items-center justify-center w-full h-64">
               <div className="flex flex-col items-center gap-4">
                 <div
@@ -115,33 +123,53 @@ const LoginForm = ({ onClose }) => {
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={formik.handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
-                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                     placeholder="Enter your email"
-                    required
+                    {...formik.getFieldProps("email")}
                   />
+                  {formik.touched.email && formik.errors.email ? (
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.email}
+                    </div>
+                  ) : null}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Password
+                  </label>
                   <input
                     type="password"
                     name="password"
-                    value={formData.password}
-                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                     placeholder="Enter your password"
-                    required
+                    {...formik.getFieldProps("password")}
                   />
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
                 </div>
               </div>
+
+              {message && (
+                <div
+                  className={`text-sm ${
+                    message.includes("successful") ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {message}
+                </div>
+              )}
 
               <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
                 <button
@@ -153,7 +181,8 @@ const LoginForm = ({ onClose }) => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  disabled={formik.isSubmitting}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
                 >
                   Login
                 </button>
