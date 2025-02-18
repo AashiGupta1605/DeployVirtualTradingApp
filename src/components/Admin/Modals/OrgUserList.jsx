@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 
-const StudentListModal = ({ isOpen, onClose, students, loading }) => {
+const OrgUserListModal = ({ isOpen, onClose, students, loading }) => {
   if (!isOpen) return null;
 
   return (
@@ -54,14 +54,14 @@ const StudentListModal = ({ isOpen, onClose, students, loading }) => {
                   <tr>
                     {["Name", "Email", "Mobile", "Gender", "Date of Birth"].map(
                       (header) => (
-                      <th
-                        key={header}
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        {header}
-                      </th>
-                    )
-                  )}
+                        <th
+                          key={header}
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          {header}
+                        </th>
+                      )
+                    )}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -103,4 +103,4 @@ const StudentListModal = ({ isOpen, onClose, students, loading }) => {
   );
 };
 
-export default StudentListModal;
+export default OrgUserListModal;

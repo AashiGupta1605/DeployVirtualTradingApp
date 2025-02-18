@@ -2,8 +2,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { ChevronDown, ChevronRight, Trash2, Filter, PlusCircle, Edit } from "lucide-react";
 import CardStats from "../../components/Admin/Cards/CardStats";
-import RegisterModal from "../auth/Register"; // Updated import to use RegisterModal
+import RegisterModal from "../auth/Register";
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const RegisterUserList = () => {
   const [contacts, setContacts] = useState([]);
@@ -16,7 +18,47 @@ const RegisterUserList = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null); // State to hold the selected user for editing
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  // Validation schema using Yup
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits")
+      .required("Mobile is required"),
+    address: Yup.string().required("Address is required"),
+    // Add other fields as necessary
+  });
+
+  // Formik hook for form management
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      mobile: "",
+      address: "",
+      // Initialize other fields as necessary
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      try {
+        if (selectedUser) {
+          // Update existing user
+          await axios.put(`http://localhost:5000/api/user/users/${selectedUser._id}`, values);
+        } else {
+          // Create new user
+          await axios.post("http://localhost:5000/api/user/register", values);
+        }
+        closeRegisterModal();
+        setRefresh((prev) => !prev); // Refresh user list
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("Failed to submit form. Please try again.");
+      }
+    },
+    enableReinitialize: true, // This is important to reinitialize form when selectedUser changes
+  });
 
   useEffect(() => {
     fetchContacts();
@@ -26,7 +68,7 @@ const RegisterUserList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/user/display-users"); // Corrected endpoint
+      const response = await axios.get("http://localhost:5000/api/user/display-users");
       setContacts(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -36,7 +78,7 @@ const RegisterUserList = () => {
 
   const fetchOrgCount = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/org/display-all-org"); // Corrected endpoint
+      const response = await axios.get("http://localhost:5000/api/org/display-all-org");
       setOrgCount(response.data.length);
     } catch (error) {
       console.error("Error fetching organizations:", error);
@@ -45,7 +87,7 @@ const RegisterUserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/user/display-users"); // Corrected endpoint
+      const response = await axios.get("http://localhost:5000/api/user/display-users");
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -54,10 +96,10 @@ const RegisterUserList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/user/users/${id}`); // Corrected endpoint
+      await axios.delete(`http://localhost:5000/api/user/users/${id}`);
       setRefresh((prev) => !prev);
       setIsDeleteModalOpen(false);
-      setIsSuccessModalOpen(true); // Show success modal after deletion
+      setIsSuccessModalOpen(true);
     } catch (error) {
       console.error("Error deleting user:", error);
       alert("Failed to delete user. Please try again.");
@@ -89,13 +131,15 @@ const RegisterUserList = () => {
   const userCount = contacts.length;
 
   const openRegisterModal = () => {
-    setSelectedUser(null); // Reset selected user for new registration
+    setSelectedUser(null);
+    formik.resetForm(); // Reset form when opening for new registration
     setIsRegisterModalOpen(true);
   };
 
   const closeRegisterModal = () => {
     setIsRegisterModalOpen(false);
-    setSelectedUser(null); // Reset selected user when modal closes
+    setSelectedUser(null);
+    formik.resetForm(); // Reset form when closing the modal
   };
 
   const openDeleteModal = (id) => {
@@ -112,8 +156,15 @@ const RegisterUserList = () => {
   };
 
   const handleEditClick = (user) => {
-    setSelectedUser(user); // Set the selected user for editing
-    setIsRegisterModalOpen(true); // Open the registration modal
+    setSelectedUser(user);
+    formik.setValues({
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      address: user.address,
+      // Set other fields as necessary
+    });
+    setIsRegisterModalOpen(true);
   };
 
   return (
@@ -148,7 +199,6 @@ const RegisterUserList = () => {
           </div>
         </div>
       </div>
-
       <div className="p-8 mx-4 -mt-24">
         <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
           <h2 className="text-xl font-bold text-gray-800 flex items-center">
@@ -218,7 +268,7 @@ const RegisterUserList = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleEditClick(user); // Open modal for editing
+                          handleEditClick(user);
                         }}
                         className="text-yellow-500 mx-2 hover:text-yellow-600 transition-colors relative group"
                       >
@@ -227,7 +277,6 @@ const RegisterUserList = () => {
                           Edit
                         </span>
                       </button>
-
                       {/* Delete Button with Tooltip */}
                       <button
                         onClick={(e) => {
@@ -276,7 +325,7 @@ const RegisterUserList = () => {
       <RegisterModal
         isOpen={isRegisterModalOpen}
         onClose={closeRegisterModal}
-        initialValues={selectedUser} // Pass selected user data for editing
+        formik={formik} // Pass Formik instance to the modal
       />
 
       {/* Delete Confirmation Modal */}

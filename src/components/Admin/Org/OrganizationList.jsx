@@ -3,7 +3,7 @@ import axios from "axios";
 import { ChevronDown, ChevronRight, Edit, Trash2, PlusCircle, Filter, MoreVertical, Check, X } from "lucide-react";
 import ConfirmationModal from "../Modals/ConformationModal";
 import OrganizationRegistrationForm from "./OrganizationRegistrationForm";
-import StudentListModal from "../Modals/OrgStudentList";
+import OrgUserListModal from "../Modals/OrgUserList";
 
 const OrganizationList = () => {
   const [organizations, setOrganizations] = useState([]);
@@ -263,7 +263,7 @@ const OrganizationList = () => {
       </div>
 
       {/* Modals */}
-      <StudentListModal isOpen={isStudentModalOpen} onClose={handleCloseStudentModal} students={students} loading={loadingStudents} />
+      <OrgUserListModal isOpen={isStudentModalOpen} onClose={handleCloseStudentModal} students={students} loading={loadingStudents} />
       <ConfirmationModal isOpen={isActionModalOpen} onClose={() => setIsActionModalOpen(false)} onConfirm={() => handleApproval(selectedOrg._id, pendingAction)} title={`Confirm ${pendingAction === "approved" ? "Approval" : "Rejection"}`} message={`Are you sure you want to ${pendingAction} this organization?`} />
       <ConfirmationModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={() => handleDelete(selectedOrg._id)} title="Confirm Deletion" message="Are you sure you want to delete this organization?" />
       <ConfirmationModal isOpen={isSuccessModalOpen} onClose={() => setIsSuccessModalOpen(false)} onConfirm={() => setIsSuccessModalOpen(false)} title="Success" message="Organization deleted successfully!" />

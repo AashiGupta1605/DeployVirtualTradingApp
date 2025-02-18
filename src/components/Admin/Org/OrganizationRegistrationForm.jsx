@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
-  const [formData, setFormData] = useState({
+  const initialValues = {
     name: "",
     address: "",
     website: "",
@@ -11,50 +13,25 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
     mobile: "",
     password: "",
     approvalStatus: "approved", // Default status for new organizations
-  });
-
-  // Pre-fill form data when selectedOrg changes
-  useEffect(() => {
-    if (selectedOrg) {
-      setFormData({
-        name: selectedOrg.name || "",
-        address: selectedOrg.address || "",
-        website: selectedOrg.website || "",
-        contactPerson: selectedOrg.contactPerson || "",
-        email: selectedOrg.email || "",
-        mobile: selectedOrg.mobile || "",
-        password: "", // Password is not pre-filled for security reasons
-        approvalStatus: selectedOrg.approvalStatus || "approved", // Use existing approvalStatus or default to "approved"
-      });
-    } else {
-      // Reset form data if no selectedOrg (for new registration)
-      setFormData({
-        name: "",
-        address: "",
-        website: "",
-        contactPerson: "",
-        email: "",
-        mobile: "",
-        password: "",
-        approvalStatus: "approved", // Default to "approved" for new registrations
-      });
-    }
-  }, [selectedOrg]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Organization Name is required"),
+    address: Yup.string().required("Address is required"),
+    website: Yup.string().url("Invalid URL format"),
+    contactPerson: Yup.string(),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits")
+      .required("Mobile is required"),
+    password: selectedOrg
+      ? Yup.string()
+      : Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+  });
 
-    // Validate required fields
-    if (!formData.name || !formData.email || !formData.mobile || (!selectedOrg && !formData.password)) {
-      alert("Please fill in all required fields.");
-      return;
-    }
+  useEffect(() => {}, [selectedOrg]);
 
+  const onSubmit = async (values, { setSubmitting }) => {
     try {
       const url = selectedOrg
         ? `http://localhost:5000/api/org/${selectedOrg._id}`
@@ -63,8 +40,8 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
 
       // Prepare the data to send
       const dataToSend = selectedOrg
-        ? { ...formData, password: undefined } // Exclude password for updates
-        : formData; // Include password and approvalStatus for new registrations
+        ? { ...values, password: undefined } // Exclude password for updates
+        : values; // Include password and approvalStatus for new registrations
 
       const response = await axios[method](url, dataToSend);
       console.log("Data sent to backend:", dataToSend);
@@ -83,6 +60,8 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
           ? "Failed to update organization. Please check the data and try again."
           : "Failed to register organization. Please check the data and try again."
       );
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -118,142 +97,167 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
 
         {/* Modal Body */}
         <div className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Organization Details Section */}
-              <div className="bg-gray-50 p-6 rounded-xl flex-1">
-                <h3 className="text-sm font-semibold text-gray-400 uppercase mb-6">
-                  Organization Details
-                </h3>
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Organization Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter organization name"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Organization Website
-                    </label>
-                    <input
-                      type="text"
-                      name="website"
-                      value={formData.website}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter organization URL"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Contact Person
-                    </label>
-                    <input
-                      type="text"
-                      name="contactPerson"
-                      value={formData.contactPerson}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter contact person name"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Contact Details Section */}
-              <div className="bg-gray-50 p-6 rounded-xl flex-1">
-                <h3 className="text-sm font-semibold text-gray-400 uppercase mb-6">
-                  Contact Information
-                </h3>
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter email address"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Address <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter address"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Mobile <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="mobile"
-                      value={formData.mobile}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter mobile number"
-                      required
-                    />
-                  </div>
-                  {!selectedOrg && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Password <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        placeholder="Enter password"
-                        required
-                      />
+          <Formik
+            initialValues={selectedOrg ? { ...initialValues, ...selectedOrg } : initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+            enableReinitialize
+          >
+            {({ isSubmitting }) => (
+              <Form className="space-y-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                  {/* Organization Details Section */}
+                  <div className="bg-gray-50 p-6 rounded-xl flex-1">
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase mb-6">
+                      Organization Details
+                    </h3>
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Organization Name <span className="text-red-500">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="name"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          placeholder="Enter organization name"
+                        />
+                        <ErrorMessage
+                          name="name"
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Organization Website
+                        </label>
+                        <Field
+                          type="text"
+                          name="website"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          placeholder="Enter organization URL"
+                        />
+                        <ErrorMessage
+                          name="website"
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Contact Person
+                        </label>
+                        <Field
+                          type="text"
+                          name="contactPerson"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          placeholder="Enter contact person name"
+                        />
+                        <ErrorMessage
+                          name="contactPerson"
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
                     </div>
-                  )}
+                  </div>
+                  {/* Contact Details Section */}
+                  <div className="bg-gray-50 p-6 rounded-xl flex-1">
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase mb-6">
+                      Contact Information
+                    </h3>
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email <span className="text-red-500">*</span>
+                        </label>
+                        <Field
+                          type="email"
+                          name="email"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          placeholder="Enter email address"
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Address <span className="text-red-500">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="address"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          placeholder="Enter address"
+                        />
+                        <ErrorMessage
+                          name="address"
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Mobile <span className="text-red-500">*</span>
+                        </label>
+                        <Field
+                          type="text"
+                          name="mobile"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          placeholder="Enter mobile number"
+                        />
+                        <ErrorMessage
+                          name="mobile"
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
+                      {!selectedOrg && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Password <span className="text-red-500">*</span>
+                          </label>
+                          <Field
+                            type="password"
+                            name="password"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                            placeholder="Enter password"
+                          />
+                          <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="text-red-500 text-sm"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-              >
-                {selectedOrg ? "Update Organization" : "Register Organization"}
-              </button>
-            </div>
-          </form>
+                {/* Action Buttons */}
+                <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  >
+                    {selectedOrg ? "Update Organization" : "Register Organization"}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>
