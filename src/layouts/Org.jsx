@@ -20,7 +20,7 @@ import StudentList from "../views/Organization/OrganizationUsers";
 import Dashboard from "../views/Organization/OrganizationDashboard";
 import Register from "../views/auth/Register";
 // import Login from "views/Organization/auth/Login";
-
+// const orgName = localStorage.getItem("orgName");
 
 export default function Org() {
   const [sidebarExpanded, setSidebarExpanded] = React.useState(false);
@@ -37,6 +37,7 @@ export default function Org() {
           <Routes>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="userlist" element={<StudentList />} />
+            {/* <Route path={`${orgName}/users`} element={<StudentList />} /> */}
             <Route path="register" element={<Register />} />
             {/* <Route path="login" element={<Login />} /> */}
             <Route path="*" element={<Navigate to="dashboard" replace />} />
