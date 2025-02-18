@@ -7,10 +7,12 @@ import UserDropdown from "../Admin/Dropdowns/UserDropdown";
 import OrganizationRegistrationForm from "../../views/Organization/auth/OrganizationUserRegistration";
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
+  const orgName = localStorage.getItem("orgName");
   const [collapseShow, setCollapseShow] = useState("hidden");
   const [activeMenu, setActiveMenu] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false); // Modal state
   // const [isModalOpenLogin, setModalOpenLogin] = useState(false); // Modal state
+
   const location = useLocation();
 
   const toggleSidebar = () => {
@@ -34,9 +36,9 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     ],
     organization: [
       { to: "/organization/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
-    //   { to: "#", icon: "fas fa-user-graduate", label: "User Register", onClick: () => setModalOpen(true) },
-      // { to: "#", icon: "fas fa-sign-in-alt", label: "Student Login", onClick: () => setModalOpenLogin(true) },
       { to: "/organization/userlist", icon: "fas fa-users", label: "User List" },
+      // { to: `/organization/${orgName}/users`, icon: "fas fa-users", label: "User List" },
+     
     ],
   };
 
@@ -55,7 +57,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
               className={`flex items-center space-x-3 ${!sidebarExpanded && "md:hidden"}`}
             >
               <span className="text-lg font-semibold bg-gray-800 bg-clip-text text-transparent">
-                Organization
+                {orgName}
               </span>
             </Link>
             <button
@@ -142,7 +144,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
                   <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                  <div className="font-medium text-gray-900">Abhishek</div>
+                  <div className="font-medium text-gray-900">{orgName}</div>
                   <div className="text-sm text-gray-500">Administrator</div>
                 </div>
               </div>
