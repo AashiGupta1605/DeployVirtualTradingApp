@@ -13,15 +13,14 @@ const QueriesPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [contactsResponse, orgResponse, orgRegisterResponse, usersResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/contacts"),
-          axios.get("http://localhost:5000/api/organizations"),
-          axios.get("http://localhost:5000/api/orgRegister"),
-          axios.get("http://localhost:5000/api/auth/admin/users"), // Fetch users data
+        const [contactsResponse, orgResponse, usersResponse] = await Promise.all([
+          axios.get("http://localhost:5000/api/contact"), // Corrected endpoint
+          axios.get("http://localhost:5000/api/org/display-all-org"), // Corrected endpoint
+          axios.get("http://localhost:5000/api/user/display-users"), // Corrected endpoint
         ]);
 
         setContacts(contactsResponse.data);
-        setOrgCount(orgResponse.data.length + orgRegisterResponse.data.length); // Combine org counts
+        setOrgCount(orgResponse.data.length); // Set organization count
         setUsers(usersResponse.data); // Set users state
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -34,7 +33,7 @@ const QueriesPage = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this contact?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/contacts/${id}`);
+      await axios.delete(`http://localhost:5000/api/contact/${id}`); // Corrected endpoint
       setRefresh((prev) => !prev);
     } catch (error) {
       console.error("Error deleting contact:", error);

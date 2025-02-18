@@ -8,7 +8,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    // confirmPassword: "",
     mobile: "",
     gender: "",
     dob: "",
@@ -23,7 +23,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
         name: initialValues.name || "",
         email: initialValues.email || "",
         password: "",
-        confirmPassword: "",
+        // confirmPassword: "",
         mobile: initialValues.mobile || "",
         gender: initialValues.gender || "",
         dob: initialValues.dob || "",
@@ -35,7 +35,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
         name: "",
         email: "",
         password: "",
-        confirmPassword: "",
+        // confirmPassword: "",
         mobile: "",
         gender: "",
         dob: "",
@@ -51,14 +51,14 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("❌ Passwords do not match.");
-      return;
-    }
+    // if (formData.password !== formData.confirmPassword) {
+    //   setMessage("❌ Passwords do not match.");
+    //   return;
+    // }
 
     try {
       const url = initialValues
-        ? `http://localhost:5000/api/users/${initialValues._id}`
+        ? "http://localhost:5000/api/user/users/${initialValues._id}" // Corrected endpoint
         : "http://localhost:5000/api/user/register";
       const method = initialValues ? "put" : "post";
 
@@ -70,11 +70,17 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(`✅ ${initialValues ? "User updated" : "Registration"} successful! Redirecting to login...`);
-        setTimeout(() => {
-          navigate("/login");
-          onClose();
-        }, 2000);
+        if (initialValues) {
+          // For editing profile, show success message and do not redirect
+          setMessage("✅ Profile updated successfully!");
+        } else {
+          // For new registration, show success message and redirect to login
+          setMessage("✅ Registration successful! Redirecting to login...");
+          setTimeout(() => {
+            navigate("/login");
+            onClose();
+          }, 2000);
+        }
       } else {
         setMessage(data.message || `❌ ${initialValues ? "Update" : "Registration"} failed.`);
       }
@@ -150,7 +156,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
                       required={!initialValues}
                     />
                   </div>
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
                     <input
                       type="password"
@@ -161,7 +167,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
                       placeholder="Confirm password"
                       required={!initialValues}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="bg-gray-50 p-6 rounded-xl flex-1">

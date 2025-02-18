@@ -11,14 +11,13 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [usersResponse, orgResponse, orgRegisterResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/auth/admin/users"),
-          axios.get("http://localhost:5000/api/organizations"),
-          axios.get("http://localhost:5000/api/orgRegister"),
+        const [usersResponse, orgResponse] = await Promise.all([
+          axios.get("http://localhost:5000/api/user/display-users"), // Corrected endpoint
+          axios.get("http://localhost:5000/api/org/display-all-org"), // Corrected endpoint
         ]);
 
         setUsers(usersResponse.data);
-        setOrgCount(orgResponse.data.length + orgRegisterResponse.data.length);
+        setOrgCount(orgResponse.data.length);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

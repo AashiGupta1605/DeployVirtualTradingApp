@@ -26,7 +26,7 @@ const RegisterUserList = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/admin/users");
+      const response = await axios.get("http://localhost:5000/api/user/display-users"); // Corrected endpoint
       setContacts(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -36,7 +36,7 @@ const RegisterUserList = () => {
 
   const fetchOrgCount = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/organizations");
+      const response = await axios.get("http://localhost:5000/api/org/display-all-org"); // Corrected endpoint
       setOrgCount(response.data.length);
     } catch (error) {
       console.error("Error fetching organizations:", error);
@@ -45,7 +45,7 @@ const RegisterUserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/admin/users");
+      const response = await axios.get("http://localhost:5000/api/user/display-users"); // Corrected endpoint
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -54,7 +54,7 @@ const RegisterUserList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/auth/admin/users/${id}`);
+      await axios.delete(`http://localhost:5000/api/user/users/${id}`); // Corrected endpoint
       setRefresh((prev) => !prev);
       setIsDeleteModalOpen(false);
       setIsSuccessModalOpen(true); // Show success modal after deletion

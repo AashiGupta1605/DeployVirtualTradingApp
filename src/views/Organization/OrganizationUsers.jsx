@@ -1640,7 +1640,7 @@ const OrganizationUsers = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/organization/user/display-all-users");
+      const response = await axios.get("http://localhost:5000/api/org/user/display-all-users");
       setStudentList(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -1652,7 +1652,7 @@ const OrganizationUsers = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/organization/user/${id}`);
+      await axios.delete(`http://localhost:5000/api/org/user/${id}`);
       setStudentList(studentList.filter((student) => student._id !== id));
       toast.success("Student deleted successfully!");
       setConfirmationModalOpen(false);

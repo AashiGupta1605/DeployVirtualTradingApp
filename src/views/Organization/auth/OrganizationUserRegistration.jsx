@@ -311,10 +311,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues }) => {
     onSubmit: async (values, { resetForm }) => {
       try {
         if (initialValues) {
-          await axios.put(`http://localhost:5000/api/organization/user/${initialValues._id}`, values);
+          await axios.put(`http://localhost:5000/api/org/user/${initialValues._id}`, values);
           toast.success("Student updated successfully!");
         } else {
-          await axios.post("http://localhost:5000/api/organization/user/register", values);
+          await axios.post("http://localhost:5000/api/org/user/register", values);
           toast.success("Student registered successfully!");
         }
         resetForm(); // Reset form values
