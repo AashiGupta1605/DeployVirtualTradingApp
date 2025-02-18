@@ -39,14 +39,13 @@ const OrganizationList = () => {
   const handleOrgNameClick = async (org, e) => {
     e.stopPropagation();
     setSelectedOrg(org);
-    await fetchStudentsByOrgName(org.name); // Use the organization's name dynamically
+    await fetchStudentsByOrgName(org.name); // Pass the organization name dynamically
   };
 
-  const fetchStudentsByOrgName = async () => {
+  const fetchStudentsByOrgName = async (orgName) => {
     setLoadingStudents(true);
     try {
-      // Call the endpoint without passing the organization name
-      const response = await axios.get(`http://localhost:5000/api/org/users/mits`);
+      const response = await axios.get(`http://localhost:5000/api/org/users/${encodeURIComponent(orgName)}`);
       setStudents(response.data);
       setIsStudentModalOpen(true);
     } catch (error) {
