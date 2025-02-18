@@ -3,43 +3,40 @@ import axios from "axios";
 
 const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
   const [formData, setFormData] = useState({
-    id: "",
     name: "",
     address: "",
     website: "",
     contactPerson: "",
     email: "",
     mobile: "",
-    status: true,
-    createdBy: "",
+    password: "",
+    approvalStatus: "approved", // Default status for new organizations
   });
 
   // Pre-fill form data when selectedOrg changes
   useEffect(() => {
     if (selectedOrg) {
       setFormData({
-        id: selectedOrg._id || "",
         name: selectedOrg.name || "",
         address: selectedOrg.address || "",
         website: selectedOrg.website || "",
         contactPerson: selectedOrg.contactPerson || "",
         email: selectedOrg.email || "",
         mobile: selectedOrg.mobile || "",
-        status: selectedOrg.status || true,
-        createdBy: selectedOrg.createdBy || "",
+        password: "", // Password is not pre-filled for security reasons
+        approvalStatus: selectedOrg.approvalStatus || "approved", // Use existing approvalStatus or default to "approved"
       });
     } else {
       // Reset form data if no selectedOrg (for new registration)
       setFormData({
-        id: "",
         name: "",
         address: "",
         website: "",
         contactPerson: "",
         email: "",
         mobile: "",
-        status: true,
-        createdBy: "",
+        password: "",
+        approvalStatus: "approved", // Default to "approved" for new registrations
       });
     }
   }, [selectedOrg]);
@@ -51,25 +48,40 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.mobile || (!selectedOrg && !formData.password)) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
     try {
       const url = selectedOrg
-        ? `http://localhost:5000/api/organizations/${selectedOrg._id}`
-        : "http://localhost:5000/api/organizations";
+        ? `http://localhost:5000/api/org/${selectedOrg._id}`
+        : "http://localhost:5000/api/org/register";
       const method = selectedOrg ? "put" : "post";
-      const response = await axios[method](url, formData);
+
+      // Prepare the data to send
+      const dataToSend = selectedOrg
+        ? { ...formData, password: undefined } // Exclude password for updates
+        : formData; // Include password and approvalStatus for new registrations
+
+      const response = await axios[method](url, dataToSend);
+      console.log("Data sent to backend:", dataToSend);
+      console.log("Response from backend:", response.data);
       alert(
         selectedOrg
           ? "Organization updated successfully!"
           : "Organization registered successfully!"
       );
-      console.log(response.data);
       onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error("Error:", error);
+      console.error("Error response data:", error.response?.data);
       alert(
         selectedOrg
-          ? "Failed to update organization."
-          : "Failed to register organization."
+          ? "Failed to update organization. Please check the data and try again."
+          : "Failed to register organization. Please check the data and try again."
       );
     }
   };
@@ -116,21 +128,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Organization ID
-                    </label>
-                    <input
-                      type="text"
-                      name="id"
-                      value={formData.id}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Enter organization ID"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Organization Name
+                      Organization Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -179,7 +177,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -193,7 +191,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Address
+                      Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -207,7 +205,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Mobile
+                      Mobile <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -216,8 +214,25 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                       placeholder="Enter mobile number"
+                      required
                     />
                   </div>
+                  {!selectedOrg && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Password <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                        placeholder="Enter password"
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

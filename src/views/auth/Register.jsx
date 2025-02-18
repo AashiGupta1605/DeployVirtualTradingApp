@@ -7,10 +7,10 @@ import "../../components/User/Contact/ContactPage.css";
 const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");  // Feedback message state
-
   useEffect(() => {
     // Reset form data when initialValues change (if editing an existing user)
     if (initialValues) {
+
       formik.setValues(initialValues);
     }
   }, [initialValues]);
@@ -131,6 +131,8 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
               {formik.touched.email && formik.errors.email && (
                 <p className="text-red-500 text-sm">{formik.errors.email}</p>
               )}
+
+      
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
@@ -158,8 +160,6 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
     placeholder="Re-enter password"
   />
 </div>
-
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
               <input
