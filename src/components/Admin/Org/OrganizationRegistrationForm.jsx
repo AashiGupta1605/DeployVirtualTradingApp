@@ -24,7 +24,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
         email: selectedOrg.email || "",
         mobile: selectedOrg.mobile || "",
         password: "", // Password is not pre-filled for security reasons
-        approvalStatus: selectedOrg.approvalStatus || "approved",
+        approvalStatus: selectedOrg.approvalStatus || "approved", // Use existing approvalStatus or default to "approved"
       });
     } else {
       // Reset form data if no selectedOrg (for new registration)
@@ -36,7 +36,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
         email: "",
         mobile: "",
         password: "",
-        approvalStatus: "approved", // Default to "approved"
+        approvalStatus: "approved", // Default to "approved" for new registrations
       });
     }
   }, [selectedOrg]);
@@ -64,18 +64,20 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
       // Prepare the data to send
       const dataToSend = selectedOrg
         ? { ...formData, password: undefined } // Exclude password for updates
-        : formData; // Include password for new registrations
+        : formData; // Include password and approvalStatus for new registrations
 
       const response = await axios[method](url, dataToSend);
+      console.log("Data sent to backend:", dataToSend);
+      console.log("Response from backend:", response.data);
       alert(
         selectedOrg
           ? "Organization updated successfully!"
           : "Organization registered successfully!"
       );
-      console.log(response.data);
       onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error("Error:", error);
+      console.error("Error response data:", error.response?.data);
       alert(
         selectedOrg
           ? "Failed to update organization. Please check the data and try again."
