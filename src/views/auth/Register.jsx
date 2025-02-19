@@ -232,7 +232,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
                 type="submit"
                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
               >
-                {initialValues ? "Update User" : "Register"}
+                {initialValues ? "Update User" : "Sign Up"}
               </button>
             </div>
             {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}
