@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 
-const OrgUserListModal = ({ isOpen, onClose, students, loading }) => {
+const OrgUserListModal = ({ isOpen, onClose, students, loading, orgName }) => {
   if (!isOpen) return null;
 
   return (
@@ -29,7 +29,7 @@ const OrgUserListModal = ({ isOpen, onClose, students, loading }) => {
             <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-users text-white"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Students</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">{orgName} Users</h2>
           </div>
           <button
             onClick={onClose}
