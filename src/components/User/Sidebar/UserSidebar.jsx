@@ -57,108 +57,89 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   return (
     <>
       <nav
-        className={`${
-          sidebarExpanded ? "md:w-64" : "md:w-24"
-        } fixed md:left-0 md:top-0 md:bottom-0 bg-white  shadow-xl transition-all duration-300 ease-in-out z-0`}
+  className={`${
+    sidebarExpanded ? "md:w-64" : "md:w-20"
+  } fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-0`}
+>
+  <div className="flex flex-col h-full">
+    {/* Logo Section */}
+    <div className="flex items-center justify-between w-full h-[71px]  px-6 border-b border-gray-200">
+      <Link
+        to={isAdmin ? "/admin/dashboard" : "/user/dashboard"}
+        className={`flex items-center space-x-3 text-black ${!sidebarExpanded && "md:hidden"}`}
       >
-        <div className="flex flex-col h-full">
-          {/* Logo Section */}
-          <div className="flex items-center justify-between w-full h-[71px] px-6 border-b border-gray-200 ">
+        <span className="text-lg font-semibold bg-gray-800 bg-clip-text text-transparent capitalize">
+          {userName}
+        </span>
+      </Link>
+      <button
+        onClick={toggleSidebar}
+        className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
+      >
+        <i className={`fas fa-${sidebarExpanded ? "times" : "bars"} text-gray-400 text-base`}></i>
+      </button>
+    </div>
 
-            <Link
-              to={isAdmin ? "/admin/dashboard" : "/user/dashboard"}
-              className={`flex items-center space-x-3 ${!sidebarExpanded && "md:hidden"}`}
-            >
-              <span className="text-lg font-semibold bg-gray-800 bg-clip-text text-transparent capitalize">
-                {userName}
-              </span>
-            </Link>
-            <button
-              onClick={toggleSidebar}
-              className="p-1 rounded-lg hover:bg-gray-200  transition-colors focus:outline-none focus:ring-0 ml-auto"
-            >
-              <i className={`fas fa-${sidebarExpanded ? "times" : "bars"} text-gray-400  text-base`}></i>
-            </button>
-          </div>
+    {/* Mobile User Actions */}
+    <div className="md:hidden flex items-center space-x-4 px-4 py-4 bg-gray-50">
+      <NotificationDropdown />
+      <DashboardDropdown />
+    </div>
 
-          {/* Mobile User Actions */}
-          <div className="md:hidden flex items-center space-x-4 px-4 py-4 bg-gray-50 ">
-            <NotificationDropdown />
-            <DashboardDropdown />
-          </div>
-
-          {/* Navigation */}
-          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-            {Object.entries(menuItems).map(([section, items]) => (
-              <div key={section} className="space-y-4">
-                <button
-                  onClick={() => toggleMenu(section)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
-                    activeMenu === section
-                      ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
-                      : "text-gray-600 "
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <div
-                      className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-                        activeMenu === section
-                          ? "bg-white/20"
-                          : "bg-gray-100"
-                      }`}
-                    >
-                      <i
-                        className={`fas fa-${isAdmin ? "user-shield" : "user"} ${
-                          activeMenu === section
-                            ? "text-gray-800"
-                            : "text-gray-500 "
-                        }`}
-                      ></i>
-                    </div>
-                    {sidebarExpanded && (
-                      <span className="font-medium capitalize">{userName}</span>
-                    )}
-                  </div>
-                  {sidebarExpanded && (
-                    <i
-                      className={`fas fa-chevron-${
-                        activeMenu === section ? "down" : "right"
-                      } transition-transform duration-200 text-sm`}
-                    ></i>
-                  )}
-                </button>
-
-                {sidebarExpanded && activeMenu === section && (
-                  <div className="pl-4 space-y-2">
-                    {items.map((item) => (
-                      <MenuLink
-                        key={item.to}
-                        to={item.to}
-                        icon={item.icon}
-                        label={item.label}
-                        isActive={location.pathname === item.to}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Logout Button */}
-          {/* {user && (
-            <div className="p-4">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+    {/* Navigation */}
+    <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+      {Object.entries(menuItems).map(([section, items]) => (
+        <div key={section} className="space-y-4">
+          <button
+            onClick={() => toggleMenu(section)}
+            className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+              activeMenu === section
+                ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
+                : "text-gray-600"
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+                  activeMenu === section ? "bg-white/20" : "bg-lightBlue-100"
+                }`}
               >
-                <i className="fas fa-sign-out-alt"></i>
-                {sidebarExpanded && <span>Logout</span>}
-              </button>
+                <i
+                  className={`fas fa-${isAdmin ? "user-shield" : "user"} ${
+                    activeMenu === section ? "text-gray-500" : "text-gray-500"
+                  }`}
+                ></i>
+              </div>
+              {sidebarExpanded && <span className="font-medium capitalize">{userName}</span>}
             </div>
-          )} */}
+            {sidebarExpanded && (
+              <i
+                className={`fas fa-chevron-${
+                  activeMenu === section ? "down" : "right"
+                } transition-transform duration-200 text-sm`}
+              ></i>
+            )}
+          </button>
+
+          {sidebarExpanded && activeMenu === section && (
+            <div className="pl-4 space-y-2">
+              {items.map((item) => (
+                <MenuLink
+                  key={item.to}
+                  to={item.to}
+                  icon={item.icon}
+                  label={item.label}
+                  isActive={location.pathname === item.to}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </nav>
+      ))}
+    </div>
+  </div>
+</nav>
+
     </>
   );
 }
