@@ -1,5 +1,5 @@
 
-// params organization dasbaord
+// updated version
 
 import React, { useEffect, useState } from "react";
 import CardPageVisits from "../../components/Admin/Cards/CardPageVisits";
@@ -11,34 +11,48 @@ import Loader from "../../components/Common/Loader";
 export default function OrganizationDashboard({ type }) {
   const [totalUsers, setTotalUsers] = useState(0);
   const [newUsersLastWeek, setNewUsersLastWeek] = useState(0);
+  const [maleUsers, setMaleUsers] = useState(0);
+  const [femaleUsers, setFemaleUsers] = useState(0);
+  const [activeUsers, setActiveUsers] = useState(0);
+  const [deactiveUsers, setDeactiveUsers] = useState(0);
+  const [averageUserAge, setAverageUserAge] = useState(0);
   const [loading, setLoading] = useState(true);
   const orgName = localStorage.getItem("orgName");
 
   useEffect(() => {
-    // Fetch the total user count from the backend
-    const fetchTotalUsers = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/org/${orgName}/users/count/total`);
-        setTotalUsers(response.data.count);
-      } catch (error) {
-        console.error("Error fetching total user count:", error);
-      }
-    };
-
-    // Fetch the new users count from the last week
-    const fetchNewUsersLastWeek = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/org/${orgName}/users/count/new-last-week`);
-        setNewUsersLastWeek(response.data.count);
-      } catch (error) {
-        console.error("Error fetching new users count from last week:", error);
-      }
-    };
-
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([fetchTotalUsers(), fetchNewUsersLastWeek()]);
-      setLoading(false);
+      try {
+        const [
+          totalUsersRes,
+          newUsersLastWeekRes,
+          maleUsersRes,
+          femaleUsersRes,
+          activeUsersRes,
+          deactiveUsersRes,
+          averageUserAgeRes
+        ] = await Promise.all([
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/total`),
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/new-week`),
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/male`),
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/female`),
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/active`),
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/deactive`),
+          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/average-age`)
+        ]);
+
+        setTotalUsers(totalUsersRes.data.count);
+        setNewUsersLastWeek(newUsersLastWeekRes.data.count);
+        setMaleUsers(maleUsersRes.data.count);
+        setFemaleUsers(femaleUsersRes.data.count);
+        setActiveUsers(activeUsersRes.data.count);
+        setDeactiveUsers(deactiveUsersRes.data.count);
+        setAverageUserAge(averageUserAgeRes.data.averageAge);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
@@ -50,8 +64,9 @@ export default function OrganizationDashboard({ type }) {
 
   return (
     <>
-      <div className={type !== "student-list" ? "mt-24" : ""}>
-        <div className="bg-lightBlue-600 md:pt-32 pb-32 pt-12">
+      <div className={type !== "student-list" ? "mt-24" : "mt-12"}>
+        {/* <div className="bg-lightBlue-600 md:pt-32 pb-32 pt-12"> */}
+        <div className={type!== "student-list" ? "bg-lightBlue-600 md:pt-32 pb-32 pt-12": "bg-lightBlue-600 md:pt-32 pb-16 pt-12"}>
           <div className="px-4 mx-auto w-full">
             <div>
               {/* Card stats */}
@@ -82,29 +97,65 @@ export default function OrganizationDashboard({ type }) {
                 </div>
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
-                    statSubtitle="ACTIVE USERS"
-                    statTitle="924"
+                    statSubtitle="MALE USERS"
+                    statTitle={maleUsers.toString()}
                     statArrow="up"
-                    statPercent="1.10"
+                    statPercent="2.10"
                     statPercentColor="text-emerald-500"
-                    statDescripiron="Since yesterday"
-                    statIconName="fas fa-users"
+                    statDescripiron="Since last month"
+                    statIconName="fas fa-male"
+                    statIconColor="bg-blue-500"
+                  />
+                </div>
+                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                  <CardStats
+                    statSubtitle="FEMALE USERS"
+                    statTitle={femaleUsers.toString()}
+                    statArrow="up"
+                    statPercent="3.20"
+                    statPercentColor="text-emerald-500"
+                    statDescripiron="Since last month"
+                    statIconName="fas fa-female"
                     statIconColor="bg-pink-500"
                   />
                 </div>
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
-                    statSubtitle="RETENTION RATE"
-                    statTitle="49.65%"
+                    statSubtitle="ACTIVE USERS"
+                    statTitle={activeUsers.toString()}
                     statArrow="up"
-                    statPercent="12"
+                    statPercent="4.10"
                     statPercentColor="text-emerald-500"
-                    statDescripiron="Since last month"
-                    statIconName="fas fa-percent"
-                    statIconColor="bg-lightBlue-500"
+                    statDescripiron="Since last week"
+                    statIconName="fas fa-user-check"
+                    statIconColor="bg-green-500"
                   />
                 </div>
-                {type !== "student-list" && (
+                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                  <CardStats
+                    statSubtitle="DEACTIVE USERS"
+                    statTitle={deactiveUsers.toString()}
+                    statArrow="down"
+                    statPercent="1.10"
+                    statPercentColor="text-red-500"
+                    statDescripiron="Since last week"
+                    statIconName="fas fa-user-slash"
+                    statIconColor="bg-gray-500"
+                  />
+                </div>
+                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                  <CardStats
+                    statSubtitle="AVERAGE USER AGE"
+                    statTitle={averageUserAge}
+                    statArrow="up"
+                    statPercent=""
+                    statPercentColor="text-emerald-500"
+                    statDescripiron="Average age of users"
+                    statIconName="fas fa-birthday-cake"
+                    statIconColor="bg-purple-500"
+                  />
+                </div>
+                {/* {type !== "student-list" && (
                   <>
                     <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                       <CardStats
@@ -155,7 +206,7 @@ export default function OrganizationDashboard({ type }) {
                       />
                     </div>
                   </>
-                )}
+                )} */}
               </div>
             </div>
           </div>

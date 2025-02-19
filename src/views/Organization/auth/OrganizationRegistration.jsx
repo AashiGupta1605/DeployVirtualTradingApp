@@ -25,7 +25,7 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
       contactPerson: "",
       email: "",
       mobile: "",
-      approvalStatus: "approved",
+      approvalStatus: "pending",
       password: "",
     },
     validationSchema: validationSchema,
