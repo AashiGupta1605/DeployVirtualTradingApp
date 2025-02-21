@@ -64,7 +64,7 @@ export default function OrganizationDashboard({ type }) {
 
   return (
     <>
-      <div className={type !== "student-list" ? "mt-24" : "mt-12"}>
+      <div className={type !== "student-list" ? "mt-24" : "pt-24"}>
         {/* <div className="bg-lightBlue-600 md:pt-32 pb-32 pt-12"> */}
         <div className={type!== "student-list" ? "bg-lightBlue-600 md:pt-32 pb-32 pt-12": "bg-lightBlue-600 md:pt-32 pb-16 pt-12"}>
           <div className="px-4 mx-auto w-full">
