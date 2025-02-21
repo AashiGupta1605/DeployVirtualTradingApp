@@ -80,7 +80,7 @@ const ContactModal = ({ onClose }) => {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/contacts/createContact", {
+      const response = await fetch("http://localhost:5000/api/contact/createContact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
