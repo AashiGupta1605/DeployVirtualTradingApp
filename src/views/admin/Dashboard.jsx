@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUsers } from "../../redux/userSlice";
+import { fetchOrganizations } from "../../redux/orgSlice";
 import CardPageVisits from "../../components/Admin/Cards/CardPageVisits";
 import CardSocialTraffic from "../../components/Admin/Cards/CardSocialTraffic";
 import CardStats from "../../components/Admin/Cards/CardStats";
 
 export default function Dashboard() {
-  const [users, setUsers] = useState([]);
-  const [orgCount, setOrgCount] = useState(0);
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.user.list);
+  const orgCount = useSelector((state) => state.organization.list.length);
+  const userStatus = useSelector((state) => state.user.status);
+  const orgStatus = useSelector((state) => state.organization.status);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [usersResponse, orgResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/user/display-users"), // Corrected endpoint
-          axios.get("http://localhost:5000/api/org/display-all-org"), // Corrected endpoint
-        ]);
+    if (userStatus === 'idle') {
+      dispatch(fetchUsers());
+    }
+    if (orgStatus === 'idle') {
+      dispatch(fetchOrganizations());
+    }
+  }, [userStatus, orgStatus, dispatch]);
 
-        setUsers(usersResponse.data);
-        setOrgCount(orgResponse.data.length);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const userCount = users.length; // Calculate user count
+  const userCount = users.length;
 
   return (
     <div className="mt-12">
@@ -36,7 +32,7 @@ export default function Dashboard() {
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
               <CardStats
                 statSubtitle="REGISTERED USERS"
-                statTitle={userCount.toString()} // Use userCount here
+                statTitle={userCount.toString()}
                 statArrow="up"
                 statPercent="100"
                 statPercentColor="text-emerald-500"
