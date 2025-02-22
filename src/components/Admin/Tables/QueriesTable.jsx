@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Trash2 } from 'lucide-react';
 import PropTypes from 'prop-types';
 import ConfirmationModal from '../Modals/ConformationModal';
+import { BASE_API_URL } from '../../../utils/BaseUrl'; 
 
 const TYPE_COLORS = {
   "General Inquiry": "bg-blue-100 text-blue-800",
@@ -37,9 +38,9 @@ const QueriesTable = ({ tempFilters, searchQuery, currentPage, itemsPerPage, set
     setState(prev => ({ ...prev, isLoading: true, deleteError: null }));
     try {
       const [contacts, orgs, users] = await Promise.all([
-        axios.get("http://localhost:5000/api/contact"),
-        axios.get("http://localhost:5000/api/org/display-all-org"),
-        axios.get("http://localhost:5000/api/user/display-users"),
+        axios.get(`${BASE_API_URL}/contact`),
+        axios.get(`${BASE_API_URL}/organization/display-all-org`),
+        axios.get(`${BASE_API_URL}/user/display-users`),
       ]);
 
       if (!contacts.data) throw new Error('No data received');
