@@ -1,29 +1,25 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUsers } from "../../redux/userSlice";
+import { fetchOrganizations } from "../../redux/orgSlice";
 import StockTable from "../../components/Common/StockTable";
 import CardStats from "../../components/Admin/Cards/CardStats";
 
 export default function ETfTable() {
-  const [users, setUsers] = useState([]);
-  const [orgCount, setOrgCount] = useState(0);
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.user.list);
+  const orgCount = useSelector((state) => state.organization.list.length);
+  const userStatus = useSelector((state) => state.user.status);
+  const orgStatus = useSelector((state) => state.organization.status);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [usersResponse, orgResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/user/display-users"), // Corrected endpoint
-          axios.get("http://localhost:5000/api/org/display-all-org"), // Corrected endpoint
-        ]);
-
-        setUsers(usersResponse.data);
-        setOrgCount(orgResponse.data.length);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+    if (userStatus === 'idle') {
+      dispatch(fetchUsers());
+    }
+    if (orgStatus === 'idle') {
+      dispatch(fetchOrganizations());
+    }
+  }, [userStatus, orgStatus, dispatch]);
 
   const userCount = users.length;
 

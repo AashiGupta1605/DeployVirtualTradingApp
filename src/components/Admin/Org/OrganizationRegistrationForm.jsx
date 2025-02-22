@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 
 const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
   const initialValues = {
@@ -34,8 +35,8 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg }) => {
   const onSubmit = async (values, { setSubmitting }) => {
     try {
       const url = selectedOrg
-        ? `http://localhost:5000/api/org/${selectedOrg._id}`
-        : "http://localhost:5000/api/org/register";
+        ? `${BASE_API_URL}/organization/${selectedOrg._id}`
+        : `${BASE_API_URL}/organization/register`;
       const method = selectedOrg ? "put" : "post";
 
       // Prepare the data to send

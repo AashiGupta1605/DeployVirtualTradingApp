@@ -1,31 +1,40 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// src/pages/Admin/OrgRegister.js
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUsers } from "../../redux/userSlice";
+import { fetchOrganizations } from "../../redux/orgSlice";
 import OrganizationManagementPage from "../../components/Admin/Org/OrganizationManagementPage";
 import CardStats from "../../components/Admin/Cards/CardStats";
 
 export default function OrgRegister() {
-    const [users, setUsers] = useState([]);
-    const [orgCount, setOrgCount] = useState(0);
+    const dispatch = useDispatch();
+    
+    // Select data from Redux store
+    const users = useSelector((state) => state.user.list);
+    const organizations = useSelector((state) => state.organization.list);
+    const userStatus = useSelector((state) => state.user.status);
+    const orgStatus = useSelector((state) => state.organization.status);
+    const userError = useSelector((state) => state.user.error);
+    const orgError = useSelector((state) => state.organization.error);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [usersResponse, orgResponse] = await Promise.all([
-                    axios.get("http://localhost:5000/api/user/display-users"), // Corrected endpoint
-                    axios.get("http://localhost:5000/api/org/display-all-org"), // Corrected endpoint
-                ]);
+        if (userStatus === 'idle') {
+            dispatch(fetchUsers());
+        }
+        if (orgStatus === 'idle') {
+            dispatch(fetchOrganizations());
+        }
+    }, [userStatus, orgStatus, dispatch]);
 
-                setUsers(usersResponse.data);
-                setOrgCount(orgResponse.data.length);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+    // Loading states
+    if (userStatus === 'loading' || orgStatus === 'loading') {
+        return <div>Loading...</div>;
+    }
 
-        fetchData();
-    }, []);
-
-    const userCount = users.length;
+    // Error states
+    if (userError || orgError) {
+        return <div>Error: {userError || orgError}</div>;
+    }
 
     return (
         <div className="mt-12">
@@ -47,7 +56,7 @@ export default function OrgRegister() {
                         <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                             <CardStats
                                 statSubtitle="REGISTERED ORGANIZATIONS"
-                                statTitle={orgCount.toString()}
+                                statTitle={organizations.length.toString()}
                                 statArrow="up"
                                 statPercent="100"
                                 statPercentColor="text-emerald-500"

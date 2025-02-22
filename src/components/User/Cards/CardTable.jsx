@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../../../assets/styles/table.css';
+import { BASE_API_URL } from '../../../utils/BaseUrl';
 
 const Table = () => {
   const [niftyData, setNiftyData] = useState([]);
@@ -12,7 +13,7 @@ const Table = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/niftydata');
+        const response = await axios.get(`${BASE_API_URL}/admin/niftydata`);
         console.log('Fetched data:', response.data);
         if (response.data && Array.isArray(response.data)) {
           const sortedData = response.data.sort((a, b) => new Date(b.fetchTime) - new Date(a.fetchTime));

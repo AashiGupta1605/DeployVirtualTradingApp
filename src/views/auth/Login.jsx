@@ -1,18 +1,25 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
-
+import { 
+  loginUser, 
+  selectAuthStatus, 
+  selectAuthError, 
+  selectIsAdmin 
+} from '../../redux/authSlice';
 const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
-
   return <LoginForm onClose={onClose} />;
 };
 
 const LoginForm = ({ onClose }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = React.useState(false);
+  const dispatch = useDispatch();
+  const authStatus = useSelector(selectAuthStatus);
+  const authError = useSelector(selectAuthError);
+  const loading = authStatus === 'loading';
 
   const formik = useFormik({
     initialValues: {
@@ -28,47 +35,36 @@ const LoginForm = ({ onClose }) => {
         .required("Password is required"),
     }),
     onSubmit: async (values, { setSubmitting }) => {
-      setLoading(true);
       try {
-        if (values.email === "admin@example.com" && values.password === "admin123") {
-          localStorage.setItem("token", "admin-token");
-          localStorage.setItem("user", JSON.stringify({ name: "Admin", role: "admin" }));
+        const resultAction = await dispatch(loginUser(values));
+        
+        if (loginUser.fulfilled.match(resultAction)) {
+          const user = resultAction.payload.user;
+          
           setTimeout(() => {
-            setLoading(false);
             setSubmitting(false);
-            navigate("/admin");
-            onClose();
-          }, 2000);
-          return;
-        }
-
-        const response = await fetch("http://localhost:5000/api/user/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify({ name: data.user.name, role: data.user.role }));
-          setTimeout(() => {
-            setLoading(false);
-            setSubmitting(false);
-            navigate("/user");
+            // Navigate based on user role
+            if (user.role === 'admin') {
+              navigate('/admin');
+            } else {
+              navigate('/user');
+            }
             onClose();
           }, 2000);
         } else {
-          setLoading(false);
           setSubmitting(false);
         }
       } catch (error) {
-        setLoading(false);
         setSubmitting(false);
       }
     },
   });
+
+  // Handle quick admin login
+  const handleAdminLogin = () => {
+    formik.setValues(adminCredentials);
+    formik.submitForm();
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
@@ -77,25 +73,17 @@ const LoginForm = ({ onClose }) => {
         style={{ width: "100%", maxWidth: "40%" }}
         className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50"
       >
-      {loading && (
-  <div className="absolute inset-0 flex items-center justify-center rounded-2xl z-50">
-    {/* Background Overlay */}
-    <div className="absolute inset-0 bg-gray-900 opacity-50 rounded-2xl z-40"></div>
-
-    {/* Loader */}
-    <div className="z-50 flex flex-col items-center gap-4">
-      <div
-        className="inline-block h-16 w-16 animate-spin rounded-full border-8 border-solid border-blue-600 border-t-transparent"
-        role="status"
-      ></div>
-    </div>
-  </div>
-)}
-
-
-
-
-
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-2xl z-50">
+            <div className="absolute inset-0 bg-gray-900 opacity-50 rounded-2xl z-40"></div>
+            <div className="z-50 flex flex-col items-center gap-4">
+              <div
+                className="inline-block h-16 w-16 animate-spin rounded-full border-8 border-solid border-blue-600 border-t-transparent"
+                role="status"
+              ></div>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
@@ -113,6 +101,12 @@ const LoginForm = ({ onClose }) => {
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[80vh] relative">
+          {authError && (
+            <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+              {authError}
+            </div>
+          )}
+
           <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div>
@@ -151,6 +145,8 @@ const LoginForm = ({ onClose }) => {
               </div>
             </div>
 
+
+
             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
@@ -168,6 +164,7 @@ const LoginForm = ({ onClose }) => {
               </button>
             </div>
           </form>
+
         </div>
       </div>
     </div>

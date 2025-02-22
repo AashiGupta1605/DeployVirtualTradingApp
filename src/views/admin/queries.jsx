@@ -15,6 +15,8 @@ import {
 import CardStats from "../../components/Admin/Cards/CardStats";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { BASE_API_URL } from "../../utils/BaseUrl";
+
 
 // Tooltip Component
 const Tooltip = ({ children, text }) => {
@@ -157,9 +159,9 @@ const QueriesPage = () => {
       setIsLoading(true);
       try {
         const [contactsResponse, orgResponse, usersResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/contact"),
-          axios.get("http://localhost:5000/api/org/display-all-org"),
-          axios.get("http://localhost:5000/api/user/display-users"),
+          axios.get(`${BASE_API_URL}/contact`),
+          axios.get(`${BASE_API_URL}/organization/display-all-org`),
+          axios.get(`${BASE_API_URL}/user/display-users`),
         ]);
 
         setContacts(contactsResponse.data);
@@ -235,7 +237,7 @@ const QueriesPage = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/contact/${deleteId}`);
+      await axios.delete(`${BASE_API_URL}/contact/${deleteId}`);
       setRefresh((prev) => !prev);
       setDeleteModalOpen(false);
       setDeleteId(null);

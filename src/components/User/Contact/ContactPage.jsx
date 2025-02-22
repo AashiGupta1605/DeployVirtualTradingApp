@@ -5,6 +5,7 @@ import Footer from "../Footers/Footer";
 import StockP from "../../../assets/p-stock.jpg";
 import "./ContactPage.css"; // Import custom CSS file
 
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 const ContactPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -80,7 +81,7 @@ const ContactModal = ({ onClose }) => {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/contact/createContact", {
+      const response = await fetch(`${BASE_API_URL}/contact/createContact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

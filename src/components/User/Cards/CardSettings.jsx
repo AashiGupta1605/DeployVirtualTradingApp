@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import UpdateProfileForm from "./UpdateProfileForm";
 import ConfirmationModal from "./ConfirmationModal";
 import { useNavigate } from "react-router-dom";
-
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 export default function CardSettings({ isOpen, onClose }) {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
@@ -15,43 +15,48 @@ export default function CardSettings({ isOpen, onClose }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("No token found");
-
-        const response = await fetch("http://localhost:5000/api/user/profile", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-
-        const data = await response.json();
-        const formattedDob = data.user?.dob ? data.user.dob.split("T")[0] : "";
-
-        setUserData({
-          name: data.user?.name || "",
-          email: data.user?.email || "",
-          mobile: data.user?.mobile || "",
-          gender: data.user?.gender || "",
-          dob: formattedDob,
-        });
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-      }
-    };
-
-    if (isOpen) fetchUserData();
-  }, [isOpen]);
-
-  const handleUpdate = async (updatedData) => {
+  // Function to fetch user data
+  const fetchUserData = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token found");
 
-      const response = await fetch("http://localhost:5000/api/user/update", {
+      const response = await fetch(`${BASE_API_URL}/user/profile`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+
+      const data = await response.json();
+      const formattedDob = data.user?.dob ? data.user.dob.split("T")[0] : "";
+
+      setUserData({
+        name: data.user?.name || "",
+        email: data.user?.email || "",
+        mobile: data.user?.mobile || "",
+        gender: data.user?.gender || "",
+        dob: formattedDob,
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+    }
+  };
+
+  // Fetch user data when modal opens
+  useEffect(() => {
+    if (isOpen) fetchUserData();
+  }, [isOpen]);
+
+  // Function to handle profile update
+  const handleUpdate = async (updatedData) => {
+    console.log("Updated Data:", updatedData); // Debugging output
+  
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No token found");
+  
+      const response = await fetch(`${BASE_API_URL}/user/update`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,27 +64,29 @@ export default function CardSettings({ isOpen, onClose }) {
         },
         body: JSON.stringify(updatedData),
       });
-
+  
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Profile update failed");
-
+  
       setUserData((prevUserData) => ({
         ...prevUserData,
         ...updatedData,
       }));
-
+  
+      await fetchUserData();
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Error updating profile:", error.message);
     }
   };
-
+  
+  // Function to handle profile deletion
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token found");
 
-      const response = await fetch("http://localhost:5000/api/user/delete", {
+      const response = await fetch(`${BASE_API_URL}/user/delete`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

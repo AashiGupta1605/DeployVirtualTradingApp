@@ -234,6 +234,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronRight, ChevronLeft, Filter } from "lucide-react";
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
 import "../../assets/styles/table.css";
+import { BASE_API_URL } from "../../utils/BaseUrl";
 
 const StockTable = () => {
   const [stockData, setStockData] = useState([]);
@@ -249,7 +250,7 @@ const StockTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/admin/etfdata");
+        const response = await axios.get(`${BASE_API_URL}/admin/etfdata`);
         if (Array.isArray(response.data)) {
           setStockData(response.data);
         } else {

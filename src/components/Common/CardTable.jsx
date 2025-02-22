@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronRight, ChevronLeft, Edit, Trash2, PlusCircle, Filter, Check, X } from 'lucide-react';
 import ConfirmationModal from '../../components/Admin/Modals/ConformationModal';
 import CardStats from '../../components/Admin/Cards/CardStats';
+import { BASE_API_URL } from '../../utils/BaseUrl';
 
 const CardTable = () => {
   // Existing state variables
@@ -28,7 +29,7 @@ const CardTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/niftydata');
+        const response = await axios.get(`${BASE_API_URL}/admin/niftydata`);
         if (response.data && Array.isArray(response.data)) {
           const sortedData = response.data.sort((a, b) => new Date(b.fetchTime) - new Date(a.fetchTime));
           setNiftyData([sortedData[0]]);
