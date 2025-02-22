@@ -3,6 +3,7 @@
 
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 import * as Yup from "yup";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -39,10 +40,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues }) => {
     onSubmit: async (values, { resetForm }) => {
       try {
         if (initialValues) {
-          await axios.put(`http://localhost:5000/api/org/user/${initialValues._id}`, values);
+          await axios.put(`${BASE_API_URL}/organization/user/${initialValues._id}`, values);
           toast.success("Student updated successfully!");
         } else {
-          await axios.post("http://localhost:5000/api/org/user/register", values);
+          await axios.post(`${BASE_API_URL}/organization/user/register`, values);
           toast.success("Student registered successfully!");
         }
         resetForm(); // Reset form values

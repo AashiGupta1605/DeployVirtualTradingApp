@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import { BASE_API_URL } from '../utils/BaseUrl';
 export const fetchOrganizations = createAsyncThunk('organizations/fetchOrganizations', async () => {
-  const response = await axios.get('http://localhost:5000/api/org/display-all-org');
+  const response = await axios.get(`${BASE_API_URL}/organization/display-all-org`);
   return response.data;
 });
 

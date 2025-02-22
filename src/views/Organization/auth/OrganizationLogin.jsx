@@ -8,6 +8,8 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../components/Common/Loader";
+import { BASE_API_URL } from "../../../utils/BaseUrl";
+
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email format").required("Email is required"),
@@ -26,7 +28,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
-        const response = await axios.post("http://localhost:5000/api/org/login", values);
+        const response = await axios.post(`${BASE_API_URL}/organization/login`, values);
         if (response && response.data.success) {
           toast.success(response.data.message);
           localStorage.setItem("orgName", response.data.orgName); // Store organization name

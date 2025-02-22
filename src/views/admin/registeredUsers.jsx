@@ -21,6 +21,7 @@ import RegisterModal from "../auth/Register";
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { BASE_API_URL } from "../../utils/BaseUrl";
 
 // Tooltip Component
 const Tooltip = ({ children, text }) => {
@@ -149,9 +150,9 @@ const RegisterUserList = () => {
     onSubmit: async (values) => {
       try {
         if (selectedUser) {
-          await axios.put(`http://localhost:5000/api/user/users/${selectedUser._id}`, values);
+          await axios.put(`${BASE_API_URL}/user/users/${selectedUser._id}`, values);
         } else {
-          await axios.post("http://localhost:5000/api/user/register", values);
+          await axios.post(`${BASE_API_URL}/user/register`, values);
         }
         closeRegisterModal();
         setRefresh(prev => !prev);
@@ -169,8 +170,8 @@ const RegisterUserList = () => {
       setIsLoading(true);
       try {
         const [usersResponse, orgResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/user/display-users"),
-          axios.get("http://localhost:5000/api/org/display-all-org"),
+          axios.get(`${BASE_API_URL}/user/display-users`),
+          axios.get(`${BASE_API_URL}/organization/display-all-org`),
         ]);
         setUsers(usersResponse.data || []);
         setOrgCount(orgResponse.data?.length || 0);
@@ -249,7 +250,7 @@ const filteredUsers = users.filter((user) => {
   // Handler Functions
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/user/users/${id}`);
+      await axios.delete(`${BASE_API_URL}/user/users/${id}`);
       setRefresh(prev => !prev);
       setIsDeleteModalOpen(false);
       setIsSuccessModalOpen(true);

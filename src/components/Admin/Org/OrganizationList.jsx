@@ -1,5 +1,5 @@
 // OrganizationList.jsx - Part 1: Imports and Utility Components
-
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
@@ -137,7 +137,7 @@ const OrganizationList = () => {
     const fetchOrganizations = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/api/org/display-all-org");
+        const response = await axios.get(`${BASE_API_URL}/organization/display-all-org`);
         setOrganizations(response.data || []);
       } catch (error) {
         console.error("Error fetching organizations:", error);
@@ -225,7 +225,7 @@ const OrganizationList = () => {
   // Handler Functions
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/org/${id}`);
+      await axios.delete(`${BASE_API_URL}/organization/${id}`);
       setRefresh(prev => !prev);
       setIsDeleteModalOpen(false);
       setIsSuccessModalOpen(true);
@@ -236,7 +236,7 @@ const OrganizationList = () => {
 
   const handleApproval = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/org/${id}/approval-status`, { status });
+      await axios.put(`${BASE_API_URL}/organization/${id}/approval-status`, { status });
       setRefresh(prev => !prev);
       setDropdownOpen(null);
       setIsActionModalOpen(false);
@@ -302,7 +302,7 @@ const OrganizationList = () => {
   const fetchStudentsByOrgName = async (orgName) => {
     setLoadingStudents(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/org/users/${encodeURIComponent(orgName)}`);
+      const response = await axios.get(`${BASE_API_URL}/organization/users/${encodeURIComponent(orgName)}`);
       setStudents(response.data);
       setIsStudentModalOpen(true);
     } catch (error) {

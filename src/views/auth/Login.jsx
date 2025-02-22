@@ -9,7 +9,6 @@ import {
   selectAuthError, 
   selectIsAdmin 
 } from '../../redux/authSlice';
-
 const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return <LoginForm onClose={onClose} />;
