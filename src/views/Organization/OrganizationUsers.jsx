@@ -11,6 +11,7 @@ import { Edit, Trash2, ChevronDown, ChevronRight, Filter, X, UserPlus, Trash, Ch
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Dashboard from "./OrganizationDashboard";
+import { BASE_API_URL } from "../../utils/BaseUrl";
 
 const OrganizationUsers = () => {
   const [studentList, setStudentList] = useState([]);
@@ -35,7 +36,7 @@ const OrganizationUsers = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/org/${orgName}/users`, {
+      const response = await axios.get(`${BASE_API_URL}/organization/${orgName}/users`, {
         params: {
           page: currentPage,
           limit: itemsPerPage,
@@ -63,7 +64,7 @@ const OrganizationUsers = () => {
   // Handle delete student
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/org/user/${id}`);
+      await axios.delete(`${BASE_API_URL}/organization/user/${id}`);
       setStudentList(studentList.filter((student) => student._id !== id));
       toast.success("Student deleted successfully!");
       setConfirmationModalOpen(false);

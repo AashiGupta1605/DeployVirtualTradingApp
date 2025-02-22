@@ -1,7 +1,7 @@
 // src/redux/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import { BASE_API_URL } from '../utils/BaseUrl';
 // Admin credentials
 const ADMIN_CREDENTIALS = {
   email: "admin@example.com",
@@ -25,7 +25,7 @@ export const loginUser = createAsyncThunk(
         };
         return adminData;
       }
-      const response = await axios.post('http://localhost:5000/api/user/login', credentials);
+      const response = await axios.post(`${BASE_API_URL}/user/login`, credentials);
       return {
         user: {
           name: response.data.user.name,

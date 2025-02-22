@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   address: Yup.string().required("Address is required"),
@@ -31,7 +31,7 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await axios.post("http://localhost:5000/api/org/register", values);
+        const response = await axios.post(`${BASE_API_URL}/organization/register`, values);
         // toast.success("Organization registered successfully!");
         toast.success(response.data.message);
         resetForm(); // Reset form values

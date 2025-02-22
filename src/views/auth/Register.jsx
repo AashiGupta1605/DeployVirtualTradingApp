@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../../components/User/Contact/ContactPage.css";
+import { BASE_API_URL } from "../../utils/BaseUrl";
 
 const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   const navigate = useNavigate();
@@ -48,8 +49,8 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   
       try {
         const url = initialValues
-          ? `http://localhost:5000/api/user/users/${initialValues._id}`
-          : "http://localhost:5000/api/user/register";
+          ? `${BASE_API_URL}/user/users/${initialValues._id}`
+          : `${BASE_API_URL}/user/register`;
         const method = initialValues ? "put" : "post";
   
         const response = await fetch(url, {

@@ -7,6 +7,7 @@ import CardSocialTraffic from "../../components/Admin/Cards/CardSocialTraffic";
 import CardStats from "../../components/Admin/Cards/CardStats";
 import axios from "axios";
 import Loader from "../../components/Common/Loader";
+import { BASE_API_URL } from "../../utils/BaseUrl";
 
 export default function OrganizationDashboard({ type }) {
   const [totalUsers, setTotalUsers] = useState(0);
@@ -32,13 +33,13 @@ export default function OrganizationDashboard({ type }) {
           deactiveUsersRes,
           averageUserAgeRes
         ] = await Promise.all([
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/total`),
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/new-week`),
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/male`),
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/female`),
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/active`),
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/deactive`),
-          axios.get(`http://localhost:5000/api/org/${orgName}/users/count/average-age`)
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/total`),
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/new-week`),
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/male`),
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/female`),
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/active`),
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/deactive`),
+          axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/average-age`)
         ]);
 
         setTotalUsers(totalUsersRes.data.count);
