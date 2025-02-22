@@ -8,7 +8,7 @@ import {
   selectAuthStatus, 
   selectAuthError, 
   selectIsAdmin 
-} from '../../redux/authSlice';
+} from '../../redux/User/authSlice';
 
 const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
