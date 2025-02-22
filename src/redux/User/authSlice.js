@@ -1,7 +1,7 @@
 // src/redux/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { BASE_API_URL } from '../utils/BaseUrl';
+import { BASE_API_URL } from '../../utils/BaseUrl';
 // Admin credentials
 const ADMIN_CREDENTIALS = {
   email: "admin@example.com",
