@@ -8,9 +8,9 @@ import CardStats from "../../components/Admin/Cards/CardStats";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.user.list);
+  const users = useSelector((state) => state.user.users.list);
   const orgCount = useSelector((state) => state.organization.list.length);
-  const userStatus = useSelector((state) => state.user.status);
+  const userStatus = useSelector((state) => state.user.users.status);
   const orgStatus = useSelector((state) => state.organization.status);
 
   useEffect(() => {

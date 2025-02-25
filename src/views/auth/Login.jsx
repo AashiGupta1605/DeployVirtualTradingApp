@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { 
-  loginUser, 
-  selectAuthStatus, 
-  selectAuthError, 
-  selectIsAdmin 
-} from '../../redux/User/authSlice';
+import {
+  loginUser,
+  selectAuthStatus,
+  selectAuthError,
+} from "../../redux/User/authSlice";
 
 const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -20,7 +19,7 @@ const LoginForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const authStatus = useSelector(selectAuthStatus);
   const authError = useSelector(selectAuthError);
-  const loading = authStatus === 'loading';
+  const loading = authStatus === "loading";
 
   const formik = useFormik({
     initialValues: {
@@ -40,15 +39,14 @@ const LoginForm = ({ onClose }) => {
         const resultAction = await dispatch(loginUser(values));
         
         if (loginUser.fulfilled.match(resultAction)) {
-          const user = resultAction.payload.user;
+          const user = resultAction.payload?.user;
           
           setTimeout(() => {
             setSubmitting(false);
-            // Navigate based on user role
-            if (user.role === 'admin') {
-              navigate('/admin');
+            if (user?.role === "admin") {
+              navigate("/admin");
             } else {
-              navigate('/user');
+              navigate("/user");
             }
             onClose();
           }, 2000);
@@ -60,12 +58,6 @@ const LoginForm = ({ onClose }) => {
       }
     },
   });
-
-  // Handle quick admin login
-  const handleAdminLogin = () => {
-    formik.setValues(adminCredentials);
-    formik.submitForm();
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
