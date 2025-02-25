@@ -9,11 +9,11 @@ import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 // Views
 import Dashboard from "../views/admin/Dashboard";
 import Settings from "../views/admin/Settings";
-import OrgRegister from "../views/admin/OrgRegsiter";
+import OrgRegister from "../views/Admin/OrganizationList";
 import ETFTable from "../views/admin/EtfTable";
 import NiftyTable from "../views/admin/NiftyTable";
-import RegisteredUsers from "../views/admin/registeredUsers";
-import Queries from "../views/admin/queries";
+import RegisteredUsers from "../views/Admin/UserList";
+import Queries from "../views/Admin/QueryList";
 
 export default function Admin() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
