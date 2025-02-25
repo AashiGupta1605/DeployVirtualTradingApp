@@ -1,103 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData, updateUserProfile } from "../../../redux/User/userprofileSlice";
 import UpdateProfileForm from "./UpdateProfileForm";
 import ConfirmationModal from "./ConfirmationModal";
 import { useNavigate } from "react-router-dom";
-import { BASE_API_URL } from "../../../utils/BaseUrl";
+
 export default function CardSettings({ isOpen, onClose }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    gender: "",
-    dob: "",
-  });
+  const { userData } = useSelector((state) => state.user.profile);
+  // Get user profile from Redux
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // Function to fetch user data
-  const fetchUserData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-
-      const response = await fetch(`${BASE_API_URL}/user/profile`, {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-
-      const data = await response.json();
-      const formattedDob = data.user?.dob ? data.user.dob.split("T")[0] : "";
-
-      setUserData({
-        name: data.user?.name || "",
-        email: data.user?.email || "",
-        mobile: data.user?.mobile || "",
-        gender: data.user?.gender || "",
-        dob: formattedDob,
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error.message);
-    }
-  };
-
-  // Fetch user data when modal opens
   useEffect(() => {
-    if (isOpen) fetchUserData();
-  }, [isOpen]);
+    if (isOpen) {
+      dispatch(fetchUserData()); // Fetch user profile when modal opens
+    }
+  }, [isOpen, dispatch]);
 
-  // Function to handle profile update
   const handleUpdate = async (updatedData) => {
-    console.log("Updated Data:", updatedData); // Debugging output
-  
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-  
-      const response = await fetch(`${BASE_API_URL}/user/update`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      });
-  
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Profile update failed");
-  
-      setUserData((prevUserData) => ({
-        ...prevUserData,
-        ...updatedData,
-      }));
-  
-      await fetchUserData();
-      setIsEditModalOpen(false);
-    } catch (error) {
-      console.error("Error updating profile:", error.message);
-    }
-  };
-  
-  // Function to handle profile deletion
-  const handleDelete = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-
-      const response = await fetch(`${BASE_API_URL}/user/delete`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) throw new Error("Profile deletion failed");
-
-      localStorage.removeItem("token");
-      navigate("/login");
-    } catch (error) {
-      console.error("Error deleting profile:", error.message);
-    }
+    await dispatch(updateUserProfile(updatedData));
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -113,7 +37,7 @@ export default function CardSettings({ isOpen, onClose }) {
               <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <i className="fas fa-user-edit text-white"></i>
               </div>
-              <h2 className="text-2xl font-semibold text-gray-800">My Account</h2>
+              <h2 className="text-2xl font-semibold text-gray-800">My Profile</h2>
             </div>
             <button
               onClick={onClose}
@@ -125,11 +49,12 @@ export default function CardSettings({ isOpen, onClose }) {
           <div className="p-6">
             <h6 className="text-gray-600 font-bold uppercase mb-3">User Information</h6>
             <div className="grid grid-cols-2 gap-4 text-gray-700">
-              <p><strong>Name:</strong> {userData.name}</p>
-              <p><strong>Email:</strong> {userData.email}</p>
-              <p><strong>Date of Birth:</strong> {userData.dob}</p>
-              <p><strong>Mobile:</strong> {userData.mobile}</p>
-              <p><strong>Gender:</strong> {userData.gender}</p>
+            <p><strong>Name:</strong> {userData?.name}</p>
+            <p><strong>Email:</strong> {userData?.email}</p>
+            <p><strong>Date of Birth:</strong> {userData?.dob}</p>
+            <p><strong>Mobile:</strong> {userData?.mobile}</p>
+            <p><strong>Gender:</strong> {userData?.gender}</p>
+
             </div>
             <div className="mt-6 flex justify-end space-x-4">
               <button
@@ -150,13 +75,13 @@ export default function CardSettings({ isOpen, onClose }) {
         <UpdateProfileForm 
           isOpen={isEditModalOpen} 
           onClose={() => setIsEditModalOpen(false)} 
-          userProfile={userData} 
+          userData={userData} 
           onUpdate={handleUpdate} 
         />
         <ConfirmationModal 
           isOpen={isDeleteModalOpen} 
           onClose={() => setIsDeleteModalOpen(false)} 
-          onConfirm={handleDelete} 
+          onConfirm={() => console.log("Handle delete action")} 
           message="Are you sure you want to delete your profile? This action cannot be undone."
         />
       </div>

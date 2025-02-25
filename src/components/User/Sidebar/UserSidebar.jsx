@@ -56,20 +56,19 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
 
   return (
     <>
-      <nav
+     <nav
   className={`${
     sidebarExpanded ? "md:w-64" : "md:w-20"
   } fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-0`}
 >
-  <div className="flex flex-col h-full">
-    {/* Logo Section */}
-    <div className="flex items-center justify-between w-full h-[71px]  px-6 border-b border-gray-200">
+  <div className="flex flex-col h-full pb-16"> {/* Added padding-bottom to avoid footer overlap */}
+    <div className="flex items-center justify-between w-full h-[71px] px-6 border-b border-gray-200">
       <Link
         to={isAdmin ? "/admin/dashboard" : "/user/dashboard"}
         className={`flex items-center space-x-3 text-black ${!sidebarExpanded && "md:hidden"}`}
       >
         <span className="text-lg font-semibold bg-gray-800 bg-clip-text text-transparent capitalize">
-          {userName}
+          My Account
         </span>
       </Link>
       <button
@@ -80,13 +79,11 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
       </button>
     </div>
 
-    {/* Mobile User Actions */}
     <div className="md:hidden flex items-center space-x-4 px-4 py-4 bg-gray-50">
       <NotificationDropdown />
       <DashboardDropdown />
     </div>
 
-    {/* Navigation */}
     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
       {Object.entries(menuItems).map(([section, items]) => (
         <div key={section} className="space-y-4">

@@ -234,12 +234,15 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronRight, ChevronLeft, Filter } from "lucide-react";
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
 import "../../assets/styles/table.css";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_API_URL } from "../../utils/BaseUrl";
+import { fetchStockData } from "../../redux/Common/etfSlice"; 
 
 const StockTable = () => {
-  const [stockData, setStockData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+
+  const { stockData, loading, error } = useSelector((state) => state.stock);
+
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "none" });
   const [expandedRow, setExpandedRow] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -248,23 +251,9 @@ const StockTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BASE_API_URL}/admin/etfdata`);
-        if (Array.isArray(response.data)) {
-          setStockData(response.data);
-        } else {
-          setError("Invalid data format received");
-        }
-      } catch (error) {
-        setError("Error fetching stock data");
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(fetchStockData());
+  }, [dispatch]);
 
-    fetchData();
-  }, []);
 
   // Filtering logic
   const filteredData = searchTerm

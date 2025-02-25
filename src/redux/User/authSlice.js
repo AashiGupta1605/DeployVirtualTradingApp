@@ -83,10 +83,10 @@ const authSlice = createSlice({
   },
 });
 
-export const selectCurrentUser = (state) => state.auth.user;
-export const selectAuthStatus = (state) => state.auth.status;
-export const selectAuthError = (state) => state.auth.error;
-export const selectIsAdmin = (state) => state.auth.user?.role === 'admin';
+export const selectCurrentUser = (state) => state.user.auth;
+export const selectAuthStatus = (state) => state.user?.auth?.status;
+export const selectAuthError = (state) => state.user?.auth?.error;
+export const selectIsAdmin = (state) => state.user.auth?.role === 'admin';
 
 export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;

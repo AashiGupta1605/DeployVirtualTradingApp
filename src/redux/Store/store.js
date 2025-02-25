@@ -1,16 +1,13 @@
-// src/redux/store.js
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from '../User/userSlice';
-import orgReducer from '../Organization/orgSlice';
-import authReducer from '../User/authSlice';
-import adminReducer from '../Admin/AdminSlice';
+import userReducer from '../User/mainSlice';
+import organizationReducer from '../Organization/organizationSlice';
+import etfReducer from '../Common/etfSlice';
 
 const store = configureStore({
   reducer: {
-    user: userReducer,
-    organization: orgReducer,
-    auth: authReducer,
-    admin: adminReducer,
+    user: userReducer,  // Single reducer for all user-related slices
+    organization: organizationReducer,
+    stock: etfReducer,
   },
 });
 
