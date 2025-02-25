@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers } from "../../redux/User/userSlice";
-import { fetchOrganizations } from "../../redux/Organization/orgSlice";
+import { fetchOrganizations } from "../../redux/Organization/auth/organizationAuthSlice";
 import StockTable from "../../components/Common/StockTable";
 import CardStats from "../../components/Admin/Cards/CardStats";
 

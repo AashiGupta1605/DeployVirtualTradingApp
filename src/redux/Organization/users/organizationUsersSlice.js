@@ -1,0 +1,208 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { BASE_API_URL } from "../../../utils/BaseUrl";
+import toast from "react-hot-toast";
+
+// Async Thunk for registering a new user
+export const registerOrganizationUser = createAsyncThunk(
+  "organizationUser/register",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_API_URL}/organization/user/register`, userData);
+      // toast.success("User registered successfully!");
+      toast.success(response?.data?.msg);
+      return response.data; // Return the newly created user
+    } catch (error) {
+      toast.error(error.response.data.msg);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Async Thunk for updating an existing user
+export const updateOrganizationUser = createAsyncThunk(
+  "organizationUser/update",
+  async ({ id, userData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${BASE_API_URL}/organization/user/${id}`, userData);
+      // toast.success("User updated successfully!");
+      toast.success(response?.data?.msg); 
+      return response.data; // Return the updated user
+    } catch (error) {
+      toast.error(error.response.data.msg);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
+
+
+// Async Thunk for fetching users
+export const fetchOrganizationUsers = createAsyncThunk(
+  "organizationUser/fetchUsers",
+  async ({ orgName, page, limit, search, startDate, endDate, minAge, maxAge }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_API_URL}/organization/${orgName}/users`, {
+        params: {
+          page,
+          limit,
+          search,
+          startDate: startDate ? startDate.toISOString() : null,
+          endDate: endDate ? endDate.toISOString() : null,
+          minAge,
+          maxAge,
+        },
+      });
+      console.log("Fetched users:", response); 
+      return response.data; // Return the fetched users and pagination data
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Failed to fetch users.");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Async Thunk for deleting a user
+export const deleteOrganizationUser = createAsyncThunk(
+  "organizationUser/deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${BASE_API_URL}/organization/user/${id}`);
+      toast.success("User deleted successfully!");
+      return id; // Return the deleted user's ID
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Failed to delete user.");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
+
+// Initial state
+const initialState = {
+  users: [], // List of users
+  loading: false,
+  error: null,
+  success: false,
+};
+
+// Slice
+const organizationUsersSlice = createSlice({
+  name: "organizationUser",
+  initialState,
+  reducers: {
+    resetUserState: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    setItemsPerPage: (state, action) => {
+      state.itemsPerPage = action.payload;
+    },
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
+    },
+    setStartDate: (state, action) => {
+      state.startDate = action.payload;
+    },
+    setEndDate: (state, action) => {
+      state.endDate = action.payload;
+    },
+    setMinAge: (state, action) => {
+      state.minAge = action.payload;
+    },
+    setMaxAge: (state, action) => {
+      state.maxAge = action.payload;
+    },
+    clearFilters: (state) => {
+      state.startDate = null;
+      state.endDate = null;
+      state.minAge = "";
+      state.maxAge = "";
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Register User
+      .addCase(registerOrganizationUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerOrganizationUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.users.push(action.payload); // Add the new user to the list
+      })
+      .addCase(registerOrganizationUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      // Update User
+      .addCase(updateOrganizationUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOrganizationUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        const updatedUser = action.payload;
+        const index = state.users.findIndex((user) => user._id === updatedUser._id);
+        if (index !== -1) {
+          state.users[index] = updatedUser; // Update the user in the list
+        }
+      })
+      .addCase(updateOrganizationUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      .addCase(fetchOrganizationUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrganizationUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload.users;
+        state.totalPages = action.payload.totalPages;
+      })
+      .addCase(fetchOrganizationUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      // Delete User
+      .addCase(deleteOrganizationUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteOrganizationUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.users = state.users.filter((user) => user._id !== action.payload); // Remove the deleted user
+      })
+      .addCase(deleteOrganizationUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      });
+  },
+});
+
+// export const { resetUserState } = organizationUsersSlice.actions;
+// export default organizationUsersSlice.reducer;
+
+export const {
+  resetUserState,
+  setCurrentPage,
+  setItemsPerPage,
+  setSearchTerm,
+  setStartDate,
+  setEndDate,
+  setMinAge,
+  setMaxAge,
+  clearFilters,
+} = organizationUsersSlice.actions;
+
+export default organizationUsersSlice.reducer;
