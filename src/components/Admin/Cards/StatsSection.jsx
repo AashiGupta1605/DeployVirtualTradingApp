@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CardStats from './CardStats';
 import { fetchUsers } from '../../../redux/User/userSlice';
-import { fetchOrganizations } from '../../../redux/Organization/orgSlice';
+import { fetchOrganizations } from '../../../redux/Organization/auth/organizationAuthSlice';
 
 const StatsSection = () => {
   const dispatch = useDispatch();
