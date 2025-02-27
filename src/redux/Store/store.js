@@ -1,34 +1,31 @@
+// store.js
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from '../User/mainSlice';
 import organizationReducer from '../Organization/organizationSlice';
 import etfReducer from '../Common/etfSlice';
 import adminReducer from '../Admin/AdminSlice';
 
-const store = configureStore({
+import { setupListeners } from '@reduxjs/toolkit/query/react';
 
-reducer: {
-user: userReducer,
-organization: organizationReducer,
-stock: etfReducer,
-admin: adminReducer,
-},
-middleware: (getDefaultMiddleware) =>
-getDefaultMiddleware({
-serializableCheck: {
-ignoredActions: ['organizationRegistration/register/rejected'],
-},
-}),
+const store = configureStore({
   reducer: {
-    user: userReducer,  // Single reducer for all user-related slices
+    admin: adminReducer,
+    user: userReducer,
     organization: organizationReducer,
     stock: etfReducer,
-    admin:adminReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          'organizationRegistration/register/rejected',
+          'feedbackTable/updateFeedbackStatus/rejected',
+        ],
+      },
+    }),
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
-// Optional: Add dev tools
-if (process.env.NODE_ENV === 'development') {
-window.store = store;
-}
+setupListeners(store.dispatch);
 
 export default store;

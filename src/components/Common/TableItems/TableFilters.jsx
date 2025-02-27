@@ -87,6 +87,8 @@ const TableFilters = ({
     return filters;
   }, [tempFilters, searchQuery, filterType]);
 
+  
+
   const activeFiltersCount = useMemo(() => {
     return Object.values(localActiveFilters).filter(Boolean).length;
   }, [localActiveFilters]);
