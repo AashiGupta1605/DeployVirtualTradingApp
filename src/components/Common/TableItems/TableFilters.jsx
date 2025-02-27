@@ -1,5 +1,3 @@
-// components/Common/TableFilters.jsx - Part 1
-
 import React, { useMemo } from 'react';
 import DatePicker from "react-datepicker";
 import { 
@@ -72,14 +70,12 @@ const TableFilters = ({
 }) => {
   const filterConfig = FILTER_CONFIGS[filterType] || {};
 
-  // Memoized active filters calculation
   const localActiveFilters = useMemo(() => {
     const filters = {
       search: !!searchQuery,
       dateRange: !!(tempFilters.startDate && tempFilters.endDate)
     };
 
-    // Add type-specific filters
     if (filterType === 'queries') {
       filters.type = tempFilters.type !== 'all';
     } else if (filterType === 'users') {
@@ -91,12 +87,10 @@ const TableFilters = ({
     return filters;
   }, [tempFilters, searchQuery, filterType]);
 
-  // Memoized active filters count
   const activeFiltersCount = useMemo(() => {
     return Object.values(localActiveFilters).filter(Boolean).length;
   }, [localActiveFilters]);
 
-  // Memoized active filters text
   const activeFiltersText = useMemo(() => {
     const activeFilterLabels = [];
 
@@ -121,31 +115,23 @@ const TableFilters = ({
     return `: ${activeFilterLabels[0]} +${activeFilterLabels.length - 1}`;
   }, [localActiveFilters, tempFilters, filterType]);
 
-  // components/Common/TableFilters.jsx - Part 2
-
-  // Render filter options based on type
   const renderTypeSpecificFilter = () => {
     const config = filterConfig[Object.keys(filterConfig)[0]];
     if (!config || !config.options) return null;
 
     return (
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {config.label}
-        </label>
-        <select
-          name={filterType === 'queries' ? 'type' : filterType === 'users' ? 'gender' : 'status'}
-          value={tempFilters[filterType === 'queries' ? 'type' : filterType === 'users' ? 'gender' : 'status']}
-          onChange={handleTypeFilterChange}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
-        >
-          {config.options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <select
+        name={filterType === 'queries' ? 'type' : filterType === 'users' ? 'gender' : 'status'}
+        value={tempFilters[filterType === 'queries' ? 'type' : filterType === 'users' ? 'gender' : 'status']}
+        onChange={handleTypeFilterChange}
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
+      >
+        {config.options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     );
   };
 
@@ -176,11 +162,11 @@ const TableFilters = ({
                   {activeFiltersCount}
                 </span>
               )}
-              {activeFiltersText && (
+              {/* {activeFiltersText && (
                 <span className="ml-2 text-gray-600 text-sm">
                   {activeFiltersText}
                 </span>
-              )}
+              )} */}
               {isFilterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
           </div>
@@ -240,73 +226,88 @@ const TableFilters = ({
         </div>
       </div>
 
-      {/* Filter Panel */}
-      {isFilterOpen && (
-        <div className="bg-gray-100 rounded-md shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {renderTypeSpecificFilter()}
+{/* Filter Panel */}
+{isFilterOpen && (
+  <div className="bg-gray-100 rounded-md shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out p-6">
+    <div className="flex items-center space-x-6">
+      {/* Type-specific Filter */}
+      <div className="flex-1 min-w-[200px]">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {filterConfig[Object.keys(filterConfig)[0]]?.label}
+        </label>
+        <div className="w-full">
+          {renderTypeSpecificFilter()}
+        </div>
+      </div>
 
-            {/* Date Range Filter */}
-            {filterConfig.dateRange && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date Range
-                </label>
-                <div className="flex space-x-2">
-                  <DatePicker
-                    selected={tempFilters.startDate}
-                    onChange={handleStartDateChange}
-                    selectsStart
-                    startDate={tempFilters.startDate}
-                    endDate={tempFilters.endDate}
-                    placeholderText="Start Date"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
-                  />
-                  <DatePicker
-                    selected={tempFilters.endDate}
-                    onChange={handleEndDateChange}
-                    selectsEnd
-                    startDate={tempFilters.startDate}
-                    endDate={tempFilters.endDate}
-                    minDate={tempFilters.startDate}
-                    placeholderText="End Date"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Filter Actions */}
-          <div className="flex justify-end mt-4 space-x-4">
-            <button
-              onClick={() => {
-                if (typeof applyFilters === 'function') {
-                  applyFilters();
-                  setIsFilterOpen(false);
-                }
-              }}
-              className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700"
-            >
-              Apply
-            </button>
-            <button
-              onClick={clearFilters}
-              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
-            >
-              Clear
-            </button>
+      {/* Date Range Filter */}
+      {filterConfig.dateRange && (
+        <div className="flex-2 min-w-[400px]">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Date Range
+          </label>
+          <div className="flex space-x-2">
+            <div className="flex-1">
+              <DatePicker
+                selected={tempFilters.startDate}
+                onChange={handleStartDateChange}
+                selectsStart
+                startDate={tempFilters.startDate}
+                endDate={tempFilters.endDate}
+                placeholderText="Start Date"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
+              />
+            </div>
+            <div className="flex-1">
+              <DatePicker
+                selected={tempFilters.endDate}
+                onChange={handleEndDateChange}
+                selectsEnd
+                startDate={tempFilters.startDate}
+                endDate={tempFilters.endDate}
+                minDate={tempFilters.startDate}
+                placeholderText="End Date"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
+              />
+            </div>
           </div>
         </div>
       )}
 
+      {/* Filter Actions */}
+      <div className="flex flex-col justify-end">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+  
+        </label>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => {
+              if (typeof applyFilters === 'function') {
+                applyFilters();
+                setIsFilterOpen(false);
+              }
+            }}
+            className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 whitespace-nowrap"
+          >
+            Apply
+          </button>
+          <button
+            onClick={clearFilters}
+            className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 whitespace-nowrap"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       {/* Active Filters Display */}
       {activeFiltersCount > 0 && (
         <div className="bg-gray-50 px-6 py-2 mt-2 rounded-lg flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-600">Active Filters:</span>
             <div className="flex flex-wrap gap-2">
-              {/* Type-specific Filter Chip */}
               {(localActiveFilters.type || localActiveFilters.gender || localActiveFilters.status) && (
                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                   {filterConfig[Object.keys(filterConfig)[0]]?.label}: {
@@ -317,14 +318,12 @@ const TableFilters = ({
                 </span>
               )}
 
-              {/* Date Range Filter Chip */}
               {localActiveFilters.dateRange && (
                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                   Date Range: {tempFilters.startDate?.toLocaleDateString()} - {tempFilters.endDate?.toLocaleDateString()}
                 </span>
               )}
 
-              {/* Search Filter Chip */}
               {localActiveFilters.search && (
                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                   Search: "{searchQuery}"
@@ -333,7 +332,6 @@ const TableFilters = ({
             </div>
           </div>
           
-          {/* Clear All Filters */}
           <button
             onClick={clearFilters}
             className="text-sm text-gray-600 hover:text-gray-800 flex items-center"

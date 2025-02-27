@@ -1,13 +1,27 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetAdminState } from '../../../redux/Admin/AdminSlice';
+import logoImage from "../../../assets/img/PGR_logo.jpeg"; 
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
     setActiveMenu(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    dispatch(resetAdminState());
+
+    navigate('/');
   };
 
   const toggleMenu = (menuName) => {
@@ -20,9 +34,9 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
       { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
       { to: "/admin/niftytable", icon: "fas fa-table", label: "Nifty 50" },
       { to: "/admin/etftable", icon: "fas fa-list", label: "ETF" },
-      { to: "/admin/registeredUsers", icon: "fas fa-building", label: "Users" },
+      { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
       { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },
-      { to: "/admin/queries", icon: "fas fa-building", label: "Queries" },
+      { to: "/admin/queries", icon: "fas fa-envelope", label: "Queries" },
       { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
     ],
     user: [
@@ -43,14 +57,12 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
       <div className="flex flex-col h-full">
         {/* Logo Section */}
         <div className="flex items-center justify-between w-full h-20 px-6 border-b border-gray-200">
-          <Link
-            to="/"
-            className={`flex items-center text-black space-x-2 ${!sidebarExpanded && "md:hidden"}`}
-          >
-            <i className="fas fa-briefcase text-xl text-gray-800"></i>
-            <span className="text-lg font-bold leading-relaxed uppercase">StockSphere</span>
-          </Link>
-          <button
+
+
+            <span className="text-lg font-bold leading-relaxed uppercase">
+              {sidebarExpanded ? "Admin" : ""}
+            </span>
+            <button
             onClick={toggleSidebar}
             className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
           >
@@ -59,7 +71,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 relative">
           {Object.entries(menuItems).map(([section, items]) => (
             <div key={section} className="space-y-4">
               <button
@@ -96,29 +108,54 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
               )}
             </div>
           ))}
+
+          {/* Logout Button - Responsive Design */}
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <button 
+              onClick={handleLogout}
+              className={`
+                w-full flex items-center justify-center 
+                text-red-500 hover:text-red-700 
+                transition-colors 
+                rounded-lg p-3
+                ${sidebarExpanded 
+                  ? "bg-red-50 hover:bg-red-100 space-x-2" 
+                  : "hover:bg-red-50"
+                }
+              `}
+            >
+              <i className="fas fa-sign-out-alt"></i>
+              {sidebarExpanded && <span>Logout</span>}
+            </button>
+          </div>
         </div>
 
-        {/* User Profile Preview */}
-        {sidebarExpanded && (
-          <div className="mt-auto p-6 border-t bg-gray-50">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
-                  <i className="fas fa-user"></i>
-                </div>
-                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+        {/* User Profile Section - Always Visible */}
+        <div className={`
+          border-t bg-gray-50 p-4 flex items-center 
+          ${sidebarExpanded ? "justify-between" : "justify-center"}
+        `}>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
+                <i className="fas fa-user text-white"></i>
               </div>
+              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+            </div>
+            {sidebarExpanded && (
               <div>
                 <div className="font-medium">Roshni</div>
                 <div className="text-sm">Administrator</div>
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
 }
+
+// Rest of the component remains the same...
 
 // Helper Components
 const MenuLink = ({ to, icon, label, isActive }) => {
