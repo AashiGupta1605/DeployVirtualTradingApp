@@ -111,7 +111,7 @@ export default function UserNavbar({ sidebarExpanded }) {
         {/* Brand with Icon */}
         <div className="flex items-center space-x-2">
           <i className="fas fa-briefcase text-xl text-gray-700"></i>
-          <span className="text-gray-700 text-lg font-semibold">StockSphere</span>
+          <span className="text-gray-700 text-lg font-semibold">PGRVirtualTradingApp</span>
         </div>
 
         {/* Search Form */}
@@ -156,12 +156,12 @@ export default function UserNavbar({ sidebarExpanded }) {
               >
                 Profile
               </button>
-              <button
+              {/* <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 Logout
-              </button>
+              </button> */}
             </div>
           )}
         </div>
