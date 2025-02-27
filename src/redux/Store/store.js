@@ -9,7 +9,7 @@ const store = configureStore({
     user: userReducer,  // Single reducer for all user-related slices
     organization: organizationReducer,
     stock: etfReducer,
-    admin: adminReducer,
+    admin:adminReducer,
   },
 });
 

@@ -41,17 +41,21 @@ export const updateOrganizationUser = createAsyncThunk(
 // Async Thunk for fetching users
 export const fetchOrganizationUsers = createAsyncThunk(
   "organizationUser/fetchUsers",
-  async ({ orgName, page, limit, search, startDate, endDate, minAge, maxAge }, { rejectWithValue }) => {
+  async ({ orgName, page, limit, search, startDate, endDate, gender }, { rejectWithValue }) => {
+  // async ({ orgName, page, limit, search, startDate, endDate }, { rejectWithValue }) => {
+
     try {
       const response = await axios.get(`${BASE_API_URL}/organization/${orgName}/users`, {
         params: {
           page,
           limit,
           search,
-          startDate: startDate ? startDate.toISOString() : null,
-          endDate: endDate ? endDate.toISOString() : null,
-          minAge,
-          maxAge,
+          // startDate: startDate ? startDate.toISOString() : null,
+          // endDate: endDate ? endDate.toISOString() : null,
+          startDate: startDate ? new Date(startDate).toISOString() : null, // Convert ISO string back to Date
+          endDate: endDate ? new Date(endDate).toISOString() : null, 
+          gender
+      
         },
       });
       console.log("Fetched users:", response); 
@@ -82,10 +86,24 @@ export const deleteOrganizationUser = createAsyncThunk(
 
 // Initial state
 const initialState = {
-  users: [], // List of users
+  // old one working
+  // users: [], // List of users
+  // loading: false,
+  // error: null,
+  // success: false,
+ 
+// new one gendeer
+  users: [],
   loading: false,
   error: null,
   success: false,
+  currentPage: 1,
+  totalPages: 1,
+  itemsPerPage: 10,
+  searchTerm: '',
+  startDate: null,
+  endDate: null,
+  gender: '',
 };
 
 // Slice
@@ -93,6 +111,7 @@ const organizationUsersSlice = createSlice({
   name: "organizationUser",
   initialState,
   reducers: {
+    // old code working 
     resetUserState: (state) => {
       state.loading = false;
       state.error = null;
@@ -113,18 +132,22 @@ const organizationUsersSlice = createSlice({
     setEndDate: (state, action) => {
       state.endDate = action.payload;
     },
-    setMinAge: (state, action) => {
-      state.minAge = action.payload;
-    },
-    setMaxAge: (state, action) => {
-      state.maxAge = action.payload;
+    // clearFilters: (state) => {
+    //   state.startDate = null;
+    //   state.endDate = null;
+    //   state.minAge = "";
+    //   state.maxAge = "";
+    // },
+    // new one
+    setGender: (state, action) => {
+      state.gender = action.payload;
     },
     clearFilters: (state) => {
       state.startDate = null;
       state.endDate = null;
-      state.minAge = "";
-      state.maxAge = "";
+      state.gender = '';
     },
+
   },
   extraReducers: (builder) => {
     builder
@@ -200,8 +223,7 @@ export const {
   setSearchTerm,
   setStartDate,
   setEndDate,
-  setMinAge,
-  setMaxAge,
+  setGender,
   clearFilters,
 } = organizationUsersSlice.actions;
 

@@ -286,9 +286,9 @@ export default function OrganizationDashboard({ type }) {
 
   return (
     <>
-      <div className={type !== 'student-list' ? 'mt-24' : 'pt-24'}>
+      <div className={type !== 'user-list' ? 'mt-24' : 'pt-24'}>
         {/* Dashboard header */}
-        <div className={type !== 'student-list' ? 'bg-lightBlue-600 md:pt-32 pb-32 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
+        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-32 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
           <div className="px-4 mx-auto w-full">
             <div>
               {/* Card stats */}
@@ -349,8 +349,9 @@ export default function OrganizationDashboard({ type }) {
                   />
                 </div>
 
-                {/* Active Users Card */}
-                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+
+               {type !== 'user-list' &&  (<>
+             <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="ACTIVE USERS"
                     statTitle={activeUsers.toString()}
@@ -363,7 +364,6 @@ export default function OrganizationDashboard({ type }) {
                   />
                 </div>
 
-                {/* Deactive Users Card */}
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="DEACTIVE USERS"
@@ -377,7 +377,6 @@ export default function OrganizationDashboard({ type }) {
                   />
                 </div>
 
-                {/* Average User Age Card */}
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="AVERAGE USER AGE"
@@ -390,13 +389,30 @@ export default function OrganizationDashboard({ type }) {
                     statIconColor="bg-purple-500"
                   />
                 </div>
+
+                  
+                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                  <CardStats
+                    statSubtitle="AVERAGE USER AGE"
+                    statTitle={averageUserAge.toString()}
+                    statArrow="up"
+                    statPercent=""
+                    statPercentColor="text-emerald-500"
+                    statDescripiron="Average age of users"
+                    statIconName="fas fa-birthday-cake"
+                    statIconColor="bg-purple-500"
+                  />
+                </div>   </> ) }
+                {/* Active Users Card */}
+          
+
               </div>
             </div>
           </div>
         </div>
 
         {/* Additional cards for non-student-list views */}
-        {type !== 'student-list' && (
+        {type !== 'user-list' && (
           <div className="flex flex-wrap">
             <div className="w-full xl:w-8/12 px-4 -mt-20 pt-2">
               <CardPageVisits />
