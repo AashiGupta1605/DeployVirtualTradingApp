@@ -5,6 +5,7 @@ import etfReducer from '../Common/etfSlice';
 import adminReducer from '../Admin/AdminSlice';
 
 const store = configureStore({
+
 reducer: {
 user: userReducer,
 organization: organizationReducer,
@@ -17,6 +18,12 @@ serializableCheck: {
 ignoredActions: ['organizationRegistration/register/rejected'],
 },
 }),
+  reducer: {
+    user: userReducer,  // Single reducer for all user-related slices
+    organization: organizationReducer,
+    stock: etfReducer,
+    admin:adminReducer,
+  },
 });
 
 // Optional: Add dev tools
