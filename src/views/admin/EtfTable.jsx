@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-=======
-
-
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchUsers } from "../../redux/User/userSlice";
-import { fetchOrganizations } from "../../redux/Organization/auth/organizationAuthSlice";
->>>>>>> 443853b631a6a86204cd32118ea1c3c9dda8971c
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers } from "../../redux/User/userSlice";
