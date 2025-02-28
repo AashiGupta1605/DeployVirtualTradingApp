@@ -1,5 +1,3 @@
-// src/redux/Admin/OrganizationList/OrganizationListSlice.js
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
@@ -21,10 +19,24 @@ export const deleteOrganization = createAsyncThunk(
   'organizationList/deleteOrganization',
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${BASE_API_URL}/organization/${id}`);
+      if (!id) {
+        throw new Error('Invalid organization ID');
+      }
+
+      const response = await axios.delete(`${BASE_API_URL}/organization/${id}`);
+      
+      if (!response.data) {
+        throw new Error('No response from server');
+      }
+
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to delete organization');
+      console.error('Delete organization error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to delete organization'
+      );
     }
   }
 );
@@ -33,10 +45,16 @@ export const updateOrganizationStatus = createAsyncThunk(
   'organizationList/updateStatus',
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      await axios.put(`${BASE_API_URL}/organization/${id}/approval-status`, { status });
-      return { id, status };
+      const response = await axios.put(
+        `${BASE_API_URL}/organization/${id}/approval-status`,
+        { status }
+      );
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to update status');
+      return rejectWithValue(
+        error.response?.data?.message || 
+        'Failed to update organization status'
+      );
     }
   }
 );
@@ -111,8 +129,16 @@ const organizationListSlice = createSlice({
       if (state.filters.startDate && state.filters.endDate) {
         filtered = filtered.filter(org => {
           const orgDate = new Date(org.createDate);
-          return orgDate >= state.filters.startDate && orgDate <= state.filters.endDate;
+          return orgDate >= new Date(state.filters.startDate) && 
+                 orgDate <= new Date(state.filters.endDate);
         });
+      }
+
+      // City Filter
+      if (state.filters.city !== "all") {
+        filtered = filtered.filter(org => 
+          org.city?.toLowerCase() === state.filters.city.toLowerCase()
+        );
       }
 
       // Search Filter
@@ -149,7 +175,6 @@ const organizationListSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-
       // Delete Organization
       .addCase(deleteOrganization.fulfilled, (state, action) => {
         state.organizations = state.organizations.filter(
@@ -159,16 +184,13 @@ const organizationListSlice = createSlice({
           org => org._id !== action.payload
         );
       })
-
       // Update Organization Status
       .addCase(updateOrganizationStatus.fulfilled, (state, action) => {
         const { id, status } = action.payload;
-        state.organizations = state.organizations.map(org =>
-          org._id === id ? { ...org, approvalStatus: status } : org
-        );
-        state.filteredOrganizations = state.filteredOrganizations.map(org =>
-          org._id === id ? { ...org, approvalStatus: status } : org
-        );
+        const org = state.organizations.find(org => org._id === id);
+        if (org) {
+          org.approvalStatus = status;
+        }
       });
   }
 });

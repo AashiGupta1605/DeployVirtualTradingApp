@@ -29,6 +29,7 @@
     "chart.js": "^4.4.7",
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",
+    "framer-motion": "^12.4.7",
     "gulp": "^5.0.0",
     "gulp-append-prepend": "^1.0.9",
     "https-browserify": "^1.0.0",
