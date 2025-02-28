@@ -2,6 +2,9 @@ import React from "react";
 
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
 import Footer from "../../components/GuestUser/Footers/Footer";
+import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsSlider";
+// import FooterSlider3 from "../../components/GuestUser/Footers/FooterSlider3";
+import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import { Link } from "react-router-dom";
 import Stock from "../../assets/stock.jpg";
 
@@ -39,7 +42,9 @@ const MainHomePage = () => {
           />
         </div>
       </div>
-
+      <InfoCards/>
+      <OrganizationsSlider/>
+      {/* <FooterSlider3/> */}
       <Footer />
     </>
   );

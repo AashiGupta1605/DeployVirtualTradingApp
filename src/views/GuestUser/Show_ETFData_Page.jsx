@@ -8,7 +8,7 @@ const Show_ETFData_Page = () => {
   return (
     <>
       <MainHomeNavbar/>
-      <div className="mx-2 overflow-hidden mt-8" style={{ paddingBottom: '120px' }}>
+      <div className="mx-2 overflow-hidden" style={{ paddingBottom: '120px' }}>
       <StockTable/>
       </div>
       <Footer/>
