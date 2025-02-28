@@ -45,7 +45,6 @@
     "react-router-dom": "^7.1.5",
     "react-scripts": "^5.0.1",
     "react-slick": "^0.30.3",
-    "react-spring": "^9.7.5",
     "recharts": "^2.15.1",
     "slick-carousel": "^1.8.1",
     "stream-browserify": "^3.0.0",

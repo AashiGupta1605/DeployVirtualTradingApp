@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useSpring, animated } from "react-spring";
+// import { useSpring, animated } from "react-spring";
 
 const InfoCards = () => {
 
