@@ -1237,7 +1237,8 @@ export default function Navbar() {
               onClick={() => handleNavigation("/")}
             >
               <i className="fas fa-briefcase mr-2 text-xl"></i>
-              StockSphere
+              {/* StockSphere */}
+              PGR VIRTUAL TRADING APP
             </div>
             <button
               className="cursor-pointer text-white text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
@@ -1282,15 +1283,28 @@ export default function Navbar() {
               {/* Conditional Rendering Based on Organization Login State */}
               {isOrgLoggedIn ? (
                 // Show Logout Button if Organization is Logged In
+                // <li className="flex items-center">
+                //   <button
+                //     className="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-red-700 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
+                //     type="button"
+                //     onClick={handleLogout}
+                //   >
+                //     <i className="fas fa-sign-out-alt mr-1"></i> Logout
+                //   </button>
+                // </li>
+
                 <li className="flex items-center">
-                  <button
-                    className="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-red-700 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={handleLogout}
-                  >
-                    <i className="fas fa-sign-out-alt mr-1"></i> Logout
-                  </button>
-                </li>
+                <button
+                  className="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-red-700 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={() => navigate( isOrgLoggedIn ? "/organization" : "/")}
+                
+                >
+                  <i className="fas fa-sign-out-alt mr-1"></i> {orgName}
+                </button>
+              </li>
+
+                
               ) : (
                 // Show Login and Register Dropdowns if Organization is Not Logged In
                 <>

@@ -1,18 +1,25 @@
 import React from "react";
 import UserDropdown from "../Dropdowns/UserDropdown";
+import logoImage from "../../../assets/img/PGR_logo.jpeg";
 
 export default function AdminNavbar({ sidebarExpanded }) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 bg-white shadow-lg">
       <div className="w-full mx-auto flex items-center justify-between p-4 md:px-10 px-4">
-        {/* Brand with Logo */}
+        {/* Brand with Logo - Adjust margin based on sidebar state */}
         <a
-          className="text-gray-700 mx-16 text-lg uppercase hidden lg:inline-block font-bold hover:text-gray-900 transition-colors flex items-center space-x-2"
+          className={`text-gray-700 text-lg uppercase lg:flex hidden items-center space-x-4 font-bold hover:text-gray-900 transition-colors ${
+            sidebarExpanded ? 'ml-64' : 'ml-20'  // Adjust these values based on your sidebar width
+          } transition-all duration-300`}
           href="#pablo"
           onClick={(e) => e.preventDefault()}
         >
-          <i className="fas fa-briefcase text-xl text-gray-800"></i>
-          <span>StockSphere</span>
+          <img 
+            src={logoImage} 
+            alt="PGR Logo" 
+            className="h-10 w-10 object-contain rounded-full"
+          />
+          <span className="text-xl">PGR VirtualTrading App</span>
         </a>
 
         {/* Form */}

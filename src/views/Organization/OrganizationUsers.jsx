@@ -1258,6 +1258,268 @@
 
 // debouncing and seaprate filter text and count function
 
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   fetchOrganizationUsers,
+//   deleteOrganizationUser,
+//   setCurrentPage,
+//   setItemsPerPage,
+//   setSearchTerm,
+//   setStartDate,
+//   setEndDate,
+//   setMinAge,
+//   setMaxAge,
+//   clearFilters,
+// } from "../../redux/Organization/users/organizationUsersSlice";
+// import { fetchDashboardData } from "../../redux/Organization/dashboard/organizationDashboardSlice";
+// import Pagination from "../../components/Organization/Pagination";
+// import FilterComponent from "../../components/Organization/FilterComponent";
+// import OrgUserTable from "../../components/Organization/OrgUserTable";
+// import OrganizationUserRegistration from "./auth/OrganizationUserRegistration";
+// import ConfirmationModal from "../../components/Organization/ConfirmationModal";
+// import Loader from "../../components/Common/Loader";
+// import { Edit, Trash2, ChevronDown, ChevronRight, Filter, X, UserPlus, Trash, ChevronLeft } from "lucide-react";
+// import Dashboard from "./OrganizationDashboard";
+// import { getAppliedFiltersCount, getAppliedFiltersText } from "../../utils/filterFunctions";
+
+// const OrganizationUsers = () => {
+//   const dispatch = useDispatch();
+//   const {
+//     users: studentList,
+//     loading,
+//     currentPage,
+//     totalPages,
+//     itemsPerPage,
+//     searchTerm,
+//     startDate,
+//     endDate,
+//     minAge,
+//     maxAge,
+//   } = useSelector((state) => state.organization.users);
+
+//   const [isModalOpen, setModalOpen] = useState(false);
+//   const [selectedStudent, setSelectedStudent] = useState(null);
+//   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+//   const [studentToDelete, setStudentToDelete] = useState(null);
+//   const [isFilterOpen, setFilterOpen] = useState(false);
+//   const [expandedRow, setExpandedRow] = useState(null);
+//   const orgName = localStorage.getItem("orgName");
+
+//   // Fetch students when filters or pagination change
+//   useEffect(() => {
+//     dispatch(
+//       fetchOrganizationUsers({
+//         orgName,
+//         page: currentPage,
+//         limit: itemsPerPage,
+//         search: searchTerm,
+//         startDate,
+//         endDate,
+//         minAge,
+//         maxAge,
+//       })
+//     );
+//   }, [dispatch, orgName, currentPage, itemsPerPage, searchTerm, startDate, endDate, minAge, maxAge]);
+
+//   // Handle delete student
+//   const handleDelete = async (id) => {
+//     try {
+//       await dispatch(deleteOrganizationUser(id)).unwrap();
+//       dispatch(fetchDashboardData(orgName));
+//     } catch (error) {
+//       console.error("Failed to delete user:", error);
+//     } finally {
+//       setConfirmationModalOpen(false);
+//     }
+//   };
+
+//   // Handle edit student
+//   const handleEdit = (student) => {
+//     setSelectedStudent(student);
+//     setModalOpen(true);
+//   };
+
+//   // Handle delete confirmation
+//   const handleDeleteClick = (student) => {
+//     setStudentToDelete(student);
+//     setConfirmationModalOpen(true);
+//   };
+
+//   // Handle page change
+//   const handlePageChange = (page) => {
+//     dispatch(setCurrentPage(page));
+//   };
+
+//   // Handle items per page change
+//   const handleItemsPerPageChange = (event) => {
+//     dispatch(setItemsPerPage(Number(event.target.value)));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Handle search term change
+//   const handleSearchChange = (event) => {
+//     dispatch(setSearchTerm(event.target.value));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Handle date and age filter changes
+//   const handleStartDateChange = (date) => {
+//     dispatch(setStartDate(date));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   const handleEndDateChange = (date) => {
+//     dispatch(setEndDate(date));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   const handleMinAgeChange = (event) => {
+//     dispatch(setMinAge(event.target.value));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   const handleMaxAgeChange = (event) => {
+//     dispatch(setMaxAge(event.target.value));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Clear filters
+//   const clearAllFilters = () => {
+//     dispatch(clearFilters());
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Toggle row expansion
+//   const toggleRow = (id) => {
+//     setExpandedRow(expandedRow === id ? null : id);
+//   };
+
+//   return (
+//     <div className="relative">
+//       <Dashboard type="user-list"/>
+//       <div className="mx-auto w-full">
+//         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50">
+//           <div className="px-8 py-8 -mt-38 z-50">
+//             <div className="z-50 mt-24 rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b">
+//               <h2 className="text-base md:text-xl font-bold text-gray-800 flex-grow">Manage Users</h2>
+//               <button
+//                 onClick={() => setFilterOpen(!isFilterOpen)}
+//                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4 relative"
+//               >
+//                 <Filter size={16} />
+//                 {getAppliedFiltersCount({ startDate, endDate, minAge, maxAge }) > 0 && (
+//                   <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-green-100 bg-green-600 rounded-full">
+//                     {getAppliedFiltersCount({ startDate, endDate, minAge, maxAge })}
+//                   </span>
+//                 )}
+//                 {getAppliedFiltersText({ startDate, endDate, minAge, maxAge }) && (
+//                   <span className="ml-2 text-[0px] sm:text-[10px] text-white">{getAppliedFiltersText({ startDate, endDate, minAge, maxAge })}</span>
+//                 )}
+//               </button>
+//               <div className="flex items-center w-full max-w-xs mr-4 relative mx-2">
+//                 <input
+//                   type="text"
+//                   placeholder="Search..."
+//                   onChange={handleSearchChange}
+//                   value={searchTerm}
+//                   className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-8"
+//                 />
+//                 {searchTerm && (
+//                   <button onClick={() => dispatch(setSearchTerm(""))} className="focus:outline-none absolute right-2 text-gray-500 hover:text-gray-700">
+//                     <X size={16} />
+//                   </button>
+//                 )}
+//               </div>
+//               <button
+//                 onClick={() => {
+//                   setSelectedStudent(null);
+//                   setModalOpen(true);
+//                 }}
+//                 className="z-50 bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4"
+//               >
+//                 <UserPlus size={16} />
+//               </button>
+//             </div>
+//             {isFilterOpen && (
+//               <FilterComponent
+//                 isFilterOpen={isFilterOpen}
+//                 setFilterOpen={setFilterOpen}
+//                 searchTerm={searchTerm}
+//                 onSearchChange={handleSearchChange}
+//                 startDate={startDate}
+//                 onStartDateChange={handleStartDateChange}
+//                 endDate={endDate}
+//                 onEndDateChange={handleEndDateChange}
+//                 minAge={minAge}
+//                 onMinAgeChange={handleMinAgeChange}
+//                 maxAge={maxAge}
+//                 onMaxAgeChange={handleMaxAgeChange}
+//                 onClearFilters={clearAllFilters}
+//               />
+//             )}
+//           </div>
+//           {loading ? (
+//             <Loader />
+//           ) : (
+//             <div className="pt-16 px-8 -mt-24 z-20">
+//               <OrgUserTable
+//                 users={studentList}
+//                 onEdit={handleEdit}
+//                 onDelete={handleDeleteClick}
+//                 expandedRow={expandedRow}
+//                 toggleRow={toggleRow}
+//               />
+//               <Pagination
+//                 currentPage={currentPage}
+//                 totalPages={totalPages}
+//                 itemsPerPage={itemsPerPage}
+//                 onPageChange={handlePageChange}
+//                 onItemsPerPageChange={handleItemsPerPageChange}
+//               />
+//             </div>
+//           )}
+
+//           {/* Organization User Registration Modal */}
+//           <OrganizationUserRegistration
+//             isOpen={isModalOpen}
+//             onClose={() => setModalOpen(false)}
+//             initialValues={selectedStudent}
+//             refreshStudents={() => dispatch(fetchOrganizationUsers({
+//               orgName,
+//               page: currentPage,
+//               limit: itemsPerPage,
+//               search: searchTerm,
+//               startDate,
+//               endDate,
+//               minAge,
+//               maxAge,
+//             }))}
+//             refreshDashboard={() => dispatch(fetchDashboardData(orgName))}
+//           />
+
+//           {/* Confirmation Modal for Delete */}
+//           <ConfirmationModal
+//             isOpen={isConfirmationModalOpen}
+//             onClose={() => setConfirmationModalOpen(false)}
+//             onConfirm={() => handleDelete(studentToDelete._id)}
+//             message={`Are you sure you want to delete student ${studentToDelete?.name}?`}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrganizationUsers;
+
+
+
+
+
+// gender:::
+
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -1268,8 +1530,7 @@ import {
   setSearchTerm,
   setStartDate,
   setEndDate,
-  setMinAge,
-  setMaxAge,
+  setGender,
   clearFilters,
 } from "../../redux/Organization/users/organizationUsersSlice";
 import { fetchDashboardData } from "../../redux/Organization/dashboard/organizationDashboardSlice";
@@ -1294,8 +1555,7 @@ const OrganizationUsers = () => {
     searchTerm,
     startDate,
     endDate,
-    minAge,
-    maxAge,
+    gender,
   } = useSelector((state) => state.organization.users);
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -1316,11 +1576,10 @@ const OrganizationUsers = () => {
         search: searchTerm,
         startDate,
         endDate,
-        minAge,
-        maxAge,
+        gender,
       })
     );
-  }, [dispatch, orgName, currentPage, itemsPerPage, searchTerm, startDate, endDate, minAge, maxAge]);
+  }, [dispatch, orgName, currentPage, itemsPerPage, searchTerm, startDate, endDate, gender]);
 
   // Handle delete student
   const handleDelete = async (id) => {
@@ -1363,25 +1622,27 @@ const OrganizationUsers = () => {
     dispatch(setCurrentPage(1));
   };
 
-  // Handle date and age filter changes
+  // Handle start date change
   const handleStartDateChange = (date) => {
-    dispatch(setStartDate(date));
-    dispatch(setCurrentPage(1));
+    if (date instanceof Date && !isNaN(date)) {
+      dispatch(setStartDate(date.toISOString())); // Serialize valid date to ISO string
+    } else {
+      dispatch(setStartDate(null)); // Handle invalid or null date
+    }
   };
 
+  // Handle end date change
   const handleEndDateChange = (date) => {
-    dispatch(setEndDate(date));
-    dispatch(setCurrentPage(1));
+    if (date instanceof Date && !isNaN(date)) {
+      dispatch(setEndDate(date.toISOString())); // Serialize valid date to ISO string
+    } else {
+      dispatch(setEndDate(null)); // Handle invalid or null date
+    }
   };
 
-  const handleMinAgeChange = (event) => {
-    dispatch(setMinAge(event.target.value));
-    dispatch(setCurrentPage(1));
-  };
-
-  const handleMaxAgeChange = (event) => {
-    dispatch(setMaxAge(event.target.value));
-    dispatch(setCurrentPage(1));
+  // Handle gender change
+  const handleGenderChange = (value) => {
+    dispatch(setGender(value));
   };
 
   // Clear filters
@@ -1390,6 +1651,57 @@ const OrganizationUsers = () => {
     dispatch(setCurrentPage(1));
   };
 
+  // Apply filters
+  // const handleApplyFilters = () => {
+  //   dispatch(setCurrentPage(1));
+  //   dispatch(
+  //     fetchOrganizationUsers({
+  //       orgName,
+  //       page: 1,
+  //       limit: itemsPerPage,
+  //       search: searchTerm,
+  //       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
+  //       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
+  //       gender,
+  //     })
+  //   );
+  // };
+
+
+  // Handle apply filters
+// const handleApplyFilters = () => {
+//   dispatch(setCurrentPage(1)); // Reset to the first page
+//   dispatch(
+//     fetchOrganizationUsers({
+//       orgName,
+//       page: 1,
+//       limit: itemsPerPage,
+//       search: searchTerm,
+//       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
+//       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
+//       gender,
+//     })
+//   );
+// };
+
+
+// gender fix
+
+const handleApplyFilters = () => {
+  dispatch(setCurrentPage(1)); // Reset to the first page
+  dispatch(
+    fetchOrganizationUsers({
+      orgName,
+      page: 1,
+      limit: itemsPerPage,
+      search: searchTerm,
+      startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
+      endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
+      gender, // Pass the gender value
+    })
+  );
+};
+
   // Toggle row expansion
   const toggleRow = (id) => {
     setExpandedRow(expandedRow === id ? null : id);
@@ -1397,7 +1709,7 @@ const OrganizationUsers = () => {
 
   return (
     <div className="relative">
-      <Dashboard type="student-list"/>
+      <Dashboard type="user-list" />
       <div className="mx-auto w-full">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50">
           <div className="px-8 py-8 -mt-38 z-50">
@@ -1408,13 +1720,13 @@ const OrganizationUsers = () => {
                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4 relative"
               >
                 <Filter size={16} />
-                {getAppliedFiltersCount({ startDate, endDate, minAge, maxAge }) > 0 && (
+                {getAppliedFiltersCount({ startDate, endDate, gender }) > 0 && (
                   <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-green-100 bg-green-600 rounded-full">
-                    {getAppliedFiltersCount({ startDate, endDate, minAge, maxAge })}
+                    {getAppliedFiltersCount({ startDate, endDate, gender })}
                   </span>
                 )}
-                {getAppliedFiltersText({ startDate, endDate, minAge, maxAge }) && (
-                  <span className="ml-2 text-[0px] sm:text-[10px] text-white">{getAppliedFiltersText({ startDate, endDate, minAge, maxAge })}</span>
+                {getAppliedFiltersText({ startDate, endDate, gender }) && (
+                  <span className="ml-2 text-[0px] sm:text-[10px] text-white">{getAppliedFiltersText({ startDate, endDate, gender })}</span>
                 )}
               </button>
               <div className="flex items-center w-full max-w-xs mr-4 relative mx-2">
@@ -1445,17 +1757,14 @@ const OrganizationUsers = () => {
               <FilterComponent
                 isFilterOpen={isFilterOpen}
                 setFilterOpen={setFilterOpen}
-                searchTerm={searchTerm}
-                onSearchChange={handleSearchChange}
                 startDate={startDate}
                 onStartDateChange={handleStartDateChange}
                 endDate={endDate}
                 onEndDateChange={handleEndDateChange}
-                minAge={minAge}
-                onMinAgeChange={handleMinAgeChange}
-                maxAge={maxAge}
-                onMaxAgeChange={handleMaxAgeChange}
+                gender={gender}
+                onGenderChange={handleGenderChange}
                 onClearFilters={clearAllFilters}
+                onApplyFilters={handleApplyFilters}
               />
             )}
           </div>
@@ -1492,8 +1801,7 @@ const OrganizationUsers = () => {
               search: searchTerm,
               startDate,
               endDate,
-              minAge,
-              maxAge,
+              gender,
             }))}
             refreshDashboard={() => dispatch(fetchDashboardData(orgName))}
           />
@@ -1512,7 +1820,3 @@ const OrganizationUsers = () => {
 };
 
 export default OrganizationUsers;
-
-
-
-

@@ -29,7 +29,7 @@ const CardTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/v1/api/admin/niftydata`);
+        const response = await axios.get(`${BASE_API_URL}/admin/niftydata`);
         if (response.data && Array.isArray(response.data)) {
           const sortedData = response.data.sort((a, b) => new Date(b.fetchTime) - new Date(a.fetchTime));
           setNiftyData([sortedData[0]]);
@@ -46,31 +46,9 @@ const CardTable = () => {
     fetchData();
   }, []);
 
-  // Pagination and filtering calculations
-  const filteredStocks = niftyData[0]?.stocks?.filter(stock => 
-    stock.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
 
-  const totalPages = Math.ceil(filteredStocks.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-  // Sorting logic
-  const getSortedData = (data) => {
-    if (sortConfig.direction === 'none' || !sortConfig.key) return data;
-    return [...data].sort((a, b) => {
-      const valueA = a[sortConfig.key] ?? "";
-      const valueB = b[sortConfig.key] ?? "";
-      return sortConfig.direction === 'ascending'
-        ? valueA.toString().localeCompare(valueB.toString())
-        : valueB.toString().localeCompare(valueA.toString());
-    });
-  };
-
-  const sortedStocks = getSortedData(filteredStocks);
-  const paginatedStocks = sortedStocks.slice(indexOfFirstItem, indexOfLastItem);
-
-  const requestSort = (key) => {
+   // Sorting logic
+   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
@@ -80,6 +58,37 @@ const CardTable = () => {
     setSortConfig({ key, direction });
   };
 
+  const getSortedData = (data) => {
+    if (sortConfig.direction === 'none') {
+      return data;
+    }
+    return [...data].sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  // Pagination and filtering calculations
+  const filteredStocks = niftyData[0]?.stocks?.filter(stock => 
+    stock.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  
+  const sortedStocks = getSortedData(filteredStocks);
+
+  const totalPages = Math.ceil(filteredStocks.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+
+  const paginatedStocks = sortedStocks.slice(indexOfFirstItem, indexOfLastItem);
+
+  
   // Enhanced pagination rendering
   const renderPageNumbers = () => {
     const pages = [];
@@ -121,6 +130,8 @@ const CardTable = () => {
     });
   };
 
+ 
+
   if (loading) {
     return (
       <div className="mt-12 flex items-center justify-center w-full h-64">
@@ -145,14 +156,14 @@ const CardTable = () => {
 
   return (
     <>
-      <div className="">
+
         <div className="mx-2 overflow-hidden -mt-20">
           <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
             <h2 className="text-xl font-bold text-gray-800 flex items-center">
               <Filter className="mr-2 text-gray-600" size={20} />
               Nifty Data
             </h2>
-            <input
+            {/* <input
               type="text"
               placeholder="Search by Symbol..."
               value={searchTerm}
@@ -161,12 +172,42 @@ const CardTable = () => {
                 setCurrentPage(1);
               }}
               className="border px-4 py-2 rounded shadow-md focus:outline-none"
-            />
+            /> */}
+             <div className="relative">
+  <input
+    type="text"
+    placeholder="Search by symbol..."
+    className="border p-2 pr-10 rounded w-full"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  {searchTerm && (
+    <button
+      className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-0"
+      onClick={() => setSearchTerm("")}
+    >
+      ✕
+    </button>
+  )}
+</div>
           </div>
 
           <div className="bg-white shadow-md rounded-lg overflow-x-auto h-[28rem] overflow-y-auto">
             <table className="w-full">
-              {/* Table header and body remain the same */}
+            <thead className="bg-gray-50 border-b sticky top-0">
+                <tr>
+                  {['symbol', 'open', 'dayHigh', 'dayLow', 'previousClose', 'lastPrice', 'change', 'pChange', 'totalTradedVolume', 'totalTradedValue', 'yearHigh', 'yearLow', 'perChange365d', 'perChange30d'].map((column) => (
+                    <th
+                      key={column}
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                      onClick={() => requestSort(column)}
+                    >
+                      {column.replace(/([A-Z])/g, ' $1').toUpperCase()}
+                      {sortConfig.key === column && (sortConfig.direction === 'ascending' ? ' ▲' : sortConfig.direction === 'descending' ? ' ▼' : '')}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
               <tbody className="divide-y divide-gray-200">
                 {paginatedStocks.map((row, index) => (
                   <React.Fragment key={index}>
@@ -208,15 +249,15 @@ const CardTable = () => {
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="border rounded px-2 py-1 text-sm text-gray-600"
+                className="border rounded px-6 py-2 text-sm text-gray-600"
               >
                 {[5, 10, 15, 25, 50, 100, 200].map((num) => (
                   <option key={num} value={num}>{num}</option>
                 ))}
               </select>
               <span className="text-sm text-gray-600">
-                {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredStocks.length)} {" "} of {" "}
-                {filteredStocks.length}
+                {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredStocks.length)} {" "}
+                 of {" "} {filteredStocks.length}
               </span>
             </div>
 
@@ -241,7 +282,7 @@ const CardTable = () => {
             </div>
           </div>
         </div>
-      </div>
+     
 
       <ConfirmationModal
         isOpen={isModalOpen}

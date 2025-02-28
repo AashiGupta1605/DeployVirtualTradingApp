@@ -1,4 +1,3 @@
-// src/Admin/adminQueryTableSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
@@ -18,8 +17,8 @@ const contactService = {
       userCount: users.data.length
     };
   },
-  
-  delete: (contactId) => 
+
+  delete: (contactId) =>
     axios.delete(`${BASE_API_URL}/contact/${contactId}`)
 };
 
@@ -65,10 +64,11 @@ const adminQueryTableSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    // Fetch Contacts
     builder
-      .addCase(fetchContacts.pending, (state) => { 
-        state.status = 'loading'; 
+      // Fetch Contacts
+      .addCase(fetchContacts.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         const { contacts, orgCount, userCount } = action.payload;
@@ -76,18 +76,20 @@ const adminQueryTableSlice = createSlice({
         state.contacts = contacts;
         state.orgCount = orgCount;
         state.userCount = userCount;
+        state.error = null;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
-      
       // Delete Contact
-      .addCase(deleteContact.pending, (state) => { 
-        state.isDeleting = true; 
+      .addCase(deleteContact.pending, (state) => {
+        state.isDeleting = true;
+        state.error = null;
       })
-      .addCase(deleteContact.fulfilled, (state) => { 
-        state.isDeleting = false; 
+      .addCase(deleteContact.fulfilled, (state) => {
+        state.isDeleting = false;
+        state.error = null;
       })
       .addCase(deleteContact.rejected, (state, action) => {
         state.isDeleting = false;
@@ -95,6 +97,14 @@ const adminQueryTableSlice = createSlice({
       });
   }
 });
+
+// Selectors
+export const selectContacts = (state) => state.adminQueryTable.contacts;
+export const selectOrgCount = (state) => state.adminQueryTable.orgCount;
+export const selectUserCount = (state) => state.adminQueryTable.userCount;
+export const selectStatus = (state) => state.adminQueryTable.status;
+export const selectError = (state) => state.adminQueryTable.error;
+export const selectIsDeleting = (state) => state.adminQueryTable.isDeleting;
 
 export const { clearError } = adminQueryTableSlice.actions;
 export default adminQueryTableSlice.reducer;
