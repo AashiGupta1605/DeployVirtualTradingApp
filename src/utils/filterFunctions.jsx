@@ -25,8 +25,8 @@
 // filterFunctions.js
 export const getAppliedFiltersCount = ({ startDate, endDate, gender }) => {
   let count = 0;
-  if (startDate) count++;
-  if (endDate) count++;
+  if (startDate || endDate) count++;
+  // if (endDate) count++;
   if (gender) count++;
   return count;
 };

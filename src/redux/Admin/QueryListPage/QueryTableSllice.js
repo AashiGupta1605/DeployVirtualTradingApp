@@ -6,7 +6,7 @@ import { BASE_API_URL } from '../../../utils/BaseUrl';
 const contactService = {
   fetchAll: async () => {
     const [contacts, orgs, users] = await Promise.all([
-      axios.get(`${BASE_API_URL}/contact`),
+      axios.get(`${BASE_API_URL}/user/contact/get`),
       axios.get(`${BASE_API_URL}/organization/display-all-org`),
       axios.get(`${BASE_API_URL}/user/display-users`),
     ]);
@@ -19,10 +19,51 @@ const contactService = {
   },
 
   delete: (contactId) =>
-    axios.delete(`${BASE_API_URL}/contact/${contactId}`)
+    axios.delete(`${BASE_API_URL}/user/contact/deleteContact/${contactId}`)
 };
 
-// Async Thunks with simplified error handling
+// Helper function for filtering contacts
+const applyContactFilters = (contacts, filters, searchQuery) => {
+  return contacts.filter(contact => {
+    // Type filter
+    if (filters.type !== 'all' && contact.type !== filters.type) {
+      return false;
+    }
+
+    // Date range filter
+    if (filters.startDate && filters.endDate) {
+      const contactDate = new Date(contact.createdDate);
+      const startDate = new Date(filters.startDate);
+      const endDate = new Date(filters.endDate);
+      if (contactDate < startDate || contactDate > endDate) {
+        return false;
+      }
+    }
+
+    // Search filter
+    if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        contact.name?.toLowerCase().includes(searchLower) ||
+        contact.email?.toLowerCase().includes(searchLower) ||
+        contact.type?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return true;
+  });
+};
+
+// Calculate stats
+const calculateContactStats = (contacts) => ({
+  total: contacts.length,
+  technicalSupport: contacts.filter(c => c.type === 'Technical Support').length,
+  billingIssues: contacts.filter(c => c.type === 'Billing Issue').length,
+  generalInquiries: contacts.filter(c => c.type === 'General Inquiry').length,
+  feedback: contacts.filter(c => c.type === 'Feedback').length
+});
+
+// Async Thunks
 export const fetchContacts = createAsyncThunk(
   'adminQueryTable/fetchContacts',
   async (_, { rejectWithValue }) => {
@@ -47,25 +88,70 @@ export const deleteContact = createAsyncThunk(
   }
 );
 
-// Simplified Slice
+// Initial State
+const initialState = {
+  contacts: [],
+  filteredContacts: [],
+  orgCount: 0,
+  userCount: 0,
+  status: 'idle',
+  error: null,
+  isDeleting: false,
+  filters: {
+    type: 'all',
+    startDate: null,
+    endDate: null
+  },
+  activeFilters: {
+    type: false,
+    dateRange: false,
+    search: false
+  },
+  searchQuery: '',
+  stats: {
+    total: 0,
+    technicalSupport: 0,
+    billingIssues: 0,
+    generalInquiries: 0,
+    feedback: 0
+  }
+};
+
+// Slice
 const adminQueryTableSlice = createSlice({
   name: 'adminQueryTable',
-  initialState: {
-    contacts: [],
-    orgCount: 0,
-    userCount: 0,
-    status: 'idle',
-    error: null,
-    isDeleting: false
-  },
+  initialState,
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    setFilters: (state, action) => {
+      state.filters = { ...state.filters, ...action.payload };
+      state.filteredContacts = applyContactFilters(state.contacts, state.filters, state.searchQuery);
+      state.stats = calculateContactStats(state.filteredContacts);
+    },
+    setActiveFilters: (state, action) => {
+      state.activeFilters = { ...state.activeFilters, ...action.payload };
+    },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+      state.filteredContacts = applyContactFilters(state.contacts, state.filters, action.payload);
+      state.stats = calculateContactStats(state.filteredContacts);
+    },
+    clearFilters: (state) => {
+      state.filters = initialState.filters;
+      state.activeFilters = initialState.activeFilters;
+      state.searchQuery = '';
+      state.filteredContacts = state.contacts;
+      state.stats = calculateContactStats(state.contacts);
+    },
+    filterContacts: (state) => {
+      state.filteredContacts = applyContactFilters(state.contacts, state.filters, state.searchQuery);
+      state.stats = calculateContactStats(state.filteredContacts);
     }
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Contacts
       .addCase(fetchContacts.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -74,15 +160,16 @@ const adminQueryTableSlice = createSlice({
         const { contacts, orgCount, userCount } = action.payload;
         state.status = 'succeeded';
         state.contacts = contacts;
+        state.filteredContacts = applyContactFilters(contacts, state.filters, state.searchQuery);
         state.orgCount = orgCount;
         state.userCount = userCount;
+        state.stats = calculateContactStats(state.filteredContacts);
         state.error = null;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
-      // Delete Contact
       .addCase(deleteContact.pending, (state) => {
         state.isDeleting = true;
         state.error = null;
@@ -98,13 +185,27 @@ const adminQueryTableSlice = createSlice({
   }
 });
 
-// Selectors
-export const selectContacts = (state) => state.adminQueryTable.contacts;
-export const selectOrgCount = (state) => state.adminQueryTable.orgCount;
-export const selectUserCount = (state) => state.adminQueryTable.userCount;
-export const selectStatus = (state) => state.adminQueryTable.status;
-export const selectError = (state) => state.adminQueryTable.error;
-export const selectIsDeleting = (state) => state.adminQueryTable.isDeleting;
+// Export actions
+export const {
+  clearError,
+  setFilters,
+  setActiveFilters,
+  setSearchQuery,
+  clearFilters,
+  filterContacts
+} = adminQueryTableSlice.actions;
 
-export const { clearError } = adminQueryTableSlice.actions;
+// Selectors
+export const selectContacts = (state) => state.admin.queryTable.contacts;
+export const selectFilteredContacts = (state) => state.admin.queryTable.filteredContacts;
+export const selectOrgCount = (state) => state.admin.queryTable.orgCount;
+export const selectUserCount = (state) => state.admin.queryTable.userCount;
+export const selectStatus = (state) => state.admin.queryTable.status;
+export const selectError = (state) => state.admin.queryTable.error;
+export const selectIsDeleting = (state) => state.admin.queryTable.isDeleting;
+export const selectFilters = (state) => state.admin.queryTable.filters;
+export const selectActiveFilters = (state) => state.admin.queryTable.activeFilters;
+export const selectSearchQuery = (state) => state.admin.queryTable.searchQuery;
+export const selectStats = (state) => state.admin.queryTable.stats;
+
 export default adminQueryTableSlice.reducer;

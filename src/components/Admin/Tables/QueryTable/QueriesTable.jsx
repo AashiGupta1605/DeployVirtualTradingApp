@@ -98,7 +98,7 @@ const QueriesTable = ({ contacts, tempFilters, searchQuery }) => {
           className={`text-red-600 hover:text-red-900 flex items-center ${isDeleting ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={isDeleting}
         >
-          <Trash2 size={16} />
+          <Trash2 size={18} />
           {isDeleting && <span className="ml-2 text-xs">Deleting...</span>}
         </button>
       </td>
