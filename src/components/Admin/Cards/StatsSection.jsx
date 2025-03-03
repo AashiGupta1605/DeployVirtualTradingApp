@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import CardStats from './CardStats';
 
 import { fetchUsers, selectUserCount, selectActiveUserCount } from '../../../redux/User/userSlice';
-import { fetchOrganizations, selectOrganizationCount } from '../../../redux/Organization/auth/organizationAuthSlice';
+// import { fetchOrganizations, selectOrganizationCount } from '../../../redux/Organization/auth/organizationAuthSlice';
+import { fetchOrganizations } from '../../../redux/Organization/auth/organizationAuthSlice';
 
 const StatsSection = ({ isDashboard = false }) => {
   const dispatch = useDispatch();
