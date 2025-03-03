@@ -370,16 +370,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NotificationDropdown from "../Dropdowns/NotificationDropdown";
 import DashboardDropdown from "../Dropdowns/DashboardDropdown";
-import { fetchUserData } from "../../../redux/User/userprofileSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-
-// Function to get user details from localStorage
-// const getUser = () => {
-//   const token = localStorage.getItem("token");
-//   const user = JSON.parse(localStorage.getItem("user"));
-//   return token && user ? user : null;
-// };
 
 export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
@@ -413,7 +404,9 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const menuItems = [
     { to: "/user/niftytable", icon: "fas fa-table", label: "Nifty 50 Table" },
     { to: "/user/etftable", icon: "fas fa-list", label: "ETF Table" },
+  
   ];
+  
 
   return (
     <>
@@ -423,6 +416,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
         } fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-0`}
       >
         <div className="flex flex-col h-full pb-0">
+          {/* Sidebar Header */}
           <div className="flex items-center justify-between w-full h-[71px] px-6 border-b border-gray-200">
             <Link
               to="/user/dashboard"
@@ -444,12 +438,15 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
             </button>
           </div>
 
+          {/* Mobile Dropdowns */}
           <div className="md:hidden flex items-center space-x-4 px-4 py-4 bg-gray-50">
             <NotificationDropdown />
             <DashboardDropdown />
           </div>
 
+          {/* Sidebar Menu */}
           <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+            {/* Nifty & ETF Tables Dropdown */}
             <div className="space-y-4">
               <button
                 onClick={() => toggleMenu("user")}
@@ -478,6 +475,8 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                   ></i>
                 )}
               </button>
+             
+              
 
               {sidebarExpanded && activeMenu === "user" && (
                 <div className="pl-4 space-y-2">
@@ -493,9 +492,31 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 </div>
               )}
             </div>
-          </div>
+            <div className="space-y-4">
+  <Link
+    to="/user/feedback"
+    className="flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 text-gray-600"
+  >
+    <div
+      className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
+        location.pathname === "/user/feedback" ? "bg-blue-600" : "bg-gray-100 hover:bg-gray-200"
+      }`}
+    >
+      <i
+        className={`fas fa-comment ${
+          location.pathname === "/user/feedback" ? " text-white" : "text-gray-500"
+        }`}
+      ></i>
+    </div>
+    {sidebarExpanded && <span className="font-medium">Feedback</span>}
+  </Link>
+</div>
 
-          {/* Logout Button */}
+
+          </div>
+          
+
+          {/* Logout */}
           {userData && (
             <div className="p-4">
               <button
@@ -508,7 +529,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
             </div>
           )}
 
-          {sidebarExpanded && (
+      {sidebarExpanded && (
             <div className="mt-auto p-6 border-t bg-gray-50">
               <div className="flex items-center space-x-4">
                 <div className="relative">
@@ -530,7 +551,6 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   );
 }
 
-// Helper Component for Menu Links
 const MenuLink = ({ to, icon, label, isActive }) => {
   return (
     <Link

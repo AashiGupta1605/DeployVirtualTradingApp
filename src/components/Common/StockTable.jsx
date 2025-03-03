@@ -635,116 +635,123 @@ const StockTable = () => {
 
   return (
     <div className="mx-2 mt-8 overflow-hidden">
-      <div className="mt-24 flex items-center justify-between rounded bg-gray-100 px-6 py-4 shadow-md border-b">
-        <h2 className="flex items-center text-xl font-bold text-gray-800">
-          <Filter className="mr-2 text-gray-600" size={20} /> ETF Data
-        </h2>
-        <div className="relative">
-  <input
-    type="text"
-    placeholder="Search by symbol..."
-    className="border p-2 pr-10 rounded w-full"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
-  {searchTerm && (
-    <button
-      className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-0"
-      onClick={() => setSearchTerm("")}
-    >
-      ✕
-    </button>
-  )}
+    <div className="mt-24 flex items-center justify-between rounded bg-gray-100 px-6 py-4 shadow-md border-b">
+      <h2 className="flex items-center text-xl font-bold text-gray-800">
+        <Filter className="mr-2 text-gray-600" size={20} /> ETF Data
+      </h2>
+      <div className="relative">
+<input
+  type="text"
+  placeholder="Search by symbol..."
+  className="border p-2 pr-10 rounded w-full"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
+{searchTerm && (
+  <button
+    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-0"
+    onClick={() => setSearchTerm("")}
+  >
+    ✕
+  </button>
+)}
 </div>
+    </div>
 
+    <div className="h-[28rem] overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg">
+      <table className="w-full">
+        <thead className="sticky top-0 border-b bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            {["symbol", "open", "dayHigh", "dayLow", "previousClose", "lastPrice", "change", "pChange", "totalTradedVolume", "totalTradedValue", "yearHigh", "yearLow", "perChange365d", "perChange30d"].map((column) => (
+              <th
+                key={column}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                onClick={() => requestSort(column)}
+              >
+                {column.replace(/([A-Z])/g, " $1").toUpperCase()} {sortConfig.key === column && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {paginatedData.map((row, index) => (
+            <React.Fragment key={index}>
+              <tr
+                onClick={() => toggleRow(index)}
+                className={`cursor-pointer transition-colors hover:bg-gray-50 ${expandedRow === index ? "bg-gray-50" : ""}`}
+              >
+                <td className="px-4 py-4 whitespace-nowrap">
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">Sell</button>
+                    <button className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">Buy</button>
+                    <button className="p-1 bg-gray-200 rounded-full hover:bg-gray-300">ℹ️</button>
+                  </div>
+                </td>
+                <td className="px-6 py-4 flex items-center">
+                  {expandedRow === index ? (
+                    <ChevronDown className="mr-2 text-gray-500" size={16} />
+                  ) : (
+                    <ChevronRight className="mr-2 text-gray-500" size={16} />
+                  )}
+                  <Link to={`/company/${row.symbol}`} className="text-blue-500 hover:text-blue-800">
+                    {row.symbol}
+                  </Link>
+                </td>
+                {["open", "dayHigh", "dayLow", "previousClose", "lastPrice", "change", "pChange", "totalTradedVolume", "totalTradedValue", "yearHigh", "yearLow", "perChange365d", "perChange30d"].map((field, idx) => (
+                  <td key={idx} className="px-6 py-4">{row[field] ?? "N/A"}</td>
+                ))}
+              </tr>
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
+    <div className="flex justify-between items-center mt-4 px-4 py-3">
+ <div className="flex items-center space-x-4">
+  <span className="text-sm text-gray-700">Rows per page:</span>
+  <select
+          value={itemsPerPage} 
+          onChange={(e) => {
+            setItemsPerPage(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+          className="border rounded px-6 py-2 text-sm text-gray-600"
+        >
+          {[5, 10, 15, 25, 50, 100, 200].map((num) => (
+            <option key={num} value={num}>{num}</option>
+          ))}
+        </select>
+        <span></span>
+        <span className="text-sm text-gray-600">
+          {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedData.length)} {" "}
+           of {" "} {sortedData.length}
+        </span>
       </div>
 
-      <div className="h-[28rem] overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg">
-        <table className="w-full">
-          <thead className="sticky top-0 border-b bg-gray-50">
-            <tr>
-              {["symbol", "open", "dayHigh", "dayLow", "previousClose", "lastPrice", "change", "pChange", "totalTradedVolume", "totalTradedValue", "yearHigh", "yearLow", "perChange365d", "perChange30d"].map((column) => (
-                <th
-                  key={column}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                  onClick={() => requestSort(column)}
-                >
-                  {column.replace(/([A-Z])/g, " $1").toUpperCase()} {sortConfig.key === column && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {paginatedData.map((row, index) => (
-              <React.Fragment key={index}>
-                <tr
-                  onClick={() => toggleRow(index)}
-                  className={`cursor-pointer transition-colors hover:bg-gray-50 ${expandedRow === index ? "bg-gray-50" : ""}`}
-                >
-                  <td className="px-6 py-4 flex items-center">
-                    {expandedRow === index ? (
-                      <ChevronDown className="mr-2 text-gray-500" size={16} />
-                    ) : (
-                      <ChevronRight className="mr-2 text-gray-500" size={16} />
-                    )}
-                    <Link to={`/company/${row.symbol}`} className="text-blue-500 hover:text-blue-800">
-                      {row.symbol}
-                    </Link>
-                  </td>
-                  {["open", "dayHigh", "dayLow", "previousClose", "lastPrice", "change", "pChange", "totalTradedVolume", "totalTradedValue", "yearHigh", "yearLow", "perChange365d", "perChange30d"].map((field, idx) => (
-                    <td key={idx} className="px-6 py-4">{row[field] ?? "N/A"}</td>
-                  ))}
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <div className="flex items-center space-x-1">
+        <button
+          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50"
+        >
+          <ChevronLeft size={16} />
+        </button>
 
-      <div className="flex justify-between items-center mt-4 px-4 py-3">
-   <div className="flex items-center space-x-4">
-    <span className="text-sm text-gray-700">Rows per page:</span>
-    <select
-            value={itemsPerPage} 
-            onChange={(e) => {
-              setItemsPerPage(Number(e.target.value));
-              setCurrentPage(1);
-            }}
-            className="border rounded px-6 py-2 text-sm text-gray-600"
-          >
-            {[5, 10, 15, 25, 50, 100, 200].map((num) => (
-              <option key={num} value={num}>{num}</option>
-            ))}
-          </select>
-          <span></span>
-          <span className="text-sm text-gray-600">
-            {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedData.length)} {" "}
-             of {" "} {sortedData.length}
-          </span>
-        </div>
+        {renderPageNumbers()}
 
-        <div className="flex items-center space-x-1">
-          <button
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50"
-          >
-            <ChevronLeft size={16} />
-          </button>
-
-          {renderPageNumbers()}
-
-          <button
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        <button
+          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50"
+        >
+          <ChevronRight size={16} />
+        </button>
       </div>
     </div>
+  </div>
+
   );
 };
 
