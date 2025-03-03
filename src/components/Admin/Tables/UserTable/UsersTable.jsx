@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, CreditCard } from 'lucide-react';
 import PropTypes from 'prop-types';
 
 const TYPE_COLORS = {
@@ -10,7 +10,8 @@ const TYPE_COLORS = {
 const UsersTable = ({
   users,
   onEditClick,
-  onDeleteClick
+  onDeleteClick,
+  onSubscriptionClick  // Add this prop
 }) => {
   // Format date utility
   const formatDate = (date) => {
@@ -70,17 +71,24 @@ const UsersTable = ({
                     <div className="flex space-x-3">
                       <button
                         onClick={() => onEditClick(user)}
-                        className="text-yellow-600 hover:text-yellow-900 transition-colors duration-200"
+                        className="text-yellow-600 mx-2 hover:text-yellow-900 transition-colors duration-200"
                         aria-label="Edit user"
                       >
-                        <Edit size={16} />
+                        <Edit size={18} />
+                      </button>
+                      <button
+                        onClick={() => onSubscriptionClick(user)} // Now this will work
+                        className="text-lightBlue-600 mx-2 hover:text-lightBlue-900 transition-colors duration-200"
+                        aria-label="Manage subscription"
+                      >
+                        <CreditCard size={18} />
                       </button>
                       <button
                         onClick={() => onDeleteClick(user)}
-                        className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                        className="text-red-600 mx-2 hover:text-red-900 transition-colors duration-200"
                         aria-label="Delete user"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </td>
@@ -114,6 +122,7 @@ UsersTable.propTypes = {
   ).isRequired,
   onEditClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  onSubscriptionClick: PropTypes.func.isRequired, // Add this line
 };
 
 export default UsersTable;

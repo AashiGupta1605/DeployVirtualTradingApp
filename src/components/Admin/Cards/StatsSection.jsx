@@ -5,7 +5,6 @@ import CardStats from './CardStats';
 import { fetchUsers, selectUserCount, selectActiveUserCount } from '../../../redux/User/userSlice';
 import { fetchOrganizations, selectOrganizationCount } from '../../../redux/Organization/auth/organizationAuthSlice';
 
-
 const StatsSection = ({ isDashboard = false }) => {
   const dispatch = useDispatch();
 
@@ -48,7 +47,7 @@ const StatsSection = ({ isDashboard = false }) => {
   // Show loading state while data is being fetched
   if (userStatus === 'loading' || orgStatus === 'loading') {
     return (
-      <div className="bg-lightBlue-600 md:pt-32 pb-32 pt-12">
+      <div className="mt-8 bg-lightBlue-600 md:pt-20 pb-20 pt-10">
         <div className="flex justify-center items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
         </div>
@@ -148,7 +147,7 @@ const StatsSection = ({ isDashboard = false }) => {
   const stats = isDashboard ? [...baseStats, ...dashboardStats] : baseStats;
 
   return (
-    <div className="bg-lightBlue-600 md:pt-32 pb-32 pt-12">
+    <div className="bg-lightBlue-600 md:pt-20 pb-20 pt-10">
       <div className="px-4 mx-auto w-full">
         <div className="flex flex-wrap">
           {stats.map((stat, index) => (
