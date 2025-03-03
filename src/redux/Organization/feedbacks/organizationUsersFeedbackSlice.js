@@ -100,7 +100,7 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 export const fetchOrganizationFeedbacks = createAsyncThunk(
   "feedbacks/fetchOrganizationFeedbacks",
   async ({ orgName, page, limit, search, startDate, endDate }) => {
-    const response = await axios.get(`${BASE_API_URL}/user/${orgName}/users/feedbacks`, {
+    const response = await axios.get(`${BASE_API_URL}/user/feedback/${orgName}/users/feedbacks`, {
       params: { page, limit, search, startDate, endDate },
     });
     return response.data;
@@ -111,7 +111,7 @@ export const fetchOrganizationFeedbacks = createAsyncThunk(
 export const deleteOrganizationFeedback = createAsyncThunk(
   "feedbacks/deleteOrganizationFeedback",
   async (id) => {
-    await axios.delete(`${BASE_API_URL}/user/delete/feedbacks/${id}`);
+    await axios.delete(`${BASE_API_URL}/user/feedback/delete/${id}`);
     return id; // Return the deleted feedback ID
   }
 );
@@ -120,7 +120,7 @@ export const updateFeedbackStatus = createAsyncThunk(
   "feedbacks/updateFeedbackStatus",
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_API_URL}/user/update/feedbacks/${id}`, { status });
+      const response = await axios.put(`${BASE_API_URL}/user/feedback/update/${id}`, { status });
       return response.data; // Return the updated feedback
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -148,7 +148,7 @@ export const fetchOrganizationFeedback = createAsyncThunk(
   "feedbacks/fetchOrganizationFeedback",
   async ({ orgName, page, limit, search, startDate, endDate }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/user/${orgName}/feedback`, {
+      const response = await axios.get(`${BASE_API_URL}/user/feedback/${orgName}/feedback`, {
         params: { page, limit, search, startDate, endDate },
       });
       return response.data;
