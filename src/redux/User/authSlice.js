@@ -26,7 +26,7 @@ export const loginUser = createAsyncThunk(
         };
         return adminData;
       }
-      const response = await axios.post(`${BASE_API_URL}/user/login`, credentials);
+      const response = await axios.post(`${BASE_API_URL}/user/auth/login`, credentials);
       return {
         user: {
           _id: response.data.user._id,
