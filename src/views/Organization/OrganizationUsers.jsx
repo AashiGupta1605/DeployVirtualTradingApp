@@ -1520,6 +1520,317 @@
 // gender:::
 
 
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   fetchOrganizationUsers,
+//   deleteOrganizationUser,
+//   setCurrentPage,
+//   setItemsPerPage,
+//   setSearchTerm,
+//   setStartDate,
+//   setEndDate,
+//   setGender,
+//   clearFilters,
+// } from "../../redux/Organization/users/organizationUsersSlice";
+// import { fetchDashboardData } from "../../redux/Organization/dashboard/organizationDashboardSlice";
+// import Pagination from "../../components/Organization/Pagination";
+// import FilterComponent from "../../components/Organization/FilterComponent";
+// import OrgUserTable from "../../components/Organization/OrgUserTable";
+// import OrganizationUserRegistration from "./auth/OrganizationUserRegistration";
+// import ConfirmationModal from "../../components/Organization/ConfirmationModal";
+// import Loader from "../../components/Common/Loader";
+// import { Edit, Trash2, ChevronDown, ChevronRight, Filter, X, UserPlus, Trash, ChevronLeft } from "lucide-react";
+// // import Dashboard from "./OrganizationDashboard";
+// import OrganizationDashboard from "./OrganizationDashboard";
+// import { getAppliedFiltersCount, getAppliedFiltersText } from "../../utils/filterFunctions";
+
+// const OrganizationUsers = () => {
+//   const dispatch = useDispatch();
+//   const {
+//     users: studentList,
+//     loading,
+//     currentPage,
+//     totalPages,
+//     itemsPerPage,
+//     searchTerm,
+//     startDate,
+//     endDate,
+//     gender,
+//   } = useSelector((state) => state.organization.users);
+
+//   const [isModalOpen, setModalOpen] = useState(false);
+//   const [selectedStudent, setSelectedStudent] = useState(null);
+//   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+//   const [studentToDelete, setStudentToDelete] = useState(null);
+//   const [isFilterOpen, setFilterOpen] = useState(false);
+//   const [expandedRow, setExpandedRow] = useState(null);
+//   const orgName = localStorage.getItem("orgName");
+
+//   // Fetch students when filters or pagination change
+//   useEffect(() => {
+//     dispatch(
+//       fetchOrganizationUsers({
+//         orgName,
+//         page: currentPage,
+//         limit: itemsPerPage,
+//         search: searchTerm,
+//         startDate,
+//         endDate,
+//         gender,
+//       })
+//     );
+//   }, [dispatch, orgName, currentPage, itemsPerPage, searchTerm, startDate, endDate, gender]);
+
+//   // Handle delete student
+//   const handleDelete = async (id) => {
+//     try {
+//       await dispatch(deleteOrganizationUser(id)).unwrap();
+//       dispatch(fetchDashboardData(orgName));
+//     } catch (error) {
+//       console.error("Failed to delete user:", error);
+//     } finally {
+//       setConfirmationModalOpen(false);
+//     }
+//   };
+
+//   // Handle edit student
+//   const handleEdit = (student) => {
+//     setSelectedStudent(student);
+//     setModalOpen(true);
+//   };
+
+//   // Handle delete confirmation
+//   const handleDeleteClick = (student) => {
+//     setStudentToDelete(student);
+//     setConfirmationModalOpen(true);
+//   };
+
+//   // Handle page change
+//   const handlePageChange = (page) => {
+//     dispatch(setCurrentPage(page));
+//   };
+
+//   // Handle items per page change
+//   const handleItemsPerPageChange = (event) => {
+//     dispatch(setItemsPerPage(Number(event.target.value)));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Handle search term change
+//   const handleSearchChange = (event) => {
+//     dispatch(setSearchTerm(event.target.value));
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Handle start date change
+//   const handleStartDateChange = (date) => {
+//     if (date instanceof Date && !isNaN(date)) {
+//       dispatch(setStartDate(date.toISOString())); // Serialize valid date to ISO string
+//     } else {
+//       dispatch(setStartDate(null)); // Handle invalid or null date
+//     }
+//   };
+
+//   // Handle end date change
+//   const handleEndDateChange = (date) => {
+//     if (date instanceof Date && !isNaN(date)) {
+//       dispatch(setEndDate(date.toISOString())); // Serialize valid date to ISO string
+//     } else {
+//       dispatch(setEndDate(null)); // Handle invalid or null date
+//     }
+//   };
+
+//   // Handle gender change
+//   const handleGenderChange = (value) => {
+//     dispatch(setGender(value));
+//   };
+
+//   // Clear filters
+//   const clearAllFilters = () => {
+//     dispatch(clearFilters());
+//     dispatch(setCurrentPage(1));
+//   };
+
+//   // Apply filters
+//   // const handleApplyFilters = () => {
+//   //   dispatch(setCurrentPage(1));
+//   //   dispatch(
+//   //     fetchOrganizationUsers({
+//   //       orgName,
+//   //       page: 1,
+//   //       limit: itemsPerPage,
+//   //       search: searchTerm,
+//   //       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
+//   //       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
+//   //       gender,
+//   //     })
+//   //   );
+//   // };
+
+
+//   // Handle apply filters
+// // const handleApplyFilters = () => {
+// //   dispatch(setCurrentPage(1)); // Reset to the first page
+// //   dispatch(
+// //     fetchOrganizationUsers({
+// //       orgName,
+// //       page: 1,
+// //       limit: itemsPerPage,
+// //       search: searchTerm,
+// //       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
+// //       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
+// //       gender,
+// //     })
+// //   );
+// // };
+
+
+// // gender fix
+
+// const handleApplyFilters = () => {
+//   dispatch(setCurrentPage(1)); // Reset to the first page
+//   dispatch(
+//     fetchOrganizationUsers({
+//       orgName,
+//       page: 1,
+//       limit: itemsPerPage,
+//       search: searchTerm,
+//       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
+//       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
+//       gender, // Pass the gender value
+//     })
+//   );
+// };
+
+//   // Toggle row expansion
+//   const toggleRow = (id) => {
+//     setExpandedRow(expandedRow === id ? null : id);
+//   };
+
+//   return (
+//     <div className="relative">
+//       <OrganizationDashboard type="user-list" />
+//       <div className="mx-auto w-full">
+//         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50">
+//           <div className="px-8 py-8 -mt-38 z-50">
+//             <div className="z-50 mt-24 rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b">
+//               <h2 className="text-base md:text-xl font-bold text-gray-800 flex-grow">Manage Users</h2>
+//               <button
+//                 onClick={() => setFilterOpen(!isFilterOpen)}
+//                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4 relative"
+//               >
+//                 <Filter size={16} />
+//                 {getAppliedFiltersCount({ startDate, endDate, gender }) > 0 && (
+//                   <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-green-100 bg-green-600 rounded-full">
+//                     {getAppliedFiltersCount({ startDate, endDate, gender })}
+//                   </span>
+//                 )}
+//                 {getAppliedFiltersText({ startDate, endDate, gender }) && (
+//                   <span className="ml-2 text-[0px] sm:text-[10px] text-white">{getAppliedFiltersText({ startDate, endDate, gender })}</span>
+//                 )}
+//               </button>
+//               <div className="flex items-center w-full max-w-xs mr-4 relative mx-2">
+//                 <input
+//                   type="text"
+//                   placeholder="Search..."
+//                   onChange={handleSearchChange}
+//                   value={searchTerm}
+//                   className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-8"
+//                 />
+//                 {searchTerm && (
+//                   <button onClick={() => dispatch(setSearchTerm(""))} className="focus:outline-none absolute right-2 text-gray-500 hover:text-gray-700">
+//                     <X size={16} />
+//                   </button>
+//                 )}
+//               </div>
+//               <button
+//                 onClick={() => {
+//                   setSelectedStudent(null);
+//                   setModalOpen(true);
+//                 }}
+//                 className="z-50 bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4"
+//               >
+//                 <UserPlus size={16} />
+//               </button>
+//             </div>
+//             {isFilterOpen && (
+//               <FilterComponent
+//                 isFilterOpen={isFilterOpen}
+//                 setFilterOpen={setFilterOpen}
+//                 startDate={startDate}
+//                 onStartDateChange={handleStartDateChange}
+//                 endDate={endDate}
+//                 onEndDateChange={handleEndDateChange}
+//                 gender={gender}
+//                 onGenderChange={handleGenderChange}
+//                 onClearFilters={clearAllFilters}
+//                 onApplyFilters={handleApplyFilters}
+//               />
+//             )}
+//           </div>
+//           {loading ? (
+//             <Loader />
+//           ) : (
+//             <div className="pt-16 px-8 -mt-24 z-20">
+//               <OrgUserTable
+//                 users={studentList}
+//                 onEdit={handleEdit}
+//                 onDelete={handleDeleteClick}
+//                 expandedRow={expandedRow}
+//                 toggleRow={toggleRow}
+//               />
+//               <Pagination
+//                 currentPage={currentPage}
+//                 totalPages={totalPages}
+//                 itemsPerPage={itemsPerPage}
+//                 onPageChange={handlePageChange}
+//                 onItemsPerPageChange={handleItemsPerPageChange}
+//               />
+//             </div>
+//           )}
+
+//           {/* Organization User Registration Modal */}
+//           <OrganizationUserRegistration
+//             isOpen={isModalOpen}
+//             onClose={() => setModalOpen(false)}
+//             initialValues={selectedStudent}
+//             refreshStudents={() => dispatch(fetchOrganizationUsers({
+//               orgName,
+//               page: currentPage,
+//               limit: itemsPerPage,
+//               search: searchTerm,
+//               startDate,
+//               endDate,
+//               gender,
+//             }))}
+//             refreshDashboard={() => dispatch(fetchDashboardData(orgName))}
+//           />
+
+//           {/* Confirmation Modal for Delete */}
+//           <ConfirmationModal
+//             isOpen={isConfirmationModalOpen}
+//             onClose={() => setConfirmationModalOpen(false)}
+//             onConfirm={() => handleDelete(studentToDelete._id)}
+//             message={`Are you sure you want to delete student ${studentToDelete?.name}?`}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrganizationUsers;
+
+
+
+
+
+
+
+
+// same design as admin
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -1540,8 +1851,8 @@ import OrgUserTable from "../../components/Organization/OrgUserTable";
 import OrganizationUserRegistration from "./auth/OrganizationUserRegistration";
 import ConfirmationModal from "../../components/Organization/ConfirmationModal";
 import Loader from "../../components/Common/Loader";
-import { Edit, Trash2, ChevronDown, ChevronRight, Filter, X, UserPlus, Trash, ChevronLeft } from "lucide-react";
-import Dashboard from "./OrganizationDashboard";
+import { Filter, X, UserPlus, SearchIcon } from "lucide-react";
+import OrganizationDashboard from "./OrganizationDashboard";
 import { getAppliedFiltersCount, getAppliedFiltersText } from "../../utils/filterFunctions";
 
 const OrganizationUsers = () => {
@@ -1625,18 +1936,18 @@ const OrganizationUsers = () => {
   // Handle start date change
   const handleStartDateChange = (date) => {
     if (date instanceof Date && !isNaN(date)) {
-      dispatch(setStartDate(date.toISOString())); // Serialize valid date to ISO string
+      dispatch(setStartDate(date.toISOString()));
     } else {
-      dispatch(setStartDate(null)); // Handle invalid or null date
+      dispatch(setStartDate(null));
     }
   };
 
   // Handle end date change
   const handleEndDateChange = (date) => {
     if (date instanceof Date && !isNaN(date)) {
-      dispatch(setEndDate(date.toISOString())); // Serialize valid date to ISO string
+      dispatch(setEndDate(date.toISOString()));
     } else {
-      dispatch(setEndDate(null)); // Handle invalid or null date
+      dispatch(setEndDate(null));
     }
   };
 
@@ -1651,127 +1962,146 @@ const OrganizationUsers = () => {
     dispatch(setCurrentPage(1));
   };
 
-  // Apply filters
-  // const handleApplyFilters = () => {
-  //   dispatch(setCurrentPage(1));
-  //   dispatch(
-  //     fetchOrganizationUsers({
-  //       orgName,
-  //       page: 1,
-  //       limit: itemsPerPage,
-  //       search: searchTerm,
-  //       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
-  //       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
-  //       gender,
-  //     })
-  //   );
-  // };
-
-
   // Handle apply filters
-// const handleApplyFilters = () => {
-//   dispatch(setCurrentPage(1)); // Reset to the first page
-//   dispatch(
-//     fetchOrganizationUsers({
-//       orgName,
-//       page: 1,
-//       limit: itemsPerPage,
-//       search: searchTerm,
-//       startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
-//       endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
-//       gender,
-//     })
-//   );
-// };
-
-
-// gender fix
-
-const handleApplyFilters = () => {
-  dispatch(setCurrentPage(1)); // Reset to the first page
-  dispatch(
-    fetchOrganizationUsers({
-      orgName,
-      page: 1,
-      limit: itemsPerPage,
-      search: searchTerm,
-      startDate: startDate ? new Date(startDate).toISOString() : null, // Serialize date to ISO string
-      endDate: endDate ? new Date(endDate).toISOString() : null, // Serialize date to ISO string
-      gender, // Pass the gender value
-    })
-  );
-};
+  const handleApplyFilters = () => {
+    dispatch(setCurrentPage(1));
+    dispatch(
+      fetchOrganizationUsers({
+        orgName,
+        page: 1,
+        limit: itemsPerPage,
+        search: searchTerm,
+        startDate: startDate ? new Date(startDate).toISOString() : null,
+        endDate: endDate ? new Date(endDate).toISOString() : null,
+        gender,
+      })
+    );
+  };
 
   // Toggle row expansion
   const toggleRow = (id) => {
     setExpandedRow(expandedRow === id ? null : id);
   };
 
+  // Get applied filters count
+  const appliedFiltersCount = getAppliedFiltersCount({ startDate, endDate, gender });
+
+  // Get applied filters text
+  const appliedFiltersText = getAppliedFiltersText({ startDate, endDate, gender });
+
   return (
     <div className="relative">
-      <Dashboard type="user-list" />
-      <div className="mx-auto w-full">
-        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50">
-          <div className="px-8 py-8 -mt-38 z-50">
-            <div className="z-50 mt-24 rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b">
-              <h2 className="text-base md:text-xl font-bold text-gray-800 flex-grow">Manage Users</h2>
-              <button
-                onClick={() => setFilterOpen(!isFilterOpen)}
-                className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4 relative"
-              >
-                <Filter size={16} />
-                {getAppliedFiltersCount({ startDate, endDate, gender }) > 0 && (
-                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-green-100 bg-green-600 rounded-full">
-                    {getAppliedFiltersCount({ startDate, endDate, gender })}
-                  </span>
-                )}
-                {getAppliedFiltersText({ startDate, endDate, gender }) && (
-                  <span className="ml-2 text-[0px] sm:text-[10px] text-white">{getAppliedFiltersText({ startDate, endDate, gender })}</span>
-                )}
-              </button>
-              <div className="flex items-center w-full max-w-xs mr-4 relative mx-2">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  onChange={handleSearchChange}
-                  value={searchTerm}
-                  className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-8"
-                />
-                {searchTerm && (
-                  <button onClick={() => dispatch(setSearchTerm(""))} className="focus:outline-none absolute right-2 text-gray-500 hover:text-gray-700">
-                    <X size={16} />
-                  </button>
-                )}
+      <OrganizationDashboard type="user-list" />
+      <div className="mx-auto w-[95%] z-50">
+        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50 -mt-12">
+          {/* Header with Search and Filters */}
+          <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b z-30">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
+              <Filter className="mr-2 text-gray-600" size={18} />
+              Manage Users
+            </h2>
+
+            <div className="flex items-center space-x-4">
+              {/* Filter Button */}
+              <div>
+                <button
+                  onClick={() => setFilterOpen(!isFilterOpen)}
+                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 flex items-center"
+                >
+                  <Filter size={18} />
+                  {appliedFiltersCount > 0 && (
+                    <span className="ml-2 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
+                      {appliedFiltersCount}
+                    </span>
+                  )}
+                </button>
               </div>
+
+              {/* Search Bar */}
+              <div className="flex-grow max-w-xl">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <SearchIcon size={18} className="text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 focus:border-lightBlue-500 text-gray-900 placeholder-gray-500 bg-white shadow-sm transition duration-150 ease-in-out"
+                  />
+                  {searchTerm && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <button
+                        onClick={() => dispatch(setSearchTerm(""))}
+                        className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-150"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Add New Button */}
               <button
                 onClick={() => {
                   setSelectedStudent(null);
                   setModalOpen(true);
                 }}
-                className="z-50 bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 ml-4"
+                className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
               >
-                <UserPlus size={16} />
+                <UserPlus className="mr-2" size={16} />
+                Add New
               </button>
             </div>
-            {isFilterOpen && (
-              <FilterComponent
-                isFilterOpen={isFilterOpen}
-                setFilterOpen={setFilterOpen}
-                startDate={startDate}
-                onStartDateChange={handleStartDateChange}
-                endDate={endDate}
-                onEndDateChange={handleEndDateChange}
-                gender={gender}
-                onGenderChange={handleGenderChange}
-                onClearFilters={clearAllFilters}
-                onApplyFilters={handleApplyFilters}
-              />
-            )}
           </div>
+
+          {/* Filter Panel */}
+          {isFilterOpen && (
+            <FilterComponent
+              isFilterOpen={isFilterOpen}
+              setFilterOpen={setFilterOpen}
+              startDate={startDate}
+              onStartDateChange={handleStartDateChange}
+              endDate={endDate}
+              onEndDateChange={handleEndDateChange}
+              gender={gender}
+              onGenderChange={handleGenderChange}
+              onClearFilters={clearAllFilters}
+              onApplyFilters={handleApplyFilters}
+            />
+          )}
+
+          {/* Active Filters Display */}
+          {appliedFiltersCount > 0 && (
+            <div className="bg-gray-50 px-6 py-2 mt-2 rounded-lg flex items-center justify-between z-50">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600">Active Filters:</span>
+                <div className="flex flex-wrap gap-2">
+                  {appliedFiltersText && (
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      {appliedFiltersText}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={clearAllFilters}
+                className="text-sm text-gray-600 hover:text-gray-800 flex items-center"
+              >
+                <X size={14} className="mr-1" />
+                Clear All
+              </button>
+            </div>
+          )}
+
+          {/* User Table and Pagination */}
           {loading ? (
             <Loader />
           ) : (
-            <div className="pt-16 px-8 -mt-24 z-20">
+            <div className="pt-18 -mt-18 z-20">
               <OrgUserTable
                 users={studentList}
                 onEdit={handleEdit}

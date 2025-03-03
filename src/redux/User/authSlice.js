@@ -18,6 +18,7 @@ export const loginUser = createAsyncThunk(
       ) {
         const adminData = {
           user: {
+            _id: "admin-id",
             name: "Admin",
             role: "admin"
           },
@@ -28,6 +29,7 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post(`${BASE_API_URL}/user/login`, credentials);
       return {
         user: {
+          _id: response.data.user._id,
           name: response.data.user.name,
           role: response.data.user.role
         },
@@ -73,8 +75,14 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.error = null;
-        localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
+         // Store user data properly in localStorage
+         localStorage.setItem('token', action.payload.token);
+         localStorage.setItem('user', JSON.stringify({
+           _id: action.payload.user._id,  
+           name: action.payload.user.name,
+           role: action.payload.user.role
+         }));
+        
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
