@@ -1,14 +1,16 @@
 
-// // new one date picker 
 
-// import React, { useEffect } from "react";
+
+// // redux toolkit
+// import React from "react";
 // import { useFormik } from "formik";
-// import { BASE_API_URL } from "../../../utils/BaseUrl";
 // import * as Yup from "yup";
-// import axios from "axios";
+// import { useDispatch, useSelector } from "react-redux";
+// import { registerOrganizationUser, updateOrganizationUser, resetUserState } from "../../../redux/Organization/users/organizationUsersSlice";
 // import toast, { Toaster } from "react-hot-toast";
 // import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
+// import { fetchDashboardData } from "../../../redux/Organization/dashboard/organizationDashboardSlice";
 
 // // Validation schema
 // const validationSchema = Yup.object({
@@ -24,7 +26,12 @@
 //   status: Yup.boolean().default(true).required("Status is required"),
 // });
 
-// const OrganizationUserRegistration = ({ isOpen, onClose, initialValues }) => {
+// const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshStudents, refreshDashboard }) => {
+//   const dispatch = useDispatch();
+//   const { loading, error, success } = useSelector((state) => state.organization.users);
+//   const orgName = localStorage.getItem("orgName");
+
+
 //   const formik = useFormik({
 //     initialValues: initialValues || {
 //       name: "",
@@ -40,22 +47,31 @@
 //     onSubmit: async (values, { resetForm }) => {
 //       try {
 //         if (initialValues) {
-//           await axios.put(`${BASE_API_URL}/organization/user/${initialValues._id}`, values);
-//           toast.success("Student updated successfully!");
+//           // Update existing user
+//           await dispatch(updateOrganizationUser({ id: initialValues._id, userData: values }));
 //         } else {
-//           await axios.post(`${BASE_API_URL}/organization/user/register`, values);
-//           toast.success("Student registered successfully!");
+//           // Register new user
+//           await dispatch(registerOrganizationUser(values));
 //         }
 //         resetForm(); // Reset form values
 //         onClose(); // Close the modal after successful submission
-//         window.location.reload(); // Refresh the page to show the new user
+//         refreshStudents();
+//         refreshDashboard();
+//         // dispatch(fetchDashboardData(orgName));
+
 //       } catch (error) {
 //         console.error("Error submitting form:", error);
-//         toast.error(error.response.data.msg);
 //       }
 //     },
 //     enableReinitialize: true, // Reinitialize form values when initialValues change
 //   });
+
+//   // Reset state when the modal is closed
+//   React.useEffect(() => {
+//     if (!isOpen) {
+//       dispatch(resetUserState());
+//     }
+//   }, [isOpen, dispatch]);
 
 //   if (!isOpen) return null;
 
@@ -63,14 +79,14 @@
 //     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
 //       <Toaster />
 //       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-      
-//       <div style={{width:"100%", maxWidth:"90%"}} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+
+//       <div style={{ width: "100%", maxWidth: "90%" }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
 //         <div className="flex justify-between items-center p-6 border-b border-gray-100">
 //           <div className="flex items-center space-x-3">
 //             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //               <i className="fas fa-building text-white"></i>
 //             </div>
-//             <h2 className="text-2xl font-semibold text-gray-800">{initialValues ? "Edit Student" : "Sign Up"}</h2>
+//             <h2 className="text-2xl font-semibold text-gray-800">{initialValues ? "Edit User" : "Sign Up"}</h2>
 //           </div>
 //           <button
 //             onClick={onClose}
@@ -85,9 +101,7 @@
 //             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 //               <div className="space-y-4">
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Name
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
 //                   <input
 //                     type="text"
 //                     name="name"
@@ -103,9 +117,7 @@
 //                   ) : null}
 //                 </div>
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Email
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
 //                   <input
 //                     type="email"
 //                     name="email"
@@ -121,9 +133,7 @@
 //                   ) : null}
 //                 </div>
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Mobile
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
 //                   <input
 //                     type="text"
 //                     name="mobile"
@@ -139,9 +149,7 @@
 //                   ) : null}
 //                 </div>
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Gender
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
 //                   <select
 //                     name="gender"
 //                     value={formik.values.gender}
@@ -163,9 +171,7 @@
 
 //               <div className="space-y-4">
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Password
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
 //                   <input
 //                     type="password"
 //                     name="password"
@@ -181,9 +187,7 @@
 //                   ) : null}
 //                 </div>
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Date of Birth
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
 //                   <DatePicker
 //                     selected={formik.values.dob ? new Date(formik.values.dob) : null}
 //                     onChange={(date) => formik.setFieldValue("dob", date)}
@@ -200,9 +204,7 @@
 //                   ) : null}
 //                 </div>
 //                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-1">
-//                     Added By
-//                   </label>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Added By</label>
 //                   <input
 //                     type="text"
 //                     name="addedby"
@@ -233,9 +235,10 @@
 //               </button>
 //               <button
 //                 type="submit"
+//                 disabled={loading}
 //                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
 //               >
-//                 {initialValues ? "Update Student" : "Register Student"}
+//                 {loading ? "Processing..." : initialValues ? "Update User" : "Register User"}
 //               </button>
 //             </div>
 //           </form>
@@ -249,7 +252,10 @@
 
 
 
-// redux toolkit
+
+
+// email added for user password 
+
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -264,7 +270,6 @@ import { fetchDashboardData } from "../../../redux/Organization/dashboard/organi
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email format").required("Email is required"),
-  password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
   mobile: Yup.string().matches(/^[9876]\d{9}$/, "Mobile number must start with 9, 8, 7, or 6 and contain 10 digits").required("Mobile number is required"),
   gender: Yup.string().required("Gender is required"),
   dob: Yup.date().required("Date of Birth is required").test("age", "You must be at least 18 years old", function (value) {
@@ -279,12 +284,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
   const { loading, error, success } = useSelector((state) => state.organization.users);
   const orgName = localStorage.getItem("orgName");
 
-
   const formik = useFormik({
     initialValues: initialValues || {
       name: "",
       email: "",
-      password: "",
       mobile: "",
       gender: "",
       dob: "",
@@ -306,7 +309,6 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
         refreshStudents();
         refreshDashboard();
         // dispatch(fetchDashboardData(orgName));
-
       } catch (error) {
         console.error("Error submitting form:", error);
       }
@@ -418,22 +420,6 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                    placeholder="Enter password"
-                    required
-                  />
-                  {formik.touched.password && formik.errors.password ? (
-                    <div className="text-red-500 text-sm">{formik.errors.password}</div>
-                  ) : null}
-                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
                   <DatePicker

@@ -1177,7 +1177,7 @@ export default function Navbar() {
 
   // Check if organization is logged in
   const orgName = localStorage.getItem("orgName");
-  const isOrgLoggedIn = !!orgName;
+  const isOrgLoggedIn = !orgName;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -1388,3 +1388,5 @@ export default function Navbar() {
     </>
   );
 }
+
+
