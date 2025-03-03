@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUsers } from "../../redux/User/userSlice";
+import { fetchOrganizations } from "../../redux/Organization/auth/organizationAuthSlice";
 
 import CardTable from "../../components/Common/CardTable";
 import StatsSection from "../../components/Admin/Cards/StatsSection";

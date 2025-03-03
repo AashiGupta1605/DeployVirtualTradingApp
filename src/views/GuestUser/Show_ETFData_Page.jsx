@@ -1,14 +1,17 @@
 import React from "react";
 
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
+import NavbarCarousel from "../../components/GuestUser/Navbars/NavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 import StockTable from '../../components/Common/StockTable';
 
 const Show_ETFData_Page = () => {
   return (
     <>
-      <MainHomeNavbar/>
-      <div className="mx-2 overflow-hidden mt-8" style={{ paddingBottom: '120px' }}>
+      <MainHomeNavbar fixed/>
+      <NavbarCarousel fixed/>
+      
+      <div className="mx-2 overflow-hidden" style={{ paddingBottom: '120px' }}>
       <StockTable/>
       </div>
       <Footer/>
