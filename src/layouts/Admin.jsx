@@ -18,7 +18,7 @@ import Queries from "../views/Admin/QueryList";
 import FeedbackList from "../views/Admin/FeedbackList";
 
 export default function Admin() {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-blueGray-100">

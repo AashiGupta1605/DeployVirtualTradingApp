@@ -5,7 +5,6 @@ import {
   ChevronRight,
   Edit,
   Trash2,
-  MoreVertical,
   Check,
   X
 } from 'lucide-react';
@@ -42,6 +41,39 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString();
 };
 
+// Toggle Switch Component
+const ToggleSwitch = ({ isOn, onToggle, disabled }) => (
+  <label className="relative inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="sr-only"
+      checked={isOn}
+      onChange={onToggle}
+      disabled={disabled}
+    />
+    <div
+      className={`
+        relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out
+        ${isOn ? 'bg-green-500' : 'bg-red-500'}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+      `}
+    >
+      <div
+        className={`
+          absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out
+          ${isOn ? 'translate-x-5' : 'translate-x-0'}
+        `}
+      />
+    </div>
+  </label>
+);
+
+ToggleSwitch.propTypes = {
+  isOn: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  disabled: PropTypes.bool
+};
+
 const OrganizationTable = ({
   organizations = [],
   isLoading = false,
@@ -51,11 +83,8 @@ const OrganizationTable = ({
 }) => {
   const [state, setState] = useState({
     expandedRow: null,
-    dropdownOpen: null,
     showDeleteModal: false,
-    showActionModal: false,
-    selectedOrg: null,
-    pendingAction: null
+    selectedOrg: null
   });
 
   const toggleRow = (id) => {
@@ -65,31 +94,22 @@ const OrganizationTable = ({
     }));
   };
 
-  const handleStatusClick = async (org, action) => {
+  const handleStatusToggle = async (org) => {
     if (!org || !org._id) {
       console.error('Invalid organization object:', org);
       toast.error('Invalid organization selected');
       return;
     }
-  
+
+    const newStatus = org.approvalStatus === 'approved' ? 'rejected' : 'approved';
+
     try {
-      await onStatusChange(org._id, action);
-      setState(prev => ({
-        ...prev,
-        dropdownOpen: null
-      }));
-      toast.success(`Organization status updated to ${action}`);
+      await onStatusChange(org._id, newStatus);
+      toast.success(`Organization status updated to ${newStatus}`);
     } catch (error) {
       toast.error('Failed to update organization status');
       console.error('Status update error:', error);
     }
-  };
-
-  const toggleDropdown = (id) => {
-    setState(prev => ({
-      ...prev,
-      dropdownOpen: prev.dropdownOpen === id ? null : id
-    }));
   };
 
   if (isLoading) {
@@ -116,12 +136,19 @@ const OrganizationTable = ({
 
   const renderActionButtons = (org) => (
     <div className="flex space-x-3">
+            <Tooltip text={`Toggle to ${org.approvalStatus === 'approved' ? 'reject' : 'approve'}`}>
+        <ToggleSwitch
+          isOn={org.approvalStatus === 'approved'}
+          onToggle={() => handleStatusToggle(org)}
+          disabled={isLoading}
+        />
+      </Tooltip>
       <Tooltip text="Edit organization">
         <button
           onClick={() => onEdit(org)}
-          className="text-yellow-600 hover:text-yellow-900 transition-colors focus:outline-none"
+          className="text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
         >
-          <Edit size={16} />
+          <Edit size={18} />
         </button>
       </Tooltip>
 
@@ -130,40 +157,11 @@ const OrganizationTable = ({
           onClick={() => onDelete(org)}
           className="text-red-600 hover:text-red-900 transition-colors focus:outline-none"
         >
-          <Trash2 size={16} />
+          <Trash2 size={18} />
         </button>
       </Tooltip>
 
-      <Tooltip text="Change status">
-        <div className="relative">
-          <button
-            onClick={() => toggleDropdown(org._id)}
-            className="text-gray-600 hover:text-gray-900 transition-colors focus:outline-none"
-          >
-            <MoreVertical size={16} />
-          </button>
-          
-          {state.dropdownOpen === org._id && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 py-1 flex flex-col border border-gray-200">
-              <button
-                onClick={() => handleStatusClick(org, 'approved')}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
-              >
-                <Check size={16} className="mr-2" />
-                Approve
-              </button>
-              <div className="border-t border-gray-100" />
-              <button
-                onClick={() => handleStatusClick(org, 'rejected')}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
-              >
-                <X size={16} className="mr-2" />
-                Reject
-              </button>
-            </div>
-          )}
-        </div>
-      </Tooltip>
+
     </div>
   );
 

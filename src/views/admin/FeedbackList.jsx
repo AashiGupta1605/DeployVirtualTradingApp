@@ -1,173 +1,206 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import FeedbackTable from "../../components/Admin/Tables/FeedbackTable/FeedbackTable";
 import Pagination from '../../components/Common/TableItems/Pagination';
 import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
-import { 
-    fetchFeedbacks,
-    selectFeedbacks,
-    selectFeedbackLoading,
-    selectFeedbackError,
-    selectFeedbackStats 
+import {
+  fetchFeedbacks,
+  setFilters,
+  clearFilters,
+  updateLocalFilters,
+  selectFilteredFeedbacks,
+  selectFeedbackLoading,
+  selectFeedbackError,
+  selectFeedbackStats,
+  selectFeedbackFilters
 } from "../../redux/Admin/FeedbackListPage/FeedbackTableSlice";
 
 const FeedbackList = () => {
-    const dispatch = useDispatch();
-    const feedbacks = useSelector(selectFeedbacks) || [];// Initialize as empty array if undefined
+  const dispatch = useDispatch();
+  
+  // Selectors
+  const filteredFeedbacks = useSelector(selectFilteredFeedbacks);
   const loading = useSelector(selectFeedbackLoading);
   const error = useSelector(selectFeedbackError);
-  const statsFromStore = useSelector(selectFeedbackStats);
+  const stats = useSelector(selectFeedbackStats);
+  const currentFilters = useSelector(selectFeedbackFilters);
 
-  // State management
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilters, setActiveFilters] = useState({
-    category: false,
-    dateRange: false,
-    rating: false,
-    search: false
-  });
-  const [tempFilters, setTempFilters] = useState({
-    category: 'all',
-    startDate: null,
-    endDate: null,
-    rating: 'all',
-    recommendation: 'all',
-    status: 'all'
+  // Local state
+  const [state, setState] = useState({
+    currentPage: 1,
+    itemsPerPage: 5,
+    isFilterOpen: false,
+    searchQuery: "",
+    activeFilters: {
+      category: false,
+      status: false,
+      rating: false,
+      recommend: false,
+      dateRange: false,
+      search: false
+    },
+    tempFilters: {
+      category: 'all',
+      status: 'all', // lowercase
+      rating: 'all',
+      recommend: 'all',
+      startDate: null,
+      endDate: null
+    }
   });
 
+  // Initial fetch
   useEffect(() => {
     dispatch(fetchFeedbacks())
       .unwrap()
-      .then(response => {
-        console.log('Feedbacks fetched:', response);
+      .then(() => {
+        // Optional: Handle successful fetch
+        console.log('Feedbacks fetched successfully');
       })
       .catch(error => {
+        // Optional: Handle error
         console.error('Error fetching feedbacks:', error);
       });
   }, [dispatch]);
 
-  // Filter feedbacks based on filters and search
-  const filteredFeedbacks = feedbacks.length ? feedbacks.filter(feedback => {
-    // Category Filter
-    if (tempFilters.category !== 'all' && feedback.feedbackCategory !== tempFilters.category)
-      return false;
+  // Filter handlers
+  const handleFilterChange = useCallback((e) => {
+    const { name, value } = e.target;
+    const processedValue = name === 'status' ? value.toLowerCase() : value;
 
-    // Rating Filter
-    if (tempFilters.rating !== 'all') {
-      const ratingNum = parseInt(tempFilters.rating);
-      if (feedback.rating !== ratingNum)
-        return false;
+  setState(prev => ({
+    ...prev,
+    tempFilters: {
+      ...prev.tempFilters,
+      [name]: processedValue
+    },
+    activeFilters: {
+      ...prev.activeFilters,
+      [name]: processedValue !== 'all'
     }
+  }));
 
-    if (tempFilters.status !== 'all' && feedback.status !== tempFilters.status)
-        return false;
+  dispatch(updateLocalFilters({ [name]: processedValue }));
+}, [dispatch]);
 
-    // Recommendation Filter
-    if (tempFilters.recommendation !== 'all') {
-      const isRecommended = tempFilters.recommendation === 'recommended';
-      if (feedback.recommend !== isRecommended)
-        return false;
-    }
-
-    // Date Range Filter
-    if (tempFilters.startDate && tempFilters.endDate) {
-      const feedbackDate = new Date(feedback.createdDate);
-      if (feedbackDate < tempFilters.startDate || feedbackDate > tempFilters.endDate)
-        return false;
-    }
-
-    // Search Filter
-    if (searchQuery) {
-        const searchLower = searchQuery.toLowerCase();
-        return (
-          feedback.userId?.name?.toLowerCase().includes(searchLower) ||
-          feedback.userId?.email?.toLowerCase().includes(searchLower) ||
-          feedback.feedbackMessage.toLowerCase().includes(searchLower)
-        );
+  const handleStartDateChange = useCallback((date) => {
+    setState(prev => ({
+      ...prev,
+      tempFilters: {
+        ...prev.tempFilters,
+        startDate: date
+      },
+      activeFilters: {
+        ...prev.activeFilters,
+        dateRange: !!(date || prev.tempFilters.endDate)
       }
+    }));
 
-    return true;
-  }) : [];
+    dispatch(updateLocalFilters({ startDate: date }));
+  }, [dispatch]);
 
-  // Update total items when filtered feedbacks change
-  useEffect(() => {
-    setTotalItems(filteredFeedbacks.length);
-  }, [filteredFeedbacks]);
+  const handleEndDateChange = useCallback((date) => {
+    setState(prev => ({
+      ...prev,
+      tempFilters: {
+        ...prev.tempFilters,
+        endDate: date
+      },
+      activeFilters: {
+        ...prev.activeFilters,
+        dateRange: !!(prev.tempFilters.startDate || date)
+      }
+    }));
 
-  // Handler Functions
-  const handleCategoryFilterChange = (e) => {
-    setTempFilters(prev => ({ ...prev, category: e.target.value }));
-  };
+    dispatch(updateLocalFilters({ endDate: date }));
+  }, [dispatch]);
 
-  const handleRatingFilterChange = (e) => {
-    setTempFilters(prev => ({ ...prev, rating: e.target.value }));
-  };
+  const handleSearchChange = useCallback((value) => {
+    setState(prev => ({
+      ...prev,
+      searchQuery: value,
+      activeFilters: {
+        ...prev.activeFilters,
+        search: !!value
+      }
+    }));
 
-  const handleRecommendationFilterChange = (e) => {
-    setTempFilters(prev => ({ ...prev, recommendation: e.target.value }));
-  };
+    dispatch(updateLocalFilters({ search: value }));
+  }, [dispatch]);
 
-  const handleStartDateChange = (date) => {
-    setTempFilters(prev => ({ ...prev, startDate: date }));
-  };
+  const handleApplyFilters = useCallback(() => {
+    const filters = {
+      ...state.tempFilters,
+      search: state.searchQuery
+    };
+    
+    dispatch(setFilters(filters));
+    setState(prev => ({
+      ...prev,
+      isFilterOpen: false,
+      currentPage: 1
+    }));
+  }, [dispatch, state.tempFilters, state.searchQuery]);
 
-  const handleEndDateChange = (date) => {
-    setTempFilters(prev => ({ ...prev, endDate: date }));
-  };
+  const handleClearFilters = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      searchQuery: "",
+      tempFilters: {
+        category: 'all',
+        status: 'all',
+        rating: 'all',
+        recommend: 'all',
+        startDate: null,
+        endDate: null
+      },
+      activeFilters: {
+        category: false,
+        status: false,
+        rating: false,
+        recommend: false,
+        dateRange: false,
+        search: false
+      },
+      currentPage: 1
+    }));
+    dispatch(clearFilters());
+  }, [dispatch]);
 
-  const applyFilters = () => {
-    dispatch(fetchFeedbacks(tempFilters));
-    setActiveFilters({
-      category: tempFilters.category !== 'all',
-      dateRange: !!(tempFilters.startDate && tempFilters.endDate),
-      rating: tempFilters.rating !== 'all',
-      recommendation: tempFilters.recommendation !== 'all',
-      search: !!searchQuery
-    });
-    setIsFilterOpen(false);
-    setCurrentPage(1);
-  };
+  // Handle page change
+  const handlePageChange = useCallback((newPage) => {
+    setState(prev => ({
+      ...prev,
+      currentPage: newPage
+    }));
+  }, []);
 
-  const clearFilters = () => {
-    setTempFilters({
-      category: 'all',
-      startDate: null,
-      endDate: null,
-      rating: 'all',
-      recommendation: 'all'
-    });
-    setSearchQuery("");
-    setActiveFilters({
-      category: false,
-      dateRange: false,
-      rating: false,
-      recommendation: false,
-      search: false
-    });
-    setCurrentPage(1);
-    dispatch(fetchFeedbacks()); // Fetch all feedbacks without filters
-  };
+  // Handle items per page change
+  const handleItemsPerPageChange = useCallback((newValue) => {
+    setState(prev => ({
+      ...prev,
+      itemsPerPage: newValue,
+      currentPage: 1
+    }));
+  }, []);
 
-  // Pagination Logic
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // Pagination calculations
+  const totalItems = filteredFeedbacks.length;
+  const totalPages = Math.ceil(totalItems / state.itemsPerPage);
+  const indexOfLastItem = state.currentPage * state.itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - state.itemsPerPage;
   const currentItems = filteredFeedbacks.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Calculate stats
-  const stats = {
-    total: feedbacks.length || 0,
-    positive: feedbacks.filter(f => f.rating >= 4).length || 0,
-    negative: feedbacks.filter(f => f.rating <= 2).length || 0,
-    approved: feedbacks.filter(f => f.status === 'approved').length,
-    rejected: feedbacks.filter(f => f.status === 'rejected').length,
-    recommended: feedbacks.filter(f => f.recommend).length || 0,
-    ...statsFromStore
+  // Stats calculations
+  const calculatedStats = {
+    total: filteredFeedbacks.length,
+    positive: filteredFeedbacks.filter(f => f.rating >= 4).length,
+    negative: filteredFeedbacks.filter(f => f.rating <= 2).length,
+    approved: filteredFeedbacks.filter(f => f.status === 'approved').length,
+    rejected: filteredFeedbacks.filter(f => f.status === 'rejected').length,
+    recommended: filteredFeedbacks.filter(f => f.recommend).length,
+    ...stats // Merge with stats from Redux store
   };
 
   if (loading) {
@@ -191,32 +224,30 @@ const FeedbackList = () => {
   return (
     <div className="mt-12 overflow-hidden">
       <StatsSection 
-        stats={stats}
+        stats={calculatedStats} 
         isDashboard={false} 
       />
 
       <div className="px-8 mx-4 -mt-12">
         <TableFilters
           filterType="feedback"
-          isFilterOpen={isFilterOpen}
-          setIsFilterOpen={setIsFilterOpen}
-          tempFilters={tempFilters}
-          handleCategoryFilterChange={handleCategoryFilterChange}
-          handleRatingFilterChange={handleRatingFilterChange}
-          handleRecommendationFilterChange={handleRecommendationFilterChange}
+          isFilterOpen={state.isFilterOpen}
+          setIsFilterOpen={(value) => setState(prev => ({ ...prev, isFilterOpen: value }))}
+          tempFilters={state.tempFilters}
+          handleFilterChange={handleFilterChange}
           handleStartDateChange={handleStartDateChange}
           handleEndDateChange={handleEndDateChange}
+          applyFilters={handleApplyFilters}
+          clearFilters={handleClearFilters}
+          searchQuery={state.searchQuery}
+          setSearchQuery={handleSearchChange}
+          activeFilters={state.activeFilters}
+          setActiveFilters={(filters) => setState(prev => ({ ...prev, activeFilters: filters }))}
           pageTitle="Manage Feedback"
-          applyFilters={applyFilters}
-          clearFilters={clearFilters}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          activeFilters={activeFilters}
-          setActiveFilters={setActiveFilters}
           showAddButton={false}
         />
 
-        {feedbacks.length === 0 ? (
+        {filteredFeedbacks.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">No feedback data available</p>
           </div>
@@ -224,20 +255,20 @@ const FeedbackList = () => {
           <>
             <FeedbackTable 
               feedbacks={currentItems}
-              tempFilters={tempFilters}
-              searchQuery={searchQuery}
             />
 
-            <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              itemsPerPage={itemsPerPage}
-              setItemsPerPage={setItemsPerPage}
-              setCurrentPage={setCurrentPage}
-              filteredItems={filteredFeedbacks}
-              indexOfFirstItem={indexOfFirstItem}
-              indexOfLastItem={indexOfLastItem}
-            />
+            <div className="mt-4">
+              <Pagination 
+                currentPage={state.currentPage}
+                totalPages={totalPages}
+                itemsPerPage={state.itemsPerPage}
+                setItemsPerPage={handleItemsPerPageChange}
+                setCurrentPage={handlePageChange}
+                filteredItems={filteredFeedbacks}
+                indexOfFirstItem={indexOfFirstItem}
+                indexOfLastItem={indexOfLastItem}
+              />
+            </div>
           </>
         )}
       </div>
