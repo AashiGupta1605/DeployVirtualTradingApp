@@ -283,14 +283,14 @@ export default function OrganizationDashboard({ type }) {
   if (error) {
     return <div className="text-red-500 text-center mt-8">Error: {error}</div>;
   }
-
+// before in palce of pt-15 we have pt-24
   return (
-    <>
-      <div className={type !== 'user-list' ? 'mt-24' : 'pt-24'}>
+    <> 
+      <div className={type !== 'user-list' ? 'mt-24' : 'pt-20'}>  
         {/* Dashboard header */}
         <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-32 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
           <div className="px-4 mx-auto w-full">
-            <div>
+            <div> 
               {/* Card stats */}
               <div className="flex flex-wrap">
                 {/* Total Users Card */}
