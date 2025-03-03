@@ -50,7 +50,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
       try {
         const url = initialValues
           ? `${BASE_API_URL}/user/users/${initialValues._id}`
-          : `${BASE_API_URL}/user/register`;
+          : `${BASE_API_URL}/user/auth/register`;
         const method = initialValues ? "put" : "post";
   
         const response = await fetch(url, {
