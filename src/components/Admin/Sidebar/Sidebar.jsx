@@ -1,8 +1,10 @@
+// Sidebar.jsx
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import PropTypes from 'prop-types';
 import { resetAdminState } from '../../../redux/Admin/AdminSlice';
-import logoImage from "../../../assets/img/PGR_logo.jpeg"; 
+import logoImage from "../../../assets/img/PGR_logo.jpeg";
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -10,7 +12,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const toggleSidebar = () => {
+  const handleSidebarToggle = () => {
     setSidebarExpanded(!sidebarExpanded);
     setActiveMenu(null);
   };
@@ -18,14 +20,14 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    
     dispatch(resetAdminState());
-
     navigate('/');
   };
 
-  const toggleMenu = (menuName) => {
-    if (!sidebarExpanded) setSidebarExpanded(true);
+  const handleMenuToggle = (menuName) => {
+    if (!sidebarExpanded) {
+      setSidebarExpanded(true);
+    }
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
@@ -37,6 +39,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
       { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
       { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },
       { to: "/admin/queries", icon: "fas fa-envelope", label: "Queries" },
+      { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
       { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
     ],
     user: [
@@ -51,19 +54,15 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   };
 
   return (
-    <nav
-      className={`${sidebarExpanded ? "md:w-64" : "md:w-20"} fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}
-    >
+    <nav className={`${sidebarExpanded ? "md:w-64" : "md:w-20"} fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}>
       <div className="flex flex-col h-full">
         {/* Logo Section */}
         <div className="flex items-center justify-between w-full h-20 px-6 border-b border-gray-200">
-
-
-            <span className="text-lg font-bold leading-relaxed uppercase">
-              {sidebarExpanded ? "Admin" : ""}
-            </span>
-            <button
-            onClick={toggleSidebar}
+          <span className="text-lg font-bold leading-relaxed uppercase">
+            {sidebarExpanded ? "Admin" : ""}
+          </span>
+          <button
+            onClick={handleSidebarToggle}
             className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
           >
             <i className={`fas fa-${sidebarExpanded ? "times" : "bars"} text-gray-400 text-base`}></i>
@@ -71,11 +70,11 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 relative">
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
           {Object.entries(menuItems).map(([section, items]) => (
             <div key={section} className="space-y-4">
               <button
-                onClick={() => toggleMenu(section)}
+                onClick={() => handleMenuToggle(section)}
                 className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
                   activeMenu === section
                     ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
@@ -108,33 +107,20 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
               )}
             </div>
           ))}
-
-          {/* Logout Button - Responsive Design */}
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <button 
-              onClick={handleLogout}
-              className={`
-                w-full flex items-center justify-center 
-                text-red-500 hover:text-red-700 
-                transition-colors 
-                rounded-lg p-3
-                ${sidebarExpanded 
-                  ? "bg-red-50 hover:bg-red-100 space-x-2" 
-                  : "hover:bg-red-50"
-                }
-              `}
-            >
-              <i className="fas fa-sign-out-alt"></i>
-              {sidebarExpanded && <span>Logout</span>}
-            </button>
-          </div>
         </div>
 
-        {/* User Profile Section - Always Visible */}
-        <div className={`
-          border-t bg-gray-50 p-4 flex items-center 
-          ${sidebarExpanded ? "justify-between" : "justify-center"}
-        `}>
+        <div className="p-4">
+          <button 
+            onClick={handleLogout}
+            className={`w-full flex items-center justify-center text-red-500 hover:text-red-700 transition-colors rounded-lg p-3
+              ${sidebarExpanded ? "bg-red-50 hover:bg-red-100 space-x-2" : "hover:bg-red-50"}`}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+            {sidebarExpanded && <span>Logout</span>}
+          </button>
+        </div>
+        {/* User Profile Section */}
+        <div className={`border-t bg-gray-50 p-4 flex items-center ${sidebarExpanded ? "justify-between" : "justify-center"}`}>
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
@@ -144,37 +130,34 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
             </div>
             {sidebarExpanded && (
               <div>
-                <div className="font-medium">Roshni</div>
+                <div className="font-medium">Admin</div>
                 <div className="text-sm">Administrator</div>
               </div>
             )}
           </div>
         </div>
+
+        {/* Logout Button */}
+
       </div>
     </nav>
   );
 }
 
-// Rest of the component remains the same...
+const MenuLink = ({ to, icon, label, isActive }) => (
+  <Link
+    to={to}
+    className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+      isActive ? "bg-lightBlue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"
+    }`}
+  >
+    <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isActive ? "bg-lightBlue-100" : "bg-gray-100"}`}>
+      <i className={`${icon} ${isActive ? "text-lightBlue-600" : "text-gray-500"}`}></i>
+    </div>
+    <span className="text-sm font-medium">{label}</span>
+  </Link>
+);
 
-// Helper Components
-const MenuLink = ({ to, icon, label, isActive }) => {
-  return (
-    <Link
-      to={to}
-      className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-        isActive ? "bg-lightBlue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"
-      }`}
-    >
-      <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isActive ? "bg-lightBlue-100" : "bg-gray-100"}`}>
-        <i className={`${icon} ${isActive ? "text-lightBlue-600" : "text-gray-500"}`}></i>
-      </div>
-      <span className="text-sm font-medium">{label}</span>
-    </Link>
-  );
-};
-
-// Helper function to get section icons
 const getSectionIcon = (section) => {
   const icons = {
     admin: "shield-alt",
@@ -182,4 +165,16 @@ const getSectionIcon = (section) => {
     organization: "building",
   };
   return icons[section] || "circle";
+};
+
+Sidebar.propTypes = {
+  sidebarExpanded: PropTypes.bool.isRequired,
+  setSidebarExpanded: PropTypes.func.isRequired,
+};
+
+MenuLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired,
 };
