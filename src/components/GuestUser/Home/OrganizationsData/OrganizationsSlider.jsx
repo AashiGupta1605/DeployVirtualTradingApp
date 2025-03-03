@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import "../Home/OrganizationsSliderCSS.css"
+import "./OrganizationsSliderCSS.css"
 
+import "./ShowAllOrganizationsModal"
+import ShowAllOrganizationsModal from './ShowAllOrganizationsModal';
 
 const OrganizationsSlider = () => {
 
   const [data, setData] = useState([]);
   const [err, setErr] = useState('');
+
+  const [showModal,setShowModal]=useState(false)
+  const openModal = () => setShowModal(true)
+  const closeModal = () => setShowModal(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,24 +33,59 @@ const OrganizationsSlider = () => {
 
   const settings = {
     infinite: true,
-    speed: 3000,
+    speed: 3500,
     slidesToShow: 4,  // Number of images visible at a time
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 0, // Makes it a continuous scroll effect
     cssEase: "linear",
     arrows: false, // Hides navigation arrows
+    adaptiveHeight: false,
   };
 
   return (
-    <div className="mb-12 text-center">
+    <>
+    <section className="organization-slider-section mt-8 mb-8 bg-gray-100 border-2 border-gray-200 mx-6 p-6 rounded-lg">
 
+      <div className="flex justify-between items-center mb-4">
+        {/* Left-most heading */}
+        <h3 className="text-xl font-bold text-[#1a2c47]">Partnered Organizations</h3>
+
+        {/* Right side container */}
+        <div className="flex items-center gap-4">
+          {/* Second heading before the button */}
+          <h6 className="text-[18] font-semibold text-gray-500">
+            Total No. of Organizations: {data.length}
+          </h6>
+
+          {/* View More Button */}
+          <button className="flex items-center gap-2 px-4 py-1 font-semibold text-sm text-[#1a2c47] border border-[#1a2c47] rounded-lg transition-all duration-300 hover:bg-[#1a2c47] hover:text-white" onClick={openModal}>
+            View More
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13 5l7 7m0 0l-7 7m7-7H4"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    <div className="mb-0 text-center">
     {err && <div className="error-message">Error: {err}</div>}
 
     <Slider {...settings}>
           {data.length > 0 ? (
             data.map((card, index) => (
-              <div key={index} className="card flex flex-col h-86 bg-[] rounded-lg shadow-lg p-6 ease-in-out hover:scale-120" style={{}}>
+              <div key={index} className="card h-80 min-w-[300px] max-w-[300px] bg-white rounded-lg shadow-lg border p-6 overflow-hidden ease-in-out hover:scale-103 mb-3 mt-3" style={{}}>
               <div className="flex justify-center items-center">
                 <img
                   src={card.imgSrc || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s"}
@@ -52,19 +94,19 @@ const OrganizationsSlider = () => {
                   // className="w-full h-32 object-contain rounded-lg"                
                 />
                 </div>
-                <div className="card-content flex flex-col justify-between flex-grow">
-                  <h2 className="text-[22px] font-bold text-[] mb-7 uppercase mt-4 decoration-3 border-b-4 border-[#591915] pb-2">{card.name}</h2>
+                <div className="card-content justify-between overflow-hidden">
+                  <h2 className="text-[20px] font-bold text-[] mb-5 uppercase mt-4 decoration-3 border-b-2 border-[#1a2c47] pb-2">{card.name}</h2>
                   <p className="mt-2 text-sm font-medium text-left pl-4">
                     <a href={card.website || '#'} className="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">
                         {card.website || 'No website available'}
                     </a>
                   </p>                  
-                  <p className="mt-2 text-sm font-medium text-left pl-4 "><span className="font-bold text-[#591915]">Address:&nbsp;</span>
+                  <p className="mt-2 text-sm font-medium text-left pl-4 "><span className="font-bold text-[#1a2c47]">Address:&nbsp;</span>
                   {card.address 
                     ? card.address.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                     : 'No address available'}     
                   </p>
-                  <p className="mt-2 text-sm font-medium text-left pl-4"><span className="font-bold text-[#591915]">Head of Organization:&nbsp;</span>
+                  <p className="mt-2 text-sm font-medium text-left pl-4"><span className="font-bold text-[#1a2c47]">Head of Organization:&nbsp;</span>
                     {card.contactPerson 
                     ? card.contactPerson.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                     : 'No contact person available'}                  
@@ -78,6 +120,9 @@ const OrganizationsSlider = () => {
     </Slider>
 
     </div>
+    </section>
+    {showModal && <ShowAllOrganizationsModal closeModal={closeModal}/>}
+    </>
   );
 };
 

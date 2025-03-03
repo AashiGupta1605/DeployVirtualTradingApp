@@ -9,4 +9,7 @@
   .slick-list {
     margin: 0 -10px; /* Optional: to remove extra padding caused by slick's own margin/padding */
   }
+  .slick-slide > div {
+    width: 300px !important;
+  }
   

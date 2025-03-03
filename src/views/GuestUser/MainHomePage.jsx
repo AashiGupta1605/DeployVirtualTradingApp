@@ -1,20 +1,33 @@
 import React from "react";
 
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
+import NavbarCarousel from "../../components/GuestUser/Navbars/NavbarCarousel";
+import StartScreenPopupModal from "../../components/GuestUser/Home/StartScreenPopupModal";
+import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
+
 import Footer from "../../components/GuestUser/Footers/Footer";
-import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsSlider";
+import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
 // import FooterSlider3 from "../../components/GuestUser/Footers/FooterSlider3";
+
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
+
+import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
+import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
+
 import { Link } from "react-router-dom";
 import Stock from "../../assets/stock.jpg";
 
 const MainHomePage = () => {
   return (
     <>
+
+      <StartScreenPopupModal/>
       <MainHomeNavbar fixed />
+      <NavbarCarousel fixed/>
+      <HomeCarousel/>
 
       {/* Homepage Section */}
-      <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
+      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
         {/* Left - Content */}
         <div className="text-black md:w-1/2 px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
@@ -44,6 +57,8 @@ const MainHomePage = () => {
       </div>
       <InfoCards/>
       <OrganizationsSlider/>
+      <UserFeedbackCards/>
+      <OrganizationFeedbackCards/>
       {/* <FooterSlider3/> */}
       <Footer />
     </>
