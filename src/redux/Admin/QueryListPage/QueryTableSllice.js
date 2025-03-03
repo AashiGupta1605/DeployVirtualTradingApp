@@ -6,7 +6,7 @@ import { BASE_API_URL } from '../../../utils/BaseUrl';
 const contactService = {
   fetchAll: async () => {
     const [contacts, orgs, users] = await Promise.all([
-      axios.get(`${BASE_API_URL}/contact`),
+      axios.get(`${BASE_API_URL}/user/contact/get`),
       axios.get(`${BASE_API_URL}/organization/display-all-org`),
       axios.get(`${BASE_API_URL}/user/display-users`),
     ]);
@@ -19,7 +19,7 @@ const contactService = {
   },
 
   delete: (contactId) =>
-    axios.delete(`${BASE_API_URL}/contact/${contactId}`)
+    axios.delete(`${BASE_API_URL}/user/contact/deleteContact/${contactId}`)
 };
 
 // Helper function for filtering contacts

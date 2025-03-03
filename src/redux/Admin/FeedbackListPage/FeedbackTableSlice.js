@@ -103,13 +103,18 @@ const calculateStats = (feedbacks) => {
 };
 
 // Async Thunks
+// In FeedbackTableSlice.js
+
 export const fetchFeedbacks = createAsyncThunk(
   'admin/feedbackTable/fetchFeedbacks',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/feedback`);
+      console.log('Fetching feedbacks from:', `${BASE_API_URL}/user/feedback/admin`);
+      const response = await axios.get(`${BASE_API_URL}/user/feedback/admin`);
+      console.log('Feedback response:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Fetch error:', error);
       const errorMessage = error.response?.data?.message || 'Failed to fetch feedbacks';
       toast.error(errorMessage);
       return rejectWithValue(errorMessage);
@@ -121,7 +126,7 @@ export const deleteFeedback = createAsyncThunk(
   'admin/feedbackTable/deleteFeedback',
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${BASE_API_URL}/feedback/${id}`);
+      await axios.delete(`${BASE_API_URL}/user/feedback/admin/${id}`);
       toast.success('Feedback deleted successfully');
       return id;
     } catch (error) {
@@ -137,7 +142,7 @@ export const updateFeedbackStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `${BASE_API_URL}/feedback/${id}/status`,
+        `${BASE_API_URL}/user/feedback/admin/${id}/status`,
         { status }
       );
       toast.success(`Status updated to ${status}`);
@@ -206,7 +211,6 @@ const feedbackTableSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Feedbacks
       .addCase(fetchFeedbacks.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -225,8 +229,6 @@ const feedbackTableSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
-      // Delete Feedback
       .addCase(deleteFeedback.pending, (state) => {
         state.isDeleting = true;
       })
@@ -244,8 +246,6 @@ const feedbackTableSlice = createSlice({
       .addCase(deleteFeedback.rejected, (state) => {
         state.isDeleting = false;
       })
-
-      // Update Feedback Status
       .addCase(updateFeedbackStatus.pending, (state) => {
         state.isUpdating = true;
       })
@@ -269,14 +269,12 @@ const feedbackTableSlice = createSlice({
   }
 });
 
-// Export actions
 export const {
   setFilters,
   clearFilters,
   updateLocalFilters
 } = feedbackTableSlice.actions;
 
-// Selectors
 export const selectFeedbacks = state => state.admin.feedbackTable.feedbacks;
 export const selectFilteredFeedbacks = state => state.admin.feedbackTable.filteredFeedbacks;
 export const selectFeedbackStats = state => state.admin.feedbackTable.stats;
