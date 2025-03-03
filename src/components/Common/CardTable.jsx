@@ -29,7 +29,7 @@ const CardTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${BASE_API_URL}/admin/niftydata`);
+        const response = await axios.get(`${BASE_API_URL}/admin/nifty/data`);
         if (response.data && Array.isArray(response.data)) {
           const sortedData = response.data.sort((a, b) => new Date(b.fetchTime) - new Date(a.fetchTime));
           setNiftyData([sortedData[0]]);

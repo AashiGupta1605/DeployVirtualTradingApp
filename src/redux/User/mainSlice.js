@@ -5,11 +5,13 @@ import feedbackReducer from "./feedbackSlice";
 import feedbackModalReducer from './feedbackModalSlice';
 
 import userSlice from './userSlice';
+import subscriptionPlanReducer from './userSubscriptionPlan/userSubscriptionPlansSlice';
 
 const userReducer = combineReducers({
   auth: authReducer,
   profile: userProfileReducer,
   users: userSlice,
+  subscriptionPlan: subscriptionPlanReducer,
   feedback: feedbackReducer,
   feedbackModal: feedbackModalReducer,
 });
