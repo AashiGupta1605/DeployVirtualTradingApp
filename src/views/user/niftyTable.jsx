@@ -7,7 +7,7 @@ export default function TablesPage() {
   return (
     <>
     <div className="mt-24">
-                <div className="bg-lightBlue-600 md:pt-8 pb-32 pt-12">
+                <div className="bg-lightBlue-600 md:pt-8 pb-23 pt-12">
                   <div className="px-4 mx-auto w-full">
                     <div>
                       {/* Card stats */}

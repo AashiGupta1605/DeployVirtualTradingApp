@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
-import { BASE_API_URL } from "../../../utils/BaseUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { submitFeedback, updateFeedback } from "../../../redux/User/feedbackSlice"; // Import slice functions
 import { Star } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 
 const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.user.feedback);
+
   const [formData, setFormData] = useState({
     userId: "",
     feedbackCategory: "",
@@ -14,9 +17,6 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
     suggestions: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     if (feedbackData) {
       setFormData({
@@ -24,34 +24,18 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
         feedbackCategory: feedbackData.feedbackCategory || "",
         feedbackMessage: feedbackData.feedbackMessage || "",
         rating: feedbackData.rating || 0,
-        recommend: feedbackData.recommend || false, // Boolean
+        recommend: feedbackData.recommend || false,
         suggestions: feedbackData.suggestions || "",
       });
     } else {
-      const fetchUserData = async () => {
-        if (!token) return;
-        try {
-          const response = await axios.get(`${BASE_API_URL}/user/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setFormData((prevData) => ({
-            ...prevData,
-            userId: response.data.user?._id || "",
-          }));
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      };
-      fetchUserData();
+      const user = JSON.parse(localStorage.getItem("user"));
+      setFormData((prev) => ({ ...prev, userId: user?._id || "" }));
     }
-  }, [token, feedbackData]);
+  }, [feedbackData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleRatingChange = (star) => {
@@ -60,52 +44,29 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!token) {
-      alert("User is not authenticated. Please log in again.");
+    if (!formData.userId) {
+      toast.error("User not found. Please log in.");
       return;
     }
 
-    setLoading(true);
-    try {
-      let response;
-      if (feedbackData) {
-        // Update feedback
-        response = await axios.put(
-          `${BASE_API_URL}/user/feedback/${feedbackData._id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        toast.success("Feedback updated successfully!");
-      } else {
-        // Submit new feedback
-        response = await axios.post(
-          `${BASE_API_URL}/user/feedback`,
-          {
-            ...formData,
-            status: "Approved",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        toast.success("Feedback submitted successfully!");
-      }
-
-      if (onFeedbackSubmit) onFeedbackSubmit(response.data); // Update Feedback Table
-      onClose();
-    } catch (error) {
-      console.error("Error submitting feedback:", error.response?.data || error);
-      alert("Failed to submit feedback. Please try again.");
-    } finally {
-      setLoading(false);
+    if (feedbackData) {
+      dispatch(updateFeedback({ feedbackId: feedbackData._id, formData }))
+        .unwrap()
+        .then(() => {
+          toast.success("Feedback updated successfully!");
+          onFeedbackSubmit?.();
+          onClose();
+        })
+        .catch((err) => toast.error(err || "Failed to update feedback"));
+    } else {
+      dispatch(submitFeedback(formData))
+        .unwrap()
+        .then(() => {
+          toast.success("Feedback submitted successfully!");
+          onFeedbackSubmit?.();
+          onClose();
+        })
+        .catch((err) => toast.error(err || "Failed to submit feedback"));
     }
   };
 

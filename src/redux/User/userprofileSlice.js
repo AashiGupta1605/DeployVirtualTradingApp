@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_API_URL } from "../../utils/BaseUrl";
 
-// Async Thunk to Fetch User Data
+// Fetch user data
 export const fetchUserData = createAsyncThunk(
   "user/fetchUserData",
   async (_, { rejectWithValue }) => {
@@ -17,14 +17,12 @@ export const fetchUserData = createAsyncThunk(
       if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
       const data = await response.json();
-      const formattedDob = data.user?.dob ? data.user.dob.split("T")[0] : "";
-
       return {
         name: data.user?.name || "",
         email: data.user?.email || "",
         mobile: data.user?.mobile || "",
         gender: data.user?.gender || "",
-        dob: formattedDob,
+        dob: data.user?.dob ? data.user.dob.split("T")[0] : "",
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -32,7 +30,7 @@ export const fetchUserData = createAsyncThunk(
   }
 );
 
-// Async Thunk to Update User Profile
+// Update user profile
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile",
   async (userData, { rejectWithValue }) => {
@@ -59,12 +57,38 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+// Delete user profile
+export const deleteUserProfile = createAsyncThunk(
+  "user/deleteUserProfile",
+      async (_, { rejectWithValue }) => {
+      try {
+      const token = localStorage.getItem("token");
+ 
+        const response = await fetch(`${BASE_API_URL}/user/delete`, {
+           method: "DELETE",
+           headers: { 
+           "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+     });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Profile deletion failed");
+
+      return data.message;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const userprofileSlice = createSlice({
   name: "user",
   initialState: {
     userData: null,
     loading: false,
     error: null,
+    deleteMessage: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -90,6 +114,19 @@ const userprofileSlice = createSlice({
         state.userData = action.payload;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userData = null;
+        state.deleteMessage = action.payload;
+      })
+      .addCase(deleteUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
