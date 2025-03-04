@@ -146,7 +146,7 @@ const RegisterUserList = () => {
     try {
       await dispatch(fetchUsers()).unwrap();
       setState(prev => ({ ...prev, isRegisterModalOpen: false }));
-      toast.success('User operation completed successfully');
+      // toast.success('User operation completed successfully');
     } catch (error) {
       toast.error(error.message || 'Operation failed');
     }
