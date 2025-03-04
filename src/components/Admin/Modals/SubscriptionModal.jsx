@@ -118,7 +118,7 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
           })).unwrap();
           
           if (result) {
-            toast.success('Subscription updated successfully');
+            // toast.success('Subscription updated successfully');
             setIsEditing(false);
             onSuccess?.();
             dispatch(getUserSubscriptions(selectedUser._id));
@@ -127,7 +127,7 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
           const result = await dispatch(createSubscription(subscriptionData)).unwrap();
           
           if (result) {
-            toast.success('Subscription created successfully');
+            // toast.success('Subscription created successfully');
             setIsEditing(false);
             onSuccess?.();
             dispatch(getUserSubscriptions(selectedUser._id));

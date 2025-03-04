@@ -9,7 +9,7 @@ export const createSubscription = createAsyncThunk(
   'subscriptionPlan/create',
   async (subscriptionData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_API_URL}/user/subscription-plans` , subscriptionData);
+      const response = await axios.post(`${BASE_API_URL}/user/subscription` , subscriptionData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -21,7 +21,7 @@ export const getSubscription = createAsyncThunk(
   'subscriptionPlan/getOne',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/user/subscription-plans/${id}`);
+      const response = await axios.get(`${BASE_API_URL}/user/subscription/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -36,7 +36,7 @@ export const getUserSubscriptions = createAsyncThunk(
     async (userId, { rejectWithValue }) => {
       try {
         // Update this URL to match your route structure
-        const response = await axios.get(`${BASE_API_URL}/user/subscription-plans/user/${userId}`);
+        const response = await axios.get(`${BASE_API_URL}/user/subscription/user/${userId}`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -51,7 +51,7 @@ export const updateSubscription = createAsyncThunk(
   async ({ id, updateData }, { rejectWithValue }) => {
     try {
       // Make sure you're using the correct id parameter
-      const response = await axios.patch(`${BASE_API_URL}/user/subscription-plans/${id}`, updateData);
+      const response = await axios.patch(`${BASE_API_URL}/user/subscription/${id}`, updateData);
       
       // Check if response.data exists
       if (!response.data) {
@@ -71,7 +71,7 @@ export const cancelSubscription = createAsyncThunk(
     'subscriptionPlan/cancel',
     async (id, { rejectWithValue }) => {
       try {
-        const response = await axios.patch(`${BASE_API_URL}/user/subscription-plans/${id}/cancel`);
+        const response = await axios.patch(`${BASE_API_URL}/user/subscription/${id}/cancel`);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);

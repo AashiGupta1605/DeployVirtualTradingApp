@@ -133,7 +133,7 @@ const OrganizationList = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      const loadingToast = toast.loading('Updating organization status...');
+      // const loadingToast = toast.loading('Updating organization status...');
       
       await dispatch(updateOrganizationStatus({ id, status })).unwrap();
       
@@ -143,7 +143,7 @@ const OrganizationList = () => {
         dispatch(filterOrganizations())
       ]);
       
-      toast.success('Organization status updated successfully!', { id: loadingToast });
+      // toast.success('Organization status updated successfully!', { id: loadingToast });
     } catch (error) {
       console.error('Error updating status:', error);
       toast.error(error.message || 'Failed to update organization status');

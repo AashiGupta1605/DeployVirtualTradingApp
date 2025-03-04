@@ -47,7 +47,7 @@ export const updateUser = createAsyncThunk(
         data
       );
 
-      toast.success('User updated successfully!');
+      // toast.success('User updated successfully!');
       dispatch(fetchUsers());
       return response.data;
     } catch (error) {
@@ -83,8 +83,8 @@ export const fetchUsers = createAsyncThunk(
       const response = await axios.get(`${BASE_API_URL}/admin/users`);
       return response.data;
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to fetch users');
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+      // toast.error(error.response?.data?.message || '');
+      return rejectWithValue(error.response?.data?.message || '');
     }
   }
 );
