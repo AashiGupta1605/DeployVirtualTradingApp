@@ -38,11 +38,11 @@ const UserAllFeedsModal = ({ closeModal }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(230,230,230,0.3)] rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-18" // Light background
       onClick={closeModal}
     >
       <div
-        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[900px] max-h-[80vh] overflow-y-auto relative"
+        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[80%] max-w-[1200px] max-h-[85vh] relative"
         onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
       >
       <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
@@ -153,6 +153,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
         {err && <p className="text-red-500">{err}</p>}
 
         {/* List of Feedbacks */}
+        <div className="max-h-[60vh] overflow-y-auto px-4">
         {feedbacks.length > 0 ? (
           feedbacks.map((card, index) => {
             const user = userData.find((user) => user._id === card.userId);
@@ -209,13 +210,14 @@ const UserAllFeedsModal = ({ closeModal }) => {
         <div className="flex justify-end">
           <button
             onClick={closeModal}
-            className="px-6 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-3 sticky bottom-0 bg-white"
+            className="px-6 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-3 mb-5 sticky bottom-0 bg-white"
           >
             Close
           </button>
         </div>
 
       </div>
+    </div>
     </div>
   );
 };

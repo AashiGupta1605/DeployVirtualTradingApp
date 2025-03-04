@@ -20,9 +20,9 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
     }
   };
 
-  const handleSearch = () => {
-    fetchData();
-  };
+  // const handleSearch = () => {
+  //   fetchData();
+  // };
 
   useEffect(() => {
     fetchData();
@@ -30,24 +30,24 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(230,230,230,0.3)] rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-18" // Light background
       onClick={closeModal}
     >
       <div
-        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[2000px] max-h-[80vh] overflow-y-auto relative"
+        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[80%] max-w-[1200px] max-h-[85vh] relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Start of Header */}
         <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
           <div className="flex justify-between items-center mb-5 pt-4">
             <h2 className="text-lg font-semibold text-[#1a2c47">
-              About Organizations
+              Organizations
             </h2>
             {/* Right side container */}
             <div className="flex items-center gap-4 ">
               {/* First heading before*/}
               <h6 className="text-[18] font-semibold text-gray-500">
-                Total Organizations: {data.length}
+                Total Associated Organizations: {data.length}
               </h6>
               <button
                 onClick={closeModal}
@@ -65,12 +65,12 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="border p-2 rounded-lg w-full"
+              className="border px-4 py-1 rounded-lg w-[300px] h-[30px]"
             />
-            <button 
+            {/* <button 
             onClick={handleSearch} 
             className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >  Search </button>
+            >  Search </button> */}
             </div>
           </div>
         </div>
@@ -80,6 +80,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
 
         {/* List of Organizations */}
         {/* Table Container */}
+        <div className="max-h-[60vh] overflow-y-auto px-4">
         <div className="overflow-x-auto">
           <table className="w-full table-fixed border-collapse border border-gray-300">
             <thead className="bg-gray-100">
@@ -87,9 +88,9 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
                 <th className="p-3 border border-gray-300 w-[250px]">Organization Name</th>
                 <th className="p-3 border border-gray-300 w-[250px]">Organization Website</th>
                 <th className="p-3 border border-gray-300 w-[250px]">Organization Address</th>
-                <th className="p-3 border border-gray-300 w-[250px]">Organization Email</th>
-                <th className="p-3 border border-gray-300 w-[250px]">Organization Contact</th>
-                <th className="p-3 border border-gray-300 w-[250px]">Joining Date</th>
+                {/* <th className="p-3 border border-gray-300 w-[250px]">Organization Email</th> */}
+                {/* <th className="p-3 border border-gray-300 w-[250px]">Organization Contact</th> */}
+                <th className="p-3 border border-gray-300 w-[250px]">Associated Date</th>
               </tr>
             </thead>
             <tbody>
@@ -102,8 +103,8 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
                     </a>
                   </td>
                   <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.address}</td>
-                  <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.email}</td>
-                  <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.mobile}</td>
+                  {/* <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.email}</td> */}
+                  {/* <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.mobile}</td> */}
                   <td className="p-3 border border-gray-300 w-[250px] break-all">{org.createDate}</td>
                 </tr>
               ))}
@@ -115,12 +116,13 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
         <div className="flex justify-end">
           <button
             onClick={closeModal}
-            className="px-6 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-3 sticky bottom-0 bg-white"
+            className="px-6 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-3 mb-5 sticky bottom-0 bg-white"
           >
             Close
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

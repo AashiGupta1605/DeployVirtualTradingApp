@@ -7,10 +7,10 @@ import "swiper/css/pagination";
 
 const HomeCarousel = () => {
   const slides = [
-    { id: 1, image: "https://source.unsplash.com/1600x900/?trading,stock", title: "Stock Market Insights" },
-    { id: 2, image: "https://source.unsplash.com/1600x900/?cryptocurrency,bitcoin", title: "Cryptocurrency Trends" },
-    { id: 3, image: "https://source.unsplash.com/1600x900/?forex,investment", title: "Forex Trading Tips" },
-    { id: 4, image: "https://source.unsplash.com/1600x900/?finance,market", title: "Market Analysis" },
+    { id: 1, image: "", title: "Stock Market Insights" },
+    { id: 2, image: "", title: "Cryptocurrency Trends" },
+    { id: 3, image: "", title: "Forex Trading Tips" },
+    { id: 4, image: "", title: "Market Analysis" },
   ];
 
   return (

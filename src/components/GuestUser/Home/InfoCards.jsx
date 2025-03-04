@@ -50,7 +50,7 @@ const InfoCards = () => {
               {popupCards.map((card) => (
                 <div
                   key={card.id}
-                  className="bg-white rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-107"
+                  className="bg-white rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-103"
                 >
                   <h3 className="text-2xl font-bold mb-4">{card.headline}</h3>
                   <h3 className="text-2xl font-semibold mb-4">{card.description}</h3>

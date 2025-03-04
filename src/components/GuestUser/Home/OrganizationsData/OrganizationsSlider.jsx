@@ -97,7 +97,7 @@ const OrganizationsSlider = () => {
                 <div className="card-content justify-between overflow-hidden">
                   <h2 className="text-[20px] font-bold text-[] mb-5 uppercase mt-4 decoration-3 border-b-2 border-[#1a2c47] pb-2">{card.name}</h2>
                   <p className="mt-2 text-sm font-medium text-left pl-4">
-                    <a href={card.website || '#'} className="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+                    <a href={card.website || '#'} className="text-blue-600 hover:text-blue-800 break-words line-clamp-1" target="_blank" rel="noopener noreferrer">
                         {card.website || 'No website available'}
                     </a>
                   </p>                  

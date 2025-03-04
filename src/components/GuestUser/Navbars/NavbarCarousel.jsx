@@ -34,12 +34,12 @@ const NavbarCarousel = () => {
   ]);
 
   return (
-    <div className="fixed left-0 top-16 w-full bg-black text-white py-2 z-50">
+    <div className="fixed left-0 top-16 w-full bg-black text-white py-1 z-30">
       <Slider {...settings}>
         {stockData.map((stock, index) => (
-          <div key={index} className="flex items-center space-x-1 bg-black px-2 py-1 rounded-md">
-            <span className="font-bold">{stock.name}</span>
-            <span className="text-gray-300">{stock.price}</span>
+          <div key={index} className="flex items-center space-x-1 bg-black px-2 py-[2px] rounded-md">
+            <span className="font-bold text-sm">{stock.name}</span>
+            <span className="text-gray-300 text-sm">{stock.price}</span>
             <span className={`font-semibold ${stock.change.startsWith("+") ? "text-green-400" : "text-red-400"}`}>
               {stock.change}
             </span>
