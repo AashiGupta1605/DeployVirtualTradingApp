@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData, updateUserProfile } from "../../../redux/User/userprofileSlice";
+import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
 import UpdateProfileForm from "./UpdateProfileForm";
 import ConfirmationModal from "./ConfirmationModal";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function CardSettings({ isOpen, onClose }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userData } = useSelector((state) => state.user.profile);
+  const { userData, deleteMessage, error} = useSelector((state) => state.user.profile);
   // Get user profile from Redux
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -22,6 +22,13 @@ export default function CardSettings({ isOpen, onClose }) {
   const handleUpdate = async (updatedData) => {
     await dispatch(updateUserProfile(updatedData));
     setIsEditModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    await dispatch(deleteUserProfile());
+    setIsDeleteModalOpen(false);
+    localStorage.removeItem("token"); // Remove token from local storage
+    navigate("/login"); // Redirect to login page after deletion
   };
 
   return (
@@ -78,12 +85,12 @@ export default function CardSettings({ isOpen, onClose }) {
           userData={userData} 
           onUpdate={handleUpdate} 
         />
-        <ConfirmationModal 
-          isOpen={isDeleteModalOpen} 
-          onClose={() => setIsDeleteModalOpen(false)} 
-          onConfirm={() => console.log("Handle delete action")} 
-          message="Are you sure you want to delete your profile? This action cannot be undone."
-        />
+             <ConfirmationModal 
+             isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)} 
+              onConfirm={handleDelete}
+               message="Are you sure you want to delete your profile?" 
+               />
       </div>
     )
   );

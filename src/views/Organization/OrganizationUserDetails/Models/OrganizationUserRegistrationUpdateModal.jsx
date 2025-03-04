@@ -260,11 +260,11 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { registerOrganizationUser, updateOrganizationUser, resetUserState } from "../../../redux/Organization/users/organizationUsersSlice";
+import { registerOrganizationUser, updateOrganizationUser, resetUserState } from "../../../../redux/Organization/users/organizationUsersSlice";
 import toast, { Toaster } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { fetchDashboardData } from "../../../redux/Organization/dashboard/organizationDashboardSlice";
+import { fetchDashboardData } from "../../../../redux/Organization/dashboard/organizationDashboardSlice";
 
 // Validation schema
 const validationSchema = Yup.object({

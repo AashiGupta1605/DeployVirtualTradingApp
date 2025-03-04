@@ -1625,12 +1625,12 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutOrganization } from "../../redux/Organization/auth/organizationAuthSlice";
-import NotificationDropdown from "../Admin/Dropdowns/NotificationDropdown";
-import UserDropdown from "../Admin/Dropdowns/UserDropdown";
-import OrganizationRegistrationForm from "../../views/Organization/auth/OrganizationUserRegistration";
+import { logoutOrganization } from "../../../redux/Organization/auth/organizationAuthSlice";
+import NotificationDropdown from "../../Admin/Dropdowns/NotificationDropdown";
+import UserDropdown from "../../Admin/Dropdowns/UserDropdown";
+import OrganizationRegistrationForm from "../../../views/Organization/OrganizationUserDetails/Models/OrganizationUserRegistrationUpdateModal";
 import toast from "react-hot-toast";
-import Tooltip from "../Common/Tooltip";
+import Tooltip from "../../Common/Tooltip";
 
 export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const dispatch = useDispatch();

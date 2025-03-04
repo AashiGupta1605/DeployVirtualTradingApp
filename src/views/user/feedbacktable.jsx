@@ -26,9 +26,14 @@ export default function FeedbackTable() {
     dispatch(fetchFeedback());
   }, [dispatch]);
 
+  const handleFeedbackUpdate = () => {
+    dispatch(fetchFeedback()); // Fetch latest feedback after submitting
+  };
+
   const handleEditFeedback = (feedbackId) => {
     const feedbackToEdit = feedbackData.find((feedback) => feedback._id === feedbackId);
     setEditFeedback(feedbackToEdit);
+    dispatch(fetchFeedback());
     setIsEditModalOpen(true);
   };
 
@@ -36,19 +41,19 @@ export default function FeedbackTable() {
     setSelectedFeedbackId(feedbackId);
     setIsDeleteModalOpen(true);
   };
-
+  
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setSelectedFeedbackId(null);
   };
-
-  const handleDeleteFeedback = () => {
-    if (!selectedFeedbackId) return;
-    // Dispatch the deleteFeedback action
-    dispatch(deleteFeedback(selectedFeedbackId));
+  
+  const handleDeleteFeedback = (feedbackId) => {
+    if (!feedbackId) return;
+    dispatch(deleteFeedback(feedbackId));
     closeDeleteModal();
     dispatch(fetchFeedback());
   };
+  
 
   if (feedbackStatus === "loading") {
     return <div>Loading...</div>;
@@ -57,7 +62,7 @@ export default function FeedbackTable() {
   return (
     <>
       <div className="mt-24">
-        <div className="bg-lightBlue-600 md:pt-8 pb-32 pt-12">
+        <div className="bg-lightBlue-600 md:pt-8 pb-22 pt-12">
           <div className="px-4 mx-auto w-full">
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
@@ -144,73 +149,75 @@ export default function FeedbackTable() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {feedbackData.length > 0 ? (
-                    feedbackData.map((feedback) => (
-                      <tr key={feedback._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {feedback.userId?.name || "N/A"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {feedback.userId?.email || "N/A"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {feedback.feedbackMessage}
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          {[...Array(feedback.rating)].map((_, index) => (
-                            <Star key={index} size={20} fill="yellow" stroke="yellow" className="inline-block" />
-                          ))}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center">
-                          {feedback.recommend ? (
-                            <ThumbsUp size={20} className="text-green-500" />
-                          ) : (
-                            <ThumbsDown size={20} className="text-red-500" />
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(feedback.createdDate).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <span
-                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                            ${feedback.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                          >
-                            {feedback.status || "Approved"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                          <button className="text-blue-600 hover:text-blue-900 mr-4" onClick={() => handleEditFeedback(feedback._id)}>
-                            <Edit size={16} />
-                          </button>
-                          <button className="text-red-600 hover:text-red-900" onClick={() => openDeleteModal(feedback._id)}>
-                            <Trash2 size={16} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No feedbacks found</td>
-                    </tr>
-                  )}
-                </tbody>
+  {feedbackData.length > 0 ? (
+    feedbackData.map((feedback) => (
+      
+      <tr key={feedback._id} className="hover:bg-gray-50">
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+          {feedback.userId?.name || "N/A"}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {feedback.userId?.email || "N/A"}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {feedback.feedbackMessage}
+        </td>
+        <td className="px-6 py-4 text-sm">
+          {[...Array(feedback.rating)].map((_, index) => (
+            <Star key={`${feedback._id}-star-${index}`} size={20} fill="yellow" stroke="yellow" className="inline-block" />
+          ))}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center">
+          {feedback.recommend ? (
+            <ThumbsUp size={20} className="text-green-500" />
+          ) : (
+            <ThumbsDown size={20} className="text-red-500" />
+          )}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {new Date(feedback.createdDate).toLocaleDateString()}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">
+          <span
+            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+            ${feedback.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+          >
+            {feedback.status || "Approved"}
+          </span>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+          <button className="text-blue-600 hover:text-blue-900 mr-4" onClick={() => handleEditFeedback(feedback._id)}>
+            <Edit size={16} />
+          </button>
+          <button className="text-red-600 hover:text-red-900" onClick={() => openDeleteModal(feedback._id)}>
+            <Trash2 size={16} />
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No feedbacks found</td>
+    </tr>
+  )}
+</tbody>
+
               </table>
             </div>
           </div>
         </div>
       </div>
 
-      {isModalOpen && <FeedbackModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
-      {isEditModalOpen && <FeedbackModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} feedbackData={editFeedback} />}
-      {isDeleteModalOpen && (
-        <ConfirmationModal 
-          isOpen={isDeleteModalOpen} 
-          onClose={closeDeleteModal} 
-          onConfirm={handleDeleteFeedback} 
-          message="Are you sure you want to delete this feedback?"
-        />
-      )}
+      {isModalOpen && <FeedbackModal onFeedbackSubmit={handleFeedbackUpdate} onClose={() => setIsModalOpen(false)} />}
+      {isEditModalOpen && <FeedbackModal onFeedbackSubmit={handleEditFeedback} onClose={() => setIsEditModalOpen(false)} feedbackData={editFeedback} />}
+      {isDeleteModalOpen && selectedFeedbackId && (
+  <ConfirmationModal 
+    isOpen={isDeleteModalOpen} 
+    onClose={closeDeleteModal} 
+    onConfirm={() => handleDeleteFeedback(selectedFeedbackId)} 
+    message="Are you sure you want to delete this feedback?"
+  />
+)}
     </>
   );
 }

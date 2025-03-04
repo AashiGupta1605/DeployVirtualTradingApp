@@ -110,7 +110,7 @@
 import React, { useState } from "react";
 import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
 
-const OrganizationFeedbacksModal = ({ isOpen, onClose, onSubmit }) => {
+const OrganizationFeedbackModal = ({ isOpen, onClose, onSubmit }) => {
   const [feedbackCategory, setFeedbackCategory] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [rating, setRating] = useState(0);
@@ -265,4 +265,4 @@ const OrganizationFeedbacksModal = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-export default OrganizationFeedbacksModal;
+export default OrganizationFeedbackModal;

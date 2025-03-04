@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
-
+import { toast } from 'react-hot-toast';
 // Centralized API calls
 const contactService = {
   fetchAll: async () => {
@@ -81,8 +81,10 @@ export const deleteContact = createAsyncThunk(
     try {
       await contactService.delete(contactId);
       await dispatch(fetchContacts());
+      toast.success('Contact deleted successfully!'); // Success toast
       return contactId;
     } catch (error) {
+      toast.error(error.response?.data?.message || "Delete failed"); // Error toast
       return rejectWithValue(error.response?.data?.message || "Delete failed");
     }
   }
