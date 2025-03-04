@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
 import "../../components/User/Contact/ContactPage.css";
 import { BASE_API_URL } from "../../utils/BaseUrl";
 
@@ -27,10 +28,22 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
       .matches(/^[0-9]{10}$/, "Invalid mobile number")
       .required("Mobile number is required"),
     gender: Yup.string().required("Gender is required"),
-    dob: Yup.date().required("Date of birth is required"),
-    // orgtype: Yup.string().notRequired(), // Make this field not required
+    dob: Yup.date()
+      .required("Date of birth is required")
+      .test("age", "You must be at least 18 years old", (value) => {
+        if (!value) return false; // Ensure value exists
+        const today = new Date();
+        const birthDate = new Date(value);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        
+        // Adjust age if birthdate hasn't occurred yet this year
+        const hasBirthdayOccurred =
+          today.getMonth() > birthDate.getMonth() ||
+          (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+  
+        return age > 18 || (age === 18 && hasBirthdayOccurred);
+      }),
   });
-
   // Formik setup
   const formik = useFormik({
     initialValues: initialValues || {
@@ -60,18 +73,20 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
         });
   
         const data = await response.json();
-        if (response.ok) {
-          setMessage(`${initialValues ? "User updated" : "Registration"} successful! Redirecting to login...`);
-          setTimeout(() => {
-            navigate("/login");
-            onClose();
-          }, 2000);
-        } else {
-          setMessage(data.message || `${initialValues ? "Update" : "Registration"} failed.`);
-        }
-      } catch (error) {
-        setMessage("Something went wrong. Please try again.");
-      }
+
+if (response.ok) {
+  toast.success(`${initialValues ? "User updated" : "Registration"} successful! Redirecting to login...`);
+  setTimeout(() => {
+    navigate("/login");
+    onClose();
+  }, 2000);
+} else {
+  toast.error(data.message || `${initialValues ? "Update" : "Registration"} failed.`);
+}
+
+} catch (error) {
+  toast.error("Something went wrong. Please try again.");
+}
     },
   });
   
