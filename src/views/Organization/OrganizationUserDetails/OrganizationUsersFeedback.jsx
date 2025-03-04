@@ -824,13 +824,13 @@ import {
   setStartDate,
   setEndDate,
   clearFilters,
-} from "../../redux/Organization/feedbacks/organizationUsersFeedbackSlice";
-import Pagination from "../../components/Organization/Pagination";
-import OrgUserFeedbackTable from "../../components/Organization/OrgUserFeedbackTable";
-import ConfirmationModal from "../../components/Organization/ConfirmationModal";
-import Loader from "../../components/Common/Loader";
+} from "../../../redux/Organization/feedbacks/organizationUsersFeedbackSlice";
+import Pagination from "../../../components/Organization/TableFunctions/Pagination";
+import OrgUserFeedbackTable from "../../../components/Organization/Tables/FeedbackTable/OrgUserFeedbackTable";
+import ConfirmationModal from "../../../components/Organization/Modals/ConfirmationModal";
+import Loader from "../../../components/Common/Loader";
 import { Filter, X, SearchIcon } from "lucide-react";
-import { getAppliedFiltersCount, getAppliedFiltersText } from "../../utils/filterFunctions";
+import { getAppliedFiltersCount, getAppliedFiltersText } from "../../../utils/filterFunctions";
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

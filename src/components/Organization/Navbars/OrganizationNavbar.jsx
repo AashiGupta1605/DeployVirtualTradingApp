@@ -1,9 +1,17 @@
-import React from "react";
-import UserDropdown from "./UserDropdown";
+import React, {useEffect} from "react";
+import UserDropdown from "../DropDowns/UserDropdown";
 // import logoImage from "../../../assets/img/PGR_logo.jpeg";
-import logoImage from "../../assets/img/PGR_logo.jpeg";
-
+import logoImage from "../../../assets/img/PGR_logo.jpeg";
+import { fetchOrgById } from "../../../redux/Organization/auth/organizationAuthSlice";
+import { useDispatch } from "react-redux";
 export default function OrganizationNavbar({ sidebarExpanded }) {
+  const dispatch = useDispatch();
+  const orgId = localStorage.getItem("orgId"); // Assuming
+  useEffect(() => {
+    if (orgId) {
+      dispatch(fetchOrgById(orgId));
+    }
+  }, [dispatch, orgId]);
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 bg-white shadow-lg">
       <div className="w-full mx-auto flex items-center justify-between p-4 md:px-10 px-4">

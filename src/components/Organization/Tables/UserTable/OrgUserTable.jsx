@@ -105,7 +105,7 @@
 // tooltip
 import React, { useState } from "react";
 import { Edit, Trash2, ChevronDown, ChevronRight, SquarePlus } from "lucide-react";
-import Tooltip from "../Common/Tooltip"; // Adjust the import path as necessary
+import Tooltip from "../../../Common/Tooltip"; // Adjust the import path as necessary
 
 const OrgUserTable = ({ users, onEdit, onDelete, expandedRow, toggleRow }) => {
   const [hoveredTooltip, setHoveredTooltip] = useState(null);

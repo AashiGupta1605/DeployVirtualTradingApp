@@ -7,11 +7,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // Components
 // import AdminNavbar from "../components/Admin/Navbars/AdminNavbar";
-import OrganizationNavbar from "../components/Organization/OrganizationNavbar";
+import OrganizationNavbar from "../components/Organization/Navbars/OrganizationNavbar";
 // import Sidebar from "../components/Admin/Sidebar/Sidebar";
-import OrganizationSidebar from "../components/Organization/OrganizationSidebar";
+import OrganizationSidebar from "../components/Organization/Sidebars/OrganizationSidebar";
 // import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
-import OrganizationFooter from "../components/Organization/OrganizationFooter";
+import OrganizationFooter from "../components/Organization/Footers/OrganizationFooter";
 
 
 // Views
@@ -19,11 +19,11 @@ import OrganizationFooter from "../components/Organization/OrganizationFooter";
 // import Dashboard from "./views/Organization/Dashboard";
 // import Register from "./views/Organization/auth/Register";
 
-import OrganizationUsers from "../views/Organization/OrganizationUsers";
-import OrganizationDashboard from "../views/Organization/OrganizationDashboard";
+import OrganizationUsers from "../views/Organization/OrganizationUserDetails/OrganizationUsers";
+import OrganizationDashboard from "../views/Organization/OrganizationDetails/OrganizationDashboard";
 import Register from "../views/auth/Register";
-import OrganizationUsersFeedback from "../views/Organization/OrganizationUsersFeedback"
-import OrganizationFeedback from "../views/Organization/OrganizationFeedback";
+import OrganizationUsersFeedback from "../views/Organization/OrganizationUserDetails/OrganizationUsersFeedback"
+import OrganizationFeedback from "../views/Organization/OrganizationDetails/OrganizationFeedback";
 // import Login from "views/Organization/auth/Login";
 // const orgName = localStorage.getItem("orgName");
 

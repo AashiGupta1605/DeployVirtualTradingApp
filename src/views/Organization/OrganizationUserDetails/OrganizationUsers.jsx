@@ -1843,17 +1843,17 @@ import {
   setEndDate,
   setGender,
   clearFilters,
-} from "../../redux/Organization/users/organizationUsersSlice";
-import { fetchDashboardData } from "../../redux/Organization/dashboard/organizationDashboardSlice";
-import Pagination from "../../components/Organization/Pagination";
-import FilterComponent from "../../components/Organization/FilterComponent";
-import OrgUserTable from "../../components/Organization/OrgUserTable";
-import OrganizationUserRegistration from "./auth/OrganizationUserRegistration";
-import ConfirmationModal from "../../components/Organization/ConfirmationModal";
-import Loader from "../../components/Common/Loader";
+} from "../../../redux/Organization/users/organizationUsersSlice";
+import { fetchDashboardData } from "../../../redux/Organization/dashboard/organizationDashboardSlice";
+import Pagination from "../../../components/Organization/TableFunctions/Pagination";
+import FilterComponent from "../../../components/Organization/TableFunctions/FilterComponent";
+import OrgUserTable from "../../../components/Organization/Tables/UserTable/OrgUserTable";
+import OrganizationUserRegistration from "./Models/OrganizationUserRegistrationUpdateModal";
+import ConfirmationModal from "../../../components/Organization/Modals/ConfirmationModal";
+import Loader from "../../../components/Common/Loader";
 import { Filter, X, UserPlus, SearchIcon } from "lucide-react";
-import OrganizationDashboard from "./OrganizationDashboard";
-import { getAppliedFiltersCount, getAppliedFiltersText } from "../../utils/filterFunctions";
+import OrganizationDashboard from "../OrganizationDetails/OrganizationDashboard";
+import { getAppliedFiltersCount, getAppliedFiltersText } from "../../../utils/filterFunctions";
 
 const OrganizationUsers = () => {
   const dispatch = useDispatch();

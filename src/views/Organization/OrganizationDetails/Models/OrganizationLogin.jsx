@@ -174,7 +174,7 @@ import React, {useState} from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginOrganization, resetAuthState } from '../../../redux/Organization/auth/organizationAuthSlice';
+import { loginOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 const OrganizationLogin = ({ isOpen, onClose }) => {

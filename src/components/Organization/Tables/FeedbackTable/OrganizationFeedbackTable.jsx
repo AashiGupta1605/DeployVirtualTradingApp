@@ -92,13 +92,15 @@ const CATEGORY_COLORS = {
 };
 
 const OrganizationFeedbackTable = ({ feedbacks, onDelete }) => {
+  console.log(feedbacks);
+  
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              {["Category", "Message", "Rating", "Recommend", "Date", "Actions"].map((header) => (
+              {["Category", "Feedback Message", "Rating", "Recommend", "status", "Suggestions", "Date", "Actions"].map((header) => (
                 <th
                   key={header}
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -145,6 +147,19 @@ const OrganizationFeedbackTable = ({ feedbacks, onDelete }) => {
                     <ThumbsDown className="text-red-500 inline" size={20} />
                   )}
                 </td>
+
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full ${feedback.status==="approved" ? "text-green-500" : "text-red-500"}` }
+                  >
+                    {feedback.status}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {feedback.suggestions}
+                </td>
+              
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(feedback.createdDate).toLocaleDateString()}
                 </td>
