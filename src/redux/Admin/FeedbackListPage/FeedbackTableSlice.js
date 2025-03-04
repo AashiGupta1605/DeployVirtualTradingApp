@@ -127,7 +127,7 @@ export const deleteFeedback = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(`${BASE_API_URL}/user/feedback/admin/${id}`);
-      toast.success('Feedback deleted successfully');
+      // toast.success('Feedback deleted successfully');
       return id;
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to delete feedback';
@@ -145,7 +145,7 @@ export const updateFeedbackStatus = createAsyncThunk(
         `${BASE_API_URL}/user/feedback/admin/${id}/status`,
         { status }
       );
-      toast.success(`Status updated to ${status}`);
+      // toast.success(`Status updated to ${status}`);
       return { id, updatedFeedback: response.data.data };
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to update status';

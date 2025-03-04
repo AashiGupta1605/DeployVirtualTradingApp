@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
+import NavbarCarousel from "../../components/GuestUser/Navbars/NavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 import StockP from "../../assets/p-stock.jpg";
 import "../../components/GuestUser/Contact/ContactPage.css"; 
@@ -14,7 +15,8 @@ const ContactPage = () => {
 
   return (
     <>
-      <MainHomeNavbar />
+      <MainHomeNavbar fixed/>
+      <NavbarCarousel fixed/>
 
       {/* Contact Section */}
       <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">

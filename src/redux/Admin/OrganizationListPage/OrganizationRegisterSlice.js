@@ -14,7 +14,7 @@ export const registerOrganization = createAsyncThunk(
         organizationData
       );
 
-      toast.success('Organization registered successfully!');
+      // toast.success('Organization registered successfully!');
       await dispatch(fetchOrganizations());
       return response.data;
     } catch (error) {
@@ -45,7 +45,7 @@ export const updateOrganization = createAsyncThunk(
         filteredData
       );
 
-      toast.success('Organization updated successfully!');
+      // toast.success('Organization updated successfully!');
       await dispatch(fetchOrganizations());
       return response.data;
     } catch (error) {

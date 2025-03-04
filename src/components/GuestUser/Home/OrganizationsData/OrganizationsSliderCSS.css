@@ -1,0 +1,15 @@
+.slick-slide {
+    margin-right: 40px; /* Adjust the value to your preferred gap */
+  }
+  
+  .slick-track {
+    display: flex; /* Ensure the slides are laid out in a row */
+  }
+  
+  .slick-list {
+    margin: 0 -10px; /* Optional: to remove extra padding caused by slick's own margin/padding */
+  }
+  .slick-slide > div {
+    width: 300px !important;
+  }
+  

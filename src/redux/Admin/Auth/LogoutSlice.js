@@ -1,27 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
+import { toast } from 'react-hot-toast';
 
-// Logout Thunk
 export const logoutUser = createAsyncThunk(
-'auth/logout',
-async (_, { rejectWithValue }) => {
-try {
-// Optional: Call backend logout endpoint if needed
-// await axios.post(${BASE_API_URL}/auth/logout);
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      // Optional: Call backend logout endpoint if needed
+      // await axios.post(`${BASE_API_URL}/auth/logout`);
 
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('isAuthenticated');
 
-  // Clear local storage
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  localStorage.removeItem('userRole');
-  localStorage.removeItem('isAuthenticated');
-
-  return null;
-} catch (error) {
-  return rejectWithValue(error.response?.data || 'Logout failed');
-}
-}
+      toast.success('Logged out successfully!'); // Success toast
+      return null;
+    } catch (error) {
+      toast.error(error.response?.data || 'Logout failed'); // Error toast
+      return rejectWithValue(error.response?.data || 'Logout failed');
+    }
+  }
 );
 
 // Logout Slice
