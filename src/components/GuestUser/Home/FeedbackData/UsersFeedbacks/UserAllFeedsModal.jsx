@@ -38,7 +38,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-transparent rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(230,230,230,0.3)] rounded-4xl pt-18" // Light background
       onClick={closeModal}
     >
       <div
