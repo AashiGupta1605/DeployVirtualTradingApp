@@ -237,11 +237,11 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDashboardData, resetDashboardState } from '../../redux/Organization/dashboard/organizationDashboardSlice';
-import CardPageVisits from '../../components/Admin/Cards/CardPageVisits';
-import CardSocialTraffic from '../../components/Admin/Cards/CardSocialTraffic';
-import CardStats from '../../components/Admin/Cards/CardStats';
-import Loader from '../../components/Common/Loader';
+import { fetchDashboardData, resetDashboardState } from '../../../redux/Organization/dashboard/organizationDashboardSlice';
+import CardPageVisits from '../../../components/Admin/Cards/CardPageVisits';
+import CardSocialTraffic from '../../../components/Admin/Cards/CardSocialTraffic';
+import CardStats from '../../../components/Admin/Cards/CardStats';
+import Loader from '../../../components/Common/Loader';
 
 export default function OrganizationDashboard({ type }) {
   const dispatch = useDispatch();
@@ -413,11 +413,11 @@ export default function OrganizationDashboard({ type }) {
 
         {/* Additional cards for non-student-list views */}
         {type !== 'user-list' && (
-          <div className="flex flex-wrap">
-            <div className="w-full xl:w-8/12 px-4 -mt-20 pt-2">
+          <div className="flex flex-wrap -mt-28 px-4">
+            <div className="w-full xl:w-8/12 px-4 pt-2">
               <CardPageVisits />
             </div>
-            <div className="w-full xl:w-4/12 px-4 -mt-20 pt-2">
+            <div className="w-full xl:w-4/12 px-4 pt-2">
               <CardSocialTraffic />
             </div>
           </div>

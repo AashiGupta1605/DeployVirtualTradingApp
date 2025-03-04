@@ -236,7 +236,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerOrganization, resetAuthState } from '../../../redux/Organization/auth/organizationAuthSlice';
+import { registerOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
 import toast from 'react-hot-toast';
 
 // Validation schema for the registration form

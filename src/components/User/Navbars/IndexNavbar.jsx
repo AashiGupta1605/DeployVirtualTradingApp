@@ -1157,8 +1157,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterModal from "../../../views/auth/Register"; // Import Register component
 import LoginModal from "../../../views/auth/Login"; // Import LoginModal component
-import OrganizationRegistration from "../../../views/Organization/auth/OrganizationRegistration.jsx";
-import OrganizationLogin from "../../../views/Organization/auth/OrganizationLogin.jsx";
+import OrganizationRegistration from "../../../views/Organization/OrganizationDetails/Models/OrganizationRegistration";
+import OrganizationLogin from "../../../views/Organization/OrganizationDetails/Models/OrganizationLogin";
 import toast from "react-hot-toast";
 
 export default function Navbar() {
@@ -1177,7 +1177,7 @@ export default function Navbar() {
 
   // Check if organization is logged in
   const orgName = localStorage.getItem("orgName");
-  const isOrgLoggedIn = !orgName;
+  const isOrgLoggedIn = !!orgName;
 
   useEffect(() => {
     const token = localStorage.getItem("token");

@@ -10,15 +10,15 @@ import {
   setEndDate,
   clearFilters,
   deleteOrganizationFeedback
-} from "../../redux/Organization/feedbacks/organizationUsersFeedbackSlice";
-import Pagination from "../../components/Organization/Pagination";
-import OrganizationFeedbackTable from "../../components/Organization/OrganizationFeedbackTable";
-import OrganizationFeedbacksModal from "./auth/OrganizationFeedbacksModal";
-import Loader from "../../components/Common/Loader";
+} from "../../../redux/Organization/feedbacks/organizationUsersFeedbackSlice";
+import Pagination from "../../../components/Organization/TableFunctions/Pagination";
+import OrganizationFeedbackTable from "../../../components/Organization/Tables/FeedbackTable/OrganizationFeedbackTable";
+import OrganizationFeedbackModal from "../../../components/Organization/Modals/OrganizationFeedbackModal";
+import Loader from "../../../components/Common/Loader";
 import { Filter, X, SearchIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import OrganizationUsersFeedbackDashboard from "./OrganizationUsersFeedbackDashboard";
+import OrganizationUsersFeedbackDashboard from "../OrganizationUserDetails/OrganizationUsersFeedbackDashboard";
 import toast from "react-hot-toast";
 const OrganizationFeedback = () => {
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const OrganizationFeedback = () => {
   return (
     <div className="relative">
         <OrganizationUsersFeedbackDashboard/>
-      <div className="mx-auto w-[90%]">
+      <div className="mx-auto w-[95%]">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-12">
           {/* Header with Search and Filters */}
           <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b z-20">
@@ -99,7 +99,7 @@ const OrganizationFeedback = () => {
       </div>
 
       {/* Add Feedback Modal */}
-      <OrganizationFeedbacksModal
+      <OrganizationFeedbackModal
         isOpen={isAddFeedbackModalOpen}
         onClose={() => setAddFeedbackModalOpen(false)}
         onSubmit={handleAddFeedback}

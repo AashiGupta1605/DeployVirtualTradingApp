@@ -170,12 +170,12 @@ import React, { useState, useEffect } from "react";
 import { Trash2, Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import Tooltip from "../Common/Tooltip"; // Adjust the import path as necessary
+import Tooltip from "../../../Common/Tooltip"; // Adjust the import path as necessary
 import {
   deleteOrganizationFeedback,
   updateFeedbackStatus,
-} from "../../redux/Organization/feedbacks/organizationUsersFeedbackSlice";
-import ConfirmationModal from "../../components/Organization/ConfirmationModal";
+} from "../../../../redux/Organization/feedbacks/organizationUsersFeedbackSlice";
+import ConfirmationModal from "../../Modals/ConfirmationModal";
 
 const CATEGORY_COLORS = {
   "Website UI/UX": "bg-blue-100 text-blue-800",
