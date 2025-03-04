@@ -2,12 +2,15 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
+import NavbarCarousel from "../../components/GuestUser/Navbars/NavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 
 const ServicePage = () => {
   return (
     <>
-      <MainHomeNavbar />
+      <MainHomeNavbar fixed/>
+      <NavbarCarousel fixed/>
+
       <div className="bg-gray-100 min-h-screen pt-20">
         <div className="container mx-auto px-4 mt-10">
           <h1 className="text-4xl font-bold text-center text-blueGray-800 mb-10">

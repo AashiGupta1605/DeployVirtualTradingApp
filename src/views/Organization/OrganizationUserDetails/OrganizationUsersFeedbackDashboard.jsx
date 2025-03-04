@@ -1,51 +1,56 @@
 
+
+
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { fetchDashboardData, resetDashboardState } from '../../redux/Organization/dashboard/organizationDashboardSlice';
-import CardStats from '../../components/Admin/Cards/CardStats';
-import Loader from '../../components/Common/Loader';
+import { fetchDashboardData, resetDashboardState } from '../../../redux/Organization/dashboard/organizationDashboardSlice';
+import CardPageVisits from '../../../components/Admin/Cards/CardPageVisits';
+import CardSocialTraffic from '../../../components/Admin/Cards/CardSocialTraffic';
+import CardStats from '../../../components/Admin/Cards/CardStats';
+import Loader from '../../../components/Common/Loader';
+
+
 
 export default function OrganizationUsersFeedbackDashboard() {
-//   const dispatch = useDispatch();
-//   const orgName = localStorage.getItem('orgName'); // Get organization name from localStorage
+  const dispatch = useDispatch();
+  const orgName = localStorage.getItem('orgName'); // Get organization name from localStorage
 
   // Access the dashboard state from Redux
-//   const {
-//     totalUsers,
-//     newUsersLastWeek,
-//     maleUsers,
-//     femaleUsers,
-//     activeUsers,
-//     deactiveUsers,
-//     averageUserAge,
-//     loading,
-//     error,
-//   } = useSelector((state) => state.organization.dashboard);
+  const {
+    totalUsers,
+    newUsersLastWeek,
+    maleUsers,
+    femaleUsers,
+    activeUsers,
+    deactiveUsers,
+    averageUserAge,
+    loading,
+    error,
+  } = useSelector((state) => state.organization.dashboard);
 
   // Fetch dashboard data on component mount
-//   useEffect(() => {
-//     if (orgName) {
-//       dispatch(fetchDashboardData(orgName));
-//     }
-//   }, [dispatch, orgName]);
+  useEffect(() => {
+    if (orgName) {
+      dispatch(fetchDashboardData(orgName));
+    }
+  }, [dispatch, orgName]);
 
-//   // Reset dashboard state when the component unmounts
-//   useEffect(() => {
-//     return () => {
-//       dispatch(resetDashboardState());
-//     };
-//   }, [dispatch]);
+  // Reset dashboard state when the component unmounts
+  useEffect(() => {
+    return () => {
+      dispatch(resetDashboardState());
+    };
+  }, [dispatch]);
 
   // Show loader while data is being fetched
-//   if (loading) {
-//     return <Loader />;
-//   }
+  if (loading) {
+    return <Loader />;
+  }
 
-//   // Show error message if there's an error
-//   if (error) {
-//     return <div className="text-red-500 text-center mt-8">Error: {error}</div>;
-//   }
-
+  // Show error message if there's an error
+  if (error) {
+    return <div className="text-red-500 text-center mt-8">Error: {error}</div>;
+  }
   return (
     <>
       <div className='pt-20'>
@@ -59,7 +64,7 @@ export default function OrganizationUsersFeedbackDashboard() {
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="TOTAL USERS"
-                    statTitle="18"
+                    statTitle={totalUsers.toString()}
                     statArrow="up"
                     statPercent="5.48"
                     statPercentColor="text-emerald-500"
@@ -73,7 +78,7 @@ export default function OrganizationUsersFeedbackDashboard() {
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="NEW USERS"
-                    statTitle="5"
+                    statTitle={newUsersLastWeek.toString()}
                     statArrow="up"
                     statPercent="3.48"
                     statPercentColor="text-emerald-500"
@@ -87,7 +92,7 @@ export default function OrganizationUsersFeedbackDashboard() {
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="MALE USERS"
-                    statTitle="6"
+                    statTitle={maleUsers.toString()}
                     statArrow="up"
                     statPercent="2.10"
                     statPercentColor="text-emerald-500"
@@ -101,7 +106,7 @@ export default function OrganizationUsersFeedbackDashboard() {
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
                     statSubtitle="FEMALE USERS"
-                    statTitle="9"
+                    statTitle={femaleUsers.toString()}
                     statArrow="up"
                     statPercent="3.20"
                     statPercentColor="text-emerald-500"
