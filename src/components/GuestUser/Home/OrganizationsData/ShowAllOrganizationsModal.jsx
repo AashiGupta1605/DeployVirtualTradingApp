@@ -5,24 +5,32 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
   const [data, setData] = useState([]);
   const [err, setErr] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/v1/api/organization/display-all-org"
-        );
-        setData(response.data);
-      } catch (error) {
-        setErr(error.message);
-      }
-    };
+  const [search,setSearch] = useState("")
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/v1/api/guestUser/searchOrganization/${search}`
+      );
+      setData(response.data);
+      setErr(""); // Clear error if request succeeds
+    } 
+    catch (error) {
+      setErr(error.message);
+    }
+  };
+
+  const handleSearch = () => {
     fetchData();
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [search]);
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-transparent rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(230,230,230,0.3)] rounded-4xl pt-18" // Light background
       onClick={closeModal}
     >
       <div
@@ -51,7 +59,19 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
           </div>
 
           <div className="flex justify-between items-center mb-4">
-            <div className="flex gap-4 ml-auto">Search</div>
+            <div className="flex gap-4 ml-auto">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border p-2 rounded-lg w-full"
+            />
+            <button 
+            onClick={handleSearch} 
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >  Search </button>
+            </div>
           </div>
         </div>
         {/* End of sticky header */}
