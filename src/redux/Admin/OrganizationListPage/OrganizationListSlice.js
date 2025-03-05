@@ -1,3 +1,4 @@
+// OrganizationListSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
@@ -7,8 +8,8 @@ export const fetchOrganizations = createAsyncThunk(
   'organizationList/fetchOrganizations',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/organization/display-all-org`);
-      return response.data;
+      const response = await axios.get(`${BASE_API_URL}/organization/list`);
+      return response.data?.data || [];
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch organizations');
     }
@@ -23,15 +24,14 @@ export const deleteOrganization = createAsyncThunk(
         throw new Error('Invalid organization ID');
       }
 
-      const response = await axios.delete(`${BASE_API_URL}/organization/${id}`);
+      const response = await axios.delete(`${BASE_API_URL}/organization/organization/${id}`);
       
-      if (!response.data) {
-        throw new Error('No response from server');
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || 'Failed to delete organization');
       }
 
-      return id;
+      return { id, ...response.data };
     } catch (error) {
-      console.error('Delete organization error:', error);
       return rejectWithValue(
         error.response?.data?.message || 
         error.message || 
@@ -46,13 +46,23 @@ export const updateOrganizationStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `${BASE_API_URL}/organization/${id}/approval-status`,
+        `${BASE_API_URL}/organization/status/${id}`,
         { status }
       );
-      return response.data;
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || 'Failed to update status');
+      }
+
+      return {
+        id,
+        status,
+        ...response.data
+      };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || 
+        error.message ||
         'Failed to update organization status'
       );
     }
@@ -167,8 +177,8 @@ const organizationListSlice = createSlice({
       })
       .addCase(fetchOrganizations.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.organizations = action.payload;
-        state.filteredOrganizations = action.payload;
+        state.organizations = Array.isArray(action.payload) ? action.payload : [];
+        state.filteredOrganizations = Array.isArray(action.payload) ? action.payload : [];
         state.error = null;
       })
       .addCase(fetchOrganizations.rejected, (state, action) => {
@@ -176,21 +186,42 @@ const organizationListSlice = createSlice({
         state.error = action.payload;
       })
       // Delete Organization
+      .addCase(deleteOrganization.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(deleteOrganization.fulfilled, (state, action) => {
-        state.organizations = state.organizations.filter(
-          org => org._id !== action.payload
-        );
-        state.filteredOrganizations = state.filteredOrganizations.filter(
-          org => org._id !== action.payload
-        );
+        state.isLoading = false;
+        const deletedId = action.payload.id;
+        state.organizations = state.organizations.filter(org => org._id !== deletedId);
+        state.filteredOrganizations = state.filteredOrganizations.filter(org => org._id !== deletedId);
+        state.error = null;
+      })
+      .addCase(deleteOrganization.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       })
       // Update Organization Status
+      .addCase(updateOrganizationStatus.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(updateOrganizationStatus.fulfilled, (state, action) => {
+        state.isLoading = false;
         const { id, status } = action.payload;
         const org = state.organizations.find(org => org._id === id);
         if (org) {
           org.approvalStatus = status;
         }
+        const filteredOrg = state.filteredOrganizations.find(org => org._id === id);
+        if (filteredOrg) {
+          filteredOrg.approvalStatus = status;
+        }
+        state.error = null;
+      })
+      .addCase(updateOrganizationStatus.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   }
 });
