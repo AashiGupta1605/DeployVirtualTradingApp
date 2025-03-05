@@ -162,12 +162,18 @@ export const fetchOrganizations = createAsyncThunk(
 );
 
 // Async Thunks
-export const fetchOrgById = createAsyncThunk(
-  "organizations/fetchOrgById",
-  async (orgId, { rejectWithValue }) => {
+export const fetchOrgByName = createAsyncThunk(
+  "organizations/fetchOrgByName",
+  async (orgName, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/organization/${orgId}`);
-      return response.data;
+      // Use query parameter for GET request
+      const response = await axios.get(`${BASE_API_URL}/organization/by-name?orgName=${orgName}`);
+      // OR
+      // Use request body for POST request
+      // const response = await axios.post(`${BASE_API_URL}/organization/by-name`, { orgName });
+
+      console.log("API Response:", response.data); // Log the response
+      return response.data.data; // Return the organization data
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -176,9 +182,10 @@ export const fetchOrgById = createAsyncThunk(
 
 export const updateOrgDetails = createAsyncThunk(
   "organizations/updateOrgDetails",
-  async ({ orgId, orgData }, { rejectWithValue }) => {
+  async ({ orgName, orgData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_API_URL}/organization/update/${orgId}`, orgData);
+      const response = await axios.put(`${BASE_API_URL}/organization/update-by-name?orgName=${orgName}`, orgData);
+      console.log("Update API Response:", response.data); // Log the response
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -261,15 +268,16 @@ const organizationAuthSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      .addCase(fetchOrgById.pending, (state) => {
+      .addCase(fetchOrgByName.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchOrgById.fulfilled, (state, action) => {
+      .addCase(fetchOrgByName.fulfilled, (state, action) => {
         state.loading = false;
         state.currentOrg = action.payload;
+        console.log("Redux State - currentOrg:", state.currentOrg); 
       })
-      .addCase(fetchOrgById.rejected, (state, action) => {
+      .addCase(fetchOrgByName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -280,6 +288,7 @@ const organizationAuthSlice = createSlice({
       .addCase(updateOrgDetails.fulfilled, (state, action) => {
         state.loading = false;
         state.currentOrg = action.payload;
+        console.log("Redux State - currentOrg:", state.currentOrg); 
       })
       .addCase(updateOrgDetails.rejected, (state, action) => {
         state.loading = false;
