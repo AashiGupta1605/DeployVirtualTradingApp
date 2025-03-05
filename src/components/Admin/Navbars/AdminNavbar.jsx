@@ -1,8 +1,13 @@
-import React from "react";
+
 import UserDropdown from "../Dropdowns/UserDropdown";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
+import React, { useState } from "react";
 
 export default function AdminNavbar({ sidebarExpanded }) {
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+   const handleProfile = () => {
+    setIsProfileModalOpen(true); // Open profile modal instead of navigating
+  };
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 bg-white shadow-lg">
       <div className="w-full mx-auto flex items-center justify-between p-4 md:px-10 px-4">
@@ -48,10 +53,25 @@ export default function AdminNavbar({ sidebarExpanded }) {
           </div>
         </form>
 
-        {/* User */}
-        <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
-          <UserDropdown />
-        </ul>
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none"
+          >
+            <i className="fas fa-user-circle text-2xl"></i>
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
+              <button
+                onClick={handleProfile}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Profile
+              </button>
+              
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );
