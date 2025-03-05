@@ -270,7 +270,7 @@ const CardTable = () => {
 
   return (
     <>
-      <div className="mx-2 overflow-hidden mt-36">
+      <div className="mx-2 overflow-hidden mt-5">
         {/* Header Section */}
         <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
           <h2 className="text-xl font-bold text-gray-800 flex items-center">

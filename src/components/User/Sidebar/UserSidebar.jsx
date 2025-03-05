@@ -370,6 +370,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NotificationDropdown from "../Dropdowns/NotificationDropdown";
 import DashboardDropdown from "../Dropdowns/DashboardDropdown";
+import Modal from  "../Modals/tradingModal"
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
@@ -463,14 +464,20 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
       </div>
       {sidebarExpanded && (
         <i className={`fas fa-chevron-${activeMenu === "nifty" ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
+        
       )}
+      
     </button>
 
     {sidebarExpanded && activeMenu === "nifty" && (
-      <div className="pl-4 space-y-2">
-        <MenuLink to="/user/niftytable" icon="fas fa-table" label="Nifty Table" isActive={location.pathname === "/user/niftytable"} />
-      </div>
-    )}
+    <div className="pl-4 space-y-2">
+      {/* Nifty Table Option */}
+      <MenuLink to="/user/niftytable" icon="fas fa-table" label="Nifty Table" isActive={location.pathname === "/user/niftytable"} />
+      
+      {/* Trading Option inside Nifty Table */}
+      <MenuLink to="/user/tradingnifty" icon="fas fa-exchange-alt" label="Trading" isActive={location.pathname === "/user/tradingnifty"} />
+    </div>
+  )}
   </div>
 
   {/* ETF Table Dropdown */}
