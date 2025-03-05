@@ -1,7 +1,7 @@
 import React from 'react'
 
 import MainHomeNavbar from '../../components/GuestUser/Navbars/MainHomeNavbar';
-import NavbarCarousel from '../../components/GuestUser/Navbars/NavbarCarousel';
+import NavbarCarousel from '../../components/GuestUser/Navbars/NiftyNavbarCarousel';
 import Footer from '../../components/GuestUser/Footers/Footer';
 
 const Show_Nifty50Data_Page = () => {
