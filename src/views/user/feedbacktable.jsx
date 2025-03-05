@@ -20,7 +20,14 @@ export default function FeedbackTable() {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [editFeedback, setEditFeedback] = React.useState(null);
   
-
+  const CATEGORY_COLORS = {
+    "Website UI/UX": "bg-blue-100 text-blue-800",
+    "Trading Features": "bg-green-100 text-green-800",
+    "Data Accuracy": "bg-purple-100 text-purple-800",
+    "Performance & Speed": "bg-yellow-100 text-yellow-800",
+    "Customer Support": "bg-orange-100 text-orange-800",
+    "Other": "bg-gray-100 text-gray-800"
+  };
   useEffect(() => {
     // Dispatch the fetchFeedback action to load feedback data
     dispatch(fetchFeedback());
@@ -138,7 +145,7 @@ export default function FeedbackTable() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    {["Name", "Email", "Feedback", "Rating", "Recommendation", "Date", "Status", "Actions"].map((header) => (
+                    {["Name", "Email","Category", "Feedback", "Rating", "Recommendation", "Date", "Status", "Actions"].map((header) => (
                       <th
                         key={header}
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -159,6 +166,11 @@ export default function FeedbackTable() {
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
           {feedback.userId?.email || "N/A"}
         </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${CATEGORY_COLORS[feedback.feedbackCategory]}`}>
+          {feedback.feedbackCategory}
+        </span>
+      </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
           {feedback.feedbackMessage}
         </td>
