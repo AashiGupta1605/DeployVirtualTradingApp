@@ -8,7 +8,8 @@ import {
   BarChart2, 
   Clock, 
   Info,
-  AlertCircle
+  AlertCircle,
+  ShoppingCart // Add this import for the buy/sell icon
 } from 'lucide-react';
 
 const TabButton = ({ 
@@ -59,7 +60,7 @@ const TabNavigation = ({
   onTabChange, 
   type,
   loading = false,
-  availableTabs = ['overview', 'chart', 'historical']
+  availableTabs = ['overview', 'chart', 'historical', 'trading']
 }) => {
   const tabs = [
     {
@@ -87,14 +88,13 @@ const TabNavigation = ({
       icon: Clock,
       tooltip: 'Past trading data and statistics'
     },
-    // {
-    //   id: 'analysis',
-    //   label: 'Technical Analysis',
-    //   icon: BarChart,
-    //   tooltip: 'Advanced technical indicators and analysis',
-    //   badge: 'Beta',
-    //   disabled: !availableTabs.includes('analysis')
-    // }
+    {
+      id: 'trading', // New tab
+      label: 'Buy/Sell',
+      icon: ShoppingCart,
+      tooltip: 'Trade stocks and view transactions',
+      badge: 'Live' // Optional badge
+    }
   ];
 
   // Custom hook for handling tooltips
@@ -186,7 +186,7 @@ TabButton.propTypes = {
 };
 
 TabNavigation.propTypes = {
-  activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical']).isRequired,
+  activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical', 'trading']).isRequired,
   onTabChange: PropTypes.func.isRequired,
   type: PropTypes.oneOf(['nifty', 'etf']).isRequired,
   loading: PropTypes.bool,
@@ -195,7 +195,7 @@ TabNavigation.propTypes = {
 
 TabNavigation.defaultProps = {
   loading: false,
-  availableTabs: ['overview', 'chart', 'historical']
+  availableTabs: ['overview', 'chart', 'historical', 'trading']
 };
 
 export default TabNavigation;
