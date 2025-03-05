@@ -11,6 +11,7 @@ import HistoricalTab from './tabs/HistoricalTab';
 import AdvancedChartTab from './tabs/ChartTab2';
 import Buy_SellTab from './tabs/Buy_SellTab';
 import { TradingProvider } from './hooks/TradingContext';
+import TradingViewTab from './tabs/TradingViewTab';
 
 const LoadingOverlay = ({ message = "Loading data..." }) => (
   <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
@@ -151,6 +152,13 @@ const CompanyDetailModal = ({
             onRefresh={handleRefresh}
           />
         );
+        case 'trading-view':
+          return (
+            <TradingViewTab
+              symbol={symbol}
+              loading={loading || isRefreshing}
+            />
+          );
       case 'historical':
         return (
           <HistoricalTab
@@ -241,13 +249,13 @@ const CompanyDetailModal = ({
             <div className="px-6 pb-6">
               {/* Tab Navigation */}
               <div className="sticky top-[72px] z-10 bg-gray-50 py-4">
-                <TabNavigation
-                  activeTab={activeTab}
-                  onTabChange={setActiveTab}
-                  type={type}
-                  loading={loading || isRefreshing}
-                  availableTabs={['overview', 'chart', 'advanced-chart', 'historical', 'trading']}
-                />
+              <TabNavigation
+  activeTab={activeTab}
+  onTabChange={setActiveTab}
+  type={type}
+  loading={loading || isRefreshing}
+  availableTabs={['overview', 'chart', 'advanced-chart', 'historical', 'trading', 'trading-view']}
+/>
               </div>
 
               {/* Tab Content */}
