@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDown, ChevronRight, ChevronLeft, Filter } from "lucide-react";
 import { fetchStockData } from "../../redux/Common/etfSlice";
-import CompanyDetailModal from "../../components/Admin/Modals/CompanyDetailModal";
+import CompanyDetailModal from "../../components/Admin/Modals/companyDetailModal/CompanyDetailModal";
 import "../../assets/styles/table.css";
 
 const StockTable = () => {

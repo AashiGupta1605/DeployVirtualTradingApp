@@ -129,6 +129,12 @@ const MainHomeNavbar = () => {
               >
                 ETF Data
               </li>
+              <li
+                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                onClick={() => handleNavigation("/pricing")}
+              >
+                Pricing
+              </li>
               
                 <>
                   <li className="relative flex items-center" ref={loginDropdownRef}>

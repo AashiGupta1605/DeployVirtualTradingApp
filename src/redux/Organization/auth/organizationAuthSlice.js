@@ -156,7 +156,7 @@ import { deleteOrganization } from '../../Admin/OrganizationListPage/Organizatio
 export const fetchOrganizations = createAsyncThunk(
   'organizations/fetchOrganizations',
   async () => {
-    const response = await axios.get(`${BASE_API_URL}/organization/display-all-org`);
+    const response = await axios.get(`${BASE_API_URL}/organization/list`);
     return response.data;
   }
 );

@@ -1,7 +1,8 @@
 import React from "react";
 
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NavbarCarousel from "../../components/GuestUser/Navbars/NavbarCarousel";
+import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
 import StartScreenPopupModal from "../../components/GuestUser/Home/StartScreenPopupModal";
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 
@@ -23,7 +24,9 @@ const MainHomePage = () => {
 
       <StartScreenPopupModal/>
       <MainHomeNavbar fixed />
-      <NavbarCarousel fixed/>
+      <NiftyNavbarCarousel fixed />
+      <EtfNavbarCarousel fixed />
+
       <HomeCarousel/>
 
       {/* Homepage Section */}

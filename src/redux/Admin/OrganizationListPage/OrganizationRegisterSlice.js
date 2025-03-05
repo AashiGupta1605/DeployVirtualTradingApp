@@ -1,85 +1,8 @@
+// OrganizationRegisterSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { fetchOrganizations } from '../../Organization/auth/organizationAuthSlice';
-
-// Async Thunks
-export const registerOrganization = createAsyncThunk(
-  'organizationRegistration/register',
-  async (organizationData, { rejectWithValue, dispatch }) => {
-    try {
-      const response = await axios.post(
-        `${BASE_API_URL}/admin/OrgRegister`,
-        organizationData
-      );
-
-      // toast.success('Organization registered successfully!');
-      await dispatch(fetchOrganizations());
-      return response.data;
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
-      return rejectWithValue(
-        error.response?.data?.message || 
-        'Registration failed'
-      );
-    }
-  }
-);
-
-export const updateOrganization = createAsyncThunk(
-  'organizationRegistration/update',
-  async ({ id, data }, { rejectWithValue, dispatch }) => {
-    try {
-      const filteredData = Object.fromEntries(
-        Object.entries(data)
-          .filter(([key, value]) =>
-            value !== undefined &&
-            value !== '' &&
-            !['_id', 'password', 'createDate', 'updateDate', '__v'].includes(key)
-          )
-      );
-
-      const response = await axios.put(
-        `${BASE_API_URL}/organization/${id}`,
-        filteredData
-      );
-
-      // toast.success('Organization updated successfully!');
-      await dispatch(fetchOrganizations());
-      return response.data;
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Update failed');
-      console.error('Update error:', error.response?.data);
-      return rejectWithValue(
-        error.response?.data?.message || 
-        error.response?.data || 
-        'Update failed'
-      );
-    }
-  }
-);
-
-export const deleteOrganization = createAsyncThunk(
-  'organizationRegistration/delete',
-  async (id, { rejectWithValue, dispatch }) => {
-    try {
-      const response = await axios.delete(
-        `${BASE_API_URL}/organization/${id}`
-      );
-
-      await dispatch(fetchOrganizations());
-      toast.success('Organization deleted successfully!');
-      return response.data;
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Deletion failed');
-      return rejectWithValue(
-        error.response?.data?.message || 
-        'Deletion failed'
-      );
-    }
-  }
-);
 
 // Initial state
 const initialState = {
@@ -93,23 +16,97 @@ const initialState = {
   }
 };
 
+// OrganizationRegisterSlice.js
+export const registerOrganization = createAsyncThunk(
+  'organizationRegistration/register',
+  async (organizationData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${BASE_API_URL}/organization/register`,
+        organizationData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      // If the response includes a success message, treat it as success
+      if (response.data && response.data.message?.includes('successfully')) {
+        return {
+          success: true,
+          data: response.data.data,
+          message: response.data.message
+        };
+      }
+
+      return rejectWithValue({
+        success: false,
+        message: response.data.message || 'Registration failed',
+        fieldErrors: response.data.errors
+      });
+    } catch (error) {
+      return rejectWithValue({
+        success: false,
+        message: error.response?.data?.message || 'Registration failed',
+        fieldErrors: error.response?.data?.errors
+      });
+    }
+  }
+);
+
+
+export const updateOrganization = createAsyncThunk(
+  'organizationRegistration/update',
+  async ({ id, data }, { rejectWithValue, dispatch }) => {
+    try {
+      // Filter out unwanted fields
+      const filteredData = Object.fromEntries(
+        Object.entries(data).filter(([key, value]) => 
+          value !== undefined && 
+          value !== '' && 
+          !['_id', 'password', 'createDate', 'updateDate', '__v'].includes(key)
+        )
+      );
+
+      const response = await axios.put(
+        `${BASE_API_URL}/organization/update/${id}`,
+        filteredData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        // Fetch updated organization list after successful update
+        await dispatch(fetchOrganizations());
+        return response.data;
+      }
+      return rejectWithValue(response.data.message || 'Update failed');
+    } catch (error) {
+      console.error('Update Error:', error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Update failed'
+      );
+    }
+  }
+);
+
 // Slice
 const organizationRegistrationSlice = createSlice({
   name: 'organizationRegistration',
   initialState,
   reducers: {
-    resetForm: (state) => {
-      state.error = null;
-      state.success = false;
-      state.notification.message = null;
-      state.notification.type = null;
-    },
+    resetForm: () => initialState,
     setSelectedOrg: (state, action) => {
       state.selectedOrg = action.payload;
     },
     clearNotification: (state) => {
-      state.notification.message = null;
-      state.notification.type = null;
+      state.notification = { message: null, type: null };
     }
   },
   extraReducers: (builder) => {
@@ -119,44 +116,50 @@ const organizationRegistrationSlice = createSlice({
         state.isLoading = true;
         state.error = null;
         state.success = false;
-        state.notification.message = null;
-        state.notification.type = null;
+        state.notification = { message: null, type: null };
       })
-      .addCase(registerOrganization.fulfilled, (state) => {
+      .addCase(registerOrganization.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
         state.error = null;
-        state.notification.message = 'Organization registered successfully. Welcome email sent with login credentials.';
-        state.notification.type = 'success';
+        state.notification = {
+          type: 'success',
+          message: action.payload.message
+        };
       })
       .addCase(registerOrganization.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
         state.success = false;
-        state.notification.message = action.payload;
-        state.notification.type = 'error';
+        state.error = action.payload?.message || 'Registration failed';
+        state.notification = {
+          type: 'error',
+          message: action.payload?.message || 'Registration failed'
+        };
       })
       // Update Organization
       .addCase(updateOrganization.pending, (state) => {
         state.isLoading = true;
         state.error = null;
         state.success = false;
-        state.notification.message = null;
-        state.notification.type = null;
+        state.notification = { message: null, type: null };
       })
-      .addCase(updateOrganization.fulfilled, (state) => {
+      .addCase(updateOrganization.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
         state.error = null;
-        state.notification.message = 'Organization updated successfully';
-        state.notification.type = 'success';
+        state.notification = {
+          message: action.payload.message || 'Organization updated successfully',
+          type: 'success'
+        };
       })
       .addCase(updateOrganization.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
         state.success = false;
-        state.notification.message = action.payload;
-        state.notification.type = 'error';
+        state.error = action.payload;
+        state.notification = {
+          message: action.payload,
+          type: 'error'
+        };
       });
   }
 });
@@ -168,50 +171,35 @@ export const {
   clearNotification
 } = organizationRegistrationSlice.actions;
 
-// Base Selectors
-const getOrganizationRegistrationState = state => state?.admin?.organizationRegistration;
+// Base Selector
+const getOrganizationRegistrationState = state => state?.admin?.organizationRegistration || initialState;
+
+// Main Selectors
+export const selectRegistrationState = state => getOrganizationRegistrationState(state);
+export const selectRegistrationLoading = state => selectRegistrationState(state).isLoading;
+export const selectRegistrationError = state => selectRegistrationState(state).error;
+export const selectRegistrationSuccess = state => selectRegistrationState(state).success;
+export const selectSelectedOrg = state => selectRegistrationState(state).selectedOrg;
+export const selectNotification = state => selectRegistrationState(state).notification;
 
 // Derived Selectors
-export const selectRegistrationLoading = state =>
-  getOrganizationRegistrationState(state)?.isLoading ?? false;
+export const selectNotificationStatus = state => ({
+  message: selectNotification(state).message,
+  type: selectNotification(state).type
+});
 
-export const selectRegistrationError = state =>
-  getOrganizationRegistrationState(state)?.error ?? null;
-
-export const selectRegistrationSuccess = state =>
-  getOrganizationRegistrationState(state)?.success ?? false;
-
-export const selectSelectedOrg = state =>
-  getOrganizationRegistrationState(state)?.selectedOrg ?? null;
-
-export const selectNotification = state =>
-  getOrganizationRegistrationState(state)?.notification ?? {
-    message: null,
-    type: null
-  };
+// Helper Selectors
+export const selectIsProcessing = state => selectRegistrationLoading(state);
+export const selectHasErrors = state => !!selectRegistrationError(state);
+export const selectIsSuccessful = state => selectRegistrationSuccess(state);
 
 // Combined Selectors
-export const selectRegistrationState = state => ({
+export const selectRegistrationData = state => ({
   isLoading: selectRegistrationLoading(state),
   error: selectRegistrationError(state),
   success: selectRegistrationSuccess(state),
   selectedOrg: selectSelectedOrg(state),
   notification: selectNotification(state)
-});
-
-// Helper Selectors
-export const selectIsProcessing = state =>
-  selectRegistrationLoading(state);
-
-export const selectHasErrors = state =>
-  !!selectRegistrationError(state);
-
-export const selectIsSuccessful = state =>
-  selectRegistrationSuccess(state);
-
-export const selectNotificationStatus = state => ({
-  message: selectNotification(state).message,
-  type: selectNotification(state).type
 });
 
 export default organizationRegistrationSlice.reducer;

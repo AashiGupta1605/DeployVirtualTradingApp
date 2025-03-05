@@ -15,17 +15,17 @@ const OrganizationsAllFeedsModal = ({ closeModal }) => {
       try {
         const url =
           category === ""
-            ? `http://localhost:5000/v1/api/guestUser/Feedback/${sortBy}/${order}`
-            : `http://localhost:5000/v1/api/guestUser/OrganizationsFeedback/${category}/${sortBy}/${order}`;
+          ? `http://localhost:5000/v1/api/guestUser/userFeedback/${sortBy}/${order}`
+          : `http://localhost:5000/v1/api/guestUser/userFeedback/${category}/${sortBy}/${order}`;
 
         const response1 = await axios.get(url);
         setFeedbacks(response1.data.feedbackData);
 
-        console.log("Organizationss Feedbacks Object: ", response1.data);
+        console.log("Organizations Feedbacks Object: ", response1.data);
         console.log("Organizations Feedbacks: ", response1.data.feedbackData);
 
         const response2 = await axios.get(
-          "http://localhost:5000/v1/api/Organizations/display-Organizationss"
+          'http://localhost:5000/v1/api/guestUser/display-all-org'
         );
         setOrganizationsData(response2.data);
         console.log("Organizations Data", response2.data);
@@ -38,11 +38,11 @@ const OrganizationsAllFeedsModal = ({ closeModal }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(230,230,230,0.3)] rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-21" // Light background
       onClick={closeModal}
     >
       <div
-        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[900px] max-h-[80vh] overflow-y-auto relative"
+        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[70%] max-h-[80vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
       >
       <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
@@ -57,11 +57,11 @@ const OrganizationsAllFeedsModal = ({ closeModal }) => {
               Total Feedbacks: {feedbacks.length}
             </h6>
             <button
-              onClick={closeModal}
-              className="px-4 py-1 font-bold bg-red-300 text-white rounded-lg hover:bg-red-500 transition "
-            >
-              X
-            </button>
+            onClick={closeModal}
+            className="w-15 text-bold text-2xl text-red-500 hover:text-white hover:bg-red-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-600"
+          >
+            <i className="fas fa-times"></i>
+          </button>
           </div>
         </div>
 
@@ -122,7 +122,7 @@ const OrganizationsAllFeedsModal = ({ closeModal }) => {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value || "createdDate")}
                 >
-                  <option disabled>SortBy</option>r
+                  <option disabled>SortBy</option>
                   <option value="createdDate">Recent Feedback</option>
                   <option value="rating">Ratings</option>
                 </select>

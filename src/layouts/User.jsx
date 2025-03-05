@@ -13,6 +13,7 @@ import NiftyTable from "../views/user/niftyTable";
 import UserNavbar from "../components/User/Navbars/UserNavbar";
 import UserSidebar from "../components/User/Sidebar/UserSidebar";
 import FeedbackTable from "../views/user/feedbacktable";
+import TradingNifty from "../views/user/tradingnifty";
 
 export default function User() {
   const [sidebarExpanded, setSidebarExpanded] = React.useState(false);
@@ -38,6 +39,7 @@ export default function User() {
                <Route path="etftable" element={<EtfTable />} />
               <Route path="profile" element={<Profile />} />
               <Route path="feedback" element={<FeedbackTable />} />
+              <Route path="tradingnifty" element={<TradingNifty />} />
              <Route path="*" element={<Navigate to="dashboard" replace />} />
      </Routes>
 

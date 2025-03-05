@@ -11,7 +11,7 @@ const InfoCards = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response1 = await axios.get('http://localhost:5000/v1/api/organization/display-all-org');
+            const response1 = await axios.get('http://localhost:5000/v1/api/guestUser/display-all-org');
             setOrgData(response1.data);
             
             const response2 = await axios.get('http://localhost:5000/v1/api/user/display-users');
@@ -20,7 +20,8 @@ const InfoCards = () => {
             const activeCount = response2.data.filter((data) => data.status === true).length;
     
             setActiveUsers(activeCount);
-          } catch (error) {
+          } 
+          catch (error) {
             console.log(error);
           }
         };
@@ -29,7 +30,7 @@ const InfoCards = () => {
 
     const popupCards = [
       { id: 1, headline: "Organizations", description: orgData.length},
-      { id: 2, headline: "Register Users", description: userData.length},
+      { id: 2, headline: "Registered Users", description: userData.length},
       { id: 3, headline: "Active Users", description: activeUsers },
       { id: 4, headline: "Available Stocks", description: "100" },
     ];
@@ -50,10 +51,10 @@ const InfoCards = () => {
               {popupCards.map((card) => (
                 <div
                   key={card.id}
-                  className="bg-white rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-107"
+                  className="bg-white rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-103"
                 >
-                  <h3 className="text-2xl font-bold mb-4">{card.headline}</h3>
-                  <h3 className="text-2xl font-semibold mb-4">{card.description}</h3>
+                  <h3 className="text-xl font-bold text-[#1a2c47] pb-4">{card.headline}</h3>
+                  <h3 className="text-xl font-semibold mb-4">{card.description}</h3>
                 </div>
               ))}
             </div>
