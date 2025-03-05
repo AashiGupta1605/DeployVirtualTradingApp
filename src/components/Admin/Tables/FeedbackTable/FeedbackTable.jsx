@@ -58,15 +58,19 @@ const Tooltip = memo(({ children, text }) => (
 
 const Stars = memo(({ rating }) => (
   <div className="flex">
-    {[...Array(5)].map((_, i) => (
+    {[...Array(rating)].map((_, i) => (
       <Star 
         key={i} 
         size={16} 
-        className={i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
+        fill="yellow" 
+        stroke="yellow" 
+        className="inline-block"
       />
     ))}
   </div>
 ));
+
+
 
 const TableHeader = memo(() => (
   <tr>
@@ -201,10 +205,10 @@ const FeedbackTable = ({ feedbacks }) => {
   const TableRow = memo(({ feedback }) => (
     <tr className="hover:bg-gray-50 transition-colors">
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        {feedback.userId?.name || 'N/A'}
+        {feedback.userId?.name || feedback.organizationId?.name ||  'N/A'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {feedback.userId?.email || 'N/A'}
+        {feedback.userId?.email || feedback.organizationId?.email || 'N/A'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${CATEGORY_COLORS[feedback.feedbackCategory]}`}>

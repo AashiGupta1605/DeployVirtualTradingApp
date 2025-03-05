@@ -55,9 +55,9 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
 
   return (
     <nav className={`${sidebarExpanded ? "md:w-64" : "md:w-20"} fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}>
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full ">
         {/* Logo Section */}
-        <div className="flex items-center justify-between w-full h-20 px-6 border-b border-gray-200">
+        <div className="flex items-center justify-between w-full h-[73px] px-6 border-b border-gray-200">
           <span className="text-lg font-bold leading-relaxed uppercase">
             {sidebarExpanded ? "Admin" : ""}
           </span>
