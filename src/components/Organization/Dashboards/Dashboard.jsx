@@ -1,17 +1,14 @@
 
-
-
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// import { fetchDashboardData, resetDashboardState } from '../../../redux/Organization/dashboard/organizationDashboardSlice';
 import { fetchDashboardData, resetDashboardState } from '../../../redux/Organization/dashboard/organizationDashboardSlice';
-import CardPageVisits from '../../../components/Admin/Cards/CardPageVisits';
-import CardSocialTraffic from '../../../components/Admin/Cards/CardSocialTraffic';
-import CardStats from '../../../components/Admin/Cards/CardStats';
-import Loader from '../../../components/Common/Loader';
+import CardPageVisits from '../../Organization/Cards/CardPageVisits';
+import CardSocialTraffic from '../../Organization/Cards/CardSocialTraffic';
+import CardStats from '../../Organization/Cards/CardStats';
+import Loader from '../../Common/Loader';
 
-
-
-export default function OrganizationUsersFeedbackDashboard() {
+export default function Dashboard({ type, showAllCards, showCardsTable }) {
   const dispatch = useDispatch();
   const orgName = localStorage.getItem('orgName'); // Get organization name from localStorage
 
@@ -51,13 +48,14 @@ export default function OrganizationUsersFeedbackDashboard() {
   if (error) {
     return <div className="text-red-500 text-center mt-8">Error: {error}</div>;
   }
+
   return (
-    <>
-      <div className='pt-20'>
+    <> 
+      <div className={type !== 'user-list' ? 'mt-20' : 'pt-20'}>  
         {/* Dashboard header */}
-        <div className='bg-lightBlue-600 md:pt-32 pb-16 pt-12'>
+        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-32 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
           <div className="px-4 mx-auto w-full">
-            <div>
+            <div> 
               {/* Card stats */}
               <div className="flex flex-wrap">
                 {/* Total Users Card */}
@@ -115,14 +113,82 @@ export default function OrganizationUsersFeedbackDashboard() {
                     statIconColor="bg-pink-500"
                   />
                 </div>
-          
 
+                {showAllCards && (
+                  <>
+                    {/* Active Users Card */}
+                    <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                      <CardStats
+                        statSubtitle="ACTIVE USERS"
+                        statTitle={activeUsers.toString()}
+                        statArrow="up"
+                        statPercent="4.10"
+                        statPercentColor="text-emerald-500"
+                        statDescripiron="Since last week"
+                        statIconName="fas fa-user-check"
+                        statIconColor="bg-green-500"
+                      />
+                    </div>
+
+                    {/* Deactive Users Card */}
+                    <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                      <CardStats
+                        statSubtitle="DEACTIVE USERS"
+                        statTitle={deactiveUsers.toString()}
+                        statArrow="down"
+                        statPercent="1.10"
+                        statPercentColor="text-red-500"
+                        statDescripiron="Since last week"
+                        statIconName="fas fa-user-slash"
+                        statIconColor="bg-gray-500"
+                      />
+                    </div>
+
+                    {/* Average User Age Card */}
+                    <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                      <CardStats
+                        statSubtitle="AVERAGE USER AGE"
+                        statTitle={averageUserAge.toString()}
+                        statArrow="up"
+                        statPercent=""
+                        statPercentColor="text-emerald-500"
+                        statDescripiron="Average age of users"
+                        statIconName="fas fa-birthday-cake"
+                        statIconColor="bg-purple-500"
+                      />
+                    </div>
+
+                      {/* Average User Age Card */}
+                      <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
+                      <CardStats
+                        statSubtitle="AVERAGE USER AGE"
+                        statTitle={averageUserAge.toString()}
+                        statArrow="up"
+                        statPercent=""
+                        statPercentColor="text-emerald-500"
+                        statDescripiron="Average age of users"
+                        statIconName="fas fa-birthday-cake"
+                        statIconColor="bg-purple-500"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-    
+        {/* Additional cards for non-student-list views */}
+        {showCardsTable && (
+          <div className="flex flex-wrap -mt-28 px-4">
+            <div className="w-full xl:w-8/12 px-4 pt-2">
+              <CardPageVisits />
+            </div>
+            <div className="w-full xl:w-4/12 px-4 pt-2">
+              <CardSocialTraffic />
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

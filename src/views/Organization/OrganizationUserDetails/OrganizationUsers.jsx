@@ -1852,9 +1852,8 @@ import OrganizationUserRegistration from "./Models/OrganizationUserRegistrationU
 import ConfirmationModal from "../../../components/Organization/Modals/ConfirmationModal";
 import Loader from "../../../components/Common/Loader";
 import { Filter, X, UserPlus, SearchIcon } from "lucide-react";
-import OrganizationDashboard from "../OrganizationDetails/OrganizationDashboard";
 import { getAppliedFiltersCount, getAppliedFiltersText } from "../../../utils/filterFunctions";
-
+import Dashboard from "../../../components/Organization/Dashboards/Dashboard";
 const OrganizationUsers = () => {
   const dispatch = useDispatch();
   const {
@@ -1991,7 +1990,8 @@ const OrganizationUsers = () => {
 
   return (
     <div className="relative">
-      <OrganizationDashboard type="user-list" />
+      {/* <OrganizationDashboard type="user-list" /> */}
+      <Dashboard type="user-list" showAllCards={false} showCardsTable={false}/>
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50 -mt-12">
           {/* Header with Search and Filters */}
