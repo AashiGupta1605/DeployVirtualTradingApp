@@ -38,11 +38,11 @@ const UserAllFeedsModal = ({ closeModal }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-21" // Light background
       onClick={closeModal}
     >
       <div
-        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[80%] max-w-[1200px] max-h-[85vh] relative"
+        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[70%] max-h-[85vh] relative"
         onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
       >
       <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
@@ -57,11 +57,11 @@ const UserAllFeedsModal = ({ closeModal }) => {
               Total Feedbacks: {feedbacks.length}
             </h6>
             <button
-              onClick={closeModal}
-              className="px-4 py-1 font-bold bg-red-300 text-white rounded-lg hover:bg-red-500 transition "
-            >
-              X
-            </button>
+            onClick={closeModal}
+            className="w-15 text-bold text-2xl text-red-500 hover:text-white hover:bg-red-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-600"
+          >
+            <i className="fas fa-times"></i>
+          </button>
           </div>
         </div>
 
@@ -122,7 +122,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value || "createdDate")}
                 >
-                  <option disabled>SortBy</option>r
+                  <option disabled>SortBy</option>
                   <option value="createdDate">Recent Feedback</option>
                   <option value="rating">Ratings</option>
                 </select>

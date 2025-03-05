@@ -5,16 +5,24 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+// const img1 = "/assets/GuestUserPageTradingImages/tradingImg1.jpg";
+import img1 from "/src/assets/GuestUserPageTradingImages/tradingImg1.jpg"
+import img2 from "/src/assets/GuestUserPageTradingImages/tradingImg2.jpg"
+import img3 from "/src/assets/GuestUserPageTradingImages/tradingImg3.jpg"
+import img4 from "/src/assets/GuestUserPageTradingImages/tradingImg4.avif"
+import img5 from "/src/assets/GuestUserPageTradingImages/tradingImg5.jpg"
+
 const HomeCarousel = () => {
   const slides = [
-    { id: 1, image: "", title: "Stock Market Insights" },
-    { id: 2, image: "", title: "Cryptocurrency Trends" },
-    { id: 3, image: "", title: "Forex Trading Tips" },
-    { id: 4, image: "", title: "Market Analysis" },
+    { id: 1, image: img1, title: "Stock Market Insights" },
+    { id: 2, image: img2, title: "Cryptocurrency Trends" },
+    { id: 3, image: img3, title: "Forex Trading Tips" },
+    { id: 4, image: img4, title: "Market Analysis" },
+    { id: 5, image: img5, title: "Stock Analysis" },
   ];
 
   return (
-    <div className="w-full mx-auto p-4 mt-28">
+    <div className="w-full mx-auto p-4 mt-36">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}

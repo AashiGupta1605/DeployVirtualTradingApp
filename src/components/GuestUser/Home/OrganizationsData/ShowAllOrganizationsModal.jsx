@@ -5,7 +5,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
   const [data, setData] = useState([]);
   const [err, setErr] = useState("");
 
-  const [search,setSearch] = useState("")
+  const [search, setSearch] = useState("");
 
   const fetchData = async () => {
     try {
@@ -14,8 +14,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
       );
       setData(response.data);
       setErr(""); // Clear error if request succeeds
-    } 
-    catch (error) {
+    } catch (error) {
       setErr(error.message);
     }
   };
@@ -30,7 +29,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-18" // Light background
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(17,24,38,0.4)] rounded-4xl pt-21" // Light background
       onClick={closeModal}
     >
       <div
@@ -51,23 +50,23 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
               </h6>
               <button
                 onClick={closeModal}
-                className="px-4 py-1 font-bold bg-red-300 text-white rounded-lg hover:bg-red-500 transition "
+                className="w-15 text-bold text-2xl text-red-500 hover:text-white hover:bg-red-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-600"
               >
-                X
+                <i className="fas fa-times"></i>
               </button>
             </div>
           </div>
 
           <div className="flex justify-between items-center mb-4">
             <div className="flex gap-4 ml-auto">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="border px-4 py-1 rounded-lg w-[300px] h-[30px]"
-            />
-            {/* <button 
+              <input
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border border-gray-400 px-4 py-1 rounded-lg w-[300px] h-[30px] focus:outline-none focus:shadow-md focus:shadow-black focus:border-black"
+              />
+              {/* <button 
             onClick={handleSearch} 
             className="bg-blue-500 text-white px-4 py-2 rounded-lg"
             >  Search </button> */}
@@ -80,49 +79,67 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
 
         {/* List of Organizations */}
         {/* Table Container */}
-        <div className="max-h-[60vh] overflow-y-auto px-4">
-        <div className="overflow-x-auto">
-          <table className="w-full table-fixed border-collapse border border-gray-300">
-            <thead className="bg-gray-100">
-              <tr className="text-left">
-                <th className="p-3 border border-gray-300 w-[250px]">Organization Name</th>
-                <th className="p-3 border border-gray-300 w-[250px]">Organization Website</th>
-                <th className="p-3 border border-gray-300 w-[250px]">Organization Address</th>
-                {/* <th className="p-3 border border-gray-300 w-[250px]">Organization Email</th> */}
-                {/* <th className="p-3 border border-gray-300 w-[250px]">Organization Contact</th> */}
-                <th className="p-3 border border-gray-300 w-[250px]">Associated Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((org, index) => (
-                <tr key={index} className="border border-gray-300">
-                  <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.name}</td>
-                  <td className="p-3 border border-gray-300 overflow-hidden break-all text-blue-600 underline w-[250px]">
-                    <a href={org.website} target="_blank" rel="noopener noreferrer">
-                      {org.website}
-                    </a>
-                  </td>
-                  <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.address}</td>
-                  {/* <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.email}</td> */}
-                  {/* <td className="p-3 border border-gray-300 overflow-hidden w-[250px] break-all">{org.mobile}</td> */}
-                  <td className="p-3 border border-gray-300 w-[250px] break-all">{org.createDate}</td>
+        <div className="max-h-[60vh] overflow-y-auto overflow-x-auto px-3">
+          <div className="overflow-x-auto">
+            <table className="w-full table-fixed border-collapse border border-gray-300">
+              <thead className="bg-gray-100">
+                <tr className="text-left">
+                  <th className="p-3 border border-gray-300 w-[248px]">
+                    Organization Name
+                  </th>
+                  <th className="p-3 border border-gray-300 w-[248px]">
+                    Organization Website
+                  </th>
+                  <th className="p-3 border border-gray-300 w-[248px]">
+                    Organization Address
+                  </th>
+                  {/* <th className="p-3 border border-gray-300 w-[248px]">Organization Email</th> */}
+                  {/* <th className="p-3 border border-gray-300 w-[248px]">Organization Contact</th> */}
+                  <th className="p-3 border border-gray-300 w-[248px]">
+                    Associated Date
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {data.map((org, index) => (
+                  <tr key={index} className="border border-gray-300">
+                    <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">
+                      {org.name}
+                    </td>
+                    <td className="p-3 border border-gray-300 overflow-hidden break-all line-clamp-3 text-blue-600 underline w-[248px]">
+                      <a
+                        href={org.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {org.website}
+                      </a>
+                    </td>
+                    <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">
+                      {org.address}
+                    </td>
+                    {/* <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">{org.email}</td> */}
+                    {/* <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">{org.mobile}</td> */}
+                    <td className="p-3 border border-gray-300 w-[248px] break-all">
+                      {new Date(org.createDate).toISOString().split("T")[0]}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        {/* Close Button */}
-        <div className="flex justify-end">
-          <button
-            onClick={closeModal}
-            className="px-6 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-3 mb-5 sticky bottom-0 bg-white"
-          >
-            Close
-          </button>
+          {/* Close Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={closeModal}
+              className="px-6 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-3 mb-5 sticky bottom-0 bg-white"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

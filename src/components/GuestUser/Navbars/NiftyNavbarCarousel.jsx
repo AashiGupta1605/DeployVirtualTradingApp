@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-const NavbarCarousel = () => {
+const NiftyNavbarCarousel = () => {
   const settings = {
     dots: false,
     infinite: true,
@@ -50,7 +50,7 @@ const NavbarCarousel = () => {
   );
 };
 
-export default NavbarCarousel;
+export default NiftyNavbarCarousel;
 
 
 {/* Navbar */}

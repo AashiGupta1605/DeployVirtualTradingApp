@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NavbarCarousel from "../../components/GuestUser/Navbars/NavbarCarousel";
+import NavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 import StockP from "../../assets/p-stock.jpg";
 import "../../components/GuestUser/Contact/ContactPage.css"; 

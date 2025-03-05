@@ -21,7 +21,7 @@ const OrganizationsSlider = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/v1/api/organization/display-all-org');
+        const response = await axios.get('http://localhost:5000/v1/api/guestUser/display-all-org');
         setData(response.data);
       } catch (error) {
         setErr(error.message);

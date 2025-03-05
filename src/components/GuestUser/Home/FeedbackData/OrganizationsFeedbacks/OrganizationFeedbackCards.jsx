@@ -16,7 +16,7 @@ const OrganizationFeedbackCards = () => {
     const fetchData = async () => {
       try {
         const response1 = await axios.get(
-          "http://localhost:5000/v1/api/guestUser/OrganizationFeedback/createdDate/decreasing"
+          "http://localhost:5000/v1/api/guestUser/userFeedback/createdDate/decreasing"
         );
         setFeedbacks(response1.data.feedbackData);
 
