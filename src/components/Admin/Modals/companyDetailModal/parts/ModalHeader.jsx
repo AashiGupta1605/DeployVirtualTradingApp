@@ -1,11 +1,10 @@
-// components/Common/Modals/CompanyDetail/ModalHeader.jsx
-
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { 
   X,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  RefreshCw
 } from 'lucide-react';
 
 const MetricBadge = ({ label, value, type = 'neutral' }) => {
@@ -28,7 +27,9 @@ const MetricBadge = ({ label, value, type = 'neutral' }) => {
   );
 };
 
-const ModalHeader = ({ type, onClose, symbol, data, loading }) => {
+const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const formatValue = (value, type = 'number') => {
     if (value === undefined || value === null) return 'N/A';
     
@@ -56,7 +57,25 @@ const ModalHeader = ({ type, onClose, symbol, data, loading }) => {
     return { text: 'Market Open', type: 'positive' };
   };
 
+  const handleRefresh = async () => {
+    if (isRefreshing || loading) return;
+
+    setIsRefreshing(true);
+    try {
+      await onRefresh();
+    } catch (error) {
+      console.error('Refresh failed:', error);
+    } finally {
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 1000);
+    }
+  };
+
   const marketStatus = getMarketStatus();
+  const lastUpdateTime = data?.lastUpdateTime 
+    ? new Date(data.lastUpdateTime).toLocaleTimeString()
+    : 'N/A';
 
   return (
     <div className="flex flex-col">
@@ -112,14 +131,65 @@ const ModalHeader = ({ type, onClose, symbol, data, loading }) => {
               </div>
             </div>
 
+            {/* Last Updated Time */}
+            <div className="text-sm text-gray-500">
+              Last updated: {lastUpdateTime}
+            </div>
+
+            {/* Refresh Button */}
+            <button
+              onClick={handleRefresh}
+              disabled={loading || isRefreshing}
+              className={`p-2 rounded-lg transition-all duration-200 relative group ${
+                loading || isRefreshing
+                  ? 'bg-gray-100 cursor-not-allowed'
+                  : 'hover:bg-gray-100 active:bg-gray-200'
+              }`}
+              title="Refresh data"
+            >
+              <RefreshCw 
+                size={20} 
+                className={`text-gray-600 transition-all duration-700 ${
+                  isRefreshing ? 'animate-spin' : 'group-hover:rotate-180'
+                }`}
+              />
+              <span className="sr-only">Refresh data</span>
+              
+              {/* Tooltip */}
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-2 
+                            opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded shadow-lg whitespace-nowrap">
+                  {isRefreshing ? 'Refreshing...' : 'Refresh data'}
+                </div>
+                <div className="w-2 h-2 bg-gray-800 transform rotate-45 translate-x-1/2 translate-y-[-4px] 
+                              absolute left-1/2 bottom-0"></div>
+              </div>
+            </button>
+
             {/* Close Button */}
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-200 rounded-xl transition-all duration-200"
+              className="p-2 hover:bg-gray-200 rounded-xl transition-all duration-200 group"
               aria-label="Close modal"
             >
-              <X className="text-gray-500" size={24} />
+              <X 
+                className="text-gray-500 group-hover:text-gray-700 transition-colors" 
+                size={24} 
+              />
             </button>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center space-x-4">
+            <div className="animate-pulse flex space-x-4">
+              <div className="h-10 w-10 bg-gray-200 rounded-lg"></div>
+              <div className="space-y-2">
+                <div className="h-4 w-24 bg-gray-200 rounded"></div>
+                <div className="h-3 w-16 bg-gray-200 rounded"></div>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -137,12 +207,14 @@ ModalHeader.propTypes = {
     pChange: PropTypes.number,
     lastUpdateTime: PropTypes.string
   }),
+  onRefresh: PropTypes.func
 };
 
 ModalHeader.defaultProps = {
   type: 'nifty',
   loading: false,
   data: null,
+  onRefresh: () => {}
 };
 
 export default ModalHeader;
