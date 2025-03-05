@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 import Pagination from '../Common/TableItems/Pagination';
-import CompanyDetailModal from '../Admin/Modals/CompanyDetailModal';
+import CompanyDetailModal from '../Admin/Modals/companyDetailModal/index';
 
 const CardTable = () => {
   // State Management
@@ -30,8 +30,54 @@ const CardTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
+    // Add new state for modal data
+    const [modalData, setModalData] = useState({
+      stockData: null,
+      chartData: null,
+      isLoading: false,
+      error: null
+    });
   // Cache implementation
   const cache = useMemo(() => new Map(), []);
+
+    // Handle modal data fetching
+    const fetchModalData = async (symbol) => {
+      if (!symbol) return;
+  
+      setModalData(prev => ({ ...prev, isLoading: true, error: null }));
+  
+      try {
+        // Fetch stock data
+        const stockResponse = await axios.get(`${BASE_API_URL}/admin/nifty/company/${symbol}`);
+        
+        // Fetch chart data
+        const chartResponse = await axios.get(`${BASE_API_URL}/admin/nifty/company/chart/${symbol}`);
+  
+        setModalData({
+          stockData: stockResponse.data,
+          chartData: {
+            candlestick: chartResponse.data.map(item => ({
+              x: new Date(item.date).getTime(),
+              y: [item.open, item.high, item.low, item.close]
+            })),
+            volume: chartResponse.data.map(item => ({
+              x: new Date(item.date).getTime(),
+              y: item.volume
+            }))
+          },
+          isLoading: false,
+          error: null
+        });
+      } catch (err) {
+        console.error('Error fetching modal data:', err);
+        setModalData(prev => ({
+          ...prev,
+          isLoading: false,
+          error: 'Failed to fetch company data'
+        }));
+      }
+    };
+
 
   // Sorting function
   const requestSort = (key) => {
@@ -44,13 +90,7 @@ const CardTable = () => {
     setSortConfig({ key, direction });
   };
 
-  // Symbol click handler
-  const handleSymbolClick = (symbol, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedSymbol(symbol);
-    setIsModalOpen(true);
-  };
+
 
   // Data fetching with retry logic
   const fetchDataWithRetry = async (page, retries = 3) => {
@@ -73,6 +113,58 @@ const CardTable = () => {
       throw error;
     }
   };
+
+    // Handle time range change
+    const handleTimeRangeChange = async (range) => {
+      if (!selectedSymbol) return;
+  
+      setModalData(prev => ({ ...prev, isLoading: true, error: null }));
+  
+      try {
+        const response = await axios.get(
+          `${BASE_API_URL}/admin/nifty/company/chart/${selectedSymbol}`,
+          { params: { timeRange: range } }
+        );
+  
+        setModalData(prev => ({
+          ...prev,
+          chartData: {
+            candlestick: response.data.map(item => ({
+              x: new Date(item.date).getTime(),
+              y: [item.open, item.high, item.low, item.close]
+            })),
+            volume: response.data.map(item => ({
+              x: new Date(item.date).getTime(),
+              y: item.volume
+            }))
+          },
+          isLoading: false
+        }));
+      } catch (err) {
+        console.error('Error fetching chart data:', err);
+        setModalData(prev => ({
+          ...prev,
+          isLoading: false,
+          error: 'Failed to fetch chart data'
+        }));
+      }
+    };
+  
+    // Update symbol click handler
+    const handleSymbolClick = async (symbol, e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Opening modal for symbol:', symbol);
+      
+      if (!symbol) {
+        console.error('No symbol provided');
+        return;
+      }
+      
+      setSelectedSymbol(symbol);
+      setIsModalOpen(true);
+      await fetchModalData(symbol);
+    };
 
   // Main fetch function
   const fetchData = async (page = 1) => {
@@ -369,11 +461,31 @@ const CardTable = () => {
       </div>
 
       <CompanyDetailModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  symbol={selectedSymbol}
-  type="nifty"
-/>
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedSymbol(null);
+          setModalData({
+            stockData: null,
+            chartData: null,
+            isLoading: false,
+            error: null
+          });
+        }}
+        symbol={selectedSymbol}
+        data={modalData.stockData}
+        chartData={modalData.chartData}
+        onTimeRangeChange={handleTimeRangeChange}
+        loading={modalData.isLoading}
+        error={modalData.error}
+        chartSettings={{
+          theme: 'light',
+          showGrid: true,
+          showVolume: true,
+          showDetails: true
+        }}
+        type="nifty"
+      />
 
     </>
   );

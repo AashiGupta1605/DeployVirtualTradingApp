@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// OrganizationList.jsx
+import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
 
@@ -24,12 +25,15 @@ import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
 
+// Memoized selector
+const selectOrganizationState = state => state.admin.organizationList || {};
+
 const OrganizationList = () => {
   const dispatch = useDispatch();
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // Select state from Redux store
+  // Use memoized selector
   const {
     organizations,
     filteredOrganizations,
@@ -41,30 +45,33 @@ const OrganizationList = () => {
     pagination,
     modals,
     stats
-  } = useSelector(state => state.admin.organizationList);
+  } = useSelector(selectOrganizationState);
 
-  // Initial fetch
+  // Memoize current items calculation
+  const currentItems = useMemo(() => {
+    const indexOfLastItem = pagination.currentPage * pagination.itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - pagination.itemsPerPage;
+    return Array.isArray(filteredOrganizations)
+      ? filteredOrganizations.slice(indexOfFirstItem, indexOfLastItem)
+      : [];
+  }, [filteredOrganizations, pagination.currentPage, pagination.itemsPerPage]);
+
+  // Initial data fetch
   useEffect(() => {
-    dispatch(fetchOrganizations())
-      .unwrap()
-      .then(() => {
-        console.log('Organizations fetched successfully');
-      })
-      .catch(error => {
-        console.error('Error fetching organizations:', error);
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchOrganizations()).unwrap();
+      } catch (error) {
         toast.error(error.message || 'Failed to fetch organizations');
-      });
+      }
+    };
+    fetchData();
   }, [dispatch]);
 
   // Filter effect
   useEffect(() => {
     dispatch(filterOrganizations());
   }, [dispatch, filters, searchQuery]);
-
-  // Pagination calculations
-  const indexOfLastItem = pagination.currentPage * pagination.itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - pagination.itemsPerPage;
-  const currentItems = filteredOrganizations.slice(indexOfFirstItem, indexOfLastItem);
 
   // Handler functions
   const handleFilterChange = (e) => {
@@ -112,41 +119,26 @@ const OrganizationList = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    try {
-      const loadingToast = toast.loading('Deleting organization...');
-      await dispatch(deleteOrganization(selectedOrganization._id)).unwrap();
-      
-      // Refresh data
-      await Promise.all([
-        dispatch(fetchOrganizations()),
-        dispatch(filterOrganizations())
-      ]);
+    if (!selectedOrganization?._id) return;
 
+    const loadingToast = toast.loading('Deleting organization...');
+    try {
+      await dispatch(deleteOrganization(selectedOrganization._id)).unwrap();
       setIsDeleteModalOpen(false);
       setSelectedOrganization(null);
-      toast.success('Organization deleted successfully!', { id: loadingToast });
+      toast.success('Organization deleted successfully', { id: loadingToast });
+      dispatch(fetchOrganizations());
     } catch (error) {
-      console.error('Delete failed:', error);
-      toast.error(error.message || 'Failed to delete organization');
+      toast.error(error.message || 'Failed to delete organization', { id: loadingToast });
     }
   };
 
   const handleStatusChange = async (id, status) => {
     try {
-      // const loadingToast = toast.loading('Updating organization status...');
-      
       await dispatch(updateOrganizationStatus({ id, status })).unwrap();
-      
-      // Refresh data
-      await Promise.all([
-        dispatch(fetchOrganizations()),
-        dispatch(filterOrganizations())
-      ]);
-      
-      // toast.success('Organization status updated successfully!', { id: loadingToast });
+      dispatch(fetchOrganizations());
     } catch (error) {
-      console.error('Error updating status:', error);
-      toast.error(error.message || 'Failed to update organization status');
+      toast.error('Failed to update status');
     }
   };
 
@@ -158,10 +150,10 @@ const OrganizationList = () => {
   };
 
   // Loading state
-  if (isLoading && !filteredOrganizations.length) {
+  if (isLoading && !filteredOrganizations?.length) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
       </div>
     );
   }
@@ -182,7 +174,6 @@ const OrganizationList = () => {
       <StatsSection stats={stats} isDashboard={false} />
 
       <div className="px-8 mx-4 -mt-12">
-        {/* Table Filters */}
         <TableFilters
           filterType="organizations"
           isFilterOpen={modals.isFilterOpen}
@@ -200,65 +191,43 @@ const OrganizationList = () => {
           pageTitle="Manage Organizations"
           showAddButton={true}
           addButtonText="Add Organization"
-          onAddNew={() => {
-            dispatch(setModal({ 
-              isFormOpen: true,
-              selectedOrg: null 
-            }));
-          }}
+          onAddNew={() => dispatch(setModal({ isFormOpen: true, selectedOrg: null }))}
         />
 
-        {/* Organization Table */}
-        <div>
-          <OrganizationTable
-            organizations={currentItems}
-            isLoading={isLoading}
-            onEdit={handleEditOrganization}
-            onDelete={handleDeleteClick}
-            onStatusChange={handleStatusChange}
-          />
-        </div>
+        <OrganizationTable
+          organizations={currentItems}
+          isLoading={isLoading}
+          onEdit={handleEditOrganization}
+          onDelete={handleDeleteClick}
+          onStatusChange={handleStatusChange}
+        />
 
-        {/* Pagination */}
-        {filteredOrganizations.length > 0 && (
+        {filteredOrganizations?.length > 0 && (
           <div className="mt-4">
             <Pagination
               currentPage={pagination.currentPage}
               totalPages={Math.ceil(filteredOrganizations.length / pagination.itemsPerPage)}
               itemsPerPage={pagination.itemsPerPage}
-              setItemsPerPage={(value) => 
-                dispatch(setPagination({ itemsPerPage: value }))
-              }
-              setCurrentPage={(value) => 
-                dispatch(setPagination({ currentPage: value }))
-              }
+              setItemsPerPage={(value) => dispatch(setPagination({ itemsPerPage: value }))}
+              setCurrentPage={(value) => dispatch(setPagination({ currentPage: value }))}
               filteredItems={filteredOrganizations}
-              indexOfFirstItem={indexOfFirstItem}
-              indexOfLastItem={indexOfLastItem}
+              indexOfFirstItem={(pagination.currentPage - 1) * pagination.itemsPerPage}
+              indexOfLastItem={Math.min(pagination.currentPage * pagination.itemsPerPage, filteredOrganizations.length)}
             />
           </div>
         )}
 
-        {/* Registration Form Modal */}
-        <OrganizationRegistrationForm
-          isOpen={modals.isFormOpen}
-          onClose={() => {
-            dispatch(setModal({ 
-              isFormOpen: false,
-              selectedOrg: null 
-            }));
-          }}
-          selectedOrg={modals.selectedOrg}
-          onSuccess={() => {
-            dispatch(fetchOrganizations());
-            dispatch(setModal({ 
-              isFormOpen: false,
-              selectedOrg: null 
-            }));
-          }}
-        />
+<OrganizationRegistrationForm
+  isOpen={modals.isFormOpen}
+  onClose={() => {
+    dispatch(setModal({ isFormOpen: false, selectedOrg: null }));
+  }}
+  selectedOrg={modals.selectedOrg}
+  onSuccess={() => {
+    dispatch(fetchOrganizations());
+  }}
+/>
 
-        {/* Delete Confirmation Modal */}
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
           onClose={() => {
