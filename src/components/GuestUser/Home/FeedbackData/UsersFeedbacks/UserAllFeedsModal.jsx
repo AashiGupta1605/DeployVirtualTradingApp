@@ -98,14 +98,13 @@ const UserAllFeedsModal = ({ closeModal }) => {
                   value={category}
                   onChange={(e) => setCategory(e.target.value || "")}
                 >
-                  <option value="">Category</option>
+                  <option disabled>Category</option>
+                  <option value="">All</option>
                   <option value="Website UI/UX">Website UI/UX</option>
                   <option value="Data Accuracy">Data Accuracy</option>
                   <option value="Trading Features">Trading Features</option>
                   <option value="Customer Support">Customer Support</option>
-                  <option value="Performance & Speed">
-                    Performance & Speed
-                  </option>
+                  <option value="Performance & Speed">Performance & Speed</option>
                   <option value="Other">Other</option>
                 </select>
               </div>

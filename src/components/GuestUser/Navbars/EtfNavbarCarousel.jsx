@@ -3,8 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-// import { BASE_API_URL } from "../../utils/BaseUrl.jsx";
-const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 
 const EtfNavbarCarousel = () => {
   const [stockData, setStockData] = useState([]);
@@ -13,7 +12,7 @@ const EtfNavbarCarousel = () => {
 
   const fetchStockData = async () => {
     try {
-      const response = await fetch(`${BASE_API_URL}/etf`);
+      const response = await fetch(`${BASE_API_URL}/admin/etfdata`);
       if (!response.ok) throw new Error("Failed to fetch ETF data");
       
       const data = await response.json();
@@ -41,16 +40,18 @@ const EtfNavbarCarousel = () => {
     dots: false,
     infinite: true,
     speed: 2000,
-    slidesToShow: 6, 
+    slidesToShow: 7, 
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 500,
     arrows: false, 
-    pauseOnHover: false,
+    pauseOnHover: true,
   };
 
   return (
-    <div className="fixed left-0 top-26 w-full bg-black text-white py-1 z-30">
+    <>
+    <div className="fixed left-0 top-24 w-full py-[2px] z-30 bg-white"/>
+    <div className="fixed left-0 top-25 w-full bg-black text-white py-[1px] z-30">
       {loading ? (
         <p className="text-center text-white">Loading...</p>
       ) : error ? (
@@ -69,6 +70,7 @@ const EtfNavbarCarousel = () => {
         </Slider>
       )}
     </div>
+    </>
   );
 };
 

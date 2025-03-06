@@ -27,12 +27,8 @@ const UserDropdown = () => {
         }}
       >
         <div className="items-center flex">
-          <span className="w-12 h-12 text-sm text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full">
-            {/* <img
-              alt="..."
-              className="w-full rounded-full align-middle border-none shadow-lg"
-              src={require("../../../assets/img/team-4-470x470.png").default}
-            /> */}
+          <span className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none">
+          <i className="fas fa-user-circle text-2xl"></i>
           </span>
         </div>
       </a>
@@ -40,7 +36,7 @@ const UserDropdown = () => {
         ref={popoverDropdownRef}
         className={
           (dropdownPopoverShow ? "block " : "hidden ") +
-          "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
+          "bg-white text-base z-50 float-left py-0 list-none text-left rounded shadow-lg min-w-48"
         }
       >
         <a
