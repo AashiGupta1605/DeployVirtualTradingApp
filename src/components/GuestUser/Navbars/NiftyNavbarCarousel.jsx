@@ -12,10 +12,11 @@ const NiftyNavbarCarousel = () => {
 
   const fetchStockData = async () => {
     try {
-      const response = await fetch(`${BASE_API_URL}/admin/etfdata`);
+      const response = await fetch(`${BASE_API_URL}/admin/nifty/data`);
       if (!response.ok) throw new Error("Failed to fetch Nifty data");
       
-      const data = await response.json();
+      const data = await response.data.json();
+      console.log("Nifty50 Data: ",data)
       
       // Transform data to match UI format
       const formattedData = data.map((item) => ({
