@@ -1,190 +1,109 @@
-import { combineReducers, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// CardStatCountSlice.js
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
-import { logoutUser } from '../../Admin/Auth/LogoutSlice';
-import { deleteOrganization } from '../../Admin/OrganizationListPage/OrganizationListSlice';
 
-// Import existing reducers
-import adminQueryTableReducer from '../../Admin/QueryListPage/QueryTableSllice';
-import registeredUsersReducer from "../../Admin/RegisteredUsersPage/RegisteredUserListSlice";
-import organizationListReducer from '../../Admin/OrganizationListPage/OrganizationListSlice';
-import organizationRegistrationReducer from '../../Admin/OrganizationListPage/OrganizationRegisterSlice';
-import userRegistrationReducer from '../../Admin/RegisteredUsersPage/UserRegisterSlice';
-
-// Async Thunks for Organization
+// Async Thunk for fetching organizations
 export const fetchOrganizations = createAsyncThunk(
-  'organizations/fetchOrganizations',
+  'cardStatCount/fetchOrganizations',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/organization/display-all-org`);
-      return response.data;
+      const response = await axios.get(`${BASE_API_URL}/organization/list`);
+      return response.data.data; // Make sure this matches your API response structure
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to fetch organizations');
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch organizations'
+      );
     }
   }
 );
 
-export const loginOrganization = createAsyncThunk(
-  'organizations/login',
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${BASE_API_URL}/organization/login`, credentials);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const registerOrganization = createAsyncThunk(
-  'organizations/register',
-  async (organizationData, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${BASE_API_URL}/organization/register`, organizationData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-// Initial state for organization auth
+// Initial state
 const initialState = {
   organizations: [],
   status: 'idle',
   error: null,
-  orgName: null,
-  loading: false,
-  authError: null,
-  success: false,
   totalOrganizations: 0
 };
 
-// Organization Auth Slice
-const organizationAuthSlice = createSlice({
-  name: 'organizationAuth',
+// Slice
+const cardStatCountSlice = createSlice({
+  name: 'cardStatCount',
   initialState,
   reducers: {
-    resetAuthState: (state) => {
-      state.orgName = null;
-      state.loading = false;
-      state.authError = null;
-      state.success = false;
+    clearError: (state) => {
+      state.error = null;
     },
-    logoutOrganization: (state) => {
-      state.orgName = null;
-      state.success = false;
-      localStorage.removeItem('orgName');
-    },
-    addOrganization: (state, action) => {
-      state.organizations.push(action.payload);
-      state.totalOrganizations += 1;
-    },
-    removeOrganization: (state, action) => {
-      state.organizations = state.organizations.filter(org => org._id !== action.payload);
-      state.totalOrganizations = Math.max(0, state.totalOrganizations - 1);
+    updateTotalCount: (state) => {
+      state.totalOrganizations = state.organizations.length;
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrganizations.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchOrganizations.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.organizations = action.payload;
         state.totalOrganizations = action.payload.length;
+        state.error = null;
       })
       .addCase(fetchOrganizations.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-      })
-      .addCase(deleteOrganization.fulfilled, (state, action) => {
-        state.organizations = state.organizations.filter(
-          org => org._id !== action.payload
-        );
-      })
-      .addCase(loginOrganization.pending, (state) => {
-        state.loading = true;
-        state.authError = null;
-      })
-      .addCase(loginOrganization.fulfilled, (state, action) => {
-        state.loading = false;
-        state.orgName = action.payload.orgName;
-        state.success = true;
-        localStorage.setItem('orgName', action.payload.orgName);
-      })
-      .addCase(loginOrganization.rejected, (state, action) => {
-        state.loading = false;
-        state.authError = action.payload.message;
-      })
-      .addCase(registerOrganization.pending, (state) => {
-        state.loading = true;
-        state.authError = null;
-      })
-      .addCase(registerOrganization.fulfilled, (state) => {
-        state.loading = false;
-        state.success = true;
-        state.status = 'idle';
-      })
-      .addCase(registerOrganization.rejected, (state, action) => {
-        state.loading = false;
-        state.authError = action.payload.message;
       });
   }
 });
 
-// Create a custom reducer to handle logout across admin slices
-const createLogoutReducer = (reducer) => {
-  return (state, action) => {
-    if (action.type === logoutUser.fulfilled.type) {
-      return reducer(undefined, action);
-    }
-    return reducer(state, action);
-  };
-};
+// Base selectors
+const selectCardStatState = state => state?.cardStatCount || initialState;
+const selectAdminOrgState = state => state?.admin?.organizationList || { organizations: [] };
 
-// Create a reset action for the entire admin reducer
-const resetAdminState = () => ({
-  type: 'RESET_ADMIN_STATE'
-});
+// Memoized selectors
+export const selectOrganizations = createSelector(
+  [selectCardStatState],
+  state => state.organizations
+);
 
-// Apply logout handling to each reducer
-const adminReducer = combineReducers({
-  queryTable: createLogoutReducer(adminQueryTableReducer),
-  registeredUsersTable: createLogoutReducer(registeredUsersReducer),
-  organizationList: createLogoutReducer(organizationListReducer),
-  organizationRegistration: createLogoutReducer(organizationRegistrationReducer),
-  userRegistration: createLogoutReducer(userRegistrationReducer),
-});
-
-const rootAdminReducer = (state, action) => {
-  if (action.type === 'RESET_ADMIN_STATE') {
-    return adminReducer(undefined, action);
+export const selectOrganizationCount = createSelector(
+  [selectCardStatState, selectAdminOrgState],
+  (cardStatState, adminOrgState) => {
+    const cardStatCount = cardStatState.organizations?.length || 0;
+    const adminListCount = adminOrgState.organizations?.length || 0;
+    return Math.max(cardStatCount, adminListCount);
   }
-  return adminReducer(state, action);
-};
+);
 
-// Selectors
-export const selectOrganizations = state => state?.organization?.auth?.organizations ?? [];
-export const selectOrganizationStatus = state => state?.organization?.auth?.status ?? 'idle';
-export const selectOrganizationError = state => state?.organization?.auth?.error ?? null;
-export const selectOrganizationLoading = state => state?.organization?.auth?.loading ?? false;
-export const selectOrganizationSuccess = state => state?.organization?.auth?.success ?? false;
-export const selectOrganizationName = state => state?.organization?.auth?.orgName ?? null;
-export const selectOrganizationCount = state => {
-  const listCount = state.admin?.organizationList?.organizations?.length || 0;
-  const authCount = state.organization?.auth?.organizations?.length || 0;
-  return Math.max(listCount, authCount);
-};
+export const selectOrganizationStatus = createSelector(
+  [selectCardStatState],
+  state => state.status
+);
+
+export const selectOrganizationError = createSelector(
+  [selectCardStatState],
+  state => state.error
+);
+
+export const selectTotalOrganizations = createSelector(
+  [selectCardStatState],
+  state => state.totalOrganizations
+);
+
+// Stats selector for dashboard
+export const selectOrganizationStats = createSelector(
+  [selectOrganizations, selectTotalOrganizations],
+  (organizations, total) => ({
+    total,
+    active: organizations.filter(org => org.status === 'active').length,
+    pending: organizations.filter(org => org.status === 'pending').length,
+    inactive: organizations.filter(org => org.status === 'inactive').length
+  })
+);
 
 // Export actions
-export const {
-  resetAuthState,
-  logoutOrganization,
-  addOrganization,
-  removeOrganization
-} = organizationAuthSlice.actions;
+export const { clearError, updateTotalCount } = cardStatCountSlice.actions;
 
-export { resetAdminState };
-export default rootAdminReducer;
+// Export reducer
+export default cardStatCountSlice.reducer;

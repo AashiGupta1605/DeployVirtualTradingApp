@@ -2,19 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { toast } from 'react-hot-toast';
+
 // Centralized API calls
 const contactService = {
   fetchAll: async () => {
-    const [contacts, orgs, users] = await Promise.all([
-      axios.get(`${BASE_API_URL}/user/contact/get`),
-      axios.get(`${BASE_API_URL}/organization/display-all-org`),
-      axios.get(`${BASE_API_URL}/user/display-users`),
-    ]);
-
+    const response = await axios.get(`${BASE_API_URL}/user/contact/get`);
     return {
-      contacts: contacts.data,
-      orgCount: orgs.data.length,
-      userCount: users.data.length
+      contacts: response.data
     };
   },
 
@@ -81,10 +75,10 @@ export const deleteContact = createAsyncThunk(
     try {
       await contactService.delete(contactId);
       await dispatch(fetchContacts());
-      toast.success('Contact deleted successfully!'); // Success toast
+      toast.success('Contact deleted successfully!');
       return contactId;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Delete failed"); // Error toast
+      toast.error(error.response?.data?.message || "Delete failed");
       return rejectWithValue(error.response?.data?.message || "Delete failed");
     }
   }
@@ -94,8 +88,6 @@ export const deleteContact = createAsyncThunk(
 const initialState = {
   contacts: [],
   filteredContacts: [],
-  orgCount: 0,
-  userCount: 0,
   status: 'idle',
   error: null,
   isDeleting: false,
@@ -159,12 +151,10 @@ const adminQueryTableSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
-        const { contacts, orgCount, userCount } = action.payload;
+        const { contacts } = action.payload;
         state.status = 'succeeded';
         state.contacts = contacts;
         state.filteredContacts = applyContactFilters(contacts, state.filters, state.searchQuery);
-        state.orgCount = orgCount;
-        state.userCount = userCount;
         state.stats = calculateContactStats(state.filteredContacts);
         state.error = null;
       })
@@ -200,8 +190,6 @@ export const {
 // Selectors
 export const selectContacts = (state) => state.admin.queryTable.contacts;
 export const selectFilteredContacts = (state) => state.admin.queryTable.filteredContacts;
-export const selectOrgCount = (state) => state.admin.queryTable.orgCount;
-export const selectUserCount = (state) => state.admin.queryTable.userCount;
 export const selectStatus = (state) => state.admin.queryTable.status;
 export const selectError = (state) => state.admin.queryTable.error;
 export const selectIsDeleting = (state) => state.admin.queryTable.isDeleting;

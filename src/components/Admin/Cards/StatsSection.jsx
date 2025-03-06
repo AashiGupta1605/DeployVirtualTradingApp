@@ -2,41 +2,39 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CardStats from './CardStats';
 
-import { fetchUsers, selectUserCount, selectActiveUserCount } from '../../../redux/User/userSlice';
-// import { fetchOrganizations, selectOrganizationCount } from '../../../redux/Organization/auth/organizationAuthSlice';
-import { fetchOrganizations } from '../../../redux/Organization/auth/organizationAuthSlice';
+import { 
+  fetchUsers, 
+  selectUserCount, 
+  selectActiveUserCount 
+} from '../../../redux/User/userSlice';
+
+import { 
+  fetchOrganizations,
+  selectOrganizationCount,
+  selectOrganizations
+} from '../../../redux/Organization/count/CardStatCountSlice';
 
 const StatsSection = ({ isDashboard = false }) => {
   const dispatch = useDispatch();
 
-  // Get organizations from both states
-  const organizationAuth = useSelector((state) => state.organization?.auth || {});
-  const organizationList = useSelector((state) => state.admin?.organizationList || {});
-
-  const userCount = useSelector(selectUserCount);
-  const activeUserCount = useSelector(selectActiveUserCount);
+  // Get counts from selectors
+  const userCount = useSelector(selectUserCount) || 0;
+  const activeUserCount = useSelector(selectActiveUserCount) || 0;
+  
+  // Use the proper selector for organization count
   const organizationCount = useSelector(selectOrganizationCount);
+  const organizations = useSelector(selectOrganizations);
 
-  // Updated selectors with default values
-  const {
-    list: users = [],
-    totalUsers = 0,
-    status: userStatus = 'idle'
-  } = useSelector((state) => state.user || {});
-
-  const {
-    organizations = [],
-    totalOrganizations = 0,
-    status: orgStatus = 'idle'
-  } = useSelector((state) => state.organization?.auth || {});
+  // Get loading states
+  const userStatus = useSelector(state => state.user?.status || 'idle');
+  const orgStatus = useSelector(state => state.organization?.auth?.status || 'idle');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await Promise.all([
-          dispatch(fetchUsers()).unwrap(),
-          dispatch(fetchOrganizations()).unwrap()
-        ]);
+        // Fetch organizations first to ensure we have the data
+        await dispatch(fetchOrganizations()).unwrap();
+        await dispatch(fetchUsers()).unwrap();
       } catch (error) {
         console.error('Error fetching stats data:', error);
       }
@@ -44,6 +42,12 @@ const StatsSection = ({ isDashboard = false }) => {
 
     fetchData();
   }, [dispatch]);
+
+  // For debugging
+  useEffect(() => {
+    console.log('Organizations:', organizations);
+    console.log('Organization Count:', organizationCount);
+  }, [organizations, organizationCount]);
 
   // Show loading state while data is being fetched
   if (userStatus === 'loading' || orgStatus === 'loading') {
@@ -70,7 +74,7 @@ const StatsSection = ({ isDashboard = false }) => {
     },
     {
       statSubtitle: "REGISTERED ORGANIZATIONS",
-      statTitle: organizationCount.toString(),
+      statTitle: (organizationCount || 0).toString(), // Add fallback to 0
       statArrow: "up",
       statPercent: "100",
       statPercentColor: "text-emerald-500",

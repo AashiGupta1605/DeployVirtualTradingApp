@@ -63,7 +63,7 @@ export const deleteUser = createAsyncThunk(
   async (id, { rejectWithValue, dispatch }) => {
     try {
       const response = await axios.delete(
-        `${BASE_API_URL}/admin/users/${id}`
+        `${BASE_API_URL}/user/users/${id}`
       );
 
       toast.success('User deleted successfully!');
@@ -80,7 +80,7 @@ export const fetchUsers = createAsyncThunk(
   'userRegistration/fetchUsers',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/admin/users`);
+      const response = await axios.get(`${BASE_API_URL}/user/display-users`);
       return response.data;
     } catch (error) {
       // toast.error(error.response?.data?.message || '');
