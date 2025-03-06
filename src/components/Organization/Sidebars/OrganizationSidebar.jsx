@@ -82,29 +82,29 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
           {/* Logo Section */}
 
           {/* <div className="flex items-center justify-between w-full h-20 px-6 border-b border-gray-200"> */}
-            <Link
+            {/* <Link
               to="/"
               className={`flex items-center space-x-3 ${!sidebarExpanded && "md:hidden"}`}
             >
               <span className="text-lg font-semibold bg-gray-800 bg-clip-text text-transparent">
                 {currentOrg?.name || "Organization"}
               </span>
-            </Link>
-            <Tooltip title={sidebarExpanded ? "Collapse Sidebar" : "Expand Sidebar"} isVisible={!sidebarExpanded}>
+            </Link> */}
+            {/* <Tooltip title={sidebarExpanded ? "Collapse Sidebar" : "Expand Sidebar"} isVisible={!sidebarExpanded}>
               <button
                 onClick={toggleSidebar}
                 className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
               >
                 <i className={`fas fa-${sidebarExpanded ? "times" : "bars"} text-gray-400 text-base`}></i>
               </button>
-            </Tooltip>
+            </Tooltip> */}
           {/* </div> */}
 
           <div className={`flex items-center ${sidebarExpanded ? "justify-between px-5" : "justify-center px-0"} w-full h-[73px] border-b border-gray-200`}>
   {sidebarExpanded && (
     <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
       <span className="text-lg font-bold leading-relaxed uppercase">
-        {orgName || "Organization"}
+        {currentOrg?.name || "Organization"}
       </span>
     </Link>
   )}
@@ -205,7 +205,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
 
           {/* User Profile Preview */}
           {/* {sidebarExpanded && ( */}
-            <div className="p-6 border-t border-gray-100 bg-gray-50">
+            {/* <div className="p-6 border-t border-gray-100 bg-gray-50">
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
@@ -218,7 +218,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
                   <div className="text-sm text-gray-500">Administrator</div>
                 </div>
               </div>
-            </div>
+            </div> */}
           {/* )} */}
           
   <div className={`border-t bg-gray-50 p-4 flex items-center ${sidebarExpanded ? "justify-between" : "justify-center"}`}>
@@ -231,7 +231,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
       </div>
       {sidebarExpanded && (
         <div>
-          <div className="font-medium text-gray-900">{orgName || "Admin"}</div>
+          <div className="font-medium text-gray-900">{currentOrg?.name || "Organization"}</div>
           <div className="text-sm text-gray-500">Administrator</div>
         </div>
       )}
