@@ -1,7 +1,8 @@
 import React from "react";
 
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 import StockMarket from "../../assets/stock-market.jpg";
 
@@ -9,10 +10,11 @@ const AboutPage = () => {
   return (
     <>
       <MainHomeNavbar fixed/>
-      <NavbarCarousel fixed/>
+      <NiftyNavbarCarousel fixed/>
+      <EtfNavbarCarousel fixed/>
 
       {/* About Us hell Section */}
-      <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
+      <div className="mt-4 min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
         {/* Left - Content */}
         <div className="text-black md:w-1/2 px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
@@ -50,7 +52,7 @@ const AboutPage = () => {
         </div>
 
         {/* Right - Image */}
-        <div className="md:w-1/2 px-6 mt-12 md:mt-0">
+        <div className="md:w-1/2 px-6 mt-20 md:mt-0">
           <img
             src={StockMarket}
             alt="Stock Market"

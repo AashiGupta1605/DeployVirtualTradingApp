@@ -12,7 +12,7 @@ const InfoCards = () => {
         const fetchData = async () => {
           try {
             const response1 = await axios.get('http://localhost:5000/v1/api/guestUser/display-all-org');
-            setOrgData(response1.data);
+            setOrgData(response1.data.data);
             
             const response2 = await axios.get('http://localhost:5000/v1/api/user/display-users');
             setUserData(response2.data);
@@ -44,23 +44,23 @@ const InfoCards = () => {
     // };
 
   return (
-    <div>
-        <div className="left-0 right-0">
+    <>
+        <div className="-mt-14 mx-6">
           <div className="container mx-auto p-4">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               {popupCards.map((card) => (
                 <div
                   key={card.id}
-                  className="bg-white rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-103"
+                  className="bg-[#cce0e8] mr-4 rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-104"
                 >
-                  <h3 className="text-xl font-bold text-[#1a2c47] pb-4">{card.headline}</h3>
-                  <h3 className="text-xl font-semibold mb-4">{card.description}</h3>
+                  <h3 className="text-xl font-bold text-[#213e4a] pb-4">{card.headline}</h3>
+                  <h3 className="text-xl font-bold mb-4 text-[#2d5263]">{card.description}</h3>
                 </div>
               ))}
             </div>
           </div>
         </div>
-    </div>
+    </>
   )
 }
 
