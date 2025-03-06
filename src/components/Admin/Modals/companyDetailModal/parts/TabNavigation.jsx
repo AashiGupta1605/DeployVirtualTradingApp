@@ -1,139 +1,156 @@
-// components/Common/Modals/CompanyDetail/TabNavigation.jsx
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import { 
-  LineChart, 
+import {
+  LineChart,
   BarChart,
-  BarChart2, 
-  Clock, 
+  BarChart2,
+  Clock,
   Info,
-  AlertCircle
+  ShoppingCart,
+  TrendingUp,
 } from 'lucide-react';
 
-const TabButton = ({ 
-  active, 
-  onClick, 
-  icon: Icon, 
-  label, 
+const TabButton = ({
+  active,
+  onClick,
+  icon: Icon,
+  label,
   disabled = false,
-  badge = null 
+  badge = null,
 }) => {
-  const baseClasses = "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lightBlue-500";
-  const activeClasses = "bg-lightBlue-500 text-white shadow-md hover:bg-lightBlue-600";
-  const inactiveClasses = "text-gray-600 hover:bg-gray-100 hover:text-gray-900";
-  const disabledClasses = "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400";
+  const baseClasses = `
+    flex items-center gap-2 px-6 py-3 
+    rounded-lg transition-all duration-300 
+    font-medium text-sm focus:outline-none 
+    relative hover:bg-gray-50
+  `;
+  
+  const activeClasses = `
+    text-lightBlue-600 bg-blue-50 
+    shadow-sm hover:bg-blue-50
+  `;
+  
+  const inactiveClasses = `
+    text-gray-600 hover:text-gray-900
+  `;
+  
+  const disabledClasses = `
+    opacity-50 cursor-not-allowed 
+    text-gray-400 hover:bg-transparent
+  `;
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       className={`
-        ${baseClasses}
+        ${baseClasses} 
         ${active ? activeClasses : disabled ? disabledClasses : inactiveClasses}
-        relative
       `}
     >
-      <Icon size={18} />
-      <span className="font-medium text-sm">{label}</span>
+      <Icon size={20} className={active ? 'text-lightBlue-600' : 'text-gray-500'} />
+      <span>{label}</span>
       {badge && (
-        <span className={`
-          absolute -top-2 -right-2 px-2 py-1 text-xs font-bold rounded-full
-          ${active ? 'bg-white text-lightBlue-500' : 'bg-lightBlue-500 text-white'}
-        `}>
+        <span
+          className={`
+            absolute -top-2 -right-2 
+            px-2 py-0.5 text-xs font-bold 
+            rounded-full shadow-sm
+            ${active 
+              ? 'bg-lightBlue-600 text-white' 
+              : 'bg-gray-100 text-gray-600'
+            }
+          `}
+        >
           {badge}
         </span>
       )}
-      {/* {disabled && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90 rounded-lg">
-          <AlertCircle className="text-gray-400" size={16} />
-          <span className="ml-1 text-xs text-gray-500">Not Available</span>
-        </div>
-      )} */}
     </button>
   );
 };
 
-const TabNavigation = ({ 
-  activeTab, 
-  onTabChange, 
+const TabNavigation = ({
+  activeTab,
+  onTabChange,
   type,
   loading = false,
-  availableTabs = ['overview', 'chart', 'historical']
+  availableTabs = ['overview', 'chart', 'historical', 'trading'],
 }) => {
   const tabs = [
     {
       id: 'overview',
       label: 'Overview',
       icon: Info,
-      tooltip: 'General information and key metrics'
+      tooltip: 'Company overview and key metrics',
     },
     {
       id: 'chart',
       label: 'Price Chart',
       icon: LineChart,
-      tooltip: 'Interactive price chart visualization',
-      disabled: type === 'etf'
+      tooltip: 'Interactive price visualization',
+      disabled: type === 'etf',
     },
     {
       id: 'advanced-chart',
       label: 'Advanced Chart',
       icon: BarChart2,
-      tooltip: 'Advanced technical analysis chart'
+      tooltip: 'Technical analysis tools',
+    },
+    {
+      id: 'trading-view',
+      label: 'TradingView',
+      icon: TrendingUp,
+      tooltip: 'Professional TradingView charts',
+      badge: 'PRO',
     },
     {
       id: 'historical',
-      label: 'Historical Data',
+      label: 'Historical',
       icon: Clock,
-      tooltip: 'Past trading data and statistics'
+      tooltip: 'Historical price data',
     },
-    // {
-    //   id: 'analysis',
-    //   label: 'Technical Analysis',
-    //   icon: BarChart,
-    //   tooltip: 'Advanced technical indicators and analysis',
-    //   badge: 'Beta',
-    //   disabled: !availableTabs.includes('analysis')
-    // }
-  ];
+    {
+      id: 'trading',
+      label: 'Trade',
+      icon: ShoppingCart,
+      tooltip: 'Buy and sell stocks',
+      badge: 'LIVE',
+    },
+  ].filter(tab => availableTabs.includes(tab.id));
 
-  // Custom hook for handling tooltips
-  const useTooltip = () => {
-    const [tooltip, setTooltip] = React.useState({ visible: false, content: '', x: 0, y: 0 });
+  const [tooltipData, setTooltipData] = React.useState({
+    visible: false,
+    content: '',
+    x: 0,
+    y: 0,
+  });
 
-    const showTooltip = (content, event) => {
-      const rect = event.currentTarget.getBoundingClientRect();
-      setTooltip({
-        visible: true,
-        content,
-        x: rect.left + rect.width / 2,
-        y: rect.top - 10
-      });
-    };
-
-    const hideTooltip = () => {
-      setTooltip({ ...tooltip, visible: false });
-    };
-
-    return { tooltip, showTooltip, hideTooltip };
+  const showTooltip = (content, event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipData({
+      visible: true,
+      content,
+      x: rect.left + rect.width / 2,
+      y: rect.top - 5,
+    });
   };
 
-  const { tooltip, showTooltip, hideTooltip } = useTooltip();
+  const hideTooltip = () => {
+    setTooltipData(prev => ({ ...prev, visible: false }));
+  };
 
   return (
     <div className="relative">
-      {/* Loading Overlay */}
       {loading && (
-        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 border-2 border-lightBlue-500 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-sm text-gray-500">Loading...</span>
+        <div className="absolute inset-0 bg-white/75 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
+          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-lg">
+            <div className="w-5 h-5 border-3 border-lightBlue-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm text-gray-600 font-medium">Loading...</span>
           </div>
         </div>
       )}
 
-      {/* Main Navigation */}
-      <div className="bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
+      <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-100">
         <div className="flex flex-wrap gap-2">
           {tabs.map((tab) => (
             <div
@@ -155,23 +172,19 @@ const TabNavigation = ({
         </div>
       </div>
 
-      {/* Tooltip */}
-      {tooltip.visible && (
+      {tooltipData.visible && (
         <div
-          className="absolute z-20 px-2 py-1 text-xs text-white bg-gray-900 rounded shadow-lg pointer-events-none transform -translate-x-1/2 -translate-y-full"
-          style={{ left: tooltip.x, top: tooltip.y }}
+          className="absolute z-50 px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-lg pointer-events-none transform -translate-x-1/2 -translate-y-full"
+          style={{
+            left: tooltipData.x,
+            top: tooltipData.y,
+            transition: 'all 0.2s ease-in-out',
+          }}
         >
-          {tooltip.content}
-          <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-gray-900 transform rotate-45 translate-y-1/2 -translate-x-1/2"></div>
+          {tooltipData.content}
+          <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-gray-900 transform rotate-45 translate-y-1/2 -translate-x-1/2" />
         </div>
       )}
-
-      {/* Tab Description
-      <div className="mt-4 px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-sm text-gray-600">
-          {tabs.find(tab => tab.id === activeTab)?.tooltip}
-        </p>
-      </div> */}
     </div>
   );
 };
@@ -182,20 +195,27 @@ TabButton.propTypes = {
   icon: PropTypes.elementType.isRequired,
   label: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  badge: PropTypes.string
+  badge: PropTypes.string,
 };
 
 TabNavigation.propTypes = {
-  activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical']).isRequired,
+  activeTab: PropTypes.oneOf([
+    'overview',
+    'chart',
+    'advanced-chart',
+    'trading-view',
+    'historical',
+    'trading',
+  ]).isRequired,
   onTabChange: PropTypes.func.isRequired,
   type: PropTypes.oneOf(['nifty', 'etf']).isRequired,
   loading: PropTypes.bool,
-  availableTabs: PropTypes.arrayOf(PropTypes.string)
+  availableTabs: PropTypes.arrayOf(PropTypes.string),
 };
 
 TabNavigation.defaultProps = {
   loading: false,
-  availableTabs: ['overview', 'chart', 'historical']
+  availableTabs: ['overview', 'chart', 'historical', 'trading'],
 };
 
 export default TabNavigation;

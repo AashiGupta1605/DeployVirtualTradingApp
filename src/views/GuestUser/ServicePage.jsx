@@ -2,16 +2,18 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 
 const ServicePage = () => {
   return (
     <>
       <MainHomeNavbar fixed/>
-      <NavbarCarousel fixed/>
+      <NiftyNavbarCarousel fixed/>
+      <EtfNavbarCarousel fixed/>
 
-      <div className="bg-gray-100 min-h-screen pt-20">
+      <div className="mt-10 bg-gray-100 min-h-screen pt-20">
         <div className="container mx-auto px-4 mt-10">
           <h1 className="text-4xl font-bold text-center text-blueGray-800 mb-10">
             Our Stock Market Services

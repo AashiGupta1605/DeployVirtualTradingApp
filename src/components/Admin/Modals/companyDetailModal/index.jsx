@@ -1,5 +1,4 @@
-// components/Common/Modals/CompanyDetail/index.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { X, AlertCircle } from 'lucide-react';
 import { useCompanyData } from './hooks/useCompanyData';
@@ -10,6 +9,9 @@ import OverviewTab from './tabs/OverviewTab';
 import ChartTab from './tabs/ChartTab';
 import HistoricalTab from './tabs/HistoricalTab';
 import AdvancedChartTab from './tabs/ChartTab2';
+import Buy_SellTab from './tabs/Buy_SellTab';
+import { TradingProvider } from './hooks/TradingContext';
+import TradingViewTab from './tabs/TradingViewTab';
 
 const LoadingOverlay = ({ message = "Loading data..." }) => (
   <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
@@ -52,7 +54,7 @@ const CompanyDetailModal = ({
   symbol,
   type = 'nifty'
 }) => {
-  console.log('CompanyDetailModal rendered:', { isOpen, symbol, type });
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {
     data,
@@ -70,12 +72,36 @@ const CompanyDetailModal = ({
     setItemsPerPage,
     handleFilterChange,
     resetStates,
-    fetchHistoricalData
+    fetchHistoricalData,
+    fetchCompanyData // Make sure this is exposed from useCompanyData
   } = useCompanyData(isOpen, symbol, type);
 
   useEffect(() => {
     console.log('Modal state:', { loading, error, data });
   }, [loading, error, data]);
+
+  const handleRefresh = async () => {
+    if (isRefreshing || loading) return;
+
+    setIsRefreshing(true);
+    try {
+      // Refresh all data based on current tab
+      await Promise.all([
+        fetchCompanyData(), // Refresh main company data
+        fetchHistoricalData(activeFilter), // Refresh historical data
+      ]);
+
+      // Show success notification
+      // You can implement a toast notification system here
+      console.log('Data refreshed successfully');
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      // Show error notification
+      // You can implement a toast notification system here
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // If modal is not open, don't render anything
   if (!isOpen) return null;
@@ -85,7 +111,7 @@ const CompanyDetailModal = ({
     return (
       <ErrorDisplay
         error={error}
-        onRetry={() => fetchHistoricalData(activeFilter)}
+        onRetry={handleRefresh}
         onClose={onClose}
       />
     );
@@ -97,8 +123,9 @@ const CompanyDetailModal = ({
         return (
           <OverviewTab 
             data={data} 
-            loading={loading} 
+            loading={loading || isRefreshing} 
             error={error} 
+            onRefresh={handleRefresh}
           />
         );
       case 'chart':
@@ -108,8 +135,9 @@ const CompanyDetailModal = ({
             data={data}
             chartData={chartData}
             onTimeRangeChange={handleFilterChange}
-            loading={historicalLoading}
+            loading={historicalLoading || isRefreshing}
             error={error}
+            onRefresh={handleRefresh}
           />
         );
       case 'advanced-chart':
@@ -119,19 +147,50 @@ const CompanyDetailModal = ({
             data={data}
             chartData={chartData}
             onTimeRangeChange={handleFilterChange}
-            loading={historicalLoading}
+            loading={historicalLoading || isRefreshing}
             error={error}
+            onRefresh={handleRefresh}
           />
         );
+        case 'trading-view':
+          return (
+            <TradingViewTab
+              symbol={symbol}
+              loading={loading || isRefreshing}
+            />
+          );
       case 'historical':
         return (
           <HistoricalTab
             data={historicalData}
-            loading={historicalLoading}
+            loading={historicalLoading || isRefreshing}
             error={error}
             onTimeRangeChange={handleFilterChange}
-            onRefresh={() => fetchHistoricalData(activeFilter)}
+            onRefresh={handleRefresh}
           />
+        );
+      case 'trading':
+        return (
+          <TradingProvider>
+            <Buy_SellTab
+              symbol={symbol}
+              data={{
+                companyName: data?.companyName,
+                currentPrice: data?.lastPrice,
+                change: data?.change,
+                changePercent: data?.pChange,
+                dayHigh: data?.dayHigh,
+                dayLow: data?.dayLow,
+                yearHigh: data?.yearHigh,
+                yearLow: data?.yearLow,
+                volume: data?.totalTradedVolume,
+                marketCap: data?.marketCap,
+              }}
+              loading={loading || isRefreshing}
+              error={error}
+              onRefresh={handleRefresh}
+            />
+          </TradingProvider>
         );
       default:
         return null;
@@ -170,7 +229,8 @@ const CompanyDetailModal = ({
                 onClose={onClose}
                 symbol={symbol}
                 data={data}
-                loading={loading}
+                loading={loading || isRefreshing}
+                onRefresh={handleRefresh}
               />
             </div>
 
@@ -180,7 +240,8 @@ const CompanyDetailModal = ({
                 symbol={symbol}
                 type={type}
                 data={data}
-                loading={loading}
+                loading={loading || isRefreshing}
+                onRefresh={handleRefresh}
               />
             </div>
 
@@ -188,18 +249,18 @@ const CompanyDetailModal = ({
             <div className="px-6 pb-6">
               {/* Tab Navigation */}
               <div className="sticky top-[72px] z-10 bg-gray-50 py-4">
-                <TabNavigation
-                  activeTab={activeTab}
-                  onTabChange={setActiveTab}
-                  type={type}
-                  loading={loading}
-                  availableTabs={['overview', 'chart', 'advanced-chart', 'historical']}
-                />
+              <TabNavigation
+  activeTab={activeTab}
+  onTabChange={setActiveTab}
+  type={type}
+  loading={loading || isRefreshing}
+  availableTabs={['overview', 'chart', 'advanced-chart', 'historical', 'trading', 'trading-view']}
+/>
               </div>
 
               {/* Tab Content */}
               <div className="mt-6 relative">
-                {loading && <LoadingOverlay />}
+                {(loading || isRefreshing) && <LoadingOverlay />}
                 {renderTabContent()}
               </div>
             </div>
@@ -296,7 +357,8 @@ CompanyDetailModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   symbol: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['nifty', 'etf'])
+  type: PropTypes.oneOf(['nifty', 'etf']),
+  activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical', 'trading'])
 };
 
 CompanyDetailModal.defaultProps = {

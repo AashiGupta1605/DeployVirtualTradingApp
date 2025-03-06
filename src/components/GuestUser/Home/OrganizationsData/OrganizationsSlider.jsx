@@ -22,7 +22,7 @@ const OrganizationsSlider = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/v1/api/guestUser/display-all-org');
-        setData(response.data);
+        setData(response.data.data);
       } catch (error) {
         setErr(error.message);
       }
@@ -88,7 +88,7 @@ const OrganizationsSlider = () => {
               <div key={index} className="card h-80 min-w-[300px] max-w-[300px] bg-white rounded-lg shadow-lg border p-6 overflow-hidden ease-in-out hover:scale-103 mb-3 mt-3" style={{}}>
               <div className="flex justify-center items-center">
                 <img
-                  src={card.imgSrc || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s"}
+                  src={card.photo || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s"}
                   alt={card.name}
                   className="w-30 h-30 object-cover rounded-full"
                   // className="w-full h-32 object-contain rounded-lg"                

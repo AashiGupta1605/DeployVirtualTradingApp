@@ -222,8 +222,10 @@ const FILTER_CONFIGS = {
       width: 'w-[180px]',
       options: [
         { value: 'all', label: 'All Genders' },
-        { value: 'male', label: 'Male' },
-        { value: 'female', label: 'Female' }
+       
+        { value: 'Male', label: 'Male' }, // Capitalized
+      
+        { value: 'Female', label: 'Female' } 
       ]
     },
     dateRange: {
@@ -708,11 +710,13 @@ const TableFilters = ({
       search: !!searchQuery,
       dateRange: !!(tempFilters.startDate && tempFilters.endDate)
     };
+    // Normalize gender filter input
+  const normalizedGender = tempFilters.gender ? tempFilters.gender.toLowerCase().trim() : "all";
 
     // Add type-specific filters
     if (filterType === 'users') {
       filters.status = tempFilters.status !== 'all';
-      filters.gender = tempFilters.gender !== 'all';
+      filters.gender = !["all", "female", "male"].includes(normalizedGender);
     } else if (filterType === 'organizations') {
       filters.status = tempFilters.status !== 'all';
     } else if (filterType === 'queries') {
