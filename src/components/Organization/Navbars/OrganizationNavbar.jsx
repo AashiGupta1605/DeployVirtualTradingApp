@@ -71,18 +71,19 @@
 import React, { useEffect } from "react";
 import UserDropdown from "../DropDowns/UserDropdown";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
-import { fetchOrgByName } from "../../../redux/Organization/auth/organizationAuthSlice";
-import { useDispatch } from "react-redux";
+import { fetchOrgById} from "../../../redux/Organization/auth/organizationAuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useSelect } from "@material-tailwind/react";
 
 export default function OrganizationNavbar({ sidebarExpanded }) {
   const dispatch = useDispatch();
-  const orgName = localStorage.getItem("orgName"); // Assuming orgName is stored in localStorage
-
+  // const orgName = localStorage.getItem("orgName"); // Assuming orgName is stored in localStorage
+const {orgId, orgName} = useSelector((state) => state.organization.auth);
   useEffect(() => {
-    if (orgName) {
-      dispatch(fetchOrgByName(orgName));
+    if (orgId) {
+      dispatch(fetchOrgById(orgId));
     }
-  }, [dispatch, orgName]);
+  }, [dispatch, orgId]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 bg-white shadow-lg">
@@ -131,7 +132,7 @@ export default function OrganizationNavbar({ sidebarExpanded }) {
 
         {/* User */}
         <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
-          <UserDropdown orgName={orgName} />
+          <UserDropdown orgId={orgId} />
         </ul>
       </div>
     </nav>
