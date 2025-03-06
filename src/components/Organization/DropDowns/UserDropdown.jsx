@@ -54,7 +54,7 @@ const UserDropdown = () => {
           </div>
         )}
       </div>
-      <button onClick={openModal}><i className="fas fa-user-circle text-2xl"></i></button>
+      
       <OrganizationProfileModal
         isOpen={isModalOpen}
         onClose={closeModal}
