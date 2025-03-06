@@ -2,7 +2,8 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
+import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
 import Footer from "../../components/GuestUser/Footers/Footer";
 import StockP from "../../assets/p-stock.jpg";
 import "../../components/GuestUser/Contact/ContactPage.css"; 
@@ -16,10 +17,11 @@ const ContactPage = () => {
   return (
     <>
       <MainHomeNavbar fixed/>
-      <NavbarCarousel fixed/>
+      <NiftyNavbarCarousel fixed/>
+      <EtfNavbarCarousel fixed/>
 
       {/* Contact Section */}
-      <div className=" min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">
+      <div className="mt-7 min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">
         {/* Left - Content */}
         <div className="text-black md:w-1/2 px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
@@ -58,7 +60,7 @@ const ContactPage = () => {
         </div>
 
         {/* Right - Image */}
-        <div className="md:w-1/2 px-6 mt-12 md:mt-0">
+        <div className="md:w-1/2 px-6 mt-25 md:mt-0">
           <img
             src={StockP}
             alt="Stock Market"

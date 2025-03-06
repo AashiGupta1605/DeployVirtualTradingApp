@@ -30,9 +30,9 @@ const MainHomePage = () => {
       <HomeCarousel/>
 
       {/* Homepage Section */}
-      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
+      <div className="w-full mx-auto min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
         {/* Left - Content */}
-        <div className="text-black md:w-1/2 px-6">
+        <div className="text-black md:w-1/2 px-8 mt-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
             Track Stock Trends in Real Time
           </h1>
@@ -50,7 +50,7 @@ const MainHomePage = () => {
         </div>
 
         {/* Right - Image */}
-        <div className="md:w-1/2 px-6 mt-12 md:mt-0">
+        <div className="md:w-1/2 px-8 mt-8 md:mt-0">
           <img
             src={Stock}
             alt="Stock Market"
@@ -58,10 +58,13 @@ const MainHomePage = () => {
           />
         </div>
       </div>
+      {/* Homepage Section */}
+
       <InfoCards/>
       <OrganizationsSlider/>
       <UserFeedbackCards/>
       <OrganizationFeedbackCards/>
+
       {/* <FooterSlider3/> */}
       <Footer />
     </>
@@ -69,3 +72,12 @@ const MainHomePage = () => {
 };
 
 export default MainHomePage;
+
+{/* <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
+        <div className="flex justify-between items-center mb-5 pt-4">
+        </div>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex gap-4 ml-auto">
+          </div>
+        </div>
+      </div> */}
