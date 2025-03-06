@@ -82,7 +82,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
                 }`}
               >
                 <div className="flex items-center space-x-2">
-                  <div className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${activeMenu === section ? "bg-white/20" : "bg-lightBlue-100"}`}>
+                  <div className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${activeMenu === section ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
                     <i className={`fas fa-${getSectionIcon(section)} ${activeMenu === section ? "text-gray-500" : "text-gray-500"}`}></i>
                   </div>
                   {sidebarExpanded && <span className="font-medium capitalize">{section}</span>}
