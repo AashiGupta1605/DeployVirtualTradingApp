@@ -8,6 +8,8 @@ import {
   Minus
 } from 'lucide-react';
 import { useTradingContext } from '../hooks/TradingContext';
+import ConfirmationModal from '../../ConformationModal';
+import toast from 'react-hot-toast';
 
 const TradingControls = ({ 
   activeTab,
@@ -32,7 +34,7 @@ const TradingControls = ({
     setOrderType("market");
     setPrice(currentPrice);
     setStopPrice(currentPrice);
-  }, [activeTab]);
+  }, [activeTab, currentPrice]);
 
   const orderTypes = {
     market: {
@@ -60,16 +62,47 @@ const TradingControls = ({
   const calculateTotal = () => quantity * (orderType === "market" ? currentPrice : price);
 
   const confirmOrder = () => {
-    onPlaceOrder({
+    const orderDetails = {
       type: activeTab,
       orderType,
       quantity,
       price: orderType === "market" ? currentPrice : price,
       stopPrice,
       total: calculateTotal()
-    });
-    setShowConfirmation(false);
-    setQuantity(0);
+    };
+
+    try {
+      onPlaceOrder(orderDetails);
+      
+      // Success toast
+      toast.success(
+        `Successfully placed ${activeTab} order for ${quantity} shares at ₹${(
+          orderType === "market" ? currentPrice : price
+        ).toFixed(2)}`,
+        {
+          duration: 4000,
+          position: 'top-center',
+          style: {
+            background: activeTab === 'buy' ? '#dcfce7' : '#fee2e2',
+            color: activeTab === 'buy' ? '#166534' : '#991b1b',
+            border: `1px solid ${activeTab === 'buy' ? '#bbf7d0' : '#fecaca'}`,
+          },
+        }
+      );
+
+      // Reset form
+      setShowConfirmation(false);
+      setQuantity(0);
+    } catch (error) {
+      // Error toast
+      toast.error(
+        `Failed to place order: ${error.message}`,
+        {
+          duration: 4000,
+          position: 'top-center',
+        }
+      );
+    }
   };
 
   const isDisabled = quantity === 0 || 
@@ -110,7 +143,7 @@ const TradingControls = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleQuantityChange(quantity - 1)}
-                className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={quantity <= 0}
               >
                 <Minus size={16} />
@@ -125,11 +158,35 @@ const TradingControls = ({
               />
               <button
                 onClick={() => handleQuantityChange(quantity + 1)}
-                className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={quantity >= maxQuantity}
               >
                 <Plus size={16} />
               </button>
+            </div>
+            
+            {/* Quick Selection Options */}
+            <div className="mt-3">
+              <div className="text-xs text-gray-500 mb-2">Quick Select:</div>
+              <div className="flex flex-wrap gap-2">
+                {[5, 10, 25, 50, 100].map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => handleQuantityChange(value)}
+                    className={`
+                      px-3 py-1.5 text-sm rounded-lg transition-all
+                      ${quantity === value 
+                        ? 'bg-blue-100 text-blue-600 font-medium' 
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                      }
+                      ${value > maxQuantity ? 'opacity-50 cursor-not-allowed' : ''}
+                    `}
+                    disabled={value > maxQuantity}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -211,33 +268,15 @@ const TradingControls = ({
       </button>
 
       {/* Confirmation Modal */}
-      {showConfirmation && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-4 w-full max-w-sm space-y-4">
-            <h3 className="font-semibold">Confirm Order</h3>
-            <p className="text-sm text-gray-600">
-              Are you sure you want to {activeTab} {quantity} shares at 
-              ₹{(orderType === "market" ? currentPrice : price).toFixed(2)}?
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowConfirmation(false)}
-                className="px-3 py-1.5 text-sm bg-gray-100 rounded-lg hover:bg-gray-200"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmOrder}
-                className={`px-3 py-1.5 text-sm text-white rounded-lg ${
-                  activeTab === "sell" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-                }`}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={confirmOrder}
+        title="Confirm Order"
+        message={`Are you sure you want to ${activeTab} ${quantity} shares at ₹${(
+          orderType === "market" ? currentPrice : price
+        ).toFixed(2)}?`}
+      />
     </div>
   );
 };

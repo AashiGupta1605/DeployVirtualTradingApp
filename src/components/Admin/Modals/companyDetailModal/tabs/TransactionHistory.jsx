@@ -116,105 +116,111 @@ const TransactionHistory = ({ currentPrice }) => {
   return (
     <div className="w-full space-y-6">
       {/* Analytics Dashboard */}
-{/* Analytics Overview */}
-{analytics && (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    {/* Total Investment Card */}
-    <div className="bg-white rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="text-sm text-gray-500">Total Investment</h4>
-        <DollarSign size={18} className="text-gray-400" />
-      </div>
-      <p className="text-xl font-bold text-gray-800">
-        ₹{analytics.totalInvestment.toFixed(2)}
-      </p>
-      <p className="text-xs text-gray-500 mt-1">
-        {analytics.totalTrades} total trades
-      </p>
-    </div>
-
-    {/* Current Holdings Card */}
-    <div className="bg-white rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="text-sm text-gray-500">Current Holdings</h4>
-        <PieChart size={18} className="text-gray-400" />
-      </div>
-      <p className="text-xl font-bold text-gray-800">
-        {analytics.currentHoldings} shares
-      </p>
-      <p className="text-xs text-gray-500 mt-1">
-        Value: ₹{analytics.currentHoldingsValue.toFixed(2)}
-      </p>
-    </div>
-
-    {/* Realized P&L Card */}
-    <div className="bg-white rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="text-sm text-gray-500">Realized P&L</h4>
-        <Activity size={18} className="text-gray-400" />
-      </div>
-      <div className="flex items-baseline gap-2">
-        <p className={`text-xl font-bold ${
-          analytics.realizedPL >= 0 ? 'text-green-600' : 'text-red-600'
-        }`}>
-          ₹{analytics.realizedPL.toFixed(2)}
-        </p>
-        <span className={`text-sm ${
-          analytics.realizedPLPercentage >= 0 ? 'text-green-500' : 'text-red-500'
-        }`}>
-          ({analytics.realizedPLPercentage.toFixed(2)}%)
-        </span>
-      </div>
-      <p className="text-xs text-gray-500 mt-1">
-        From {analytics.sellTrades} completed trades
-      </p>
-    </div>
-
-    {/* Trading Activity Card */}
-    <div className="bg-white rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="text-sm text-gray-500">Trading Activity</h4>
-        <Calendar size={18} className="text-gray-400" />
-      </div>
-      <div className="flex items-baseline gap-2">
-        <p className="text-xl font-bold text-gray-800">
-          {analytics.buyTrades}/{analytics.sellTrades}
-        </p>
-        <span className="text-sm text-gray-500">Buy/Sell</span>
-      </div>
-      <div className="mt-2 space-y-1">
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-500">Avg Buy Price:</span>
-          <span className="font-medium">₹{analytics.avgBuyPrice.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between text-xs">
-          <span className="text-gray-500">Success Rate:</span>
-          <span className="font-medium">
-            {((analytics.realizedPL > 0 ? analytics.sellTrades : 0) / 
-              (analytics.sellTrades || 1) * 100).toFixed(1)}%
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-      {/* Filters and Controls */}
-      <div className="bg-white rounded-xl shadow-sm p-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-            <input
-              type="text"
-              placeholder="Search transactions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+      {analytics && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Total Investment Card */}
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm text-gray-500">Total Investment</h4>
+              <DollarSign size={18} className="text-gray-400" />
+            </div>
+            <p className="text-xl font-bold text-gray-800">
+              ₹{analytics.totalInvestment.toFixed(2)}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              {analytics.totalTrades} total trades
+            </p>
           </div>
 
-          {/* Filter and Export */}
-          <div className="flex items-center space-x-2">
+          {/* Current Holdings Card */}
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm text-gray-500">Current Holdings</h4>
+              <PieChart size={18} className="text-gray-400" />
+            </div>
+            <p className="text-xl font-bold text-gray-800">
+              {analytics.currentHoldings} shares
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Value: ₹{analytics.currentHoldingsValue.toFixed(2)}
+            </p>
+          </div>
+
+          {/* Realized P&L Card */}
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm text-gray-500">Realized P&L</h4>
+              <Activity size={18} className="text-gray-400" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <p className={`text-xl font-bold ${
+                analytics.realizedPL >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                ₹{analytics.realizedPL.toFixed(2)}
+              </p>
+              <span className={`text-sm ${
+                analytics.realizedPLPercentage >= 0 ? 'text-green-500' : 'text-red-500'
+              }`}>
+                ({analytics.realizedPLPercentage.toFixed(2)}%)
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              From {analytics.sellTrades} completed trades
+            </p>
+          </div>
+
+          {/* Trading Activity Card */}
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm text-gray-500">Trading Activity</h4>
+              <Calendar size={18} className="text-gray-400" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <p className="text-xl font-bold text-gray-800">
+                {analytics.buyTrades}/{analytics.sellTrades}
+              </p>
+              <span className="text-sm text-gray-500">Buy/Sell</span>
+            </div>
+            <div className="mt-2 space-y-1">
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-500">Avg Buy Price:</span>
+                <span className="font-medium">₹{analytics.avgBuyPrice.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-500">Success Rate:</span>
+                <span className="font-medium">
+                  {((analytics.realizedPL > 0 ? analytics.sellTrades : 0) / 
+                    (analytics.sellTrades || 1) * 100).toFixed(1)}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Filters and Controls */}
+      <div className="bg-white rounded-xl shadow-sm p-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+          {/* Heading on the Left */}
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold text-gray-800">Transaction History</h2>
+          </div>
+
+          {/* Search and Filter on the Right */}
+          <div className="flex items-center gap-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                type="text"
+                placeholder="Search transactions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-48 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Filter Dropdown */}
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
@@ -225,9 +231,10 @@ const TransactionHistory = ({ currentPrice }) => {
               <option value="sell">Sell Only</option>
             </select>
 
+            {/* Export Button */}
             <button
               onClick={exportTransactions}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
             >
               <Download size={18} />
               <span>Export</span>
