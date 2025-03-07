@@ -1,3 +1,5 @@
+// ----------Reviewed: Correct-------------------------------
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -7,13 +9,13 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
 
   const [search, setSearch] = useState("");
 
-  const fetchData = async () => {
+  const fetchOrganizationsData = async () => {
     try {
       const response = await axios.get(
         `http://localhost:5000/v1/api/guestUser/searchOrganization/${search}`
       );
-      setData(response.data);
-      setErr(""); // Clear error if request succeeds
+      setData(response.data.data);
+      setErr("");
     } catch (error) {
       setErr(error.message);
     }
@@ -24,7 +26,12 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
   // };
 
   useEffect(() => {
-    fetchData();
+    try {
+      fetchOrganizationsData();
+      setErr("")
+    } catch (error) {
+      setErr(error.message);
+    }
   }, [search]);
 
   return (
@@ -43,7 +50,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
               Organizations
             </h2>
             {/* Right side container */}
-            <div className="flex items-center gap-4 ">
+            <div className="flex items-center gap-6 ">
               {/* First heading before*/}
               <h6 className="text-[18] font-semibold text-gray-500">
                 Total Associated Organizations: {data.length}
@@ -64,7 +71,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="border border-gray-400 px-4 py-1 rounded-lg w-[300px] h-[30px] focus:outline-none focus:shadow-md focus:shadow-black focus:border-black"
+                className="border border-gray-400 px-4 py-1 rounded-lg w-[347px] h-[40px] focus:outline-none focus:shadow-md focus:shadow-black focus:border-black"
               />
               {/* <button 
             onClick={handleSearch} 
@@ -101,30 +108,38 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((org, index) => (
-                  <tr key={index} className="border border-gray-300">
-                    <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">
-                      {org.name}
-                    </td>
-                    <td className="p-3 border border-gray-300 overflow-hidden break-all line-clamp-3 text-blue-600 underline w-[248px]">
-                      <a
-                        href={org.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {org.website}
-                      </a>
-                    </td>
-                    <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">
-                      {org.address}
-                    </td>
-                    {/* <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">{org.email}</td> */}
-                    {/* <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">{org.mobile}</td> */}
-                    <td className="p-3 border border-gray-300 w-[248px] break-all">
-                      {new Date(org.createDate).toISOString().split("T")[0]}
+                {data && data.length > 0 ? (
+                  data.map((org, index) => (
+                    <tr key={index} className="border border-gray-300">
+                      <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">
+                        {org.name}
+                      </td>
+                      <td className="p-3 border border-gray-300 overflow-hidden break-all line-clamp-3 text-blue-600 underline w-[248px]">
+                        <a
+                          href={org.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {org.website}
+                        </a>
+                      </td>
+                      <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">
+                        {org.address}
+                      </td>
+                      {/* <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">{org.email}</td> */}
+                      {/* <td className="p-3 border border-gray-300 overflow-hidden w-[248px] break-all">{org.mobile}</td> */}
+                      <td className="p-3 border border-gray-300 w-[248px] break-all">
+                        {new Date(org.createDate).toISOString().split("T")[0]}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="p-3 text-center text-gray-500">
+                      No organizations found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

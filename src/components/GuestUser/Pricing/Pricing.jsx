@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../../views/auth/Login";
+import PricingPageTopMost from "./PricingPageTopMost";
 
 const Pricing = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -21,16 +22,10 @@ const Pricing = () => {
 
   return (
     <>
-      <div className="bg-gray-50 flex items-center justify-center p-4">
+      {/* <div className="bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-7xl mx-auto px-4 py-16">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              StockSphere, Transparent Pricing
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Choose the perfect plan that suits your needs. No hidden fees, no surprises.
-            </p>
-          </div>
+
+          <PricingPageTopMost/> */}
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
@@ -109,8 +104,8 @@ const Pricing = () => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        {/* </div> */}
+      {/* </div> */}
 
       {/* Login Modal */}
       <LoginModal isOpen={isUserLoginModalOpen} onClose={() => setUserLoginModalOpen(false)} />

@@ -26,7 +26,9 @@ const EtfNavbarCarousel = () => {
 
       setStockData(formattedData);
       setLoading(false);
-    } catch (err) {
+      setError("")
+    } 
+    catch (err) {
       setError(err.message);
       setLoading(false);
     }

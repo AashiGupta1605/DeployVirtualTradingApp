@@ -3,15 +3,16 @@ import React from "react";
 import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
 import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
 import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
+
 import StartScreenPopupModal from "../../components/GuestUser/Home/StartScreenPopupModal";
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 
 import Footer from "../../components/GuestUser/Footers/Footer";
+import PricingModalFooter from "../../components/GuestUser/Footers/PricingModalFooter";
+
 import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
 // import FooterSlider3 from "../../components/GuestUser/Footers/FooterSlider3";
-
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
-
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
 
@@ -67,6 +68,7 @@ const MainHomePage = () => {
 
       {/* <FooterSlider3/> */}
       <Footer />
+      <PricingModalFooter/>
     </>
   );
 };

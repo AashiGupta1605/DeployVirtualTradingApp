@@ -12,28 +12,43 @@ const UserFeedbackCards = () => {
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
+  const fetchUserFeedbacks = async() => {
+    try{
+      const response = await axios.get(
+        "http://localhost:5000/v1/api/guestUser/userFeedback/createdDate/decreasing"
+      );
+      setFeedbacks(response.data.feedbackData);
+
+      console.log("Users Feedbacks Object: ", response.data);
+      console.log("User Feedbacks: ", feedbacks);
+    }
+    catch(error){
+      setErr(error.response?.data?.message || "Something went wrong.");
+    }
+  }
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/v1/api/user/display-users"
+      );
+      setUserData(response.data);
+      console.log("User Data", response.data);
+    } 
+    catch (error) {
+      setErr(error.response?.data?.message || "Something went wrong.");
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response1 = await axios.get(
-          "http://localhost:5000/v1/api/guestUser/userFeedback/createdDate/decreasing"
-        );
-        setFeedbacks(response1.data.feedbackData);
-
-        console.log("Users Feedbacks Object: ", response1.data);
-        console.log("User Feedbacks: ", feedbacks);
-
-        const response2 = await axios.get(
-          "http://localhost:5000/v1/api/user/display-users"
-        );
-        setUserData(response2.data);
-        console.log("User Data", response2.data);
-      } catch (error) {
-        setErr(error.response?.data?.message || "Something went wrong.");
-      }
-    };
-    fetchData();
-  }, []);
+    try {
+      fetchUserData()
+      fetchUserFeedbacks()
+    } 
+    catch (error) {
+      setErr("Something went wrong: ",error);
+    }
+  }, [feedbacks]);
 
   return (
     <div>

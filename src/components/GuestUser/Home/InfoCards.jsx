@@ -1,3 +1,5 @@
+// ----------Reviewed: Correct (Animation of no. show left, also don't take use of err)-------------------------------
+
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 // import { useSpring, animated } from "react-spring";
@@ -7,26 +9,46 @@ const InfoCards = () => {
     const [userData,setUserData]=useState([])
     const [orgData,setOrgData]=useState([])
     const [activeUsers,setActiveUsers]=useState(0)
+    const [err,setErr]=useState("")
+
+    const fetchOrgData = async () =>{
+      try{
+        const response = await axios.get('http://localhost:5000/v1/api/guestUser/searchOrganization');
+        setOrgData(response.data.data);
+        setErr("")
+      }
+      catch(error){
+        console.log("InfoCard Error in Organizations Data fetch: ",error)
+        setErr("InfoCard Error in Organizations Data fetch: ",error.message)
+      }
+    }
+    
+    const fetchUserData = async () =>{
+      try{
+        const response = await axios.get('http://localhost:5000/v1/api/user/display-users');
+        setUserData(response.data);
+
+        const activeCount = response.data.filter((data) => data.status === true).length;
+        setActiveUsers(activeCount);
+        setErr("")
+      }
+      catch(error){
+        console.log("InfoCard Error in User Data fetch: ",error)
+        setErr("InfoCard Error in User Data fetch: ",error.message)
+      }
+    }
 
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response1 = await axios.get('http://localhost:5000/v1/api/guestUser/display-all-org');
-            setOrgData(response1.data.data);
-            
-            const response2 = await axios.get('http://localhost:5000/v1/api/user/display-users');
-            setUserData(response2.data);
-            
-            const activeCount = response2.data.filter((data) => data.status === true).length;
-    
-            setActiveUsers(activeCount);
-          } 
-          catch (error) {
-            console.log(error);
-          }
-        };
-        fetchData();
-      }, []);
+      try {
+        fetchOrgData()
+        fetchUserData()
+        setErr("")
+      } 
+      catch (error) {
+        console.log("InfoCard Error: ",error);
+        setErr("InfoCard Error: ",error.message)
+      }
+    }, [userData,orgData]);
 
     const popupCards = [
       { id: 1, headline: "Organizations", description: orgData.length},

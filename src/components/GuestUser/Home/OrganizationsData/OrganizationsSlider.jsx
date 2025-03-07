@@ -1,3 +1,5 @@
+// ----------Reviewed: Correct-------------------------------
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -18,18 +20,25 @@ const OrganizationsSlider = () => {
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
+  const fetchOrganizationsData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/v1/api/guestUser/searchOrganization');
+      setData(response.data.data);
+      setErr("")
+    } catch (error) {
+      setErr(error.message);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/v1/api/guestUser/display-all-org');
-        setData(response.data.data);
-      } catch (error) {
+        fetchOrganizationsData()
+        setErr("")
+      } 
+      catch (error) {
         setErr(error.message);
       }
-    };
-
-    fetchData();
-  }, []);
+  }, [data]);
 
   const settings = {
     infinite: true,
