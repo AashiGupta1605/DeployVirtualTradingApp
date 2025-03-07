@@ -613,31 +613,37 @@ const OrgUserFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={16}
-                          className={
-                            i < feedback.rating
-                              ? "text-yellow-400 fill-current"
-                              : "text-gray-300"
-                          }
-                        />
-                      ))}
+                                       {[...Array(feedback.rating)].map((_, i) => (
+                                             <Star 
+                                               key={i} 
+                                               size={16} 
+                                               fill="yellow" 
+                                               stroke="yellow" 
+                                               className="inline-block"
+                                             />
+                                           ))}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     {feedback.recommend ? (
-                      <ThumbsUp className="text-green-500 inline" size={20} />
+                      <ThumbsUp className="text-green-500 " size={20} />
                     ) : (
-                      <ThumbsDown className="text-red-500 inline" size={20} />
+                      <ThumbsDown className="text-red-500" size={20} />
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(feedback.createdDate).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <StatusBadge status={feedback.status} />
+                  <span
+  className={`
+    px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+    ${feedback.status.toLowerCase() === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+  `}
+>
+  {feedback.status.charAt(0).toUpperCase() + feedback.status.slice(1)}
+</span>
+
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-4">
@@ -646,14 +652,14 @@ const OrgUserFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
                         onToggle={() => handleStatusToggle(feedback._id)}
                         disabled={false}
                       />
-                      <Tooltip title="Edit Feedback" isVisible={true}>
+                      {/* <Tooltip title="Edit Feedback" isVisible={true}>
                         <button
                           onClick={() => onEdit(feedback)}
                           className="text-blue-500 hover:text-blue-700 overflow-hidden"
                         >
                           <Edit3 size={18} />
                         </button>
-                      </Tooltip>
+                      </Tooltip> */}
                       <Tooltip title="Delete Feedback" isVisible={true}>
                         <button
                           onClick={() => {

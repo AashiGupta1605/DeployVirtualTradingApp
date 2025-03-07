@@ -300,7 +300,7 @@
 
 
 import React from "react";
-import { Star, ThumbsUp, ThumbsDown, Trash, Edit } from "lucide-react";
+import { Star, ThumbsUp, ThumbsDown, Trash2, Edit } from "lucide-react";
 
 const CATEGORY_COLORS = {
   "Website UI/UX": "bg-blue-100 text-blue-800",
@@ -310,6 +310,8 @@ const CATEGORY_COLORS = {
   "Customer Support": "bg-orange-100 text-orange-800",
   Other: "bg-gray-100 text-gray-800",
 };
+
+
 
 const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
   return (
@@ -348,35 +350,36 @@ const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={16}
-                        className={
-                          i < feedback.rating
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
-                        }
-                      />
-                    ))}
-                  </div>
+                    
+                  {[...Array(feedback.rating)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          size={16} 
+                          fill="yellow" 
+                          stroke="yellow" 
+                          className="inline-block"
+                        />
+                      ))}
+                      </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   {feedback.recommend ? (
-                    <ThumbsUp className="text-green-500 inline" size={20} />
+                    <ThumbsUp className="text-green-500 " size={20} />
                   ) : (
-                    <ThumbsDown className="text-red-500 inline" size={20} />
+                    <ThumbsDown className="text-red-500" size={20} />
                   )}
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      feedback.status === "approved" ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {feedback.status}
-                  </span>
+                <span
+            className={`
+              px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+           ${feedback.status.toLowerCase() === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+        `}
+         >
+            {feedback.status.charAt(0).toUpperCase() + feedback.status.slice(1)}
+           </span>
+
                 </td>
 
                 <td className="px-6 py-4 text-sm text-gray-500">
@@ -389,15 +392,16 @@ const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
                 <td className="px-6 py-4 whitespace-nowrap text-center flex gap-x-3">
                   <button
                     onClick={() => onEdit(feedback)}
-                    className="text-blue-500 hover:text-blue-700"
+                    className="text-yellow-600 mx-2 hover:text-yellow-900 transition-colors duration-200"
+                        aria-label="Edit user"
                   >
                     <Edit size={18} />
                   </button>
                   <button
                     onClick={() => onDelete(feedback._id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-600 mx-2 hover:text-red-900 transition-colors duration-200"
                   >
-                    <Trash size={18} />
+                    <Trash2 size={18} />
                   </button>
                 </td>
               </tr>

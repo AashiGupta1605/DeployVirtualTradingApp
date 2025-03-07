@@ -13,6 +13,7 @@ import Settings from "../views/admin/Settings";
 import OrgRegister from "../views/Admin/OrganizationList";
 import ETFTable from "../views/admin/EtfTable";
 import NiftyTable from "../views/admin/NiftyTable";
+import Nifty500Table from "../views/admin/nifty500table";
 import RegisteredUsers from "../views/Admin/UserList";
 import Queries from "../views/Admin/QueryList";
 import FeedbackList from "../views/Admin/FeedbackList";
@@ -37,6 +38,7 @@ export default function Admin() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="settings" element={<Settings />} />
             <Route path="niftytable" element={<NiftyTable />} />
+            <Route path="nifty500table" element={<Nifty500Table />} />
             <Route path="etftable" element={<ETFTable />} />
             <Route path="queries" element={<Queries />} />
             <Route path="feedback" element={<FeedbackList />} />
