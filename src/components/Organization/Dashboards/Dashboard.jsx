@@ -53,7 +53,7 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
     <> 
       <div className={type !== 'user-list' ? 'mt-20' : 'pt-20'}>  
         {/* Dashboard header */}
-        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-32 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
+        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-19 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
           <div className="px-4 mx-auto w-full">
             <div> 
               {/* Card stats */}

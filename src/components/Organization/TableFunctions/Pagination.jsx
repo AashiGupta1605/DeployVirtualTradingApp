@@ -5,11 +5,13 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, onPageChange, onIte
   return (
     <div className="flex justify-between items-center mt-4 px-4 py-3">
       <div className="flex items-center space-x-4">
-        <span className="text-sm text-gray-700">Rows per page:</span>
+        <span className="text-sm font-medium text-gray-700">Rows per page:</span>
         <select
           value={itemsPerPage}
           onChange={onItemsPerPageChange}
-          className="border rounded px-2 py-1 text-sm text-gray-600"
+          className="form-select px-4 rounded-md border-gray-300 shadow-sm 
+                     focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
+                     focus:ring-opacity-50 text-sm py-2"
         >
           {[5, 10, 15, 25, 50, 100].map((num) => (
             <option key={num} value={num}>
@@ -17,8 +19,8 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, onPageChange, onIte
             </option>
           ))}
         </select>
-        <span className="text-sm text-gray-600">
-          {(currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, totalPages)} of {totalPages}
+        <span className=" px-4 text-sm font-medium text-gray-700">
+         {(currentPage - 1) * itemsPerPage + 1}- {" "}{Math.min(currentPage * itemsPerPage, totalPages)} of {totalPages}
         </span>
       </div>
 
