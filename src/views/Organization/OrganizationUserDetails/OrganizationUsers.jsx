@@ -1834,6 +1834,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+ 
+  ChevronDown,
+  ChevronUp,
+  PlusCircle,
+  Star,
+  ThumbsUp,
+  Clock,
+  ThumbsDown,
+  UserCheck,
+  Building2,
+  MessageSquare,
+  Calendar,
+  Users
+} from 'lucide-react';
+import {
   fetchOrganizationUsers,
   deleteOrganizationUser,
   setCurrentPage,
@@ -1867,6 +1882,7 @@ const OrganizationUsers = () => {
     endDate,
     gender,
   } = useSelector((state) => state.organization.users);
+  
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -1995,9 +2011,10 @@ const OrganizationUsers = () => {
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50 -mt-12">
           {/* Header with Search and Filters */}
-          <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b z-30">
+          <div className="bg-gray-50 mt-3 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
-              <Filter className="mr-2 text-gray-600" size={18} />
+            <Users className="mr-2 text-gray-600" size={24} />
+
               Manage Users
             </h2>
 
@@ -2006,20 +2023,22 @@ const OrganizationUsers = () => {
               <div>
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 flex items-center"
+                  className="h-10 px-4 rounded-lg mr-4 border border-gray-300 
+                     hover:bg-gray-50 transition-colors flex items-center space-x-2"
                 >
                   <Filter size={18} />
                   {appliedFiltersCount > 0 && (
-                    <span className="ml-2 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
                       {appliedFiltersCount}
                     </span>
                   )}
+                   {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
               </div>
 
               {/* Search Bar */}
               <div className="flex-grow max-w-xl">
-                <div className="relative">
+                <div className="relative w-[300px]">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon size={18} className="text-gray-400" />
                   </div>
@@ -2028,13 +2047,15 @@ const OrganizationUsers = () => {
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 focus:border-lightBlue-500 text-gray-900 placeholder-gray-500 bg-white shadow-sm transition duration-150 ease-in-out"
+                    className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                 text-sm placeholder-gray-500"
                   />
                   {searchTerm && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                       <button
                         onClick={() => dispatch(setSearchTerm(""))}
-                        className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-150"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
                         <X size={18} />
                       </button>
@@ -2051,7 +2072,8 @@ const OrganizationUsers = () => {
                 }}
                 className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
               >
-                <UserPlus className="mr-2" size={16} />
+                 <PlusCircle size={18} className="mr-2" />
+
                 Add New
               </button>
             </div>
