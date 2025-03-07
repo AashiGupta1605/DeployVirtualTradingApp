@@ -219,7 +219,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
           localStorage.setItem('orgName', resultAction.payload.orgName);
           localStorage.setItem('token', resultAction.payload.token);
           localStorage.setItem('orgId', resultAction.payload.orgId); // Set orgId in local storage
-
+          localStorage.setItem('org', JSON.stringify(resultAction.payload.org)); // Set orgId in local storage
           navigate('/organization/dashboard');
         } else if (loginOrganization.rejected.match(resultAction)) {
           toast.error(resultAction.payload?.message || 'Login failed. Please try again.');

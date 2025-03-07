@@ -332,6 +332,8 @@ const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
             {feedbacks.map((feedback) => (
               <tr key={feedback._id} className="hover:bg-gray-50 transition-colors">
                 {console.log(feedback.organizationId)}
+                {console.log(feedback)}
+                {/* {console.log(feedback.organizationId?.name)} */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded-full ${
