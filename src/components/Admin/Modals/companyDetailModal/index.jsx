@@ -357,12 +357,12 @@ CompanyDetailModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   symbol: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['nifty', 'etf']),
+  type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']), // Update this line
   activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical', 'trading'])
 };
 
 CompanyDetailModal.defaultProps = {
-  type: 'nifty'
+  type: 'nifty50' // Update default prop
 };
 
 export default CompanyDetailModalWithErrorBoundary;
