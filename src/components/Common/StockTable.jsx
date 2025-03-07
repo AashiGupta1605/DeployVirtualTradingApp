@@ -8,7 +8,11 @@ import "../../assets/styles/table.css";
 
 const StockTable = () => {
   const dispatch = useDispatch();
-  const { stockData, loading, error } = useSelector((state) => state.stock);
+  const { stockData, loading, error } = useSelector((state) => state.common.etf) || {
+    stockData: [],
+    loading: false,
+    error: null
+  };
   
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "none" });
   const [expandedRow, setExpandedRow] = useState(null);
