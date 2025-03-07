@@ -35,6 +35,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     admin: [
       { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
       { to: "/admin/niftytable", icon: "fas fa-table", label: "Nifty 50" },
+      { to: "/admin/nifty500table", label: "Nifty 500" },
       { to: "/admin/etftable", icon: "fas fa-list", label: "ETF" },
       { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
       { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },

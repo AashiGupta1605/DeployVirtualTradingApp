@@ -8,7 +8,7 @@ const useCompanyData = (isOpen, symbol, type) => {
   // Basic State Management
   const [data, setData] = useState(null);
   const [historicalData, setHistoricalData] = useState([]);
-  const [loading, setLoading] = useState(false); // Start with false
+  const [loading, setLoading] = useState(false);
   const [historicalLoading, setHistoricalLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -56,6 +56,26 @@ const useCompanyData = (isOpen, symbol, type) => {
     mostActive: []
   });
 
+  // Get API endpoints based on type
+  const getEndpoints = () => {
+    switch (type) {
+      case 'nifty50':
+        return {
+          companyDetails: `${BASE_API_URL}/admin/nifty/company/${symbol}`,
+          chartData: `${BASE_API_URL}/admin/nifty/company/chart/${symbol}`,
+          historicalData: `${BASE_API_URL}/admin/nifty/company/history/${symbol}`
+        };
+      case 'nifty500':
+        return {
+          companyDetails: `${BASE_API_URL}/admin/nifty500/company/${symbol}`,
+          chartData: `${BASE_API_URL}/admin/nifty500/company/chart/${symbol}`,
+          historicalData: `${BASE_API_URL}/admin/nifty500/symbol/${symbol}/historical`
+        };
+      default:
+        throw new Error(`Unsupported type: ${type}`);
+    }
+  };
+
   // Technical Analysis Functions
   const calculateSMA = (data, period = 20) => {
     if (!Array.isArray(data) || data.length === 0) return [];
@@ -84,148 +104,144 @@ const useCompanyData = (isOpen, symbol, type) => {
     return sma;
   };
 
-    // Data Fetching Functions
-    const fetchData = async () => {
-      if (!symbol) {
-        console.log('No symbol provided, skipping fetch');
-        setLoading(false);
-        return;
-      }
-  
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const currentEndpoint = type === 'etf'
-    ? `${BASE_API_URL}/admin/etf/${symbol}`
-    : `${BASE_API_URL}/admin/nifty/company/${symbol}`
-  
-        console.log('Fetching data from:', currentEndpoint);
-        
-        const response = await fetch(currentEndpoint);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-  
-        const currentData = await response.json();
-        console.log('Received data:', currentData);
-        
-        setData(currentData);
-        
-        // Fetch historical data if needed
-        if (activeTab === 'chart' || activeTab === 'advanced-chart') {
-          await fetchHistoricalData(activeFilter);
-        }
-  
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    const fetchHistoricalData = async (timeRange = '') => {
-      try {
-        setHistoricalLoading(true);
-        console.log('Fetching historical data for:', { symbol, timeRange });
-    
-        const endpoint = `${BASE_API_URL}/admin/nifty/company/chart/${symbol}`;
-        const url = `${endpoint}?timeRange=${timeRange}`;
-        
-        console.log('Fetching from:', url);
-    
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch historical data: ${response.status}`);
-        }
-    
-        const data = await response.json();
-        console.log('Raw historical data:', data);
-    
-        if (activeTab === 'chart' || activeTab === 'advanced-chart') {
-          processChartData(data);
-        } else {
-          setHistoricalData(Array.isArray(data) ? data : []);
-        }
-    
-      } catch (err) {
-        console.error('Error fetching historical data:', err);
-        setError(err.message);
-      } finally {
-        setHistoricalLoading(false);
-      }
-    };
-    // Data Processing Function
-    const processChartData = (data) => {
-      if (!Array.isArray(data) || data.length === 0) {
-        console.error('Invalid chart data format:', data);
-        return;
-      }
-    
-      try {
-        // Process candlestick data
-        const candlestick = data.map(item => ({
-          x: new Date(item.date).getTime(),
-          y: [
-            Number(item.open),
-            Number(item.high),
-            Number(item.low),
-            Number(item.close)
-          ]
-        })).filter(item => 
-          !item.y.some(val => isNaN(val)) && 
-          !isNaN(item.x)
-        );
-    
-        // Process volume data
-        const volume = data.map(item => ({
-          x: new Date(item.date).getTime(),
-          y: Number(item.volume) || 0
-        })).filter(item => !isNaN(item.x));
-    
-        console.log('Processed chart data:', { candlestick, volume });
-    
-        if (candlestick.length === 0) {
-          throw new Error('No valid candlestick data after processing');
-        }
-    
-        // Update chart data state
-        setChartData({
-          candlestick,
-          volume,
-          sma: calculateSMA(candlestick, 20),
-          ema: [],
-          rsi: [],
-          macd: [],
-          bollinger: [],
-          fibonacci: [],
-          customIndicators: []
-        });
-    
-      } catch (err) {
-        console.error('Error processing chart data:', err);
-        setError('Error processing chart data');
-      }
-    };
+  // Data Fetching Functions
+  const fetchData = async () => {
+    if (!symbol) {
+      console.log('No symbol provided, skipping fetch');
+      setLoading(false);
+      return;
+    }
 
-      // Effects
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const endpoints = getEndpoints();
+      console.log('Fetching data from:', endpoints.companyDetails);
+      
+      const response = await fetch(endpoints.companyDetails);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const currentData = await response.json();
+      console.log('Received data:', currentData);
+      
+      setData(currentData);
+      
+      if (activeTab === 'chart' || activeTab === 'advanced-chart') {
+        await fetchHistoricalData(activeFilter);
+      }
+
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchHistoricalData = async (timeRange = '') => {
+    try {
+      setHistoricalLoading(true);
+      console.log('Fetching historical data for:', { symbol, timeRange });
+  
+      const endpoints = getEndpoints();
+      const url = `${endpoints.chartData}?timeRange=${timeRange}`;
+      
+      console.log('Fetching from:', url);
+  
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch historical data: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Raw historical data:', data);
+  
+      if (activeTab === 'chart' || activeTab === 'advanced-chart') {
+        processChartData(data);
+      } else {
+        setHistoricalData(Array.isArray(data) ? data : []);
+      }
+  
+    } catch (err) {
+      console.error('Error fetching historical data:', err);
+      setError(err.message);
+    } finally {
+      setHistoricalLoading(false);
+    }
+  };
+
+  // Data Processing Function
+  const processChartData = (data) => {
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error('Invalid chart data format:', data);
+      return;
+    }
+  
+    try {
+      // Process candlestick data
+      const candlestick = data.map(item => ({
+        x: new Date(item.date).getTime(),
+        y: [
+          Number(item.open),
+          Number(item.high),
+          Number(item.low),
+          Number(item.close)
+        ]
+      })).filter(item => 
+        !item.y.some(val => isNaN(val)) && 
+        !isNaN(item.x)
+      );
+  
+      // Process volume data
+      const volume = data.map(item => ({
+        x: new Date(item.date).getTime(),
+        y: Number(item.volume) || 0
+      })).filter(item => !isNaN(item.x));
+  
+      console.log('Processed chart data:', { candlestick, volume });
+  
+      if (candlestick.length === 0) {
+        throw new Error('No valid candlestick data after processing');
+      }
+  
+      // Update chart data state
+      setChartData({
+        candlestick,
+        volume,
+        sma: calculateSMA(candlestick, 20),
+        ema: [],
+        rsi: [],
+        macd: [],
+        bollinger: [],
+        fibonacci: [],
+        customIndicators: []
+      });
+  
+    } catch (err) {
+      console.error('Error processing chart data:', err);
+      setError('Error processing chart data');
+    }
+  };
+
+  // Effects
   useEffect(() => {
-    console.log('Modal state changed:', { isOpen, symbol });
+    console.log('Modal state changed:', { isOpen, symbol, type });
     if (isOpen && symbol) {
       console.log('Modal opened, fetching data for symbol:', symbol);
       fetchData();
     }
     return () => {
-      // Cleanup function
       if (!isOpen) {
         console.log('Modal closed, resetting states');
         resetStates();
       }
     };
-  }, [isOpen, symbol]);
+  }, [isOpen, symbol, type]); // Added type to dependencies
 
   // Handler Functions
   const handleTabChange = (tab) => {
@@ -292,6 +308,7 @@ const useCompanyData = (isOpen, symbol, type) => {
     setItemsPerPage,
     handleFilterChange,
     fetchHistoricalData,
+    fetchData, // Added this to allow manual refresh
     resetStates,
     
     // Chart Settings
