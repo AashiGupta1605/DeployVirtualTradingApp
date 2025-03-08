@@ -50,6 +50,7 @@
     "react-router-dom": "^7.1.5",
     "react-scripts": "^5.0.1",
     "react-slick": "^0.30.3",
+    "react-sparklines": "^1.7.0",
     "react-tooltip": "^5.28.0",
     "recharts": "^2.15.1",
     "slick-carousel": "^1.8.1",

@@ -190,7 +190,7 @@ const feedbacksSlice = createSlice({
     loading: false,
     currentPage: 1,
     totalPages: 1,
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     searchTerm: "",
     startDate: null,
     endDate: null,

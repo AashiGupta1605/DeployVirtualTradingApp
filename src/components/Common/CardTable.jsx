@@ -159,14 +159,14 @@ const CardTable = ({ tableType = 'nifty50' }) => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 p-4">
+      <div className="flex flex-col mt-48 items-center justify-center h-64 p-4">
         <div className="text-red-500 mb-4">{error}</div>
         <button 
           onClick={() => {
             const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
             dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
           }}
-          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          className="flex items-center gap-2  bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
         >
           <RefreshCw size={16} />
           Retry
