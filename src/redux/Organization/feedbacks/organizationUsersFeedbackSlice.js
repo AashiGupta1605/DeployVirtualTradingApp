@@ -138,6 +138,7 @@ export const fetchOrganizationFeedback = createAsyncThunk(
     const response = await axios.get(`${BASE_API_URL}/user/feedback/${orgName}/feedback`, {
       params: { page, limit, search, startDate, endDate },
     });
+    console.log(response.data);
     return response.data;
   }
 );
