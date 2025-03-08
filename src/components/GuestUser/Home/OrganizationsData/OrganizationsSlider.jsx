@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BASE_API_URL } from '../../../../utils/BaseUrl';
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
@@ -13,7 +14,7 @@ import ShowAllOrganizationsModal from './ShowAllOrganizationsModal';
 
 const OrganizationsSlider = () => {
 
-  const [data, setData] = useState([]);
+  const [orgData, setOrgData] = useState([]);
   const [err, setErr] = useState('');
 
   const [showModal,setShowModal]=useState(false)
@@ -22,8 +23,8 @@ const OrganizationsSlider = () => {
 
   const fetchOrganizationsData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/v1/api/guestUser/searchOrganization');
-      setData(response.data.data);
+      const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
+      setOrgData(response.data.data);
       setErr("")
     } catch (error) {
       setErr(error.message);
@@ -38,7 +39,7 @@ const OrganizationsSlider = () => {
       catch (error) {
         setErr(error.message);
       }
-  }, [data]);
+  }, []);
 
   const settings = {
     infinite: true,
@@ -64,7 +65,7 @@ const OrganizationsSlider = () => {
         <div className="flex items-center gap-4">
           {/* Second heading before the button */}
           <h6 className="text-[18] font-semibold text-gray-500">
-            Total No. of Organizations: {data.length}
+            Total No. of Organizations: {orgData.length}
           </h6>
 
           {/* View More Button */}
@@ -92,8 +93,8 @@ const OrganizationsSlider = () => {
     {err && <div className="error-message">Error: {err}</div>}
 
     <Slider {...settings}>
-          {data.length > 0 ? (
-            data.map((card, index) => (
+          {orgData.length > 0 ? (
+            orgData.map((card, index) => (
               <div key={index} className="card h-80 min-w-[300px] max-w-[300px] bg-white rounded-lg shadow-lg border p-6 overflow-hidden ease-in-out hover:scale-103 mb-3 mt-3" style={{}}>
               <div className="flex justify-center items-center">
                 <img
@@ -104,18 +105,18 @@ const OrganizationsSlider = () => {
                 />
                 </div>
                 <div className="card-content justify-between overflow-hidden">
-                  <h2 className="text-[20px] font-bold text-[] mb-5 uppercase mt-4 decoration-3 border-b-2 border-[#1a2c47] pb-2">{card.name}</h2>
+                  <h2 className="text-[20px] font-bold text-gray-600 mb-5 uppercase mt-4 decoration-3 border-b-2 border-gray-700 pb-2">{card.name}</h2>
                   <p className="mt-2 text-sm font-medium text-left pl-4">
                     <a href={card.website || '#'} className="text-blue-600 hover:text-blue-800 break-words line-clamp-1" target="_blank" rel="noopener noreferrer">
                         {card.website || 'No website available'}
                     </a>
                   </p>                  
-                  <p className="mt-2 text-sm font-medium text-left pl-4 "><span className="font-bold text-[#1a2c47]">Address:&nbsp;</span>
+                  <p className="mt-2 text-sm font-medium text-left text-gray-500 pl-4 "><span className="font-bold text-gray-600">Address:&nbsp;</span>
                   {card.address 
                     ? card.address.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                     : 'No address available'}     
                   </p>
-                  <p className="mt-2 text-sm font-medium text-left pl-4"><span className="font-bold text-[#1a2c47]">Head of Organization:&nbsp;</span>
+                  <p className="mt-2 text-sm font-medium text-left text-gray-500 pl-4"><span className="font-bold text-gray-600">Head of Organization:&nbsp;</span>
                     {card.contactPerson 
                     ? card.contactPerson.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                     : 'No contact person available'}                  

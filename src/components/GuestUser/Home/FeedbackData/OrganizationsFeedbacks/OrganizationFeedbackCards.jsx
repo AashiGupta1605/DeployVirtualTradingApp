@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import OrganizationsAllFeedsModal from "./OrganizationsAllFeedsModal";
+import { BASE_API_URL } from "../../../../../utils/BaseUrl";
+import OrganizationAllFeedsModal from "./OrganizationAllFeedsModal";
 
 const OrganizationFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
-  const [OrganizationData, setOrganizationData] = useState([]);
+  const [orgData, setOrgData] = useState([]);
   const [err, setErr] = useState("");
 
   const [showModal,setShowModal]=useState(false)
@@ -12,27 +13,42 @@ const OrganizationFeedbackCards = () => {
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
+  const fetchUserFeedbacks = async() => {
+    try{
+      const response = await axios.get(
+        `${BASE_API_URL}/guestUser/organizationFeedbacks/createdDate/decreasing`
+      );
+      setFeedbacks(response.data.feedbackData);
+
+      console.log("Users Feedbacks Object: ", response.data);
+      console.log("User Feedbacks: ", feedbacks);
+    }
+    catch(error){
+      setErr(error.response?.data?.message || "Something went wrong.");
+    }
+  }
+
+  const fetchOrgData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_API_URL}/guestUser/getAllOrganizations`
+      );
+      setOrgData(response.data);
+      console.log("Organization Data", response.data);
+    } 
+    catch (error) {
+      setErr(error.response?.data?.message || "Something went wrong.");
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response1 = await axios.get(
-          "http://localhost:5000/v1/api/guestUser/userFeedback/createdDate/decreasing"
-        );
-        setFeedbacks(response1.data.feedbackData);
-
-        console.log("Organizations Feedbacks Object: ", response1.data);
-        console.log("Organization Feedbacks: ", feedbacks);
-
-        const response2 = await axios.get(
-          "http://localhost:5000/v1/api/Organization/display-Organizations"
-        );
-        setOrganizationData(response2.data);
-        console.log("Organization Data", response2.data);
-      } catch (error) {
-        setErr(error.response?.data?.message || "Something went wrong.");
-      }
-    };
-    fetchData();
+    try {
+      fetchOrgData()
+      fetchUserFeedbacks()
+    } 
+    catch (error) {
+      setErr("Something went wrong: ",error);
+    }
   }, []);
 
   return (
@@ -41,7 +57,7 @@ const OrganizationFeedbackCards = () => {
       {/* Flex container for headings and button */}
       <div className="flex justify-between items-center mb-6">
         {/* Left-most heading */}
-        <h3 className="text-xl font-bold text-[#1a2c47]">Organizations Feedbacks</h3>
+        <h3 className="text-xl font-bold text-[#1a2c47]">Users Feedbacks</h3>
 
         {/* Right side container */}
         <div className="flex items-center gap-4">
@@ -76,10 +92,10 @@ const OrganizationFeedbackCards = () => {
       <div className="flex justify-center gap-6">
         {feedbacks.length > 0 ? (
           feedbacks.slice(0, 3).map((card, index) => {
-            const Organization = OrganizationData.find((Organization) => Organization._id === card.OrganizationId);
+            const org = orgData.find((org) => org._id === card.organizationId);
             console.log(
-              "Get Organization data by stored OrganizationID refrence in Feedback modal",
-              Organization
+              "Get user data by stored userID refrence in Feedback modal",
+              org
             );
             return (
               <div
@@ -111,7 +127,7 @@ const OrganizationFeedbackCards = () => {
                   {card.feedbackMessage}
                 </p>
                 <h4 className="mt-4 font-semibold text-right text-sm text-gray-600">
-                  - {Organization ? Organization.name : "Anonymous"}
+                  - {org ? org.name : "Anonymous Organization"}
                 </h4>
               </div>
             );
@@ -125,7 +141,7 @@ const OrganizationFeedbackCards = () => {
         )}
       </div>
     </section>
-    {showModal && <OrganizationsAllFeedsModal closeModal={closeModal}/>}
+    {showModal && <OrganizationAllFeedsModal closeModal={closeModal}/>}
     </div>
   );
 };

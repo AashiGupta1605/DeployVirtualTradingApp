@@ -8,7 +8,7 @@ import StartScreenPopupModal from "../../components/GuestUser/Home/StartScreenPo
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 
 import Footer from "../../components/GuestUser/Footers/Footer";
-import PricingModalFooter from "../../components/GuestUser/Footers/PricingModalFooter";
+// import PricingModalFooter from "../../components/GuestUser/Footers/PricingModalFooter";
 
 import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
 // import FooterSlider3 from "../../components/GuestUser/Footers/FooterSlider3";
@@ -22,64 +22,66 @@ import Stock from "../../assets/stock.jpg";
 const MainHomePage = () => {
   return (
     <>
-
-      <StartScreenPopupModal/>
+      <StartScreenPopupModal />
       <MainHomeNavbar fixed />
       <NiftyNavbarCarousel fixed />
       <EtfNavbarCarousel fixed />
 
-      <HomeCarousel/>
+      <HomeCarousel />
 
       {/* Homepage Section */}
-      <div className="w-full mx-auto min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
-        {/* Left - Content */}
-        <div className="text-black md:w-1/2 px-8 mt-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
-            Track Stock Trends in Real Time
-          </h1>
-          <p className="text-lg leading-relaxed opacity-80">
-            Stay updated with the latest stock market trends and data with
-            StockSphere. Never miss a beat with our real-time updates.
-          </p>
-          <div className="flex gap-4 mt-6">
-            <Link to="/learn">
-              <button className="bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700  px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg">
-                LEARN MORE
-              </button>
-            </Link>
+        <div className="-mt-30 -mb-28 w-[90%] max-w-screen-xl mx-auto px-6 py-16 min-h-screen flex items-center justify-between">
+          {/* Left - Content (Pinned to Left) */}
+          <div className="w-[55%] md:w-[50%] text-left absolute left-0 pl-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+              Track Stock Trends in Real Time
+            </h1>
+            <p className="text-lg leading-relaxed text-gray-700">
+              Always, stay updated with the latest stock market trends, analysis and data with</p>
+             <p><span className="font-semibold text-blue-600">~ PGR Virtual Trading App.&nbsp;</span>
+              Never miss a beat with our real-time updates.
+            </p>
+            <div className="mt-6">
+              <Link to="/learn"> &nbsp;
+                <button className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 font-semibold rounded-md text-lg shadow-md transition">
+                  LEARN MORE
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right - Image (Pinned to Right) */}
+          <div className="absolute right-0 pr-6 w-[80%] md:w-[55%] flex justify-end">
+            <img
+              src={Stock}
+              alt="Stock Market"
+              className="w-full max-w-md md:max-w-lg object-cover rounded-lg shadow-lg"
+            />
           </div>
         </div>
-
-        {/* Right - Image */}
-        <div className="md:w-1/2 px-8 mt-8 md:mt-0">
-          <img
-            src={Stock}
-            alt="Stock Market"
-            className="w-full h-auto object-cover rounded-lg shadow-lg"
-          />
-        </div>
-      </div>
       {/* Homepage Section */}
 
-      <InfoCards/>
-      <OrganizationsSlider/>
-      <UserFeedbackCards/>
-      <OrganizationFeedbackCards/>
+      <InfoCards />
+      <OrganizationsSlider />
+      <UserFeedbackCards />
+      <OrganizationFeedbackCards />
 
       {/* <FooterSlider3/> */}
       <Footer />
-      <PricingModalFooter/>
+      {/* <PricingModalFooter/> */}
     </>
   );
 };
 
 export default MainHomePage;
 
-{/* <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
-        <div className="flex justify-between items-center mb-5 pt-4">
-        </div>
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-4 ml-auto">
-          </div>
-        </div>
-      </div> */}
+// {
+//   /* <div className="sticky top-0 bg-white left-0 w-full decoration-3 border-b-2 border-gray-500 mb-6">
+//         <div className="flex justify-between items-center mb-5 pt-4">
+//         </div>
+//         <div className="flex justify-between items-center mb-4">
+//           <div className="flex gap-4 ml-auto">
+//           </div>
+//         </div>
+//       </div> */
+// }

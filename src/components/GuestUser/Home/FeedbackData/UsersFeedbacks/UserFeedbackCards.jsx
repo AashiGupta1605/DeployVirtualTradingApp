@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BASE_API_URL } from "../../../../../utils/BaseUrl";
 import UserAllFeedsModal from "./UserAllFeedsModal";
 
 const UserFeedbackCards = () => {
@@ -15,7 +16,7 @@ const UserFeedbackCards = () => {
   const fetchUserFeedbacks = async() => {
     try{
       const response = await axios.get(
-        "http://localhost:5000/v1/api/guestUser/userFeedback/createdDate/decreasing"
+        `${BASE_API_URL}/guestUser/userFeedbacks/createdDate/decreasing`
       );
       setFeedbacks(response.data.feedbackData);
 
@@ -30,7 +31,7 @@ const UserFeedbackCards = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/v1/api/user/display-users"
+        `${BASE_API_URL}/guestUser/getAllUsers`
       );
       setUserData(response.data);
       console.log("User Data", response.data);
@@ -48,7 +49,7 @@ const UserFeedbackCards = () => {
     catch (error) {
       setErr("Something went wrong: ",error);
     }
-  }, [feedbacks]);
+  }, []);
 
   return (
     <div>

@@ -1,7 +1,8 @@
-// ----------Reviewed: Correct (Animation of no. show left, also don't take use of err)-------------------------------
+// ----------Reviewed: Correct (Animation of no. show left, active user issue, also don't take use of err)-------------------------------
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { BASE_API_URL } from "../../../utils/BaseUrl";
 // import { useSpring, animated } from "react-spring";
 
 const InfoCards = () => {
@@ -13,7 +14,7 @@ const InfoCards = () => {
 
     const fetchOrgData = async () =>{
       try{
-        const response = await axios.get('http://localhost:5000/v1/api/guestUser/searchOrganization');
+        const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
         setOrgData(response.data.data);
         setErr("")
       }
@@ -25,7 +26,7 @@ const InfoCards = () => {
     
     const fetchUserData = async () =>{
       try{
-        const response = await axios.get('http://localhost:5000/v1/api/user/display-users');
+        const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
         setUserData(response.data);
 
         const activeCount = response.data.filter((data) => data.status === true).length;
@@ -73,7 +74,7 @@ const InfoCards = () => {
               {popupCards.map((card) => (
                 <div
                   key={card.id}
-                  className="bg-[#cce0e8] mr-4 rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-104"
+                  className="bg-[#cce0e8] mr-6 w-70 rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 ease-in-out hover:scale-104"
                 >
                   <h3 className="text-xl font-bold text-[#213e4a] pb-4">{card.headline}</h3>
                   <h3 className="text-xl font-bold mb-4 text-[#2d5263]">{card.description}</h3>

@@ -6,7 +6,7 @@ const StartScreenPopupModal = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsOpen(false); // Auto-close modal after 10 seconds
-    }, 10000);
+    }, 30000);
 
     return () => clearTimeout(timer); // Cleanup on unmount
   }, []);
@@ -15,7 +15,7 @@ const StartScreenPopupModal = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
+      className="fixed inset-0 z-50 mt-10 flex items-center justify-center overflow-y-auto"
       onClick={() => setIsOpen(false)} // Close modal when clicking outside
     >
       {/* Background Overlay */}
@@ -23,18 +23,24 @@ const StartScreenPopupModal = () => {
 
       {/* Modal Container */}
       <div
-        style={{ width: "60%", maxHeight: "70vh" }}
+        style={{ width: "85%", maxHeight: "70vh" }}
         className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
       >
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-400">
           <h2 className="text-2xl font-bold text-gray-800">&nbsp;Welcome</h2>
-          <button
+          {/* <button
             onClick={() => setIsOpen(false)}
             className="w-15 text-bold text-2xl text-red-500 hover:text-white hover:bg-red-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-600"
           >
             <i className="fas fa-times"></i>
+          </button> */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="w-10 p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+          >
+            <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
           </button>
         </div>
 
