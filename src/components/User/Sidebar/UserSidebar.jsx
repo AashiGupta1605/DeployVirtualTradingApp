@@ -529,34 +529,33 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
 
           
           {/* Logout */}
-          {userData && (
-            <div className="p-4">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-200"
-              >
-                <i className="fas fa-sign-out-alt"></i>
-                {sidebarExpanded && <span>Logout</span>}
-              </button>
-            </div>
-          )}
+          <div className="p-4">
+          <button 
+            onClick={handleLogout}
+            className={`w-full flex items-center justify-center text-red-500 hover:text-red-700 transition-colors rounded-lg p-3
+              ${sidebarExpanded ? "bg-red-50 hover:bg-red-100 space-x-2" : "hover:bg-red-50"}`}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+            {sidebarExpanded && <span>Logout</span>}
+          </button>
+        </div>
 
-      {sidebarExpanded && (
-            <div className="mt-auto p-6 border-t bg-gray-50">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
-                    <i className="fas fa-user"></i>
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                </div>
-                <div>
-                  <div className="font-medium">{userName}</div>
-                  <div className="text-sm">User</div>
-                </div>
+<div className={`border-t bg-gray-50 p-4 flex items-center ${sidebarExpanded ? "justify-between" : "justify-center"}`}>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
+                <i className="fas fa-user text-white"></i>
               </div>
+              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
-          )}
+            {sidebarExpanded && (
+              <div>
+                <div className="font-medium">{userName}</div>
+                <div className="text-sm">User</div>
+              </div>
+            )}
+          </div>
+        </div>
         </div>
       </nav>
     </>
