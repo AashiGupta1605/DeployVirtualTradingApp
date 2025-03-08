@@ -276,7 +276,7 @@ const AdvancedChartTab = ({
   const chartOptions = {
     chart: {
       type: chartType,
-      height: 600,
+      height: 500,
       animations: { enabled: true },
       background: 'transparent',
       zoom: { enabled: true, type: 'xy', autoScaleYaxis: true },
@@ -490,7 +490,7 @@ const AdvancedChartTab = ({
 
   const renderChart = () => {
     if (loading) return <LoadingSpinner />;
-    return <ReactApexChart options={chartOptions} series={formatChartData()} type={chartType} height={600} />;
+    return <ReactApexChart options={chartOptions} series={formatChartData()} type={chartType} height={500} />;
   };
 
   if (error)
