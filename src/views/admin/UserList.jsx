@@ -136,7 +136,7 @@ const RegisterUserList = () => {
         endDate: null,
       },
       currentPage: 1,
-      isFilterOpen: false
+      isFilterOpen: true
     }));
     dispatch(clearFilters());
     dispatch(setSearchQuery(''));

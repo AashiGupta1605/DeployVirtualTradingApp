@@ -9,8 +9,8 @@ import CardStats from "../../components/User/Cards/CardStats";
 export default function userDashboard() {
   return (
     <>
-      <div className="mt-24">
-        <div className="bg-lightBlue-600 md:pt-8 pb-32 pt-12">
+      <div className="mt-12 overflow-hidden">
+        <div className="bg-lightBlue-600 md:pt-23 pb-20 pt-10">
           <div className="px-4 mx-auto w-full">
             <div>
               {/* Card stats */}
@@ -122,13 +122,15 @@ export default function userDashboard() {
             </div>
           </div>
         </div>
+        <div className="px-4 mx-auto w-full -mt-12">
         <div className="flex flex-wrap">
-          <div className="w-full xl:w-8/12 px-4 -mt-20 pt-2">
+          <div className="w-full xl:w-8/12 px-4">
             <CardPageVisits />
           </div>
-          <div className="w-full xl:w-4/12 px-4 -mt-20 pt-2">
+          <div className="w-full xl:w-4/12 px-4">
             <CardSocialTraffic />
           </div>
+        </div>
         </div>
       </div>
     </>

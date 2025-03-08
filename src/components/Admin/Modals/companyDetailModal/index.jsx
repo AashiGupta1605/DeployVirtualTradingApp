@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { X, AlertCircle } from 'lucide-react';
-import { useCompanyData } from './hooks/useCompanyData';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchCompanyDetails,
+  fetchHistoricalData,
+  setActiveTab,
+  setActiveFilter,
+  setCurrentPage,
+  setItemsPerPage,
+  setIsRefreshing,
+  resetCompanyDetails
+} from '../../../../redux/Common/companyDetailsSlice';
+
 import ModalHeader from './parts/ModalHeader';
-import SymbolSection from './parts/SymbolSection';
 import TabNavigation from './parts/TabNavigation';
 import OverviewTab from './tabs/OverviewTab';
-import ChartTab from './tabs/ChartTab';
 import HistoricalTab from './tabs/HistoricalTab';
 import AdvancedChartTab from './tabs/ChartTab2';
 import Buy_SellTab from './tabs/Buy_SellTab';
@@ -52,54 +61,75 @@ const CompanyDetailModal = ({
   isOpen,
   onClose,
   symbol,
-  type = 'nifty'
+  type = 'nifty50'
 }) => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
+  const dispatch = useDispatch();
   const {
-    data,
-    historicalData,
-    loading,
-    historicalLoading,
-    error,
-    activeTab,
-    activeFilter,
-    currentPage,
-    itemsPerPage,
-    chartData,
-    setActiveTab,
-    setCurrentPage,
-    setItemsPerPage,
-    handleFilterChange,
-    resetStates,
-    fetchHistoricalData,
-    fetchCompanyData // Make sure this is exposed from useCompanyData
-  } = useCompanyData(isOpen, symbol, type);
+    data = null,
+    historicalData = {
+      rawData: [],
+      processedData: {
+        candlestick: [],
+        volume: [],
+        technicalIndicators: {
+          sma20: [],
+          sma50: [],
+          sma200: []
+        }
+      }
+    },
+    loading = false,
+    historicalLoading = false,
+    error = null,
+    activeTab = 'overview',
+    activeFilter = '1D',
+    currentPage = 1,
+    itemsPerPage = 5,
+    isRefreshing = false
+  } = useSelector(state => state.common.companyDetails) || {};
+
+  useEffect(() => {
+    if (isOpen && symbol) {
+      dispatch(fetchCompanyDetails({ symbol, type }));
+    }
+    return () => {
+      if (!isOpen) {
+        dispatch(resetCompanyDetails());
+      }
+    };
+  }, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
     console.log('Modal state:', { loading, error, data });
   }, [loading, error, data]);
 
+  const handleTabChange = (tab) => {
+    dispatch(setActiveTab(tab));
+    if (['chart', 'advanced-chart', 'historical'].includes(tab)) {
+      dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter }));
+    }
+  };
+
+  const handleFilterChange = (filter) => {
+    dispatch(setActiveFilter(filter));
+    dispatch(setCurrentPage(1));
+    dispatch(fetchHistoricalData({ symbol, type, timeRange: filter }));
+  };
+
   const handleRefresh = async () => {
     if (isRefreshing || loading) return;
 
-    setIsRefreshing(true);
+    dispatch(setIsRefreshing(true));
     try {
-      // Refresh all data based on current tab
       await Promise.all([
-        fetchCompanyData(), // Refresh main company data
-        fetchHistoricalData(activeFilter), // Refresh historical data
+        dispatch(fetchCompanyDetails({ symbol, type })),
+        dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter }))
       ]);
-
-      // Show success notification
-      // You can implement a toast notification system here
       console.log('Data refreshed successfully');
     } catch (error) {
       console.error('Error refreshing data:', error);
-      // Show error notification
-      // You can implement a toast notification system here
     } finally {
-      setIsRefreshing(false);
+      dispatch(setIsRefreshing(false));
     }
   };
 
@@ -128,41 +158,29 @@ const CompanyDetailModal = ({
             onRefresh={handleRefresh}
           />
         );
-      case 'chart':
-        return (
-          <ChartTab
-            symbol={symbol}
-            data={data}
-            chartData={chartData}
-            onTimeRangeChange={handleFilterChange}
-            loading={historicalLoading || isRefreshing}
-            error={error}
-            onRefresh={handleRefresh}
-          />
-        );
       case 'advanced-chart':
         return (
           <AdvancedChartTab
             symbol={symbol}
             data={data}
-            chartData={chartData}
+            chartData={historicalData.processedData}
             onTimeRangeChange={handleFilterChange}
             loading={historicalLoading || isRefreshing}
             error={error}
             onRefresh={handleRefresh}
           />
         );
-        case 'trading-view':
-          return (
-            <TradingViewTab
-              symbol={symbol}
-              loading={loading || isRefreshing}
-            />
-          );
+      case 'trading-view':
+        return (
+          <TradingViewTab
+            symbol={symbol}
+            loading={loading || isRefreshing}
+          />
+        );
       case 'historical':
         return (
           <HistoricalTab
-            data={historicalData}
+            data={historicalData.rawData}
             loading={historicalLoading || isRefreshing}
             error={error}
             onTimeRangeChange={handleFilterChange}
@@ -234,32 +252,21 @@ const CompanyDetailModal = ({
               />
             </div>
 
-            {/* Symbol Section */}
-            <div className="px-6 py-4">
-              <SymbolSection
-                symbol={symbol}
-                type={type}
-                data={data}
-                loading={loading || isRefreshing}
-                onRefresh={handleRefresh}
-              />
-            </div>
-
             {/* Main Content */}
             <div className="px-6 pb-6">
               {/* Tab Navigation */}
               <div className="sticky top-[72px] z-10 bg-gray-50 py-4">
-              <TabNavigation
-  activeTab={activeTab}
-  onTabChange={setActiveTab}
-  type={type}
-  loading={loading || isRefreshing}
-  availableTabs={['overview', 'chart', 'advanced-chart', 'historical', 'trading', 'trading-view']}
-/>
+                <TabNavigation
+                  activeTab={activeTab}
+                  onTabChange={handleTabChange}
+                  type={type}
+                  loading={loading || isRefreshing}
+                  availableTabs={['overview', 'chart', 'advanced-chart', 'historical', 'trading', 'trading-view']}
+                />
               </div>
 
               {/* Tab Content */}
-              <div className="mt-6 relative">
+              <div className="relative mt-12">
                 {(loading || isRefreshing) && <LoadingOverlay />}
                 {renderTabContent()}
               </div>
@@ -357,12 +364,12 @@ CompanyDetailModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   symbol: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['nifty', 'etf']),
+  type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']),
   activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical', 'trading'])
 };
 
 CompanyDetailModal.defaultProps = {
-  type: 'nifty'
+  type: 'nifty50'
 };
 
 export default CompanyDetailModalWithErrorBoundary;

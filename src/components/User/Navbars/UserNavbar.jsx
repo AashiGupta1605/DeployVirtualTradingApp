@@ -88,6 +88,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
+import logoImage from "../../../assets/img/PGR_logo.jpeg";
 
 export default function UserNavbar({ sidebarExpanded }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -109,10 +110,20 @@ export default function UserNavbar({ sidebarExpanded }) {
     >
       <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
         {/* Brand with Icon */}
-        <div className="flex items-center space-x-2">
-          <i className="fas fa-briefcase text-xl text-gray-700"></i>
-          <span className="text-gray-700 text-lg font-semibold">PGRVirtualTradingApp</span>
-        </div>
+        <a
+          className={`text-gray-700 text-lg uppercase lg:flex hidden items-center space-x-4 font-bold hover:text-gray-900 transition-colors ${
+            sidebarExpanded ? 'ml-0' : 'ml-0'  // Adjust these values based on your sidebar width
+          } transition-all duration-300`}
+          href="#pablo"
+          onClick={(e) => e.preventDefault()}
+        >
+          <img 
+            src={logoImage} 
+            alt="PGR Logo" 
+            className="h-10 w-10 object-contain rounded-full"
+          />
+          <span className="text-xl">PGR VirtualTrading App</span>
+        </a>
 
         {/* Search Form */}
         <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">

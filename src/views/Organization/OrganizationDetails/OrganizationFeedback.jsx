@@ -272,6 +272,20 @@
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { 
+  ChevronDown,
+  ChevronUp,
+  PlusCircle,
+  Star,
+  ThumbsUp,
+  Clock,
+  ThumbsDown,
+  UserCheck,
+  Building2,
+  MessageSquare,
+  Calendar,
+  Users
+} from 'lucide-react';
 import {
   fetchOrganizationFeedback,
   registerOrganizationFeedback,
@@ -372,19 +386,19 @@ const OrganizationFeedback = () => {
   return (
     <div className="relative">
       <Dashboard type="organization-feedback" showAllCards={false} showCardsTable={false} />
-      <div className="mx-auto w-[95%]">
+      <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-28">
           {/* Header with Search and Filters */}
-          <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b z-20">
+          <div className="bg-gray-50 mt-16 px-6 py-2 h-19 rounded-lg flex items-center z-0 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
-              <Filter className="mr-2 text-gray-600" size={20} />
+            <MessageSquare className="mr-2 text-gray-600" size={24} />
               Manage Feedbacks
             </h2>
             <button
               onClick={() => setAddFeedbackModalOpen(true)}
-              className="px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-500"
+              className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
             >
-                <i className="fas fa-comment-dots text-lightBlue-800 mr-2 text-1xl "></i> 
+                <PlusCircle size={18} className="mr-2" />
               Add Feedback
             </button>
           </div>

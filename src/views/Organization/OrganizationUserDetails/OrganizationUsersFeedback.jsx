@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { 
+  ChevronDown,
+  ChevronUp,
+  PlusCircle,
+  Star,
+  ThumbsUp,
+  Clock,
+  ThumbsDown,
+  UserCheck,
+  Building2,
+  MessageSquare,
+  Calendar,
+  Users
+} from 'lucide-react';
 import {
   fetchOrganizationUsersFeedbacks,
   deleteOrganizationUsersFeedback,
@@ -146,11 +160,11 @@ const OrganizationUsersFeedbacks = () => {
   return (
     <div className="relative">
       <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} />
-      <div className="mx-auto w-[95%]">
-        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-28">
-          <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex items-center border-b z-20">
+      <div className="mx-auto w-[95%] z-50">
+        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-5 -mt-12">
+          <div className="bg-gray-50 mt-0 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
-              <Filter className="mr-2 text-gray-600" size={20} />
+            <MessageSquare className="mr-2 text-gray-600" size={24} />
               Manage Feedbacks
             </h2>
 
@@ -158,19 +172,21 @@ const OrganizationUsersFeedbacks = () => {
               <div>
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 flex items-center space-x-2 mr-4"
+                  className="h-10 px-4 rounded-lg mr-4 border border-gray-300 
+                     hover:bg-gray-50 transition-colors flex items-center space-x-2"
                 >
                   <Filter size={16} />
                   {appliedFiltersCount > 0 && (
-                    <span className="ml-2 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
                       {appliedFiltersCount}
                     </span>
                   )}
+                   {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
               </div>
 
               <div className="flex-grow max-w-xl">
-                <div className="relative">
+                <div className="relative w-[300px]">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon size={16} className="text-gray-400" />
                   </div>
@@ -179,13 +195,15 @@ const OrganizationUsersFeedbacks = () => {
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="w-full pl-10 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 focus:border-lightBlue-500 text-gray-900 placeholder-gray-500 bg-white shadow-sm transition duration-150 ease-in-out"
+                    className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                 text-sm placeholder-gray-500"
                   />
                   {searchTerm && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                       <button
                         onClick={() => dispatch(setSearchTerm(""))}
-                        className="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-150"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
                         <X size={16} />
                       </button>
@@ -197,7 +215,7 @@ const OrganizationUsersFeedbacks = () => {
           </div>
 
           {isFilterOpen && (
-            <div className="bg-gray-100 rounded-md shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
+            <div className="bg-gray-50  shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -224,20 +242,23 @@ const OrganizationUsersFeedbacks = () => {
                       className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
                     />
                   </div>
+                  
                 </div>
 
-                <div className="flex justify-end items-end gap-4">
-                  <button
-                    onClick={handleApplyFilters}
-                    className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
-                  >
-                    Apply Filters
-                  </button>
+                <div className="ml-140 flex justify-end gap-x-4 w-full h-full items-end">
+                  
                   <button
                     onClick={clearAllFilters}
-                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
-                  >
-                    Clear Filters
+                    className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
+                     >
+                     <X size={16} className="mr-1" />
+                      Clear
+                  </button>
+                  <button
+                    onClick={handleApplyFilters}
+                    className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
+                    >
+                    Apply
                   </button>
                 </div>
               </div>

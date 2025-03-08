@@ -8,12 +8,16 @@ import "../../assets/styles/table.css";
 
 const StockTable = () => {
   const dispatch = useDispatch();
-  const { stockData, loading, error } = useSelector((state) => state.stock);
+  const { stockData, loading, error } = useSelector((state) => state.common.etf) || {
+    stockData: [],
+    loading: false,
+    error: null
+  };
   
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "none" });
   const [expandedRow, setExpandedRow] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSymbol, setSelectedSymbol] = useState(null);
@@ -234,7 +238,7 @@ const StockTable = () => {
           }}
           className="border rounded px-6 py-2 text-sm text-gray-600"
         >
-          {[5, 10, 15, 25, 50, 100, 200].map((num) => (
+          {[10, 50, 100, 200].map((num) => (
             <option key={num} value={num}>{num}</option>
           ))}
         </select>

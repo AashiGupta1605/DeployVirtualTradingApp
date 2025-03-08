@@ -53,7 +53,7 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
     <> 
       <div className={type !== 'user-list' ? 'mt-20' : 'pt-20'}>  
         {/* Dashboard header */}
-        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-32 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
+        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-19 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
           <div className="px-4 mx-auto w-full">
             <div> 
               {/* Card stats */}
@@ -180,7 +180,8 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
 
         {/* Additional cards for non-student-list views */}
         {showCardsTable && (
-          <div className="flex flex-wrap -mt-28 px-4">
+          <div className="flex flex-wrap -mt-14 px-4">
+
             <div className="w-full xl:w-8/12 px-4 pt-2">
               <CardPageVisits />
             </div>

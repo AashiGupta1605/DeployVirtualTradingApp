@@ -843,6 +843,7 @@ const organizationAuthSlice = createSlice({
     success: false, // For login/register
     updateError: null, // For updateOrgDetails
     orgId: localStorage.getItem("orgId") || null, // For login/register
+    org:null //
   },
   reducers: {
     resetAuthState: (state) => {
@@ -852,15 +853,18 @@ const organizationAuthSlice = createSlice({
       state.success = false;
       state.token = null;
       state.orgId = null;
+      state.org = null;
     },
     logoutOrganization: (state) => {
       state.orgName = null;
       state.success = false;
       state.token = null;
       state.orgId = null;
+      state.org = null;
       localStorage.removeItem('orgName');
       localStorage.removeItem("token");
       localStorage.removeItem("orgId");
+      localStorage.removeItem("org");
     },
     addOrganization: (state, action) => {
       state.organizations.push(action.payload);
@@ -927,9 +931,11 @@ const organizationAuthSlice = createSlice({
         state.success = true;
         state.token = action.payload.token;
         state.orgId = action.payload.orgId; // Update orgId in Redux state
+        state.org = action.payload.org; // Update orgId in Redux state
         localStorage.setItem('orgName', action.payload.orgName);
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('orgId', action.payload.orgId); // Update orgId in local storage
+        localStorage.setItem('org', JSON.stringify(action.payload.org));
       })
       .addCase(loginOrganization.rejected, (state, action) => {
         state.loading = false;

@@ -1,213 +1,121 @@
-// CardTable.jsx - Part 1
-import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { 
   ChevronDown, 
   ChevronRight, 
   Filter, 
   RefreshCw,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  TrendingUp,
-  BarChart3,
-  Clock,
-  Award 
 } from 'lucide-react';
-import { BASE_API_URL } from '../../utils/BaseUrl';
-import Pagination from '../Common/TableItems/Pagination';
+
+// Import actions from both slices
+import {
+  fetchNiftyData,
+  fetchCompanyDetails as fetchNifty50CompanyDetails,
+  setSearchTerm as setNifty50SearchTerm,
+  setSortConfig as setNifty50SortConfig,
+  setCurrentPage as setNifty50CurrentPage,
+  setItemsPerPage as setNifty50ItemsPerPage,
+  setSelectedSymbol as setNifty50SelectedSymbol,
+  resetCompanyDetails as resetNifty50CompanyDetails
+} from '../../redux/Common/nifty50Slice';
+
+import {
+  fetchNifty500Data,
+  fetchCompanyDetails as fetchNifty500CompanyDetails,
+  setSearchTerm as setNifty500SearchTerm,
+  setSortConfig as setNifty500SortConfig,
+  setCurrentPage as setNifty500CurrentPage,
+  setItemsPerPage as setNifty500ItemsPerPage,
+  setSelectedSymbol as setNifty500SelectedSymbol,
+  resetCompanyDetails as resetNifty500CompanyDetails
+} from '../../redux/Common/nifty500Slice';
+
 import CompanyDetailModal from '../Admin/Modals/companyDetailModal/index';
 
-const CardTable = () => {
-  // State Management
-  const [niftyData, setNiftyData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [expandedRow, setExpandedRow] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'none' });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSymbol, setSelectedSymbol] = useState(null);
+const CardTable = ({ tableType = 'nifty50' }) => {
+  const dispatch = useDispatch();
+  
+  // Select the appropriate state based on tableType
+  const niftyState = useSelector(state => 
+    tableType === 'nifty50' 
+      ? state.common.nifty50 
+      : state.common.nifty500
+  );
 
-    // Add new state for modal data
-    const [modalData, setModalData] = useState({
+  const {
+    data = [],
+    loading = false,
+    error = null,
+    companyDetails = {
       stockData: null,
       chartData: null,
-      isLoading: false,
+      loading: false,
       error: null
-    });
-  // Cache implementation
-  const cache = useMemo(() => new Map(), []);
+    },
+    pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0
+    },
+    sortConfig = {
+      key: null,
+      direction: 'none'
+    },
+    searchTerm = '',
+    selectedSymbol = null
+  } = niftyState || {};
 
-    // Handle modal data fetching
-    const fetchModalData = async (symbol) => {
-      if (!symbol) return;
-  
-      setModalData(prev => ({ ...prev, isLoading: true, error: null }));
-  
-      try {
-        // Fetch stock data
-        const stockResponse = await axios.get(`${BASE_API_URL}/admin/nifty/company/${symbol}`);
-        
-        // Fetch chart data
-        const chartResponse = await axios.get(`${BASE_API_URL}/admin/nifty/company/chart/${symbol}`);
-  
-        setModalData({
-          stockData: stockResponse.data,
-          chartData: {
-            candlestick: chartResponse.data.map(item => ({
-              x: new Date(item.date).getTime(),
-              y: [item.open, item.high, item.low, item.close]
-            })),
-            volume: chartResponse.data.map(item => ({
-              x: new Date(item.date).getTime(),
-              y: item.volume
-            }))
-          },
-          isLoading: false,
-          error: null
-        });
-      } catch (err) {
-        console.error('Error fetching modal data:', err);
-        setModalData(prev => ({
-          ...prev,
-          isLoading: false,
-          error: 'Failed to fetch company data'
-        }));
-      }
-    };
+  const { currentPage, itemsPerPage } = pagination;
 
+  // Helper function to get the appropriate action based on tableType
+  const getAction = (nifty50Action, nifty500Action) => {
+    return tableType === 'nifty50' ? nifty50Action : nifty500Action;
+  };
 
-  // Sorting function
-  const requestSort = (key) => {
+  useEffect(() => {
+    const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
+    dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
+  }, [dispatch, currentPage, itemsPerPage, searchTerm, tableType]);
+
+  const handleSymbolClick = (symbol, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const setSymbolAction = getAction(setNifty50SelectedSymbol, setNifty500SelectedSymbol);
+    const fetchDetailsAction = getAction(fetchNifty50CompanyDetails, fetchNifty500CompanyDetails);
+    dispatch(setSymbolAction(symbol));
+    dispatch(fetchDetailsAction(symbol));
+  };
+
+  const handleTimeRangeChange = (range) => {
+    if (selectedSymbol) {
+      const fetchDetailsAction = getAction(fetchNifty50CompanyDetails, fetchNifty500CompanyDetails);
+      dispatch(fetchDetailsAction(selectedSymbol));
+    }
+  };
+
+  const handleSearchChange = (value) => {
+    const setSearchAction = getAction(setNifty50SearchTerm, setNifty500SearchTerm);
+    dispatch(setSearchAction(value));
+  };
+
+  const handleSortChange = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
       direction = 'none';
     }
-    setSortConfig({ key, direction });
+    const setSortAction = getAction(setNifty50SortConfig, setNifty500SortConfig);
+    dispatch(setSortAction({ key, direction }));
   };
 
-
-
-  // Data fetching with retry logic
-  const fetchDataWithRetry = async (page, retries = 3) => {
-    try {
-      const response = await axios.get(`${BASE_API_URL}/admin/nifty/data`, {
-        params: {
-          page,
-          limit: itemsPerPage,
-          search: searchTerm
-        },
-        timeout: 5000
-      });
-      return response.data;
-    } catch (error) {
-      if (retries > 0) {
-        console.log(`Retrying... ${retries} attempts left`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return fetchDataWithRetry(page, retries - 1);
-      }
-      throw error;
-    }
+  const handleCloseModal = () => {
+    const setSymbolAction = getAction(setNifty50SelectedSymbol, setNifty500SelectedSymbol);
+    const resetDetailsAction = getAction(resetNifty50CompanyDetails, resetNifty500CompanyDetails);
+    dispatch(setSymbolAction(null));
+    dispatch(resetDetailsAction());
   };
 
-    // Handle time range change
-    const handleTimeRangeChange = async (range) => {
-      if (!selectedSymbol) return;
-  
-      setModalData(prev => ({ ...prev, isLoading: true, error: null }));
-  
-      try {
-        const response = await axios.get(
-          `${BASE_API_URL}/admin/nifty/company/chart/${selectedSymbol}`,
-          { params: { timeRange: range } }
-        );
-  
-        setModalData(prev => ({
-          ...prev,
-          chartData: {
-            candlestick: response.data.map(item => ({
-              x: new Date(item.date).getTime(),
-              y: [item.open, item.high, item.low, item.close]
-            })),
-            volume: response.data.map(item => ({
-              x: new Date(item.date).getTime(),
-              y: item.volume
-            }))
-          },
-          isLoading: false
-        }));
-      } catch (err) {
-        console.error('Error fetching chart data:', err);
-        setModalData(prev => ({
-          ...prev,
-          isLoading: false,
-          error: 'Failed to fetch chart data'
-        }));
-      }
-    };
-  
-    // Update symbol click handler
-    const handleSymbolClick = async (symbol, e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Opening modal for symbol:', symbol);
-      
-      if (!symbol) {
-        console.error('No symbol provided');
-        return;
-      }
-      
-      setSelectedSymbol(symbol);
-      setIsModalOpen(true);
-      await fetchModalData(symbol);
-    };
-
-  // Main fetch function
-  const fetchData = async (page = 1) => {
-    const cacheKey = `nifty-data-${page}-${searchTerm}`;
-    
-    if (cache.has(cacheKey)) {
-      setNiftyData(cache.get(cacheKey));
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const { data, pagination: paginationData } = await fetchDataWithRetry(page);
-      
-      cache.set(cacheKey, data);
-      setNiftyData(data);
-    } catch (error) {
-      console.error('Error fetching Nifty data:', error);
-      setError(`Failed to fetch data. ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Effect for fetching data
-  useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage, searchTerm, itemsPerPage]);
-
-  // Debounced search effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm !== "") {
-        setCurrentPage(1);
-        fetchData(1);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  // Sort data function
   const getSortedData = (data) => {
     if (!data || !Array.isArray(data)) return [];
     if (sortConfig.direction === 'none') return data;
@@ -220,17 +128,20 @@ const CardTable = () => {
         return sortConfig.direction === "ascending" 
           ? valueA - valueB 
           : valueB - valueA;
-      } else {
-        return sortConfig.direction === "ascending"
-          ? valueA.toString().localeCompare(valueB.toString())
-          : valueB.toString().localeCompare(valueA.toString());
       }
+      return sortConfig.direction === "ascending"
+        ? valueA.toString().localeCompare(valueB.toString())
+        : valueB.toString().localeCompare(valueA.toString());
     });
   };
 
+  const filteredItems = getSortedData(data)
+    .filter(stock => stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
   
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // Loading state
   if (loading) {
     return (
       <div className="mt-12 flex items-center justify-center w-full h-64">
@@ -246,14 +157,16 @@ const CardTable = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 p-4">
+      <div className="flex flex-col mt-48 items-center justify-center h-64 p-4">
         <div className="text-red-500 mb-4">{error}</div>
         <button 
-          onClick={() => fetchData(currentPage)}
-          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          onClick={() => {
+            const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
+            dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
+          }}
+          className="flex items-center gap-2  bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
         >
           <RefreshCw size={16} />
           Retry
@@ -261,23 +174,32 @@ const CardTable = () => {
       </div>
     );
   }
-  // CardTable.jsx - Part 2 (continuing from Part 1)
 
-  // Pagination calculations
-  const filteredItems = getSortedData(niftyData[0]?.stocks || [])
-    .filter(stock => stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  if (!filteredItems.length) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 p-4">
+        <div className="text-gray-500 mb-4">No data available</div>
+        <button 
+          onClick={() => {
+            const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
+            dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
+          }}
+          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+        >
+          <RefreshCw size={16} />
+          Refresh Data
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="mx-2 overflow-hidden mt-38">
-        {/* Header Section */}
         <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
           <h2 className="text-xl font-bold text-gray-800 flex items-center">
             <Filter className="mr-2 text-gray-600" size={20} />
-            Nifty Data
+            {tableType === 'nifty50' ? 'Nifty 50 Data' : 'Nifty 500 Data'}
           </h2>
           <div className="relative">
             <input
@@ -285,12 +207,12 @@ const CardTable = () => {
               placeholder="Search by symbol..."
               className="border p-2 pr-10 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
             {searchTerm && (
               <button
                 className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
-                onClick={() => setSearchTerm("")}
+                onClick={() => handleSearchChange("")}
               >
                 ✕
               </button>
@@ -298,7 +220,6 @@ const CardTable = () => {
           </div>
         </div>
 
-        {/* Table Section */}
         <div className="bg-white shadow-md rounded-lg overflow-x-auto h-[28rem] overflow-y-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b sticky top-0">
@@ -321,7 +242,7 @@ const CardTable = () => {
                 ].map((column) => (
                   <th
                     key={column}
-                    onClick={() => requestSort(column)}
+                    onClick={() => handleSortChange(column)}
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                   >
                     <div className="flex items-center space-x-1">
@@ -340,17 +261,9 @@ const CardTable = () => {
                 .map((row, index) => (
                   <tr
                     key={index}
-                    onClick={() => setExpandedRow(expandedRow === index ? null : index)}
-                    className={`cursor-pointer hover:bg-gray-50 transition-colors ${
-                      expandedRow === index ? "bg-gray-50" : ""
-                    }`}
+                    className="hover:bg-gray-50 transition-colors"
                   >
                     <td className="px-6 py-4 flex items-center">
-                      {expandedRow === index ? (
-                        <ChevronDown className="mr-2 text-gray-500" size={16} />
-                      ) : (
-                        <ChevronRight className="mr-2 text-gray-500" size={16} />
-                      )}
                       <button
                         onClick={(e) => handleSymbolClick(row.symbol, e)}
                         className="text-blue-500 hover:text-blue-800"
@@ -391,15 +304,14 @@ const CardTable = () => {
           </table>
         </div>
 
-        {/* Pagination Section */}
         <div className="flex justify-between items-center mt-4 px-4 py-3 bg-white border rounded-lg">
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-700">Rows per page:</span>
             <select
               value={itemsPerPage}
               onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
-                setCurrentPage(1);
+                const setItemsAction = getAction(setNifty50ItemsPerPage, setNifty500ItemsPerPage);
+                dispatch(setItemsAction(Number(e.target.value)));
               }}
               className="border rounded px-2 py-1 text-sm text-gray-600"
             >
@@ -417,14 +329,16 @@ const CardTable = () => {
 
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              onClick={() => {
+                const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
+                dispatch(setPageAction(Math.max(1, currentPage - 1)));
+              }}
               disabled={currentPage === 1}
               className="p-2 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
             >
               <ChevronRight className="rotate-180" size={20} />
             </button>
             
-            {/* Page numbers */}
             <div className="flex space-x-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1)
                 .filter(page => 
@@ -438,7 +352,10 @@ const CardTable = () => {
                       <span className="px-2 py-1">...</span>
                     )}
                     <button
-                      onClick={() => setCurrentPage(page)}
+                      onClick={() => {
+                        const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
+                        dispatch(setPageAction(page));
+                      }}
                       className={`px-3 py-1 rounded-md ${
                         currentPage === page
                           ? "bg-blue-500 text-white"
@@ -452,7 +369,10 @@ const CardTable = () => {
             </div>
 
             <button
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              onClick={() => {
+                const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
+                dispatch(setPageAction(Math.min(totalPages, currentPage + 1)));
+              }}
               disabled={currentPage === totalPages}
               className="p-2 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
             >
@@ -463,32 +383,22 @@ const CardTable = () => {
       </div>
 
       <CompanyDetailModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedSymbol(null);
-          setModalData({
-            stockData: null,
-            chartData: null,
-            isLoading: false,
-            error: null
-          });
-        }}
-        symbol={selectedSymbol}
-        data={modalData.stockData}
-        chartData={modalData.chartData}
-        onTimeRangeChange={handleTimeRangeChange}
-        loading={modalData.isLoading}
-        error={modalData.error}
-        chartSettings={{
-          theme: 'light',
-          showGrid: true,
-          showVolume: true,
-          showDetails: true
-        }}
-        type="nifty"
-      />
-
+  isOpen={!!selectedSymbol}
+  onClose={handleCloseModal}
+  symbol={selectedSymbol}
+  data={companyDetails.stockData}
+  chartData={companyDetails.chartData}
+  onTimeRangeChange={handleTimeRangeChange}
+  loading={companyDetails.loading}
+  error={companyDetails.error}
+  chartSettings={{
+    theme: 'light',
+    showGrid: true,
+    showVolume: true,
+    showDetails: true
+  }}
+  type={tableType === 'nifty50' ? 'nifty50' : 'nifty500'} // Update this line
+/>
     </>
   );
 };
