@@ -161,7 +161,7 @@ const OrganizationUsersFeedbacks = () => {
     <div className="relative">
       <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} />
       <div className="mx-auto w-[95%] z-50">
-        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-50 -mt-12">
+        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-5 -mt-12">
           <div className="bg-gray-50 mt-0 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
             <MessageSquare className="mr-2 text-gray-600" size={24} />
@@ -215,7 +215,7 @@ const OrganizationUsersFeedbacks = () => {
           </div>
 
           {isFilterOpen && (
-            <div className="bg-gray-100 rounded-md shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
+            <div className="bg-gray-50  shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -242,20 +242,23 @@ const OrganizationUsersFeedbacks = () => {
                       className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
                     />
                   </div>
+                  
                 </div>
 
-                <div className="flex justify-end items-end gap-4">
-                  <button
-                    onClick={handleApplyFilters}
-                    className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
-                  >
-                    Apply Filters
-                  </button>
+                <div className="ml-140 flex justify-end gap-x-4 w-full h-full items-end">
+                  
                   <button
                     onClick={clearAllFilters}
-                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
-                  >
-                    Clear Filters
+                    className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
+                     >
+                     <X size={16} className="mr-1" />
+                      Clear
+                  </button>
+                  <button
+                    onClick={handleApplyFilters}
+                    className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
+                    >
+                    Apply
                   </button>
                 </div>
               </div>

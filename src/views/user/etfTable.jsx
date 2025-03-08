@@ -8,8 +8,8 @@ import CardStats from "../../components/User/Cards/CardStats";
 export default function etfTable() {
   return (
     <>
-    <div className="mt-24">
-            <div className="bg-lightBlue-600 md:pt-8 pb-25 pt-12">
+    <div className="mt-12 overflow-hidden">
+            <div className="bg-lightBlue-600 md:pt-23 pb-20 pt-10">
               <div className="px-4 mx-auto w-full">
                 <div>
                   {/* Card stats */}
@@ -67,7 +67,7 @@ export default function etfTable() {
               </div>
             </div>   
           </div>
-     <div className="flex flex-wrap -mt-6">
+     <div className="flex flex-wrap -mt-1.5">
         <div className="w-full mb-12 px-4 -mt-42">
           <StockTable />
         </div>

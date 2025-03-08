@@ -124,7 +124,7 @@ const QueriesPage = () => {
         status: 'all'
       },
       currentPage: 1,
-      isFilterOpen: false
+      isFilterOpen: true
     }));
     dispatch(clearFilters());
     dispatch(setSearchQuery(''));

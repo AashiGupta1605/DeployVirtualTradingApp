@@ -561,7 +561,7 @@ const OrgUserFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 border-b ">
               <tr>
                 {[
                   "User Name",

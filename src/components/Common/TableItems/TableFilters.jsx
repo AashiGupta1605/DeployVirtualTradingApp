@@ -594,7 +594,7 @@ const ActiveFiltersDisplay = ({
   };
 
   return (
-    <div className="bg-gray-50 mt-0 px-6 py-2 rounded-lg flex items-center justify-between border border-gray-200">
+    <div className="bg-gray-50 mt-0 px-6 py-2  flex items-center justify-between border border-gray-200">
       <div className="flex items-center space-x-2">
         <span className="text-sm font-small text-gray-600">Active Filters:</span>
         <div className="flex flex-wrap gap-2">
@@ -716,7 +716,7 @@ const TableFilters = ({
     // Add type-specific filters
     if (filterType === 'users') {
       filters.status = tempFilters.status !== 'all';
-      filters.gender = !["all", "female", "male"].includes(normalizedGender);
+      filters.gender = tempFilters.gender && tempFilters.gender !== 'all';
     } else if (filterType === 'organizations') {
       filters.status = tempFilters.status !== 'all';
     } else if (filterType === 'queries') {
