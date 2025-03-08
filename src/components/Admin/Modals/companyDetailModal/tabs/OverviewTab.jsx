@@ -1,48 +1,47 @@
-// components/Common/Modals/CompanyDetail/Tabs/OverviewTab.jsx
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { 
-  Clock, 
-  Award, 
-  BarChart2, 
-  Percent,
-  AlertTriangle,
   TrendingUp,
-  DollarSign,
-  Calendar,
+  BarChart2, 
+  AlertTriangle,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Clock,
+  DollarSign
 } from 'lucide-react';
 
-const StatItem = ({ label, value, change }) => (
-  <div className="flex items-center justify-between py-2">
-    <span className="text-sm text-gray-500">{label}</span>
-    <div className="flex items-center space-x-2">
-      <span className="text-sm font-medium text-gray-900">{value}</span>
-      {change && (
-        <span className={`text-xs font-medium flex items-center ${
-          change.startsWith('+') ? 'text-green-600' : 'text-red-600'
-        }`}>
-          {change.startsWith('+') ? 
-            <ArrowUpRight size={14} className="mr-0.5" /> : 
-            <ArrowDownRight size={14} className="mr-0.5" />
-          }
-          {change}
-        </span>
-      )}
-    </div>
-  </div>
-);
+const formatValue = (value, type = 'number') => {
+  if (value === undefined || value === null) return 'N/A';
+  
+  switch (type) {
+    case 'currency':
+      return `₹${Number(value).toLocaleString('en-IN', {
+        maximumFractionDigits: 2
+      })}`;
+    case 'percentage':
+      return `${Number(value).toFixed(2)}%`;
+    case 'volume':
+      const num = Number(value);
+      if (num >= 10000000) return `${(num / 10000000).toFixed(2)}Cr`;
+      if (num >= 100000) return `${(num / 100000).toFixed(2)}L`;
+      return num.toLocaleString('en-IN');
+    default:
+      return value;
+  }
+};
 
-const SectionCard = ({ title, icon: Icon, children }) => (
-  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-    <div className="flex items-center space-x-2 px-4 py-2.5 bg-gray-50 border-b border-gray-200">
-      <Icon size={16} className="text-gray-600" />
-      <h3 className="text-sm font-medium text-gray-800">{title}</h3>
-    </div>
-    <div className="p-4 divide-y divide-gray-100">
-      {children}
+const DataRow = ({ label, value, change }) => (
+  <div className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
+    <span className="text-sm text-gray-600">{label}</span>
+    <div className="flex items-center space-x-3">
+      <span className="text-sm font-medium text-gray-900">{value}</span>
+      {change !== undefined && (
+        <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium
+          ${change >= 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+          {change >= 0 ? <ArrowUpRight size={14} className="mr-1" /> : <ArrowDownRight size={14} className="mr-1" />}
+          {change}%
+        </div>
+      )}
     </div>
   </div>
 );
@@ -50,109 +49,98 @@ const SectionCard = ({ title, icon: Icon, children }) => (
 const OverviewTab = ({ data, loading, error }) => {
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-[300px] bg-red-50 rounded-xl border border-red-200 p-6">
-        <AlertTriangle className="text-red-500 w-12 h-12 mb-4" />
-        <p className="text-red-800 font-medium text-lg">Error Loading Overview</p>
-        <p className="text-red-600 text-sm mt-2">{error}</p>
+      <div className="flex flex-col items-center justify-center h-full p-8 bg-red-50 rounded-lg">
+        <AlertTriangle className="text-red-500 w-12 h-12 mb-3" />
+        <p className="text-red-800 font-medium">{error}</p>
       </div>
     );
   }
 
-  const formatValue = (value, type = 'number') => {
-    if (value === undefined || value === null) return 'N/A';
-    
-    switch (type) {
-      case 'currency':
-        return `₹${Number(value).toLocaleString('en-IN', {
-          maximumFractionDigits: 2
-        })}`;
-      case 'percentage':
-        return `${Number(value).toFixed(2)}%`;
-      case 'volume':
-        return Number(value).toLocaleString('en-IN');
-      default:
-        return value;
-    }
-  };
-
-  const formatChange = (value) => {
-    if (value === undefined || value === null) return null;
-    return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
-  };
-
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Trading Information */}
-      <SectionCard title="Trading Information" icon={Clock}>
-        <StatItem 
-          label="Open Price" 
-          value={formatValue(data?.open, 'currency')}
-        />
-        <StatItem 
-          label="Previous Close" 
-          value={formatValue(data?.previousClose, 'currency')}
-        />
-        <StatItem 
-          label="Day High" 
-          value={formatValue(data?.dayHigh, 'currency')}
-        />
-        <StatItem 
-          label="Day Low" 
-          value={formatValue(data?.dayLow, 'currency')}
-        />
-      </SectionCard>
+    <div className="grid grid-cols-2 gap-6 p-6">
+      {/* Price Information Card */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex items-center space-x-2 mb-4">
+          <TrendingUp className="text-blue-600" size={20} />
+          <h2 className="text-lg font-semibold text-gray-900">Price Information</h2>
+        </div>
+        <div className="space-y-1">
+          <DataRow 
+            label="Current Price" 
+            value={formatValue(data?.lastPrice, 'currency')}
+            change={data?.pChange}
+          />
+          <DataRow 
+            label="Day's Range" 
+            value={`${formatValue(data?.dayLow, 'currency')} - ${formatValue(data?.dayHigh, 'currency')}`}
+          />
+          <DataRow 
+            label="52 Week Range" 
+            value={`${formatValue(data?.yearLow, 'currency')} - ${formatValue(data?.yearHigh, 'currency')}`}
+          />
+          <DataRow 
+            label="Opening Price" 
+            value={formatValue(data?.open, 'currency')}
+          />
+          <DataRow 
+            label="Previous Close" 
+            value={formatValue(data?.previousClose, 'currency')}
+          />
+          <DataRow 
+            label="Today's Change" 
+            value={formatValue(data?.change, 'currency')}
+            change={data?.pChange}
+          />
+        </div>
+      </div>
 
-      {/* Performance Metrics */}
-      <SectionCard title="Performance Metrics" icon={Award}>
-        <StatItem 
-          label="52 Week High" 
-          value={formatValue(data?.yearHigh, 'currency')}
-        />
-        <StatItem 
-          label="52 Week Low" 
-          value={formatValue(data?.yearLow, 'currency')}
-        />
-        <StatItem 
-          label="Price Change" 
-          value={formatValue(data?.change, 'currency')}
-          change={formatChange(data?.pChange)}
-        />
-      </SectionCard>
+      {/* Trading Information Card */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex items-center space-x-2 mb-4">
+          <BarChart2 className="text-blue-600" size={20} />
+          <h2 className="text-lg font-semibold text-gray-900">Trading Information</h2>
+        </div>
+        <div className="space-y-1">
+          <DataRow 
+            label="Total Volume" 
+            value={formatValue(data?.totalTradedVolume, 'volume')}
+          />
+          <DataRow 
+            label="Total Value" 
+            value={formatValue(data?.totalTradedValue, 'currency')}
+          />
+          <DataRow 
+            label="1 Month Return" 
+            value={formatValue(data?.perChange30d, 'percentage')}
+            change={data?.perChange30d}
+          />
+          <DataRow 
+            label="3 Month Return" 
+            value={formatValue(data?.perChange90d, 'percentage')}
+            change={data?.perChange90d}
+          />
+          <DataRow 
+            label="1 Year Return" 
+            value={formatValue(data?.perChange365d, 'percentage')}
+            change={data?.perChange365d}
+          />
+          <DataRow 
+            label="Last Updated" 
+            value={data?.lastUpdateTime ? new Date(data.lastUpdateTime).toLocaleTimeString() : 'N/A'}
+          />
+        </div>
+      </div>
 
-      {/* Return Statistics */}
-      <SectionCard title="Return Statistics" icon={Percent}>
-        <StatItem 
-          label="1 Month Return" 
-          value={formatValue(data?.perChange30d, 'percentage')}
-          change={formatChange(data?.perChange30d)}
-        />
-        <StatItem 
-          label="3 Month Return" 
-          value={formatValue(data?.perChange90d, 'percentage')}
-          change={formatChange(data?.perChange90d)}
-        />
-        <StatItem 
-          label="1 Year Return" 
-          value={formatValue(data?.perChange365d, 'percentage')}
-          change={formatChange(data?.perChange365d)}
-        />
-      </SectionCard>
-
-      {/* Trading Statistics */}
-      <SectionCard title="Trading Statistics" icon={BarChart2}>
-        <StatItem 
-          label="Total Traded Value" 
-          value={formatValue(data?.totalTradedValue, 'currency')}
-        />
-        <StatItem 
-          label="Average Volume" 
-          value={formatValue(data?.avgTradedVolume, 'volume')}
-        />
-        <StatItem 
-          label="Price to Book" 
-          value={formatValue(data?.priceToBook, 'number')}
-        />
-      </SectionCard>
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 bg-white/75 flex items-center justify-center rounded-xl">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" />
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100" />
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
