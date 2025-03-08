@@ -1,5 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { 
+  ChevronDown,
+  ChevronUp,
+  PlusCircle,
+  
+  
+  Building2,
+  MessageSquare,
+  Calendar,
+  Users
+} from 'lucide-react';
 import axios from "axios";
 import CardStats from "../../components/User/Cards/CardStats";
 import { Edit, Trash2, Star, ThumbsUp, ThumbsDown } from "lucide-react";
@@ -125,16 +136,19 @@ export default function FeedbackTable() {
         </div>
       </div>
 
-      <div className="px-8 mx-4 -mt-12 bg-gray-50 rounded-lg p-4 mb-7.5 flex justify-between items-center shadow-md">
+      <div className="px-8 mx-4 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <FontAwesomeIcon icon={faCommentDots} className="text-blue-500 text-xl" />
-          <h2 className="text-xl font-bold text-gray-700">My Feedbacks</h2>
+          
+          <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
+          <MessageSquare className="mr-2 text-gray-600" size={24} />
+            My Feedbacks</h2>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition flex items-center justify-center"
+          className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
         >
-          <FontAwesomeIcon icon={faCommentDots} className="text-white text-lg" />
+           <PlusCircle size={18} className="mr-2" />
+                        Add Feedback
         </button>
       </div>
 
@@ -197,12 +211,12 @@ export default function FeedbackTable() {
             {feedback.status || "Approved"}
           </span>
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-          <button className="text-blue-600 hover:text-blue-900 mr-4" onClick={() => handleEditFeedback(feedback._id)}>
-            <Edit size={16} />
+        <td className="px-6 py-4 whitespace-nowrap text-center flex gap-x-3">
+          <button className="text-yellow-600 mx-2 hover:text-yellow-900 transition-colors duration-200" onClick={() => handleEditFeedback(feedback._id)}>
+            <Edit size={18} />
           </button>
-          <button className="text-red-600 hover:text-red-900" onClick={() => openDeleteModal(feedback._id)}>
-            <Trash2 size={16} />
+          <button className="text-red-600 mx-2 hover:text-red-900 transition-colors duration-200" onClick={() => openDeleteModal(feedback._id)}>
+            <Trash2 size={18} />
           </button>
         </td>
       </tr>

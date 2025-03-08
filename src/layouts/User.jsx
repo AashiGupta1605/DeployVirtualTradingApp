@@ -33,6 +33,8 @@ export default function User() {
         {/* Pass sidebarExpanded as a prop */}
         <UserNavbar sidebarExpanded={sidebarExpanded} />
         <div className="mx-auto w-full -m-24">
+        <div id="root">
+        <main>
         <Routes>
                <Route path="dashboard" element={<Dashboard />} />
                <Route path="niftytable" element={<NiftyTable />} />
@@ -42,7 +44,8 @@ export default function User() {
               <Route path="tradingnifty" element={<TradingNifty />} />
              <Route path="*" element={<Navigate to="dashboard" replace />} />
      </Routes>
-
+     </main>
+</div>
           <DashboardFooter />
         </div>
       </div>

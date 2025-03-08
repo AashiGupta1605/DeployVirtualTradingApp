@@ -13,7 +13,7 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, onPageChange, onIte
                      focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
                      focus:ring-opacity-50 text-sm py-2"
         >
-          {[5, 10, 15, 25, 50, 100].map((num) => (
+          {[10, 50, 100, 200].map((num) => (
             <option key={num} value={num}>
               {num}
             </option>

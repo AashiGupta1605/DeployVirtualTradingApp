@@ -177,8 +177,8 @@ const FilterComponent = ({
     <>
       {/* Filter Panel */}
       {isFilterOpen && (
-        <div className="bg-gray-100 rounded-md shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 items-center">
+        <div className="bg-gray-50 rounded-md shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
+          <div className="flex items-end gap-4 flex-grow">
             {/* Gender Filter */}
             <div className="w-full max-w-52"> {/* Ensure full width */}
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -197,7 +197,7 @@ const FilterComponent = ({
             </div>
 
             {/* Date Range Filter */}
-            <div className="w-full"> {/* Ensure full width */}
+            <div className="w-full "> {/* Ensure full width */}
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Date Range
               </label>
@@ -225,20 +225,23 @@ const FilterComponent = ({
             </div>
 
             {/* Apply and Clear Buttons */}
-            <div className="flex justify-end gap-x-4 w-full mt-7"> {/* Ensure full width */}
-              <button
-                onClick={handleApply}
-                className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
-              >
-                Apply Filters
-              </button>
-              <button
-                onClick={handleClear}
-                className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
-              >
-                Clear Filters
-              </button>
-            </div>
+            
+            <div className="flex justify-end gap-x-4 w-full h-full items-end"> {/* ✅ Aligns to bottom */}
+                 <button
+                  onClick={handleClear}
+                  className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
+                  >
+                  <X size={16} className="mr-1" />
+                  Clear
+            </button>
+                <button
+                  onClick={handleApply}
+                  className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
+                >
+                  Apply
+             </button>
+          </div>
+
           </div>
         </div>
       )}
