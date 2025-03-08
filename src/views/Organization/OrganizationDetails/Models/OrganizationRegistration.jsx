@@ -246,6 +246,7 @@ const validationSchema = Yup.object({
   website: Yup.string().url('Invalid URL format').nullable(),
   contactPerson: Yup.string().nullable(),
   email: Yup.string().email('Invalid email format').required('Email is required'),
+  accreditation:Yup.string().required('Accreditation is Required'),
   mobile: Yup.string()
     .matches(/^[9876]\d{9}$/, 'Mobile number must start with 9, 8, 7, or 6 and contain 10 digits')
     .nullable(),
@@ -270,6 +271,7 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
       contactPerson: '',
       email: '',
       mobile: '',
+      accreditation:'',
       approvalStatus: 'pending',
       password: '',
     },
@@ -458,8 +460,32 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     <div className="text-red-500 text-sm">{formik.errors.password}</div>
                   ) : null}
                 </div>
+
+
+                 {/* accreditation input */}
+                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Accreditation</label>
+                  <input
+                    type="text"
+                    name="accreditation"
+                    value={formik.values.accreditation}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    placeholder="Enter password"
+                    required
+                  />
+                  {formik.touched.accreditation && formik.errors.accreditation ? (
+                    <div className="text-red-500 text-sm">{formik.errors.accreditation}</div>
+                  ) : null}
+                </div>
+
               </div>
             </div>
+
+            
+
+            
 
             {/* Form actions */}
             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">

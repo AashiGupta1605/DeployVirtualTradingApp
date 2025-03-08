@@ -180,7 +180,8 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
 
         {/* Additional cards for non-student-list views */}
         {showCardsTable && (
-          <div className="flex flex-wrap -mt-12 px-4">
+          <div className="flex flex-wrap -mt-14 px-4">
+
             <div className="w-full xl:w-8/12 px-4 pt-2">
               <CardPageVisits />
             </div>
