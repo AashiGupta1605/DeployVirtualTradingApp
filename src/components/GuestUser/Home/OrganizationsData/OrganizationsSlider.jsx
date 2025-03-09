@@ -23,7 +23,8 @@ const OrganizationsSlider = () => {
 
   const fetchOrganizationsData = async () => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
+      // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
+      const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllOrganizations`);
       setOrgData(response.data.data);
       setErr("")
     } catch (error) {

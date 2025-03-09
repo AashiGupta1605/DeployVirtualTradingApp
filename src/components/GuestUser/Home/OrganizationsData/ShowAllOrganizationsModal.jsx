@@ -5,12 +5,13 @@ import axios from "axios";
 const ShowAllOrganizationsModal = ({ closeModal }) => {
   const [orgData, setOrgData] = useState([]);
   const [err, setErr] = useState("");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(" ");
 
   const fetchOrganizationsData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_API_URL}/guestUser/searchOrganization/${search}`
+        // `${BASE_API_URL}/guestUser/searchOrganization/${search}`
+        `http://localhost:5000/v1/api/guestUser/getAllOrganizations/${search}`
       );
       setOrgData(response.data.data);
       setErr("");

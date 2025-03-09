@@ -67,7 +67,8 @@ const MainHomePage = () => {
       <OrganizationFeedbackCards />
 
       {/* <FooterSlider3/> */}
-      <Footer />
+      <div className="mb-25"></div>
+      <Footer/>
       {/* <PricingModalFooter/> */}
     </>
   );

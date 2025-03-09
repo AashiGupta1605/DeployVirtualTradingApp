@@ -8,8 +8,8 @@ const UserAllFeedsModal = ({ closeModal }) => {
   const [orgData, setOrgData] = useState([]);
 
   const [err, setErr] = useState("");
-  const [category, setCategory] = useState("");
-  const [organization, setOrganization] = useState("");
+  const [category, setCategory] = useState(" ");
+  const [organization, setOrganization] = useState(" ");
   const [sortBy, setSortBy] = useState("createdDate");
   const [order, setOrder] = useState("decreasing");
   const [showOption, setShowOption] = useState("feedbackMessage");
@@ -17,7 +17,8 @@ const UserAllFeedsModal = ({ closeModal }) => {
   const fetchUserFeedbacks = async () => {
     try {
       const response = await axios.get(
-        `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${sortBy}/${order}`
+        // `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${sortBy}/${order}`
+        `http://localhost:5000/v1/api/guestUser/userFeedbacks/${organization}/${category}/${sortBy}/${order}`
       );
       setFeedbacks(response.data.feedbackData);
 
@@ -29,8 +30,11 @@ const UserAllFeedsModal = ({ closeModal }) => {
   };
   const fetchUsersData = async () => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
-      setUserData(response.data);
+      // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
+      const response = await axios.get(
+        `http://localhost:5000/v1/api/guestUser/getAllUsers`
+      );
+      setUserData(response.data.data);
       console.log("User Data", response.data);
     } catch (error) {
       setErr(error.response?.data?.message || "Something went wrong.");
@@ -39,7 +43,8 @@ const UserAllFeedsModal = ({ closeModal }) => {
   const fetchOrganizationsData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_API_URL}/guestUser/getAllOrganizations`
+        // `${BASE_API_URL}/guestUser/getAllOrganizations`
+        `http://localhost:5000/v1/api/guestUser/getAllOrganizations`
       );
       setOrgData(response.data.data);
       setErr("");
@@ -130,10 +135,10 @@ const UserAllFeedsModal = ({ closeModal }) => {
                 {/* <label className="text-sm font-medium text-gray-700 mb-2">
                 Select Organization
               </label> */}
-                <div className="relative">
+                <div className="relative overflow-visible">
                   <select
                     name="Organization"
-                    className="border rounded-lg px-5 py-1 text-sm appearance-none w-36 pr-8"
+                    className="relative border rounded-lg px-5 py-1 text-sm appearance-none w-36 pr-8"
                     value={organization}
                     onChange={(e) => setOrganization(e.target.value || "")}
                   >
@@ -164,7 +169,9 @@ const UserAllFeedsModal = ({ closeModal }) => {
                     <option value="Data Accuracy">Data Accuracy</option>
                     <option value="Trading Features">Trading Features</option>
                     <option value="Customer Support">Customer Support</option>
-                    <option value="Performance & Speed">Performance & Speed</option>
+                    <option value="Performance & Speed">
+                      Performance & Speed
+                    </option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
@@ -259,18 +266,19 @@ const UserAllFeedsModal = ({ closeModal }) => {
                     {card[showOption] || "No content available"}
                   </p>
                   <h5 className="mt-4 text-right text-sm font-semibold text-gray-600">
-                    - {user ? user.name : "Anonymous"}&nbsp;(
-                    {org ? org.name : "No Organization"})
+                    - {user ? user.name : "Anonymous"}
+                    &nbsp;({org ? org.name : "No Organization"})
                   </h5>
                 </div>
               );
             })
           ) : (
-            <div>
-              <font color="red">
-                <b>Loading...</b>
-                <h4>No content available</h4>
-              </font>
+            <div className="flex flex-col items-center justify-center h-40 bg-gray-100 rounded-lg shadow-md p-4">
+              <span className="text-red-500 text-2xl">
+                <i className="fas fa-exclamation-circle"></i>
+              </span>
+              <b className="text-lg text-gray-700 mt-2">Loading...</b>
+              <h4 className="text-gray-500 text-sm">No content available</h4>
             </div>
           )}
 

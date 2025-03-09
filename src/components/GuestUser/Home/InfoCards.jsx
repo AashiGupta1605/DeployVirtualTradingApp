@@ -14,7 +14,8 @@ const InfoCards = () => {
 
     const fetchOrgData = async () =>{
       try{
-        const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
+        // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
+        const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllOrganizations`);
         setOrgData(response.data.data);
         setErr("")
       }
@@ -26,10 +27,11 @@ const InfoCards = () => {
     
     const fetchUserData = async () =>{
       try{
-        const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
-        setUserData(response.data);
+        // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
+        const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
+        setUserData(response.data.data);
 
-        const activeCount = response.data.filter((data) => data.status === true).length;
+        const activeCount = response.data.data.filter((data) => data.status === true).length;
         setActiveUsers(activeCount);
         setErr("")
       }
@@ -49,7 +51,7 @@ const InfoCards = () => {
         console.log("InfoCard Error: ",error);
         setErr("InfoCard Error: ",error.message)
       }
-    }, [userData,orgData]);
+    }, []);
 
     const popupCards = [
       { id: 1, headline: "Organizations", description: orgData.length},

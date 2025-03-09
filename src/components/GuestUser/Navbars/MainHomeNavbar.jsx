@@ -76,7 +76,8 @@ const MainHomeNavbar = () => {
               src="https://media.licdn.com/dms/image/v2/C510BAQE1pPlwgZETKw/company-logo_200_200/company-logo_200_200/0/1630605647519/praedico_global_research_pvt_ltd_logo?e=2147483647&v=beta&t=8hAhEoZ7nj9gKxuh6iA-q10402A-rxdAP4GeUOAnFdQ"
               alt="PGR Logo"
               className="h-10 w-auto"
-            />&nbsp;
+            />
+            &nbsp;
             {/* App Name */}
             <span
               className="text-black text-[17px] font-bold leading-relaxed uppercase cursor-pointer"
@@ -149,20 +150,20 @@ const MainHomeNavbar = () => {
                   <i className="fas fa-user-plus mr-1"></i> Login
                 </button>
                 {loginDropdownOpen && (
-                  <div className="absolute right-0 mt-16 w-48 bg-white border rounded shadow-lg z-50">
+                  <ul className="absolute left-[-20px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
                     <li
-                      className="dropdown-item"
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       onClick={() => setIsModalLoginOpen(true)}
-                    >
-                      Organization
-                    </li>
-                    <li
-                      className="dropdown-item"
-                      onClick={() => setUserLoginModalOpen(true)}
                     >
                       User
                     </li>
-                  </div>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => setUserLoginModalOpen(true)}
+                    >
+                      Organization
+                    </li>
+                  </ul>
                 )}
               </li>
 
@@ -178,20 +179,20 @@ const MainHomeNavbar = () => {
                   <i className="fas fa-user-plus mr-1"></i> Register
                 </button>
                 {registerDropdownOpen && (
-                  <div className="absolute right-0 mt-16 w-48 bg-white border rounded shadow-lg z-50">
+                  <ul className="absolute left-[-30px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
                     <li
-                      className="dropdown-item"
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       onClick={() => setUserRegisterModalOpen(true)}
                     >
                       User
                     </li>
                     <li
-                      className="dropdown-item"
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       onClick={() => setModalOpen(true)}
                     >
                       Organization
                     </li>
-                  </div>
+                  </ul>
                 )}
               </li>
             </ul>
