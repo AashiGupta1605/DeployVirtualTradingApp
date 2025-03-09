@@ -185,8 +185,8 @@ const OrganizationUsersFeedbacks = () => {
                 </button>
               </div>
 
-              <div className="flex-grow max-w-xl">
-                <div className="relative w-[300px]">
+              <div className="flex-grow max-w-xl ">
+                <div className="relative w-[300px] ">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon size={16} className="text-gray-400" />
                   </div>
@@ -200,7 +200,7 @@ const OrganizationUsersFeedbacks = () => {
                  text-sm placeholder-gray-500"
                   />
                   {searchTerm && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center ">
                       <button
                         onClick={() => dispatch(setSearchTerm(""))}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
@@ -215,49 +215,49 @@ const OrganizationUsersFeedbacks = () => {
           </div>
 
           {isFilterOpen && (
-            <div className="bg-gray-50  shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
+              <div className="flex justify-between items-end w-full">
+                {/* Left side - Date Range filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Date Range
                   </label>
-                  <div className="flex space-x-2">
-                    <DatePicker
-                      selected={localStartDate}
-                      onChange={handleStartDateChange}
-                      selectsStart
-                      startDate={localStartDate}
-                      endDate={localEndDate}
-                      placeholderText="Start Date"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
-                    />
-                    <DatePicker
-                      selected={localEndDate}
-                      onChange={handleEndDateChange}
-                      selectsEnd
-                      startDate={localStartDate}
-                      endDate={localEndDate}
-                      minDate={localStartDate}
-                      placeholderText="End Date"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
-                    />
-                  </div>
-                  
+                <div className="flex space-x-2">
+                  <DatePicker
+                    selected={localStartDate}
+                    onChange={handleStartDateChange}
+                    selectsStart
+                    startDate={localStartDate}
+                    endDate={localEndDate}
+                    placeholderText="Start Date"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[42px]"
+                  />
+                  <DatePicker
+                    selected={localEndDate}
+                    onChange={handleEndDateChange}
+                    selectsEnd
+                    startDate={localStartDate}
+                    endDate={localEndDate}
+                    minDate={localStartDate}
+                    placeholderText="End Date"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[42px]"
+                  />
+                </div>
                 </div>
 
-                <div className="ml-140 flex justify-end gap-x-4 w-full h-full items-end">
-                  
+                {/* Right side - Clear & Apply buttons */}
+                <div className="flex gap-x-4">
                   <button
                     onClick={clearAllFilters}
                     className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
-                     >
-                     <X size={16} className="mr-1" />
-                      Clear
+                  >
+                    <X size={16} className="mr-1" />
+                    Clear
                   </button>
                   <button
                     onClick={handleApplyFilters}
                     className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
-                    >
+                  >
                     Apply
                   </button>
                 </div>
@@ -325,6 +325,7 @@ const OrganizationUsersFeedbacks = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

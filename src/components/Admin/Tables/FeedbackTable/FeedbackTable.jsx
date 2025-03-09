@@ -59,14 +59,15 @@ const Tooltip = memo(({ children, text }) => (
 const Stars = memo(({ rating }) => (
   <div className="flex">
     {[...Array(rating)].map((_, i) => (
-      <Star 
-        key={i} 
-        size={16} 
-        fill="yellow" 
-        stroke="yellow" 
-        className="inline-block"
-      />
-    ))}
+  <Star 
+    key={i} 
+    size={16} 
+    fill="#FFD700" 
+    stroke="#FFD700" 
+    className="inline-block"
+  />
+))}
+
   </div>
 ));
 
