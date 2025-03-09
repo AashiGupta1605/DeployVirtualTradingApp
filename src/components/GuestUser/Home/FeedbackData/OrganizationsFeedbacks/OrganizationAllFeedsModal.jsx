@@ -203,7 +203,8 @@ const OrganizationAllFeedsModal = ({ closeModal }) => {
         {err && <p className="text-red-500">{err}</p>}
 
         {/* List of Feedbacks */}
-        <div className="max-h-[60vh] overflow-y-auto px-4">
+        <div className="h-[57vh] flex flex-col px-4">
+        <div className="flex-1 overflow-y-auto h-[calc(60vh-60px)]">
           {feedbacks.length > 0 ? (
             feedbacks.map((card, index) => {
               const organizationName = orgData.find(
@@ -261,6 +262,7 @@ const OrganizationAllFeedsModal = ({ closeModal }) => {
               <h4 className="text-gray-500 text-sm">No content available</h4>
             </div>
           )}
+          </div>
 
           {/* Close Button */}
           <div className="sticky bottom-0 -pb-2 bg-white py-1 border-t border-gray-300 flex justify-end">

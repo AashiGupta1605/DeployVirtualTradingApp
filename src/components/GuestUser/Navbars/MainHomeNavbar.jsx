@@ -153,13 +153,13 @@ const MainHomeNavbar = () => {
                   <ul className="absolute left-[-20px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setIsModalLoginOpen(true)}
+                      onClick={() => setUserLoginModalOpen(true)}
                     >
                       User
                     </li>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setUserLoginModalOpen(true)}
+                      onClick={() => setIsModalLoginOpen(true)}
                     >
                       Organization
                     </li>
