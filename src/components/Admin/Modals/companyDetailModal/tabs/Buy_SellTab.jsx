@@ -195,7 +195,7 @@ import TransactionHistory from './TransactionHistory';
 import TradingControls from './TradingControls';
 import { useSelector, useDispatch } from 'react-redux';
 import { buyStock, sellStock, getTransactionHistory } from '../../../../../redux/User/userTrading/userTradingSlice';
-import { getSubscription } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
+import { getUserSubscriptions } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
 const Buy_SellTab = ({ symbol, data, loading, error }) => {
  
  const user = localStorage.getItem("user");

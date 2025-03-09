@@ -568,7 +568,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     <button
                       type="button"
                       onClick={handleRemovePhoto}
-                      className="-mt-10 text-sm text-white hover:text-gray-50 ml-24 bg-lightBlue-600 px-2 py-2 rounded-xl"
+                      className="-mt-10 text-sm text-black font-semibold hover:opacity-80 ml-24 px-2 py-2 rounded-xl"
                     >
                       Remove Photo
                     </button>
