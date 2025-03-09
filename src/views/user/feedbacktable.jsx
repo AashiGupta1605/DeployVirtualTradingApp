@@ -136,7 +136,7 @@ export default function FeedbackTable() {
         </div>
       </div>
 
-      <div className="px-8 mx-4 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">
+      <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           
           <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
@@ -152,7 +152,7 @@ export default function FeedbackTable() {
         </button>
       </div>
 
-      <div className="flex flex-wrap -mt-0">
+      <div className="flex flex-wrap mx-4 -mt-0">
         <div className="w-full mb-12 px-4 -mt-8">
           <div className="bg-white rounded-lg shadow-lg">
             <div className="overflow-x-auto">
@@ -190,7 +190,7 @@ export default function FeedbackTable() {
         </td>
         <td className="px-6 py-4 text-sm">
           {[...Array(feedback.rating)].map((_, index) => (
-            <Star key={`${feedback._id}-star-${index}`} size={20} fill="yellow" stroke="yellow" className="inline-block" />
+            <Star key={`${feedback._id}-star-${index}`} size={20} fill="#FFD700" stroke="#FFD700" className="inline-block" />
           ))}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center">
