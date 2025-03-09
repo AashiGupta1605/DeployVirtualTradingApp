@@ -3,6 +3,7 @@ import authReducer from './authSlice';
 import userProfileReducer from './userprofileSlice';
 import feedbackReducer from "./feedbackSlice";
 import feedbackModalReducer from './feedbackModalSlice';
+import userTradingReducer from "./userTrading/userTradingSlice";
 
 import userSlice from './userSlice';
 import subscriptionPlanReducer from './userSubscriptionPlan/userSubscriptionPlansSlice';
@@ -14,6 +15,7 @@ const userReducer = combineReducers({
   subscriptionPlan: subscriptionPlanReducer,
   feedback: feedbackReducer,
   feedbackModal: feedbackModalReducer,
+  userTrading:userTradingReducer
 });
 
 export default userReducer;
