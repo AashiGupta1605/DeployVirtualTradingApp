@@ -288,7 +288,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
           <div className="sticky bottom-0 -pb-2 bg-white py-1 border-t border-gray-300 flex justify-end">
             <button
               onClick={closeModal}
-              className="px-6 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white transition mt-1 -mb-1"
+              className="px-6 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white transition mt-2 -mb-6"
             >
               Close
             </button>
