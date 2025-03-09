@@ -4,6 +4,7 @@ import MainHomeNavbar from '../../components/GuestUser/Navbars/MainHomeNavbar';
 import NiftyNavbarCarousel from '../../components/GuestUser/Navbars/NiftyNavbarCarousel';
 import Footer from '../../components/GuestUser/Footers/Footer';
 import EtfNavbarCarousel from '../../components/GuestUser/Navbars/EtfNavbarCarousel';
+import CardTable from '../../components/Common/CardTable';
 
 const Show_Nifty50Data_Page = () => {
   return (
@@ -12,7 +13,10 @@ const Show_Nifty50Data_Page = () => {
       <NiftyNavbarCarousel fixed/>
       <EtfNavbarCarousel fixed/>
       
-      <div>Nifty 50 Data <br/><br/><br/></div>
+      <div className="mx-2 mt-0 overflow-hidden" style={{ paddingBottom: '120px' }}>
+      <CardTable/>
+      </div>
+
       <Footer/>
     </>
   )

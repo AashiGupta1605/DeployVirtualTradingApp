@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
 
-const UserAllFeedsModal = ({ closeModal }) => {
+const OrganizationAllFeedsModal = ({ closeModal }) => {
   const [feedbacks, setFeedbacks] = useState([]);
-  const [userData, setUserData] = useState([]);
   const [orgData, setOrgData] = useState([]);
 
   const [err, setErr] = useState("");
@@ -14,28 +13,16 @@ const UserAllFeedsModal = ({ closeModal }) => {
   const [order, setOrder] = useState("decreasing");
   const [showOption, setShowOption] = useState("feedbackMessage");
 
-  const fetchUserFeedbacks = async () => {
+  const fetchOrganizationFeedbacks = async () => {
     try {
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${sortBy}/${order}`
-        `http://localhost:5000/v1/api/guestUser/userFeedbacks/${organization}/${category}/${sortBy}/${order}`
+        // `${BASE_API_URL}/guestUser/organizationFeedbacks/${organization}/${category}/${sortBy}/${order}`
+        `http://localhost:5000/v1/api/guestUser/organizationFeedbacks/${organization}/${category}/${sortBy}/${order}`
       );
       setFeedbacks(response.data.feedbackData);
 
       console.log("Users Feedbacks Object: ", response.data);
       console.log("User Feedbacks: ", feedbacks);
-    } catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
-    }
-  };
-  const fetchUsersData = async () => {
-    try {
-      // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
-      const response = await axios.get(
-        `http://localhost:5000/v1/api/guestUser/getAllUsers`
-      );
-      setUserData(response.data.data);
-      console.log("User Data", response.data);
     } catch (error) {
       setErr(error.response?.data?.message || "Something went wrong.");
     }
@@ -56,13 +43,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const url =
-        //   category === ""
-        //     ? `http://localhost:5000/v1/api/guestUser/userFeedback/${sortBy}/${order}`
-        //     : `http://localhost:5000/v1/api/guestUser/userFeedback/${category}/${sortBy}/${order}`;
-
-        fetchUserFeedbacks();
-        fetchUsersData();
+        fetchOrganizationFeedbacks();
         fetchOrganizationsData();
         setErr("");
       } catch (error) {
@@ -84,7 +65,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
         <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-300 mb-4">
           <div className="flex justify-between items-center mb-3 pt-4">
             <h2 className="text-lg font-semibold text-gray-700">
-              &nbsp;&nbsp;All Users Feedbacks
+              &nbsp;&nbsp;All Organizations Feedbacks
             </h2>
             {/* Right side container */}
             <div className="flex items-center gap-4 ">
@@ -142,7 +123,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
                     value={organization}
                     onChange={(e) => setOrganization(e.target.value || "")}
                   >
-                    <option disabled>Organization</option>
+                    <option disabled className="sticky top-0">Organization</option>
                     <option value="">All</option>
                     {orgData.map((org) => (
                       <option key={org._id} value={org.name}>
@@ -152,6 +133,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
                   </select>
                 </div>
               </div>
+
               {/* First Select Box */}
               <div className="flex flex-col">
                 {/* <label className="text-sm font-medium text-gray-700 mb-2">
@@ -224,14 +206,12 @@ const UserAllFeedsModal = ({ closeModal }) => {
         <div className="max-h-[60vh] overflow-y-auto px-4">
           {feedbacks.length > 0 ? (
             feedbacks.map((card, index) => {
-              const user = userData.find((user) => user._id === card.userId);
-              const org = orgData.find(
-                (org) => org._id === card.organizationID
+              const organizationName = orgData.find(
+                (org) => org._id === card.organizationId
               );
               console.log(
                 "Get user data by stored userID refrence in Feedback modal",
-                user,
-                org
+                organizationName
               );
 
               return (
@@ -266,8 +246,8 @@ const UserAllFeedsModal = ({ closeModal }) => {
                     {card[showOption] || "No content available"}
                   </p>
                   <h5 className="mt-4 text-right text-sm font-semibold text-gray-600">
-                    - {user ? user.name : "Anonymous"}
-                    &nbsp;({org ? org.name : "No Organization"})
+                    -{" "}
+                    {organizationName ? organizationName.name : "Organization"}
                   </h5>
                 </div>
               );
@@ -297,4 +277,4 @@ const UserAllFeedsModal = ({ closeModal }) => {
   );
 };
 
-export default UserAllFeedsModal;
+export default OrganizationAllFeedsModal;

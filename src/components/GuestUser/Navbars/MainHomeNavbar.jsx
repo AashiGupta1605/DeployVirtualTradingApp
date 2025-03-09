@@ -5,7 +5,6 @@ import LoginModal from "../../../views/auth/Login"; // Import LoginModal compone
 import OrganizationRegistration from "../../../views/Organization/OrganizationDetails/Models/OrganizationRegistration.jsx";
 import OrganizationLogin from "../../../views/Organization/OrganizationDetails/Models/OrganizationLogin";
 
-
 const MainHomeNavbar = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -70,22 +69,34 @@ const MainHomeNavbar = () => {
     <>
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-4 py-3 navbar-expand-lg shadow-lg bg-white">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <div
-              className="text-black text-lg font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase cursor-pointer"
+          {/* Left Side - Logo & App Name */}
+          <div className="flex items-center space-x-2">
+            {/* Logo Image */}
+            <img
+              src="https://media.licdn.com/dms/image/v2/C510BAQE1pPlwgZETKw/company-logo_200_200/company-logo_200_200/0/1630605647519/praedico_global_research_pvt_ltd_logo?e=2147483647&v=beta&t=8hAhEoZ7nj9gKxuh6iA-q10402A-rxdAP4GeUOAnFdQ"
+              alt="PGR Logo"
+              className="h-10 w-auto"
+            />
+            &nbsp;
+            {/* App Name */}
+            <span
+              className="text-black text-[17px] font-bold leading-relaxed uppercase cursor-pointer"
               onClick={() => handleNavigation("/")}
             >
-              <i className="fas fa-briefcase mr-2 text-xl"></i>
-              StockSphere
-            </div>
-            <button
-              className="cursor-pointer text-white text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
-              type="button"
-              onClick={() => setNavbarOpen(!navbarOpen)}
-            >
-              <i className="fas fa-bars"></i>
-            </button>
+              PGR VIRTUAL-TRADING APP
+            </span>
           </div>
+
+          {/* Hamburger Button for Mobile */}
+          <button
+            className="cursor-pointer text-black text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+            type="button"
+            onClick={() => setNavbarOpen(!navbarOpen)}
+          >
+            <i className="fas fa-bars"></i>
+          </button>
+
+          {/* Navbar Links */}
           <div
             className={`lg:flex flex-grow items-center bg-white lg:bg-opacity-0 lg:shadow-none ${
               navbarOpen ? "block" : "hidden"
@@ -93,122 +104,114 @@ const MainHomeNavbar = () => {
             id="navbar-links"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto space-x-6">
-              <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
-                onClick={() => handleNavigation("/")}
-              >
+              <li className="nav-item" onClick={() => handleNavigation("/")}>
                 Home
               </li>
               <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                className="nav-item"
                 onClick={() => handleNavigation("/about")}
               >
                 About
               </li>
               <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                className="nav-item"
                 onClick={() => handleNavigation("/contact")}
               >
                 Contact
               </li>
               <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                className="nav-item"
                 onClick={() => handleNavigation("/services")}
               >
                 Services
               </li>
               <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                className="nav-item"
                 onClick={() => handleNavigation("/nifty50")}
               >
                 Nifty50 Data
               </li>
-              <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
-                onClick={() => handleNavigation("/etf")}
-              >
+              <li className="nav-item" onClick={() => handleNavigation("/etf")}>
                 ETF Data
               </li>
               <li
-                className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                className="nav-item"
                 onClick={() => handleNavigation("/pricing")}
               >
                 Pricing
               </li>
-              
-                <>
-                  <li className="relative flex items-center" ref={loginDropdownRef}>
-                    <button
-                      className="bg-lightBlue-500 text-white active:bg-blue-950 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-blue-950 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
-                      type="button"
-                      onClick={toggleLoginDropdown}
-                    >
-                      <i className="fas fa-user-plus mr-1"></i> Login
-                    </button>
-                    {loginDropdownOpen && (
-                      <div className="absolute right-0 mt-16 w-48 bg-white border rounded shadow-lg z-50">
-                        <li
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => setIsModalLoginOpen(true)}
-                        >
-                          Organization
-                        </li>
-                        <li
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => setUserLoginModalOpen(true)}
-                        >
-                          User
-                        </li>
-                      </div>
-                    )}
-                  </li>
 
-                  <li className="relative flex items-center" ref={registerDropdownRef}>
-                    <button
-                      className="bg-red-500 text-white active:bg-green-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-green-700 hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
-                      type="button"
-                      onClick={toggleRegisterDropdown}
+              {/* Login Dropdown */}
+              <li className="relative flex items-center" ref={loginDropdownRef}>
+                <button
+                  className="bg-lightBlue-500 text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-blue-950"
+                  onClick={toggleLoginDropdown}
+                >
+                  <i className="fas fa-user-plus mr-1"></i> Login
+                </button>
+                {loginDropdownOpen && (
+                  <ul className="absolute left-[-20px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => setIsModalLoginOpen(true)}
                     >
-                      <i className="fas fa-user-plus mr-1"></i> Register
-                    </button>
-                    {registerDropdownOpen && (
-                      <div className="absolute right-0 mt-16 w-48 bg-white border rounded shadow-lg z-50">
-                        <li
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => setUserRegisterModalOpen(true)}
-                        >
-                          User
-                        </li>
-                        <li
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => setModalOpen(true)}
-                        >
-                          Organization
-                        </li>
-                      </div>
-                    )}
-                  </li>
-                </>
-             
+                      User
+                    </li>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => setUserLoginModalOpen(true)}
+                    >
+                      Organization
+                    </li>
+                  </ul>
+                )}
+              </li>
+
+              {/* Register Dropdown */}
+              <li
+                className="relative flex items-center"
+                ref={registerDropdownRef}
+              >
+                <button
+                  className="bg-red-500 text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:bg-green-700"
+                  onClick={toggleRegisterDropdown}
+                >
+                  <i className="fas fa-user-plus mr-1"></i> Register
+                </button>
+                {registerDropdownOpen && (
+                  <ul className="absolute left-[-30px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => setUserRegisterModalOpen(true)}
+                    >
+                      User
+                    </li>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => setModalOpen(true)}
+                    >
+                      Organization
+                    </li>
+                  </ul>
+                )}
+              </li>
             </ul>
           </div>
         </div>
 
+        {/* Modals */}
         <OrganizationRegistration
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
         />
-
         <OrganizationLogin
           isOpen={isModalLoginOpen}
           onClose={() => setIsModalLoginOpen(false)}
         />
-
         <LoginModal
           isOpen={isUserLoginModalOpen}
           onClose={() => setUserLoginModalOpen(false)}
         />
-
         <RegisterModal
           isOpen={isUserRegisterModalOpen}
           onClose={() => setUserRegisterModalOpen(false)}
@@ -216,6 +219,6 @@ const MainHomeNavbar = () => {
       </nav>
     </>
   );
-}
+};
 
-export default MainHomeNavbar
+export default MainHomeNavbar;

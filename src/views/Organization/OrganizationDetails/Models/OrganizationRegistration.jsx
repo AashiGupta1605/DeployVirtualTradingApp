@@ -274,6 +274,7 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
       accreditation:'',
       approvalStatus: 'pending',
       password: '',
+      // photo:'https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png',
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
