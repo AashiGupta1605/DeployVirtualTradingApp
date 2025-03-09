@@ -2,6 +2,10 @@ import React from "react";
 import { Star, ThumbsUp, ThumbsDown, Trash2, Edit } from "lucide-react";
 const org = localStorage.getItem("org");
 const orgObject = JSON.parse(org);
+console.log(org);
+console.log(orgObject);
+
+
 const CATEGORY_COLORS = {
   "Website UI/UX": "bg-blue-100 text-blue-800",
   "Trading Features": "bg-green-100 text-green-800",
