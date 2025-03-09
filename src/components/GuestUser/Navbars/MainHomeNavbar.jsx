@@ -104,38 +104,38 @@ const MainHomeNavbar = () => {
             id="navbar-links"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto space-x-6">
-              <li className="nav-item" onClick={() => handleNavigation("/")}>
+              <li className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40" onClick={() => handleNavigation("/")}>
                 Home
               </li>
               <li
-                className="nav-item"
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/about")}
               >
                 About
               </li>
               <li
-                className="nav-item"
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/contact")}
               >
                 Contact
               </li>
               <li
-                className="nav-item"
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/services")}
               >
                 Services
               </li>
               <li
-                className="nav-item"
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/nifty50")}
               >
                 Nifty50 Data
               </li>
-              <li className="nav-item" onClick={() => handleNavigation("/etf")}>
+              <li className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40" onClick={() => handleNavigation("/etf")}>
                 ETF Data
               </li>
               <li
-                className="nav-item"
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/pricing")}
               >
                 Pricing
@@ -153,13 +153,13 @@ const MainHomeNavbar = () => {
                   <ul className="absolute left-[-20px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setIsModalLoginOpen(true)}
+                      onClick={() => setUserLoginModalOpen(true)}
                     >
                       User
                     </li>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setUserLoginModalOpen(true)}
+                      onClick={() => setIsModalLoginOpen(true)}
                     >
                       Organization
                     </li>

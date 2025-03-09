@@ -57,7 +57,7 @@ const OrganizationFeedbackCards = () => {
         {/* Flex container for headings and button */}
         <div className="flex justify-between items-center mb-6">
           {/* Left-most heading */}
-          <h3 className="text-xl font-bold text-[#1a2c47]">Users Feedbacks</h3>
+          <h3 className="text-xl font-bold text-[#1a2c47]">Organizations Feedbacks</h3>
 
           {/* Right side container */}
           <div className="flex items-center gap-4">

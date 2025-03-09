@@ -78,7 +78,7 @@ const UserAllFeedsModal = ({ closeModal }) => {
       onClick={closeModal}
     >
       <div
-        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[80%] max-h-[83vh] relative"
+        className="relative bg-white pl-4 pr-4 pb-4 pt-0 rounded-lg shadow-lg w-[80%] h-[83vh] relative"
         onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
       >
         <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-300 mb-4">
@@ -221,7 +221,8 @@ const UserAllFeedsModal = ({ closeModal }) => {
         {err && <p className="text-red-500">{err}</p>}
 
         {/* List of Feedbacks */}
-        <div className="max-h-[60vh] overflow-y-auto px-4">
+        <div className="h-[57vh] flex flex-col px-4">
+        <div className="flex-1 overflow-y-auto h-[calc(60vh-60px)]">
           {feedbacks.length > 0 ? (
             feedbacks.map((card, index) => {
               const user = userData.find((user) => user._id === card.userId);
@@ -281,12 +282,13 @@ const UserAllFeedsModal = ({ closeModal }) => {
               <h4 className="text-gray-500 text-sm">No content available</h4>
             </div>
           )}
+          </div>
 
           {/* Close Button */}
           <div className="sticky bottom-0 -pb-2 bg-white py-1 border-t border-gray-300 flex justify-end">
             <button
               onClick={closeModal}
-              className="px-6 py-1 bg-gray-200 text-white rounded-lg hover:bg-gray-400 transition mt-1 -mb-1"
+              className="px-6 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white transition mt-2 -mb-6"
             >
               Close
             </button>

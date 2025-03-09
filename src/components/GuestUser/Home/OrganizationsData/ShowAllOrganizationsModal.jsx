@@ -35,7 +35,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
       onClick={closeModal}
     >
       <div
-        className="relative bg-white p-4 rounded-lg shadow-lg w-[85%] max-w-[1200px] max-h-[83vh] flex flex-col"
+        className="relative bg-white p-4 rounded-lg shadow-lg w-[85%] max-w-[1200px] h-[83vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -154,7 +154,7 @@ const ShowAllOrganizationsModal = ({ closeModal }) => {
         <div className="sticky bottom-0 -pb-2 bg-white py-1 border-t border-gray-300 flex justify-end">
           <button
             onClick={closeModal}
-            className="px-6 py-1 bg-gray-200 text-white rounded-lg hover:bg-gray-400 transition mt-1 -mb-2"
+            className="px-6 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white transition mt-1 -mb-2"
           >
             Close
           </button>

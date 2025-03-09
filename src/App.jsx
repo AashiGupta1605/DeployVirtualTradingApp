@@ -19,6 +19,7 @@ import ServicePage from './views/GuestUser/ServicePage';
 import Show_Nifty50Data_Page from './views/GuestUser/Show_Nifty50Data_Page';
 import Show_ETFData_Page from './views/GuestUser/Show_ETFData_Page';
 import PricingPage from './views/GuestUser/PricingPage';
+import BackToTop from './components/GuestUser/BackToTop';
 
 import { Toaster } from 'react-hot-toast';
 
@@ -26,6 +27,7 @@ const App = () => {
   return (
     <div>
       <Toaster/>
+      {/* <BackToTop /> */}
     <Routes>
       {/* Routes with layouts */}
       <Route path="/admin/*" element={<Admin />} />
