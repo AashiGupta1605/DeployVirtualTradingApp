@@ -30,7 +30,7 @@ const FeedbackList = () => {
   // Local state
   const [state, setState] = useState({
     currentPage: 1,
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     isFilterOpen: false,
     searchQuery: "",
     activeFilters: {

@@ -73,8 +73,8 @@ const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
                         <Star 
                           key={i} 
                           size={16} 
-                          fill="yellow" 
-                          stroke="yellow" 
+                          fill="#FFD700" 
+                          stroke="#FFD700" 
                           className="inline-block"
                         />
                       ))}

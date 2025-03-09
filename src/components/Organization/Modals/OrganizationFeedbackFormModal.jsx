@@ -539,8 +539,8 @@ const OrganizationFeedbackFormModal = ({ isOpen, onClose, onSubmit, feedbackData
                       key={star}
                       size={24}
                       className="cursor-pointer"
-                      fill={star <= formData.rating ? "yellow" : "none"}
-                      stroke={star <= formData.rating ? "yellow" : "gray"}
+                      fill={star <= formData.rating ? "#FFD700" : "none"}
+                      stroke={star <= formData.rating ? "#FFD700" : "gray"}
                       onClick={() => handleRatingChange(star)}
                     />
                   ))}
