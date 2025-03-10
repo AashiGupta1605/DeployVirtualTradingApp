@@ -1,9 +1,6 @@
 import React from "react";
 import { Star, ThumbsUp, ThumbsDown, Trash2, Edit } from "lucide-react";
-const org = localStorage.getItem("org");
-const orgObject = JSON.parse(org);
-console.log(org);
-console.log(orgObject);
+import { useSelector } from "react-redux";
 
 
 const CATEGORY_COLORS = {
@@ -16,10 +13,21 @@ const CATEGORY_COLORS = {
 };
 
 
+// const orgObject = JSON.parse(localStorage.getItem("org"));
+// // const orgObject = JSON.parse(org);
+// // console.log(org);
+// console.log(orgObject);
 
 const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
-  console.log(org);
-  console.log(orgObject);
+  // console.log(org);
+  // console.log(orgObject);
+  const { loading, orgId, currentOrg } = useSelector((state) => state.organization.auth);
+  console.log(currentOrg);
+  console.log(orgId);
+  console.log(loading);
+  
+  
+  
   
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -45,13 +53,13 @@ const OrganizationFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
                 {/* {console.log(feedback.organizationId?.name)} */}
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                   {orgObject?.name || "N/A"}
+                   {currentOrg.name}
                  </td>
 
                  {/* Mobile Number */}
                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                   {orgObject?.mobile || "N/A"}
-                   {console.log(feedback)}                
+                   {currentOrg.mobile}
+                   {console.log(feedback.organizationId?.name)}                
                  </td>
 
                 <td className="px-6 py-4 whitespace-nowrap">
