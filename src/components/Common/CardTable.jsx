@@ -1,3 +1,4 @@
+// components/Common/CardTable.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
@@ -32,7 +33,7 @@ import {
 
 import CompanyDetailModal from '../Admin/Modals/companyDetailModal/index';
 
-const CardTable = ({ tableType = 'nifty50' }) => {
+const CardTable = ({ tableType = 'nifty50', userData }) => {
   const dispatch = useDispatch();
   
   // Select the appropriate state based on tableType
@@ -166,7 +167,7 @@ const CardTable = ({ tableType = 'nifty50' }) => {
             const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
             dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
           }}
-          className="flex items-center gap-2  bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          className="flex items-center gap-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
         >
           <RefreshCw size={16} />
           Retry
@@ -197,10 +198,24 @@ const CardTable = ({ tableType = 'nifty50' }) => {
     <>
       <div className="mx-2 overflow-hidden mt-38">
         <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
-          <h2 className="text-xl font-bold text-gray-800 flex items-center">
-            <Filter className="mr-2 text-gray-600" size={20} />
-            {tableType === 'nifty50' ? 'Nifty 50 Data' : 'Nifty 500 Data'}
-          </h2>
+          <div className="flex items-center space-x-4">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center">
+              <Filter className="mr-2 text-gray-600" size={20} />
+              {tableType === 'nifty50' ? 'Nifty 50 Data' : 'Nifty 500 Data'}
+            </h2>
+            {userData && (
+              <div className="flex items-center space-x-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                <span className="text-sm text-gray-600">
+                  Welcome, {userData.name}
+                </span>
+                {userData.role && (
+                  <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
+                    {userData.role}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
           <div className="relative">
             <input
               type="text"
@@ -383,22 +398,23 @@ const CardTable = ({ tableType = 'nifty50' }) => {
       </div>
 
       <CompanyDetailModal
-  isOpen={!!selectedSymbol}
-  onClose={handleCloseModal}
-  symbol={selectedSymbol}
-  data={companyDetails.stockData}
-  chartData={companyDetails.chartData}
-  onTimeRangeChange={handleTimeRangeChange}
-  loading={companyDetails.loading}
-  error={companyDetails.error}
-  chartSettings={{
-    theme: 'light',
-    showGrid: true,
-    showVolume: true,
-    showDetails: true
-  }}
-  type={tableType === 'nifty50' ? 'nifty50' : 'nifty500'} // Update this line
-/>
+        isOpen={!!selectedSymbol}
+        onClose={handleCloseModal}
+        symbol={selectedSymbol}
+        data={companyDetails.stockData}
+        chartData={companyDetails.chartData}
+        onTimeRangeChange={handleTimeRangeChange}
+        loading={companyDetails.loading}
+        error={companyDetails.error}
+        chartSettings={{
+          theme: 'light',
+          showGrid: true,
+          showVolume: true,
+          showDetails: true
+        }}
+        type={tableType}
+        userData={userData}
+      />
     </>
   );
 };
