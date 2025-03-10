@@ -6,6 +6,15 @@ import organizationReducer from '../Organization/organizationSlice';
 import adminReducer from '../Admin/AdminSlice';
 import commonReducer from '../Common/commonReducer';
 
+// Custom middleware for handling API errors
+const errorMiddleware = () => (next) => (action) => {
+  if (action.type.endsWith('/rejected')) {
+    // You can add global error handling here
+    console.error('API Error:', action.payload);
+  }
+  return next(action);
+};
+
 const store = configureStore({
   reducer: {
     admin: adminReducer,
@@ -19,9 +28,10 @@ const store = configureStore({
         ignoredActions: [
           'organizationRegistration/register/rejected',
           'feedbackTable/updateFeedbackStatus/rejected',
+          'trading/placeOrder/rejected'
         ],
       },
-    }),
+    }).concat(errorMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

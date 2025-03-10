@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+// index.jsx
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { X, AlertCircle } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,16 +13,20 @@ import {
   setIsRefreshing,
   resetCompanyDetails
 } from '../../../../redux/Common/companyDetailsSlice';
+import { 
+  fetchHoldings,
+  selectHoldings,
+  selectTotalHoldingsValue 
+} from '../../../../redux/User/trading/tradingSlice';
 
 import ModalHeader from './parts/ModalHeader';
 import TabNavigation from './parts/TabNavigation';
 import OverviewTab from './tabs/OverviewTab';
 import HistoricalTab from './tabs/HistoricalTab';
-import AdvancedChartTab from './tabs/ChartTab2';
 import Buy_SellTab from './tabs/Buy_SellTab';
-import { TradingProvider } from './hooks/TradingContext';
 import TradingViewTab from './tabs/TradingViewTab';
 
+// Loading Overlay Component
 const LoadingOverlay = ({ message = "Loading data..." }) => (
   <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
     <div className="flex flex-col items-center">
@@ -31,6 +36,7 @@ const LoadingOverlay = ({ message = "Loading data..." }) => (
   </div>
 );
 
+// Error Display Component
 const ErrorDisplay = ({ error, onRetry, onClose }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
     <div className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full mx-4">
@@ -64,6 +70,11 @@ const CompanyDetailModal = ({
   type = 'nifty50'
 }) => {
   const dispatch = useDispatch();
+
+  // User ID selector
+  const userId = useSelector(state => state.user.auth?.user?._id);
+
+  // Company Details Selectors
   const {
     data = null,
     historicalData = {
@@ -88,6 +99,57 @@ const CompanyDetailModal = ({
     isRefreshing = false
   } = useSelector(state => state.common.companyDetails) || {};
 
+  // User Subscription and Holdings Selectors with memoization
+  const activeSubscription = useSelector(state => 
+    state.user?.subscriptionPlan?.userSubscriptions?.find(sub => 
+      sub.status === 'Active' && !sub.isDeleted
+    )
+  );
+
+  const holdings = useSelector(selectHoldings, 
+    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
+  );
+
+  const totalHoldingsValue = useSelector(selectTotalHoldingsValue);
+
+  // Helper Functions
+  const calculateRemainingBalance = () => {
+    if (!activeSubscription?.vertualAmount) return 0;
+    return activeSubscription.vertualAmount - totalHoldingsValue;
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch (error) {
+      console.error('Date formatting error:', error);
+      return 'N/A';
+    }
+  };
+
+  // Memoized account summary data
+  const accountSummaryData = useMemo(() => {
+    if (!activeSubscription) return null;
+
+    return {
+      balance: calculateRemainingBalance(),
+      plan: activeSubscription.plan || 'Basic',
+      validTill: formatDate(activeSubscription.endDate),
+      initialAmount: activeSubscription.vertualAmount || 0
+    };
+  }, [activeSubscription, totalHoldingsValue]);
+
+  // Available Tabs
+  const availableTabs = useMemo(() => {
+    return ['overview', 'historical', 'trading-view', 'trading'];
+  }, []);
+
+  // Effects
   useEffect(() => {
     if (isOpen && symbol) {
       dispatch(fetchCompanyDetails({ symbol, type }));
@@ -100,9 +162,12 @@ const CompanyDetailModal = ({
   }, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
-    console.log('Modal state:', { loading, error, data });
-  }, [loading, error, data]);
+    if (isOpen && userId) {
+      dispatch(fetchHoldings(userId));
+    }
+  }, [isOpen, userId, dispatch]);
 
+  // Event Handlers
   const handleTabChange = (tab) => {
     dispatch(setActiveTab(tab));
     if (['chart', 'advanced-chart', 'historical'].includes(tab)) {
@@ -123,9 +188,9 @@ const CompanyDetailModal = ({
     try {
       await Promise.all([
         dispatch(fetchCompanyDetails({ symbol, type })),
-        dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter }))
+        dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter })),
+        dispatch(fetchHoldings(userId))
       ]);
-      console.log('Data refreshed successfully');
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {
@@ -133,20 +198,7 @@ const CompanyDetailModal = ({
     }
   };
 
-  // If modal is not open, don't render anything
-  if (!isOpen) return null;
-
-  // Error handling
-  if (error) {
-    return (
-      <ErrorDisplay
-        error={error}
-        onRetry={handleRefresh}
-        onClose={onClose}
-      />
-    );
-  }
-
+  // Render Functions
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -155,18 +207,6 @@ const CompanyDetailModal = ({
             data={data} 
             loading={loading || isRefreshing} 
             error={error} 
-            onRefresh={handleRefresh}
-          />
-        );
-      case 'advanced-chart':
-        return (
-          <AdvancedChartTab
-            symbol={symbol}
-            data={data}
-            chartData={historicalData.processedData}
-            onTimeRangeChange={handleFilterChange}
-            loading={historicalLoading || isRefreshing}
-            error={error}
             onRefresh={handleRefresh}
           />
         );
@@ -189,44 +229,51 @@ const CompanyDetailModal = ({
         );
       case 'trading':
         return (
-          <TradingProvider>
-            <Buy_SellTab
-              symbol={symbol}
-              data={{
-                companyName: data?.companyName,
-                currentPrice: data?.lastPrice,
-                change: data?.change,
-                changePercent: data?.pChange,
-                dayHigh: data?.dayHigh,
-                dayLow: data?.dayLow,
-                yearHigh: data?.yearHigh,
-                yearLow: data?.yearLow,
-                volume: data?.totalTradedVolume,
-                marketCap: data?.marketCap,
-              }}
-              loading={loading || isRefreshing}
-              error={error}
-              onRefresh={handleRefresh}
-            />
-          </TradingProvider>
+          <Buy_SellTab
+            symbol={symbol}
+            data={{
+              companyName: data?.companyName,
+              currentPrice: data?.lastPrice,
+              change: data?.change,
+              changePercent: data?.pChange,
+              dayHigh: data?.dayHigh,
+              dayLow: data?.dayLow,
+              yearHigh: data?.yearHigh,
+              yearLow: data?.yearLow,
+              volume: data?.totalTradedVolume,
+              marketCap: data?.marketCap,
+            }}
+            loading={loading || isRefreshing}
+            error={error}
+            onRefresh={handleRefresh}
+          />
         );
       default:
         return null;
     }
   };
 
+  if (!isOpen) return null;
+
+  if (error) {
+    return (
+      <ErrorDisplay
+        error={error}
+        onRetry={handleRefresh}
+        onClose={onClose}
+      />
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
         onClick={onClose}
       />
 
-      {/* Modal Container */}
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="relative w-[90%] h-[90%] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-          {/* Close Button */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full transition-all duration-200 z-10 group"
@@ -238,9 +285,7 @@ const CompanyDetailModal = ({
             />
           </button>
 
-          {/* Scrollable Content Container */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
-            {/* Modal Header */}
             <div className="sticky top-0 z-20 bg-gray-50">
               <ModalHeader
                 type={type}
@@ -252,39 +297,37 @@ const CompanyDetailModal = ({
               />
             </div>
 
-            {/* Main Content */}
             <div className="px-6 pb-6">
-              {/* Tab Navigation */}
               <div className="sticky top-[72px] z-10 bg-gray-50 py-4">
                 <TabNavigation
                   activeTab={activeTab}
                   onTabChange={handleTabChange}
                   type={type}
-                  loading={loading || isRefreshing}
-                  availableTabs={['overview', 'chart', 'advanced-chart', 'historical', 'trading', 'trading-view']}
+                  loading={loading}
+                  availableTabs={availableTabs}
+                  accountSummary={accountSummaryData}
+                  isUpdating={loading || isRefreshing}
                 />
               </div>
 
-              {/* Tab Content */}
-              <div className="relative mt-12">
+              <div className="relative">
                 {(loading || isRefreshing) && <LoadingOverlay />}
                 {renderTabContent()}
               </div>
             </div>
           </div>
 
-          {/* Modal Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-            <div className="flex flex-col sm:flex-row items-center justify-between text-sm text-gray-500 space-y-2 sm:space-y-0">
+            <div className="flex flex-row items-center justify-between text-sm text-gray-500">
+              <p className="text-gray-400">
+                Data provided by NSE India
+              </p>
               <p className="flex items-center">
                 <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
                 Last updated: {data?.lastUpdateTime ? 
                   new Date(data.lastUpdateTime).toLocaleString() : 
                   'N/A'
                 }
-              </p>
-              <p className="text-gray-400">
-                Data provided by NSE India
               </p>
             </div>
           </div>
@@ -353,23 +396,15 @@ if (typeof document !== 'undefined') {
   document.head.appendChild(styleSheet);
 }
 
-// Wrap the modal with error boundary
-const CompanyDetailModalWithErrorBoundary = (props) => (
-  <ErrorBoundary onClose={props.onClose}>
-    <CompanyDetailModal {...props} />
-  </ErrorBoundary>
-);
-
 CompanyDetailModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   symbol: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']),
-  activeTab: PropTypes.oneOf(['overview', 'chart', 'advanced-chart', 'historical', 'trading'])
 };
 
 CompanyDetailModal.defaultProps = {
   type: 'nifty50'
 };
 
-export default CompanyDetailModalWithErrorBoundary;
+export default CompanyDetailModal;
