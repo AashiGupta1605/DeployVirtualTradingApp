@@ -1,4 +1,5 @@
-import React from 'react';
+// TabNavigation.jsx
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   LineChart,
@@ -9,7 +10,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
-const TabButton = ({
+const TabButton = memo(({
   active,
   onClick,
   icon: Icon,
@@ -62,25 +63,70 @@ const TabButton = ({
       )}
     </button>
   );
-};
+});
 
-const TabNavigation = ({
+const BalanceCard = memo(({ balance, plan, validTill }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-sm p-3">
+      <div className="space-y-1">
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-gray-500">Available Balance</span>
+          <span className="text-lg font-semibold text-green-600">
+            ₹{balance.toLocaleString('en-IN', { 
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
+        </div>
+        <div className="text-xs text-gray-500">
+          <div className="flex justify-between">
+            <span>Plan:</span>
+            <span className="font-medium text-gray-700">{plan}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Valid till:</span>
+            <span className="font-medium text-gray-700">{validTill}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+
+
+const AccountSummaryCards = memo(({ data }) => {
+  if (!data) return null;
+
+  return (
+    <div className="min-w-[200px]">
+      <BalanceCard 
+        balance={data.balance}
+        plan={data.plan}
+        validTill={data.validTill}
+      />
+    </div>
+  );
+});
+
+const TabNavigation = memo(({
   activeTab,
   onTabChange,
   type,
   loading = false,
-  availableTabs = ['overview', 'chart', 'historical', 'trading'],
+  availableTabs = ['overview', 'historical', 'trading-view', 'trading'],
+  accountSummary = null
 }) => {
-  const tabs = [
+  const allTabs = [
     {
       id: 'overview',
       label: 'Overview',
       icon: Info,
     },
     {
-      id: 'advanced-chart',
-      label: 'Advanced Chart',
-      icon: BarChart2,
+      id: 'historical',
+      label: 'Historical',
+      icon: Clock,
     },
     {
       id: 'trading-view',
@@ -89,17 +135,14 @@ const TabNavigation = ({
       badge: 'PRO',
     },
     {
-      id: 'historical',
-      label: 'Historical',
-      icon: Clock,
-    },
-    {
       id: 'trading',
       label: 'Trade',
       icon: ShoppingCart,
       badge: 'LIVE',
     },
-  ].filter(tab => availableTabs.includes(tab.id));
+  ];
+
+  const visibleTabs = allTabs.filter(tab => availableTabs.includes(tab.id));
 
   return (
     <div className="relative">
@@ -113,36 +156,95 @@ const TabNavigation = ({
       )}
 
       <div className="bg-white p-1.5 rounded-xl shadow-sm border border-gray-100">
-        <div className="flex items-center gap-1">
-          {tabs.map((tab) => (
-            <TabButton
-              key={tab.id}
-              active={activeTab === tab.id}
-              onClick={() => !tab.disabled && onTabChange(tab.id)}
-              icon={tab.icon}
-              label={tab.label}
-              disabled={tab.disabled}
-              badge={tab.badge}
-            />
-          ))}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            {visibleTabs.map((tab) => (
+              <TabButton
+                key={tab.id}
+                active={activeTab === tab.id}
+                onClick={() => onTabChange(tab.id)}
+                icon={tab.icon}
+                label={tab.label}
+                badge={tab.badge}
+              />
+            ))}
+          </div>
+
+          {/* Account Summary Cards */}
+          {accountSummary && (
+            <div className="ml-4">
+              <AccountSummaryCards data={accountSummary} />
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
+});
+
+// Add display names for debugging
+TabButton.displayName = 'TabButton';
+BalanceCard.displayName = 'BalanceCard';
+
+AccountSummaryCards.displayName = 'AccountSummaryCards';
+TabNavigation.displayName = 'TabNavigation';
+
+// PropTypes
+TabButton.propTypes = {
+  active: PropTypes.bool,
+  onClick: PropTypes.func.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  label: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
+  badge: PropTypes.string,
+};
+
+BalanceCard.propTypes = {
+  balance: PropTypes.number.isRequired,
+  plan: PropTypes.string.isRequired,
+  validTill: PropTypes.string.isRequired,
+};
+
+
+
+AccountSummaryCards.propTypes = {
+  data: PropTypes.shape({
+    balance: PropTypes.number.isRequired,
+    plan: PropTypes.string.isRequired,
+    validTill: PropTypes.string.isRequired,
+    initialAmount: PropTypes.number.isRequired,
+    currentHoldings: PropTypes.number,
+    avgBuyPrice: PropTypes.number,
+    currentValue: PropTypes.number,
+  }),
 };
 
 TabNavigation.propTypes = {
   activeTab: PropTypes.oneOf([
     'overview',
-    'advanced-chart',
-    'trading-view',
     'historical',
+    'trading-view',
     'trading',
   ]).isRequired,
   onTabChange: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(['nifty', 'etf']).isRequired,
+  type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']).isRequired,
   loading: PropTypes.bool,
   availableTabs: PropTypes.arrayOf(PropTypes.string),
+  accountSummary: PropTypes.shape({
+    balance: PropTypes.number,
+    plan: PropTypes.string,
+    validTill: PropTypes.string,
+    initialAmount: PropTypes.number,
+    currentHoldings: PropTypes.number,
+    avgBuyPrice: PropTypes.number,
+    currentValue: PropTypes.number,
+  }),
+};
+
+TabNavigation.defaultProps = {
+  loading: false,
+  availableTabs: ['overview', 'historical', 'trading-view', 'trading'],
+  accountSummary: null,
 };
 
 export default TabNavigation;
