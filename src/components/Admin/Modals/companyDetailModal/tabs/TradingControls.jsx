@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types'; // Add this import
+import PropTypes from 'prop-types';
 import { Clock, DollarSign, AlertCircle, Plus, Minus } from 'lucide-react';
 
 const TradingControls = ({
@@ -209,7 +209,6 @@ const TradingControls = ({
   );
 };
 
-// PropTypes for type checking
 TradingControls.propTypes = {
   activeTab: PropTypes.oneOf(['buy', 'sell']).isRequired,
   currentMarketPrice: PropTypes.number.isRequired,
@@ -226,7 +225,6 @@ TradingControls.propTypes = {
   calculateTotal: PropTypes.func.isRequired
 };
 
-// Default Props
 TradingControls.defaultProps = {
   activeTab: 'buy',
   currentMarketPrice: 0,

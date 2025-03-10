@@ -44,10 +44,7 @@ export const getUserSubscriptions = createAsyncThunk(    // get user amount - fr
     }
   );
 
-// redux/User/userSubscriptionPlan/userSubscriptionPlansSlice.js
-
-// redux/User/userSubscriptionPlan/userSubscriptionPlansSlice.js
-
+// userSubscriptionPlansSlice.js
 export const updateSubscription = createAsyncThunk(
   'subscriptionPlan/update',
   async ({ id, updateData }, { rejectWithValue }) => {
@@ -110,6 +107,7 @@ export const updateSubscription = createAsyncThunk(
     }
   }
 );
+
 export const cancelSubscription = createAsyncThunk(
     'subscriptionPlan/cancel',
     async (id, { rejectWithValue }) => {
