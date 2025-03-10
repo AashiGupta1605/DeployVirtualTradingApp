@@ -66,7 +66,7 @@ export default function etfTable() {
               </div>
             </div>   
           </div>
-          <div className="flex flex-wrap -mt-6 justify-center">
+          {/* <div className="flex flex-wrap -mt-6 justify-center">
         <div className="w-full flex justify-center my-6">
           <button
             onClick={() => setIsModalOpen(true)} // Open modal on click
@@ -75,7 +75,7 @@ export default function etfTable() {
             Sell/Buy Stocks
           </button>
         </div>
-      </div>
+      </div> */}
       <TradingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );

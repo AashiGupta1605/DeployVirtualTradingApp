@@ -15,7 +15,8 @@ import {
   selectTransactions,
   selectHoldings,
   selectStatistics,
-  selectHoldingBySymbol
+  selectHoldingBySymbol,
+  fetchHoldings
 } from '../../../../../redux/User/trading/tradingSlice';
 import { getUserSubscriptions } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
 import ConfirmationModal from '../../ConformationModal';
