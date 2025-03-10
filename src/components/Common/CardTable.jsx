@@ -304,7 +304,7 @@ const CardTable = ({ tableType = 'nifty50' }) => {
           </table>
         </div>
 
-        <div className="flex justify-between items-center mt-4 px-4 py-3 bg-white border rounded-lg">
+        <div className="flex justify-between items-center mt-4 px-4 py-3">
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-700">Rows per page:</span>
             <select
@@ -313,18 +313,16 @@ const CardTable = ({ tableType = 'nifty50' }) => {
                 const setItemsAction = getAction(setNifty50ItemsPerPage, setNifty500ItemsPerPage);
                 dispatch(setItemsAction(Number(e.target.value)));
               }}
-              className="border rounded px-2 py-1 text-sm text-gray-600"
+              className="border rounded px-6 py-2 text-sm text-gray-600"
             >
               {[5, 10, 25, 50, 100].map((num) => (
                 <option key={num} value={num}>{num}</option>
               ))}
             </select>
             <span className="text-sm text-gray-600">
-              {`${indexOfFirstItem + 1}-${Math.min(
-                indexOfLastItem,
-                filteredItems.length
-              )} of ${filteredItems.length}`}
-            </span>
+  &nbsp;&nbsp; {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredItems.length)} &nbsp;of&nbsp; {filteredItems.length}
+</span>
+
           </div>
 
           <div className="flex items-center space-x-2">

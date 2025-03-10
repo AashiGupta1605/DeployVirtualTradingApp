@@ -344,7 +344,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter name"
                     required
                   />
@@ -362,7 +365,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.address}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+                             bg-white text-gray-900 
+                           focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                            focus:outline-none transition-all duration-200"
                     placeholder="Enter address"
                     required
                   />
@@ -380,7 +386,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.website}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter website URL"
                   />
                   {formik.touched.website && formik.errors.website ? (
@@ -397,7 +406,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.contactPerson}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter contact person name"
                   />
                   {formik.touched.contactPerson && formik.errors.contactPerson ? (
@@ -417,7 +429,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter email address"
                     required
                   />
@@ -435,7 +450,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.mobile}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter mobile number"
                   />
                   {formik.touched.mobile && formik.errors.mobile ? (
@@ -452,7 +470,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter password"
                     required
                   />
@@ -471,7 +492,10 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                     value={formik.values.accreditation}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter password"
                     required
                   />

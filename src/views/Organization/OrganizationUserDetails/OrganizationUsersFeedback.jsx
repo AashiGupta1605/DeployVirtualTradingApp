@@ -172,8 +172,8 @@ const OrganizationUsersFeedbacks = () => {
               <div>
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="h-10 px-4 rounded-lg mr-4 border border-gray-300 
-                     hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                  className="h-10 px-4 rounded-lg mr-4 border border-gray-400 
+                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600  transition-colors flex items-center space-x-2"
                 >
                   <Filter size={16} />
                   {appliedFiltersCount > 0 && (
@@ -186,7 +186,9 @@ const OrganizationUsersFeedbacks = () => {
               </div>
 
               <div className="flex-grow max-w-xl ">
-                <div className="relative w-[300px] ">
+                <div className="relative w-[300px] border border-gray-50 rounded-lg 
+                  focus-within:border-gray-300 focus-within:ring-1 
+                  focus-within:ring-lightBlue-500 transition-colors ">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon size={16} className="text-gray-400" />
                   </div>
