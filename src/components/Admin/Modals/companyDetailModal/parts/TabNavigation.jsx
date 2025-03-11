@@ -1,6 +1,6 @@
-// TabNavigation.jsx
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   LineChart,
   BarChart2,
@@ -10,6 +10,101 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
+// MetricCard Component (can be extracted to a separate file)
+const MetricCard = ({ label, value, isHighlighted, type }) => {
+  const getHighlightColor = () => {
+    if (!isHighlighted) return 'bg-blue-50/80';
+    return type === 'positive' ? 'bg-green-50/80' : 'bg-red-50/80';
+  };
+
+  const getTextColor = () => {
+    if (!isHighlighted) return 'text-gray-900';
+    return type === 'positive' ? 'text-green-700' : 'text-red-700';
+  };
+
+  return (
+    <div className={`px-4 py-2 ${getHighlightColor()} backdrop-blur-sm rounded-lg border border-gray-100 hover:border-gray-200 transition-all duration-200 shadow-sm hover:shadow`}>
+      <div className="text-xs font-medium text-gray-500 mb-1">{label}</div>
+      <div className={`text-sm font-bold tabular-nums ${getTextColor()}`}>{value}</div>
+    </div>
+  );
+};
+
+const BalanceCard = memo(({ balance, plan, validTill }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-sm p-3">
+      <div className="space-y-1">
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-gray-500">Available Balance</span>
+          <span className="text-lg font-semibold text-green-600">
+            ₹{balance.toLocaleString('en-IN', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })}
+          </span>
+        </div>
+        <div className="text-xs text-gray-500">
+          <div className="flex justify-between">
+            <span>Plan:</span>
+            <span className="font-medium text-gray-700">{plan}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Valid till:</span>
+            <span className="font-medium text-gray-700">{validTill}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Account Summary Cards with Multiple Metric Cards
+const AccountSummaryCards = memo(({ data }) => {
+  // Fetch the active subscription from the Redux store
+  const activeSubscription = useSelector(state => 
+    state.user.subscriptionPlan.userSubscriptions.find(sub => sub.status === 'Active' && !sub.isDeleted)
+  );
+
+  if (!data || !activeSubscription) return null;
+
+  return (
+    <div className="flex space-x-2">
+      {/* Virtual Amount Card */}
+      <MetricCard 
+        label="Virtual Amount" 
+        value={`₹${activeSubscription.vertualAmount.toLocaleString('en-IN')}`} 
+        isHighlighted={false} 
+      />
+
+      {/* Plan Card */}
+      <MetricCard 
+        label="Plan" 
+        value={activeSubscription.plan} 
+        isHighlighted={false} 
+      />
+
+      {/* Valid Till Card */}
+      <MetricCard 
+        label="Valid Till" 
+        value={new Date(activeSubscription.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} 
+        isHighlighted={false} 
+      />
+
+      {/* Current Holdings Card */}
+      {data.currentHoldings && (
+        <MetricCard 
+          label="Current Holdings" 
+          value={`₹${data.currentHoldings.toLocaleString('en-IN')}`} 
+          isHighlighted={data.currentHoldings > activeSubscription.vertualAmount} 
+          type={data.currentHoldings > activeSubscription.vertualAmount ? 'positive' : 'negative'}
+        />
+      )}
+    </div>
+  );
+});
+
+
+// Existing TabButton Component
 const TabButton = memo(({
   active,
   onClick,
@@ -65,50 +160,7 @@ const TabButton = memo(({
   );
 });
 
-const BalanceCard = memo(({ balance, plan, validTill }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-sm p-3">
-      <div className="space-y-1">
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm text-gray-500">Available Balance</span>
-          <span className="text-lg font-semibold text-green-600">
-            ₹{balance.toLocaleString('en-IN', { 
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            })}
-          </span>
-        </div>
-        <div className="text-xs text-gray-500">
-          <div className="flex justify-between">
-            <span>Plan:</span>
-            <span className="font-medium text-gray-700">{plan}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Valid till:</span>
-            <span className="font-medium text-gray-700">{validTill}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-});
-
-
-
-const AccountSummaryCards = memo(({ data }) => {
-  if (!data) return null;
-
-  return (
-    <div className="min-w-[200px]">
-      <BalanceCard 
-        balance={data.balance}
-        plan={data.plan}
-        validTill={data.validTill}
-      />
-    </div>
-  );
-});
-
+// Updated TabNavigation Component
 const TabNavigation = memo(({
   activeTab,
   onTabChange,
@@ -245,6 +297,28 @@ TabNavigation.defaultProps = {
   loading: false,
   availableTabs: ['overview', 'historical', 'trading-view', 'trading'],
   accountSummary: null,
+};
+
+MetricCard.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  isHighlighted: PropTypes.bool,
+  type: PropTypes.oneOf(['positive', 'negative']),
+};
+
+MetricCard.defaultProps = {
+  isHighlighted: false,
+  type: 'positive',
+};
+
+AccountSummaryCards.propTypes = {
+  data: PropTypes.shape({
+    currentHoldings: PropTypes.number,
+  }),
+};
+
+AccountSummaryCards.defaultProps = {
+  data: null,
 };
 
 export default TabNavigation;

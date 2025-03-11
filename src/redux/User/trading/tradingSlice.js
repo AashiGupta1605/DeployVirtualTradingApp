@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
+import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
 
 // Helper Functions
 const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) => {
@@ -81,7 +82,10 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
 const initialState = {
   transactions: [],
   holdings: [],
-  loading: false,
+  loading: {
+    general: false,
+    trading: false
+  },
   error: null,
   orderStatus: null,
   statistics: {
@@ -104,57 +108,72 @@ export const fetchHoldings = createAsyncThunk(
       const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}`);
       return response.data.holdings || [];
     } catch (error) {
-      // return rejectWithValue('Failed to fetch holdings');
+      console.error('Fetch Holdings Error:', error);
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
     }
   }
-);
+); 
 
+// tradingSlice.js
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
-  async ({ 
-    userId, 
-    subscriptionPlanId,
-    symbol, 
-    type,
-    numberOfShares, 
-    price,
-    orderType = 'market',
-    total
-  }, { rejectWithValue }) => {
+  async (orderDetails, { dispatch, rejectWithValue }) => {
     try {
+      // Validate required fields
+      const requiredFields = [
+        'userId', 
+        'subscriptionPlanId', 
+        'symbol', 
+        'type', 
+        'numberOfShares', 
+        'price', 
+        'orderType', 
+        'total', 
+        'currentMarketPrice'
+      ];
+
+      const missingFields = requiredFields.filter(field => 
+        orderDetails[field] === undefined || orderDetails[field] === null
+      );
+
+      if (missingFields.length > 0) {
+        return rejectWithValue({
+          message: `Missing required fields: ${missingFields.join(', ')}`,
+          missingFields
+        });
+      }
+
+      // Sanitize order details
+      const sanitizedOrderDetails = {
+        ...orderDetails,
+        numberOfShares: Number(orderDetails.numberOfShares),
+        price: Number(orderDetails.price),
+        total: Number(orderDetails.total)
+      };
+
       const response = await axios.post(
         `${BASE_API_URL}/user/trading/trade`,
+        sanitizedOrderDetails,
         {
-          userId,
-          subscriptionPlanId,
-          companySymbol: symbol,
-          type,
-          numberOfShares,
-          price,
-          orderType,
-          total
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
       );
 
-      if (!response.data.success) {
-        throw new Error(response.data.message);
-      }
+      // Update subscription
+      dispatch(updateSubscription({
+        id: orderDetails.subscriptionPlanId,
+        updateData: { vertualAmount: response.data.balance }
+      }));
 
-      return {
-        transaction: response.data.transaction,
-        holdings: response.data.holdings || [],
-        holding: response.data.holding,
-        balance: response.data.balance,
-        currentPrice: price
-      };
+      return response.data;
     } catch (error) {
+      console.error('Place Order Error:', error.response?.data || error.message);
       return rejectWithValue({
-        message: error.response?.data?.message || error.message || 'Failed to place order',
+        message: error.response?.data?.message || 'Failed to place order',
         error: error.message,
-        orderType: type,
-        symbol,
-        quantity: numberOfShares,
-        price
+        details: error.response?.data
       });
     }
   }

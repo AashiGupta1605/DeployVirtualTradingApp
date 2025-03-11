@@ -1,131 +1,130 @@
-// components/StockTable.jsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ChevronDown, ChevronRight, ChevronLeft, Filter } from "lucide-react";
-import { fetchStockData } from "../../redux/Common/etfSlice";
-import CompanyDetailModal from "../../components/Admin/Modals/companyDetailModal/CompanyDetailModal";
+import { 
+  ChevronDown, 
+  ChevronRight, 
+  ChevronLeft, 
+  Filter, 
+  X, 
+  SearchIcon,
+  RefreshCw
+} from "lucide-react";
+import { 
+  fetchStockData, 
+  fetchCompanyDetails,
+  setSearchTerm,
+  setSortConfig,
+  setCurrentPage,
+  setItemsPerPage,
+  setSelectedSymbol,
+  resetCompanyDetails
+} from "../../redux/Common/etfSlice";
+import CompanyDetailModal from "../Admin/Modals/companyDetailModal/index";
 import "../../assets/styles/table.css";
 
-const StockTable = () => {
+const StockTable = ({ userData }) => {
   const dispatch = useDispatch();
-  const { stockData, loading, error } = useSelector((state) => state.common.etf) || {
-    stockData: [],
-    loading: false,
-    error: null
-  };
-  
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "none" });
-  const [expandedRow, setExpandedRow] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSymbol, setSelectedSymbol] = useState(null);
+  const { 
+    stockData = [], 
+    loading = false, 
+    error = null, 
+    companyDetails = {
+      stockData: null,
+      chartData: null,
+      loading: false,
+      error: null
+    },
+    pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0
+    },
+    sortConfig = {
+      key: null,
+      direction: 'none'
+    },
+    searchTerm = '',
+    selectedSymbol = null
+  } = useSelector((state) => state.common.etf) || {};
+
+  const { currentPage, itemsPerPage } = pagination;
 
   useEffect(() => {
-    dispatch(fetchStockData());
-  }, [dispatch]);
+    dispatch(fetchStockData({ 
+      page: currentPage, 
+      limit: itemsPerPage, 
+      search: searchTerm 
+    }));
+  }, [dispatch, currentPage, itemsPerPage, searchTerm]);
 
-  const handleSymbolClick = (symbol, e) => {
-    e.preventDefault();
-    setSelectedSymbol(symbol);
-    setIsModalOpen(true);
+// In the handleSymbolClick method
+const handleSymbolClick = (symbol, e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  dispatch(setSelectedSymbol(symbol));
+  dispatch(fetchCompanyDetails(symbol)); // No need to pass type for ETF
+};
+
+  const handleSearchChange = (value) => {
+    dispatch(setSearchTerm(value));
   };
 
-  const requestSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    } else if (sortConfig.key === key && sortConfig.direction === "descending") {
-      direction = "none";
+  const handleSortChange = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
+      direction = 'none';
     }
-    setSortConfig({ key, direction });
+    dispatch(setSortConfig({ key, direction }));
+  };
+
+  const handleCloseModal = () => {
+    dispatch(setSelectedSymbol(null));
+    dispatch(resetCompanyDetails());
+  };
+
+  const handleTimeRangeChange = (range) => {
+    if (selectedSymbol) {
+      dispatch(fetchCompanyDetails(selectedSymbol));
+    }
   };
 
   const getSortedData = (data) => {
-    if (sortConfig.direction === "none" || !sortConfig.key) return data;
+    if (!data || !Array.isArray(data)) return [];
+    if (sortConfig.direction === 'none') return data;
 
     return [...data].sort((a, b) => {
       const valueA = a[sortConfig.key] ?? "";
       const valueB = b[sortConfig.key] ?? "";
 
       if (!isNaN(valueA) && !isNaN(valueB)) {
-        return sortConfig.direction === "ascending" ? valueA - valueB : valueB - valueA;
-      } else {
-        return sortConfig.direction === "ascending"
-          ? valueA.toString().localeCompare(valueB.toString())
-          : valueB.toString().localeCompare(valueA.toString());
+        return sortConfig.direction === "ascending" 
+          ? valueA - valueB 
+          : valueB - valueA;
       }
+      return sortConfig.direction === "ascending"
+        ? valueA.toString().localeCompare(valueB.toString())
+        : valueB.toString().localeCompare(valueA.toString());
     });
   };
 
-
-  const filteredData = searchTerm
-    ? stockData.filter(stock => 
-        stock.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : stockData;
-
-  const sortedData = getSortedData(filteredData);
-  // Pagination logic
-  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+  const filteredItems = getSortedData(stockData)
+    .filter(stock => stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const paginatedData = sortedData.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Pagination display logic
-  const renderPageNumbers = () => {
-    const pages = [];
-
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      if (currentPage <= 3) {
-        pages.push(1, 2, 3, '...', totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
-      } else {
-        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
-      }
-    }
-
-    return pages.map((page, index) => {
-      if (page === '...') {
-        return (
-          <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
-            ...
-          </span>
-        );
-      }
-      
-      return (
-        <button
-          key={page}
-          onClick={() => setCurrentPage(page)}
-          className={`px-3 py-1 rounded-md ${
-            currentPage === page
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          {page}
-        </button>
-      );
-    });
-  };
-
-  const toggleRow = (id) => {
-    setExpandedRow(expandedRow === id ? null : id);
-  };
 
   if (loading) {
     return (
       <div className="mt-12 flex items-center justify-center w-full h-64">
         <div className="flex flex-col items-center gap-4">
-          <div
-            className="border-blue-500 mt-72 inline-block h-12 w-12 animate-spin rounded-full border-8 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          ></div>
+          <div className="border-blue-500 mt-72 inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]" role="status">
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
+          </div>
           <p className="text-gray-600 text-sm">Loading data...</p>
         </div>
       </div>
@@ -134,151 +133,267 @@ const StockTable = () => {
 
   if (error) {
     return (
-      <div className="error-container">
-        <p className="error-message">{error}</p>
+      <div className="flex flex-col mt-48 items-center justify-center h-64 p-4">
+        <div className="text-red-500 mb-4">{error}</div>
+        <button 
+          onClick={() => dispatch(fetchStockData({ 
+            page: currentPage, 
+            limit: itemsPerPage, 
+            search: searchTerm 
+          }))}
+          className="flex items-center gap-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+        >
+          <RefreshCw size={16} />
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!filteredItems.length) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 p-4">
+        <div className="text-gray-500 mb-4">No data available</div>
+        <button 
+          onClick={() => dispatch(fetchStockData({ 
+            page: currentPage, 
+            limit: itemsPerPage, 
+            search: searchTerm 
+          }))}
+          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+        >
+          <RefreshCw size={16} />
+          Refresh Data
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="mx-2 mt-8 overflow-hidden">
-    <div className="mt-24 flex items-center justify-between rounded bg-gray-100 px-6 py-4 shadow-md border-b">
-      <h2 className="flex items-center text-xl font-bold text-gray-800">
-        <Filter className="mr-2 text-gray-600" size={20} /> ETF Data
-      </h2>
-      <div className="relative">
-<input
-  type="text"
-  placeholder="Search by symbol..."
-  className="border p-2 pr-10 rounded w-full"
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-/>
-{searchTerm && (
-  <button
-    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-0"
-    onClick={() => setSearchTerm("")}
-  >
-    ✕
-  </button>
-)}
-</div>
-    </div>
-
-    <div className="h-[28rem] overflow-x-auto overflow-y-auto bg-white shadow-md rounded-lg">
-      <table className="w-full">
-        <thead className="sticky top-0 border-b bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            {["symbol", "open", "dayHigh", "dayLow", "previousClose", "lastPrice", "change", "pChange", "totalTradedVolume", "totalTradedValue", "yearHigh", "yearLow", "perChange365d", "perChange30d"].map((column) => (
-              <th
-                key={column}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                onClick={() => requestSort(column)}
+    <>
+      <div className="mx-2 overflow-hidden mt-38">
+        <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
+          <div className="flex items-center space-x-4">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center">
+              <Filter className="mr-2 text-gray-600" size={20} />
+              ETF Data
+            </h2>
+            {userData && (
+              <div className="flex items-center space-x-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                <span className="text-sm text-gray-600">
+                  Welcome, {userData.name}
+                </span>
+                {userData.role && (
+                  <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
+                    {userData.role}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="relative w-[300px] border border-gray-50 rounded-lg 
+                  focus-within:border-gray-300 focus-within:ring-1 
+                  focus-within:ring-lightBlue-500 transition-colors">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <SearchIcon size={18} className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search by symbol..."
+              className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                 text-sm placeholder-gray-500"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+            />
+            {searchTerm && (
+              <button
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+                onClick={() => handleSearchChange("")}
               >
-                {column.replace(/([A-Z])/g, " $1").toUpperCase()} {sortConfig.key === column && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-        {paginatedData.map((row, index) => (
-              <React.Fragment key={index}>
-                <tr
-                  onClick={() => toggleRow(index)}
-                  className={`cursor-pointer transition-colors hover:bg-gray-50 ${
-                    expandedRow === index ? "bg-gray-50" : ""
-                  }`}
-                >
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
-                        Sell
-                      </button>
-                      <button className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">
-                        Buy
-                      </button>
-                      <button className="p-1 bg-gray-200 rounded-full hover:bg-gray-300">
-                        ℹ️
-                      </button>
+               <X size={16} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg overflow-x-auto h-[28rem] overflow-y-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b sticky top-0">
+              <tr>
+                {[
+                  'symbol',
+                  'open',
+                  'dayHigh',
+                  'dayLow',
+                  'previousClose',
+                  'lastPrice',
+                  'change',
+                  'pChange',
+                  'totalTradedVolume',
+                  'totalTradedValue',
+                  'yearHigh',
+                  'yearLow',
+                  'perChange365d',
+                  'perChange30d'
+                ].map((column) => (
+                  <th
+                    key={column}
+                    onClick={() => handleSortChange(column)}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>{column.replace(/([A-Z])/g, ' $1').toUpperCase()}</span>
+                      {sortConfig.key === column && (
+                        <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                      )}
                     </div>
-                  </td>
-                  <td className="px-6 py-4 flex items-center">
-                    {expandedRow === index ? (
-                      <ChevronDown className="mr-2 text-gray-500" size={16} />
-                    ) : (
-                      <ChevronRight className="mr-2 text-gray-500" size={16} />
-                    )}
-                    <button
-                      onClick={(e) => handleSymbolClick(row.symbol, e)}
-                      className="text-blue-500 hover:text-blue-800"
-                    >
-                      {row.symbol}
-                    </button>
-                  </td>
-                {["open", "dayHigh", "dayLow", "previousClose", "lastPrice", "change", "pChange", "totalTradedVolume", "totalTradedValue", "yearHigh", "yearLow", "perChange365d", "perChange30d"].map((field, idx) => (
-                  <td key={idx} className="px-6 py-4">{row[field] ?? "N/A"}</td>
+                  </th>
                 ))}
               </tr>
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filteredItems
+                .slice(indexOfFirstItem, indexOfLastItem)
+                .map((row, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 flex items-center">
+                      <button
+                        onClick={(e) => handleSymbolClick(row.symbol, e)}
+                        className="text-blue-500 hover:text-blue-800"
+                      >
+                        {row.symbol}
+                      </button>
+                    </td>
+                    {[
+                      'open',
+                      'dayHigh',
+                      'dayLow',
+                      'previousClose',
+                      'lastPrice',
+                      'change',
+                      'pChange',
+                      'totalTradedVolume',
+                      'totalTradedValue',
+                      'yearHigh',
+                      'yearLow',
+                      'perChange365d',
+                      'perChange30d'
+                    ].map((field, idx) => (
+                      <td key={idx} className="px-6 py-4">
+                        {typeof row[field] === 'number'
+                          ? field.includes('Change')
+                            ? `${row[field].toFixed(2)}%`
+                            : field.includes('tradedValue')
+                            ? `₹${row[field].toLocaleString()}`
+                            : field.includes('Price') || field.includes('High') || field.includes('Low') || field.includes('open')
+                            ? `₹${row[field].toLocaleString()}`
+                            : row[field].toLocaleString()
+                          : row[field] || 'N/A'}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
 
-    <div className="flex justify-between items-center mt-4 px-4 py-3">
- <div className="flex items-center space-x-4">
-  <span className="text-sm text-gray-700">Rows per page:</span>
-  <select
-          value={itemsPerPage} 
-          onChange={(e) => {
-            setItemsPerPage(Number(e.target.value));
-            setCurrentPage(1);
-          }}
-          className="border rounded px-6 py-2 text-sm text-gray-600"
-        >
-          {[10, 50, 100, 200].map((num) => (
-            <option key={num} value={num}>{num}</option>
-          ))}
-        </select>
-        <span></span>
-        <span className="text-sm text-gray-600">
-          {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedData.length)} {" "}
-           of {" "} {sortedData.length}
-        </span>
+        <div className="flex justify-between items-center mt-4 px-4 py-3">
+          <div className="flex items-center space-x-4">
+            <span className="text-sm font-medium text-gray-700">Rows per page:</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                dispatch(setItemsPerPage(Number(e.target.value)));
+              }}
+              className="form-select px-6 py-2 rounded-md border-gray-300 shadow-sm 
+                     focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
+                     focus:ring-opacity-50 text-sm"
+            >
+              {[5, 10, 25, 50, 100].map((num) => (
+                <option key={num} value={num}>{num}</option>
+              ))}
+            </select>
+            <span className="text-sm font-medium text-gray-600">
+              {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredItems.length)} of {filteredItems.length}
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => {
+                dispatch(setCurrentPage(Math.max(1, currentPage - 1)));
+              }}
+              disabled={currentPage === 1}
+              className="p-2 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+            >
+              <ChevronRight className="rotate-180" size={20} />
+            </button>
+            
+            <div className="flex space-x-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => 
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                )
+                .map((page, index, array) => (
+                  <React.Fragment key={page}>
+                    {index > 0 && array[index - 1] !== page - 1 && (
+                      <span className="px-2 py-1">...</span>
+                    )}
+                    <button
+                      onClick={() => {
+                        dispatch(setCurrentPage(page));
+                      }}
+                      className={`px-3 py-1 rounded-md ${
+                        currentPage === page
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  </React.Fragment>
+                ))}
+            </div>
+
+            <button
+              onClick={() => {
+                dispatch(setCurrentPage(Math.min(totalPages, currentPage + 1)));
+              }}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center space-x-1">
-        <button
-          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-          className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50"
-        >
-          <ChevronLeft size={16} />
-        </button>
-
-        {renderPageNumbers()}
-
-        <button
-          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50"
-        >
-          <ChevronRight size={16} />
-        </button>
-      </div>
-    </div>
-    <CompanyDetailModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  symbol={selectedSymbol}
-  type="etf"
-/>
-  </div>
-
+      <CompanyDetailModal
+        isOpen={!!selectedSymbol}
+        onClose={handleCloseModal}
+        symbol={selectedSymbol}
+        data={companyDetails.stockData}
+        chartData={companyDetails.chartData}
+        onTimeRangeChange={handleTimeRangeChange}
+        loading={companyDetails.loading}
+        error={companyDetails.error}
+        chartSettings={{
+          theme: 'light',
+          showGrid: true,
+          showVolume: true,
+          showDetails: true
+        }}
+        type="etf"
+        userData={userData}
+      />
+    </>
   );
 };
-
 
 export default StockTable;

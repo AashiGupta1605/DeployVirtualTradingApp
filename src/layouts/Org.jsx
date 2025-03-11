@@ -6,25 +6,17 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Components
-// import AdminNavbar from "../components/Admin/Navbars/AdminNavbar";
 import OrganizationNavbar from "../components/Organization/Navbars/OrganizationNavbar";
-// import Sidebar from "../components/Admin/Sidebar/Sidebar";
 import OrganizationSidebar from "../components/Organization/Sidebars/OrganizationSidebar";
-// import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 import OrganizationFooter from "../components/Organization/Footers/OrganizationFooter";
 
-
-// Views
-// import StudentList from "./views/Organization/StudentList";
-// import Dashboard from "./views/Organization/Dashboard";
-// import Register from "./views/Organization/auth/Register";
-
+// pages
 import OrganizationUsers from "../views/Organization/OrganizationUserDetails/OrganizationUsers";
 import OrganizationDashboard from "../views/Organization/OrganizationDetails/OrganizationDashboard";
 import Register from "../views/auth/Register";
 import OrganizationUsersFeedback from "../views/Organization/OrganizationUserDetails/OrganizationUsersFeedback"
 import OrganizationFeedback from "../views/Organization/OrganizationDetails/OrganizationFeedback";
-// import Login from "views/Organization/auth/Login";
+import ProtectedRoute from "../components/Organization/ProtectedRoutes/ProtectedRoute";
 // const orgName = localStorage.getItem("orgName");
 
 export default function Org() {
@@ -34,21 +26,21 @@ export default function Org() {
     <>
       <OrganizationSidebar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
       <div className={`relative ${sidebarExpanded ? "md:ml-64" : "md:ml-20"} ml-16 bg-blueGray-100 transition-all duration-300 ease-in-out`}>
-        {/* <AdminNavbar sidebarExpanded={sidebarExpanded} /> */}
+        <div className="z-0">
         <OrganizationNavbar sidebarExpanded={sidebarExpanded}/>
+        </div>
         <div className="mx-auto w-full -m-24">
           <div id="root">
           <main>
           <Routes>
+          <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<OrganizationDashboard />} />
             <Route path="userlist" element={<OrganizationUsers />} />
             <Route path="users/feedbacks" element={<OrganizationUsersFeedback />} />
             <Route path="org-feedabacks" element={<OrganizationFeedback />} />
-
-            {/* <Route path={`${orgName}/users`} element={<StudentList />} /> */}
-            <Route path="register" element={<Register />} />
-            {/* <Route path="login" element={<Login />} /> */}
+            </Route>
             <Route path="*" element={<Navigate to="dashboard" replace />} />
+            <Route path="register" element={<Register />} />
           </Routes>
           </main>
           </div>
@@ -64,40 +56,3 @@ export default function Org() {
 
 
 
-
-
-// // new one 
-// import React from "react";
-// import { Routes, Route, Navigate } from "react-router-dom";
-
-// // Components
-// import AdminNavbar from "../components/Admin/Navbars/AdminNavbar";
-// import Sidebar from "../components/Organization/Sidebar";
-// import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
-
-// // Views
-// import StudentList from "../views/Organization/StudentList";
-// import Dashboard from "../views/Organization/Dashboard";
-// import Register from "../views/auth/Register";
-
-// export default function Org() {
-//   const [sidebarExpanded, setSidebarExpanded] = React.useState(true); // Sidebar expanded by default
-
-//   return (
-//     <>
-//       <Sidebar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
-//       <div className={`relative ${sidebarExpanded ? "md:ml-64" : "md:ml-20"} ml-20 bg-blueGray-100 transition-all duration-300 ease-in-out`}>
-//         <AdminNavbar sidebarExpanded={sidebarExpanded} />
-//         <div className="px-4 md:px-10 mx-auto w-full -m-24">
-//           <Routes>
-//             <Route path="dashboard" element={<Dashboard />} />
-//             <Route path="userlist" element={<StudentList />} />
-//             <Route path="register" element={<Register />} />
-//             <Route path="*" element={<Navigate to="dashboard" replace />} />
-//           </Routes>
-//           <FooterAdmin />
-//         </div>
-//       </div>
-//     </>
-//   );
-// }

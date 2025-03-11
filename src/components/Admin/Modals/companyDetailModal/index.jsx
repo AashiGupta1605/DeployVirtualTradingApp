@@ -152,7 +152,7 @@ const CompanyDetailModal = ({
   // Effects
   useEffect(() => {
     if (isOpen && symbol) {
-      dispatch(fetchCompanyDetails({ symbol, type }));
+      dispatch(fetchCompanyDetails({ symbol, type })); // Pass both symbol and type
     }
     return () => {
       if (!isOpen) {

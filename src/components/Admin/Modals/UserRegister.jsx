@@ -106,10 +106,10 @@ return (
 <div className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity"></div>
 
 
-Collapse
-  <div className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl">
+
+  <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl">
     {/* Modal Header */}
-    <div className="flex justify-between items-center p-6 border-b border-gray-200">
+    <div className="flex justify-between items-center p-6 border-b border-gray-100">
       <div className="flex items-center space-x-3">
         <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center">
           <i className="fas fa-user text-white"></i>
@@ -139,11 +139,14 @@ Collapse
             type="text"
             name="name"
             {...formik.getFieldProps('name')}
-            className={`w-full px-4 py-3 rounded-xl border ${
+            className={`w-full px-4 py-3 !rounded-xl border ${
               formik.touched.name && formik.errors.name
                 ? 'border-red-500'
                 : 'border-gray-200'
-            } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+            } !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200`}
             placeholder="Enter full name"
           />
           {formik.touched.name && formik.errors.name && (
@@ -160,11 +163,14 @@ Collapse
             type="email"
             name="email"
             {...formik.getFieldProps('email')}
-            className={`w-full px-4 py-3 rounded-xl border ${
+            className={`w-full px-4 py-3 !rounded-xl border ${
               formik.touched.email && formik.errors.email
                 ? 'border-red-500'
                 : 'border-gray-200'
-            } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+            } !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200`}
             placeholder="Enter email address"
           />
           {formik.touched.email && formik.errors.email && (
@@ -181,11 +187,14 @@ Collapse
             type="text"
             name="mobile"
             {...formik.getFieldProps('mobile')}
-            className={`w-full px-4 py-3 rounded-xl border ${
+            className={`w-full px-4 py-3 !rounded-xl border ${
               formik.touched.mobile && formik.errors.mobile
                 ? 'border-red-500'
                 : 'border-gray-200'
-            } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+            } !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200`}
             placeholder="Enter mobile number"
           />
           {formik.touched.mobile && formik.errors.mobile && (
@@ -230,7 +239,9 @@ Collapse
               formik.touched.dob && formik.errors.dob
                 ? 'border-red-500'
                 : 'border-gray-200'
-            } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+            }  border-gray-200 
+               focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
           />
           {formik.touched.dob && formik.errors.dob && (
             <p className="mt-1 text-sm text-red-500">{formik.errors.dob}</p>
@@ -246,11 +257,14 @@ Collapse
             type="text"
             name="orgtype"
             {...formik.getFieldProps('orgtype')}
-            className={`w-full px-4 py-3 rounded-xl border ${
+            className={`w-full px-4 py-3 !rounded-xl border ${
               formik.touched.orgtype && formik.errors.orgtype
                 ? 'border-red-500'
                 : 'border-gray-200'
-            } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+            } !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200`}
             placeholder="Enter organization type"
           />
           {formik.touched.orgtype && formik.errors.orgtype && (
@@ -267,7 +281,7 @@ Collapse
       )}
 
       {/* Form Actions */}
-      <div className="flex justify-end items-center space-x-4 mt-6 pt-6 border-t border-gray-200">
+      <div className="flex justify-end items-center space-x-4 mt-6 pt-6 border-t border-gray-100">
         <button
           type="button"
           onClick={onClose}
