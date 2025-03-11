@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { deleteOrganization } from '../../Admin/OrganizationListPage/OrganizationListSlice';
+import axiosInstance from '../../../utils/axiosConfig';
 
 // Async Thunks for Organization
 export const fetchOrganizations = createAsyncThunk(
@@ -15,11 +16,26 @@ export const fetchOrganizations = createAsyncThunk(
   }
 );
 
+// without token working
+
+// export const fetchOrgById = createAsyncThunk(
+//   "organizations/fetchOrgById",
+//   async (orgId, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.get(`${BASE_API_URL}/organization/by-id?orgId=${orgId}`);
+//       console.log("Fetched Organization Data:", response.data.data); 
+//       return response.data.data; // Return the nested organization data
+//     } catch (error) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   }
+// );
+
 export const fetchOrgById = createAsyncThunk(
   "organizations/fetchOrgById",
   async (orgId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/organization/by-id?orgId=${orgId}`);
+      const response = await axiosInstance.get(`${BASE_API_URL}/organization/by-id?orgId=${orgId}`);
       console.log("Fetched Organization Data:", response.data.data); 
       return response.data.data; // Return the nested organization data
     } catch (error) {
@@ -28,11 +44,12 @@ export const fetchOrgById = createAsyncThunk(
   }
 );
 
+
 export const updateOrgDetails = createAsyncThunk(
   "organizations/updateOrgDetails",
   async ({ orgId, orgData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_API_URL}/organization/update-by-id?orgId=${orgId}`, orgData);
+      const response = await axiosInstance.put(`${BASE_API_URL}/organization/update-by-id?orgId=${orgId}`, orgData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

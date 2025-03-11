@@ -71,7 +71,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
       <Toaster />
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
 
-      <div style={{ width: "100%", maxWidth: "90%", margin: "1rem" }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+      <div style={{ width: "100%", maxWidth: "85%", margin: "1rem" }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">

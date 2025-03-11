@@ -87,11 +87,11 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+    <div className="fixed inset-0 z-45 flex items-center justify-center overflow-y-auto">
       <Toaster />
-      <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
+      <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
 
-      <div className="relative w-full max-w-7xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
+      <div className="relative w-full max-w-7xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">

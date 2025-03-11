@@ -178,8 +178,8 @@ const OrganizationUsers = () => {
     <div className="relative">
       {/* <OrganizationDashboard type="user-list" /> */}
       <Dashboard type="user-list" showAllCards={false} showCardsTable={false}/>
-      <div className="mx-auto w-[95%] z-50">
-        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-5 -mt-12">
+      <div className="mx-auto w-[95%] z-40">
+        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
           {/* Header with Search and Filters */}
           <div className="bg-gray-50 mt-3 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
@@ -293,7 +293,7 @@ const OrganizationUsers = () => {
           {loading ? (
             <Loader />
           ) : (
-            <div className="pt-18 -mt-18 z-20">
+            <div className="pt-18 -mt-18">
               <OrgUserTable
                 users={studentList}
                 onEdit={handleEdit}
