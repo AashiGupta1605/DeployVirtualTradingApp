@@ -76,7 +76,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
       <nav
         className={`${
           sidebarExpanded ? "md:w-64" : "md:w-20"
-        } fixed md:left-0 md:top-0 md:bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-20`}
+        } fixed md:left-0 md:top-0 md:bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-5`}
       >
         <div className="flex flex-col h-full">
           {/* Logo Section */}

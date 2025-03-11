@@ -40,26 +40,27 @@ export default function ETFTable() {
       percentColor: "text-emerald-500",
       description: "Total Amount Invested"
     },
-    {
-      subtitle: "Current Holdings Value",
-      title: statistics.currentHoldingsValue,
-      iconName: "fas fa-chart-line",
-      iconColor: "bg-blue-500",
-      percentColor: statistics.realizedPLPercentage >= 0 
-        ? "text-emerald-500" 
-        : "text-red-500",
-      description: "Current Market Value"
-    },
-    {
-      subtitle: "Realized P&L",
-      title: statistics.realizedPL,
-      iconName: "fas fa-percent",
-      iconColor: "bg-purple-500",
-      percentColor: statistics.realizedPLPercentage >= 0 
-        ? "text-emerald-500" 
-        : "text-red-500",
-      description: "Profit/Loss Percentage"
-    },
+
+    // {
+    //   subtitle: "Current Holdings Value",
+    //   title: statistics.currentHoldingsValue,
+    //   iconName: "fas fa-chart-line",
+    //   iconColor: "bg-blue-500",
+    //   percentColor: statistics.realizedPLPercentage >= 0 
+    //     ? "text-emerald-500" 
+    //     : "text-red-500",
+    //   description: "Current Market Value"
+    // },
+    // {
+    //   subtitle: "Realized P&L",
+    //   title: statistics.realizedPL,
+    //   iconName: "fas fa-percent",
+    //   iconColor: "bg-purple-500",
+    //   percentColor: statistics.realizedPLPercentage >= 0 
+    //     ? "text-emerald-500" 
+    //     : "text-red-500",
+    //   description: "Profit/Loss Percentage"
+    // },
     {
       subtitle: "Trading Performance",
       title: `${statistics.successRate.toFixed(2)}%`,
@@ -79,6 +80,25 @@ export default function ETFTable() {
       description: "Buy & Sell Trades"
     },
     // Add Virtual Amount Card
+    // {
+    //   subtitle: "Total Trades",
+    //   title: `${statistics.buyTrades + statistics.sellTrades}`,
+    //   iconName: "fas fa-exchange-alt",
+    //   iconColor: "bg-pink-500",
+    //   percentColor: "text-gray-500",
+    //   description: "Buy & Sell Trades"
+    // },
+    // Add Virtual Amount Card
+    {
+      subtitle: "Trades & P&L",
+      title: `${statistics.buyTrades + statistics.sellTrades} Trades`,
+      iconName: "fas fa-exchange-alt",
+      iconColor: "bg-pink-500",
+      percentColor: statistics.realizedPLPercentage >= 0 
+        ? "text-emerald-500" 
+        : "text-red-500",
+      description: `Realized P&L: ₹${statistics.realizedPL.toLocaleString()}`
+    },
 
   ];
 

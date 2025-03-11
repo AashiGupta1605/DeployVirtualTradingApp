@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
+import axiosInstance from "../../../utils/axiosConfig";
 
 export const fetchOrganizationUsersFeedbacks = createAsyncThunk(
   "organizationUsersFeedbacks/fetchOrganizationUsersFeedbacks",
   async ({ orgName, page, limit, search, startDate, endDate }) => {
-    const response = await axios.get(`${BASE_API_URL}/user/feedback/${orgName}/users/feedbacks`, {
+    const response = await axiosInstance.get(`${BASE_API_URL}/user/feedback/${orgName}/users/feedbacks`, {
       params: { page, limit, search, startDate, endDate },
     });
     return response.data;
@@ -15,7 +16,7 @@ export const fetchOrganizationUsersFeedbacks = createAsyncThunk(
 export const deleteOrganizationUsersFeedback = createAsyncThunk(
   "organizationUsersFeedbacks/deleteOrganizationUsersFeedback",
   async (id) => {
-    await axios.delete(`${BASE_API_URL}/user/feedback/delete/${id}`);
+    await axiosInstance.delete(`${BASE_API_URL}/user/feedback/delete/${id}`);
     return id;
   }
 );
@@ -23,7 +24,7 @@ export const deleteOrganizationUsersFeedback = createAsyncThunk(
 export const updateOrganizationUsersFeedback = createAsyncThunk(
   "organizationUsersFeedbacks/updateOrganizationUsersFeedback",
   async ({ id, feedbackData }) => {
-    const response = await axios.put(`${BASE_API_URL}/user/feedback/update/feedbacks/${id}`, feedbackData);
+    const response = await axiosInstance.put(`${BASE_API_URL}/user/feedback/update/feedbacks/${id}`, feedbackData);
     return response.data;
   }
 );
@@ -31,7 +32,7 @@ export const updateOrganizationUsersFeedback = createAsyncThunk(
 export const updateOrganizationUsersFeedbackStatus = createAsyncThunk(
   "organizationUsersFeedbacks/updateOrganizationUsersFeedbackStatus",
   async ({ id, status }) => {
-    const response = await axios.put(`${BASE_API_URL}/user/feedback/update/status/${id}`, { status });
+    const response = await axiosInstance.put(`${BASE_API_URL}/user/feedback/update/status/${id}`, { status });
     return response.data;
   }
 );

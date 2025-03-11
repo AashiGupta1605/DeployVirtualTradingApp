@@ -16,7 +16,7 @@ import OrganizationDashboard from "../views/Organization/OrganizationDetails/Org
 import Register from "../views/auth/Register";
 import OrganizationUsersFeedback from "../views/Organization/OrganizationUserDetails/OrganizationUsersFeedback"
 import OrganizationFeedback from "../views/Organization/OrganizationDetails/OrganizationFeedback";
-
+import ProtectedRoute from "../components/Organization/ProtectedRoutes/ProtectedRoute";
 // const orgName = localStorage.getItem("orgName");
 
 export default function Org() {
@@ -26,18 +26,21 @@ export default function Org() {
     <>
       <OrganizationSidebar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
       <div className={`relative ${sidebarExpanded ? "md:ml-64" : "md:ml-20"} ml-16 bg-blueGray-100 transition-all duration-300 ease-in-out`}>
+        <div className="z-0">
         <OrganizationNavbar sidebarExpanded={sidebarExpanded}/>
+        </div>
         <div className="mx-auto w-full -m-24">
           <div id="root">
           <main>
           <Routes>
+          <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<OrganizationDashboard />} />
             <Route path="userlist" element={<OrganizationUsers />} />
             <Route path="users/feedbacks" element={<OrganizationUsersFeedback />} />
             <Route path="org-feedabacks" element={<OrganizationFeedback />} />
-
-            <Route path="register" element={<Register />} />
+            </Route>
             <Route path="*" element={<Navigate to="dashboard" replace />} />
+            <Route path="register" element={<Register />} />
           </Routes>
           </main>
           </div>
