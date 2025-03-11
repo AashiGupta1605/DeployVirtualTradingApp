@@ -126,7 +126,10 @@ if (response.ok) {
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                 placeholder="Enter your name"
               />
               {formik.touched.name && formik.errors.name && (
@@ -141,7 +144,10 @@ if (response.ok) {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                 placeholder="Enter email address"
               />
               {formik.touched.email && formik.errors.email && (
@@ -158,7 +164,10 @@ if (response.ok) {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                 placeholder="Enter password"
               />
               {formik.touched.password && formik.errors.password && (
@@ -172,7 +181,10 @@ if (response.ok) {
     name="confirmPassword"
     value={formik.values.confirmPassword}
     onChange={formik.handleChange}
-    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
     placeholder="Re-enter password"
   />
 </div>
@@ -184,7 +196,10 @@ if (response.ok) {
                 value={formik.values.mobile}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                 placeholder="Enter mobile number"
               />
               {formik.touched.mobile && formik.errors.mobile && (
@@ -217,7 +232,9 @@ if (response.ok) {
                 value={formik.values.dob}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 
+               focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               />
               {formik.touched.dob && formik.errors.dob && (
                 <p className="text-red-500 text-sm">{formik.errors.dob}</p>
@@ -230,7 +247,10 @@ if (response.ok) {
                 name="orgtype"
                 value={formik.values.orgtype}
                 onChange={formik.handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                 placeholder="Enter organization type"
               />
               

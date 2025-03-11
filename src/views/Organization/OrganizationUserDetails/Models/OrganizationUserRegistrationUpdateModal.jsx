@@ -71,7 +71,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
       <Toaster />
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
 
-      <div style={{ width: "100%", maxWidth: "90%", margin: "1rem" }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+      <div style={{ width: "100%", maxWidth: "80%"}} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
@@ -103,7 +103,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter name"
                     required
                   />
@@ -121,7 +124,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter email address"
                     required
                   />
@@ -139,7 +145,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.mobile}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+                         bg-white text-gray-900 
+                        focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                          focus:outline-none transition-all duration-200"
                     placeholder="Enter mobile number"
                     required
                   />
@@ -200,7 +209,10 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.addedby}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter added by"
                     required
                   />

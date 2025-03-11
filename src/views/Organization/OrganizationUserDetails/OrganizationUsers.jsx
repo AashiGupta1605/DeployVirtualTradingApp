@@ -178,7 +178,7 @@ const OrganizationUsers = () => {
     <div className="relative">
       {/* <OrganizationDashboard type="user-list" /> */}
       <Dashboard type="user-list" showAllCards={false} showCardsTable={false}/>
-      <div className="mx-auto w-[95%] z-50">
+      <div className="mx-auto w-[95%] z-30">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-5 -mt-12">
           {/* Header with Search and Filters */}
           <div className="bg-gray-50 mt-3 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">
@@ -193,8 +193,8 @@ const OrganizationUsers = () => {
               <div>
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="h-10 px-4 rounded-lg mr-4 border border-gray-300 
-                     hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                  className="h-10 px-4 rounded-lg mr-4 border border-gray-400 
+                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600  transition-colors flex items-center space-x-2"
                 >
                   <Filter size={18} />
                   {appliedFiltersCount > 0 && (
@@ -207,32 +207,34 @@ const OrganizationUsers = () => {
               </div>
 
               {/* Search Bar */}
-              <div className="flex-grow max-w-xl">
-                <div className="relative w-[300px]">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon size={18} className="text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-                 text-sm placeholder-gray-500"
-                  />
-                  {searchTerm && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <button
-                        onClick={() => dispatch(setSearchTerm(""))}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        <X size={18} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+             <div className="flex-grow max-w-xl">
+              <div className="relative w-[300px] border border-gray-50 rounded-lg 
+                  focus-within:border-gray-300 focus-within:ring-1 
+                  focus-within:ring-lightBlue-500 transition-colors">
+       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+       <SearchIcon size={18} className="text-gray-400" />
+    </div>
+    <input
+      type="text"
+      placeholder="Search..."
+      value={searchTerm}
+      onChange={handleSearchChange}
+      className="w-full h-10 pl-10 pr-10 rounded-lg bg-transparent text-sm 
+                 placeholder-gray-500 focus:outline-none"
+    />
+    {searchTerm && (
+      <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+        <button
+          onClick={() => dispatch(setSearchTerm(""))}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          <X size={18} />
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+
 
               {/* Add New Button */}
               <button
