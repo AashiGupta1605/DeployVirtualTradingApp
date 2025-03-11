@@ -178,7 +178,7 @@ const OrganizationTable = ({
           <tr key={org._id} className="hover:bg-gray-50 transition-colors duration-150">
             <td className="px-6 py-4 whitespace-nowrap">
               <div className="flex items-center">
-                <button 
+                {/* <button 
                   onClick={() => toggleRow(org._id)}
                   className="mr-2 focus:outline-none"
                 >
@@ -187,7 +187,7 @@ const OrganizationTable = ({
                   ) : (
                     <ChevronRight className="text-gray-500" size={16} />
                   )}
-                </button>
+                </button> */}
                 <div className="text-sm font-medium text-gray-900">{org.name}</div>
               </div>
             </td>

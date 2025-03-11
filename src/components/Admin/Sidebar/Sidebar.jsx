@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import PropTypes from 'prop-types';
 import { resetAdminState } from '../../../redux/Admin/AdminSlice';
+import toast from "react-hot-toast";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
@@ -21,6 +22,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     dispatch(resetAdminState());
+    toast.success("Logout Successfully");
     navigate('/');
   };
 
