@@ -3,6 +3,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
+import axiosInstance from "../../../utils/axiosConfig";
 
 // Fetch organization user feedbacks
 // export const fetchOrganizationUserFeedback = createAsyncThunk(
@@ -43,7 +44,7 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 export const fetchOrganizationFeedback = createAsyncThunk(
   "feedbacks/fetchOrganizationFeedbacks",
   async ({ orgName, page, limit, search, startDate, endDate }) => {
-    const response = await axios.get(`${BASE_API_URL}/user/feedback/${orgName}/feedback`, {
+    const response = await axiosInstance.get(`${BASE_API_URL}/user/feedback/${orgName}/feedback`, {
       params: { page, limit, search, startDate, endDate },
     });
     console.log(response.data);
@@ -56,7 +57,7 @@ export const registerOrganizationFeedback = createAsyncThunk(
   "feedbacks/registerOrganizationFeedback",
   async (feedbackData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_API_URL}/user/feedback/register`, feedbackData);
+      const response = await axiosInstance.post(`${BASE_API_URL}/user/feedback/register`, feedbackData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -69,7 +70,7 @@ export const updateOrganizationFeedback = createAsyncThunk(
   "feedbacks/updateOrganizationFeedback",
   async ({ feedbackId, feedbackData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_API_URL}/user/feedback/update/${feedbackId}`, feedbackData);
+      const response = await axiosInstance.put(`${BASE_API_URL}/user/feedback/update/${feedbackId}`, feedbackData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -82,7 +83,7 @@ export const deleteOrganizationFeedback = createAsyncThunk(
   "feedbacks/deleteOrganizationFeedback",
   async (feedbackId, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${BASE_API_URL}/user/feedback/delete/${feedbackId}`);
+      const response = await axiosInstance.delete(`${BASE_API_URL}/user/feedback/delete/${feedbackId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

@@ -2,13 +2,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import toast from "react-hot-toast";
+import axiosInstance from "../../../utils/axiosConfig";
 
 // Async Thunk for registering a new user
 export const registerOrganizationUser = createAsyncThunk(
   "organizationUser/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_API_URL}/organization/user/register`, userData);
+      const response = await axiosInstance.post(`${BASE_API_URL}/organization/user/register`, userData);
       // toast.success("User registered successfully!");
       toast.success(response?.data?.msg);
       return response.data; // Return the newly created user
@@ -24,7 +25,7 @@ export const updateOrganizationUser = createAsyncThunk(
   "organizationUser/update",
   async ({ id, userData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_API_URL}/organization/user/${id}`, userData);
+      const response = await axiosInstance.put(`${BASE_API_URL}/organization/user/${id}`, userData);
       // toast.success("User updated successfully!");
       toast.success(response?.data?.msg); 
       return response.data; // Return the updated user
@@ -45,7 +46,7 @@ export const fetchOrganizationUsers = createAsyncThunk(
   // async ({ orgName, page, limit, search, startDate, endDate }, { rejectWithValue }) => {
 
     try {
-      const response = await axios.get(`${BASE_API_URL}/organization/${orgName}/users`, {
+      const response = await axiosInstance.get(`${BASE_API_URL}/organization/${orgName}/users`, {
         params: {
           page,
           limit,
@@ -72,7 +73,7 @@ export const deleteOrganizationUser = createAsyncThunk(
   "organizationUser/deleteUser",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${BASE_API_URL}/organization/user/${id}`);
+      await axiosInstance.delete(`${BASE_API_URL}/organization/user/${id}`);
       toast.success("User deleted successfully!");
       return id; // Return the deleted user's ID
     } catch (error) {

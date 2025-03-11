@@ -1,23 +1,19 @@
 import React from 'react';
-import { User, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
+import { User, Wallet, TrendingUp, TrendingDown, BookUser } from 'lucide-react';
 
 const PortfolioHeader = ({ user, statistics, balance }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 w-full">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {/* Left - User Info */}
-        <div className="flex items-center space-x-4">
-          <div className="p-3 bg-blue-50 rounded-full">
-            <User className="w-6 h-6 text-blue-600" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold">{user?.name}'s Portfolio</h2>
-            <p className="text-sm text-gray-500">Active Investor</p>
-          </div>
+        <div className="flex items-center space-x-2">
+            <BookUser className="" size={28} />
+            <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
+            My Portfolio</h2>
         </div>
 
         {/* Center - Balance */}
-        <div className="flex items-center justify-center space-x-4">
+        {/* <div className="flex items-center justify-center space-x-4">
           <div className="p-3 bg-green-50 rounded-full">
             <Wallet className="w-6 h-6 text-green-600" />
           </div>
@@ -25,7 +21,7 @@ const PortfolioHeader = ({ user, statistics, balance }) => {
             <h3 className="text-xl font-semibold">₹{balance.toFixed(2)}</h3>
             <p className="text-sm text-gray-500">Available Balance</p>
           </div>
-        </div>
+        </div> */}
 
         {/* Right - Trade Stats */}
         <div className="flex items-center justify-end space-x-6">
