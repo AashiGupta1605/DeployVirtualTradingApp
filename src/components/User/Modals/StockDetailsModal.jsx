@@ -1,99 +1,24 @@
-// import React from 'react';
-
-// const StockDetailsModal = ({ stock, onClose }) => {
-//   return (
-//     <div className="fixed inset-0 z-50 flex items-center justify-center">
-/* <div 
-className="fixed inset-0 bg-opacity-50 backdrop-blur-sm"
-onClick={onClose}
-></div> */
-//       <div className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-//         <div className="px-6 py-4 border-b flex justify-between items-center">
-//           <h3 className="text-xl font-semibold">{stock.symbol} Trading History</h3>
-//           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-//             &times;
-//           </button>
-//         </div>
-        
-//         <div className="p-6">
-//           <div className="grid grid-cols-2 gap-4 mb-6">
-//             <div className="bg-gray-50 p-4 rounded-lg">
-//               <h4 className="text-sm text-gray-500 mb-2">Total Shares</h4>
-//               <p className="text-xl font-bold">
-//                 {stock.holding?.quantity || 0} shares
-//               </p>
-//             </div>
-//             <div className="bg-gray-50 p-4 rounded-lg">
-//               <h4 className="text-sm text-gray-500 mb-2">Average Price</h4>
-//               <p className="text-xl font-bold">
-//                 ₹{stock.holding?.averageBuyPrice?.toFixed(2) || '0.00'}
-//               </p>
-//             </div>
-//           </div>
-
-//           <div className="overflow-x-auto">
-//             <table className="min-w-full">
-//               <thead className="bg-gray-50">
-//                 <tr>
-//                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-//                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-//                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-//                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-//                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-//                 </tr>
-//               </thead>
-//               <tbody className="divide-y divide-gray-200">
-//                 {stock.transactions.map((transaction, index) => (
-//                   <tr key={index}>
-//                     <td className="px-4 py-3 text-sm">
-//                       {new Date(transaction.createdAt).toLocaleDateString()}
-//                     </td>
-//                     <td className="px-4 py-3">
-//                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-//                         transaction.type === 'buy' 
-//                           ? 'bg-green-100 text-green-800' 
-//                           : 'bg-red-100 text-red-800'
-//                       }`}>
-//                         {transaction.type}
-//                       </span>
-//                     </td>
-//                     <td className="px-4 py-3 text-sm">{transaction.numberOfShares}</td>
-//                     <td className="px-4 py-3 text-sm">₹{transaction.price.toFixed(2)}</td>
-//                     <td className="px-4 py-3 text-sm">₹{transaction.total.toFixed(2)}</td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default StockDetailsModal;
-
-
 import React from 'react';
 
 const StockDetailsModal = ({ stock, onClose }) => {
-
-    if(stock.length === 0){
-        return (
-            <div className='text-center flex justify-center items-center h-screen text-4xl'>PLEASE DO TRADING TO SEE THE HISTORY....</div>
-        )
-    }
+  if (stock.length === 0) {
+    return (
+      <div className='text-center flex justify-center items-center h-screen text-4xl'>
+        PLEASE DO TRADING TO SEE THE HISTORY....
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay with gray transparent background */}
       <div 
-        className="fixed inset-0 bg-opacity-50 backdrop-blur-sm"
+        className="fixed inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>
 
       {/* Modal Content */}
-      <div className="relative bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all">
+      <div className="relative bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
           <h3 className="text-xl font-semibold text-gray-800">{stock.symbol} Trading History</h3>
@@ -130,11 +55,11 @@ const StockDetailsModal = ({ stock, onClose }) => {
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -143,10 +68,10 @@ const StockDetailsModal = ({ stock, onClose }) => {
                     key={index}
                     className="hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-4 py-3 text-sm text-gray-700">
+                    <td className="px-6 py-4 text-sm text-gray-700">
                       {new Date(transaction.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         transaction.type === 'buy' 
                           ? 'bg-green-100 text-green-700' 
@@ -155,9 +80,9 @@ const StockDetailsModal = ({ stock, onClose }) => {
                         {transaction.type.toUpperCase()}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700">{transaction.numberOfShares}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">₹{transaction.price.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700">₹{transaction.total.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700">{transaction.numberOfShares}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700">₹{transaction.price.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700">₹{transaction.total.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
