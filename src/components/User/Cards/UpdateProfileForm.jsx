@@ -68,13 +68,19 @@ const UpdateProfileForm = ({ isOpen, onClose, onUpdate }) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                   <input type="text" name="name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200" required />
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200" required />
                   {formik.touched.name && formik.errors.name && <p className="text-red-500 text-sm">{formik.errors.name}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
                   <input type="date" name="dob" value={formik.values.dob} onChange={formik.handleChange} onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200" required />
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200" required />
                   {formik.touched.dob && formik.errors.dob && <p className="text-red-500 text-sm">{formik.errors.dob}</p>}
                 </div>
                 <div>
@@ -96,13 +102,19 @@ const UpdateProfileForm = ({ isOpen, onClose, onUpdate }) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input type="email" name="email" value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200" required />
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200" required />
                   {formik.touched.email && formik.errors.email && <p className="text-red-500 text-sm">{formik.errors.email}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
                   <input type="text" name="mobile" value={formik.values.mobile} onChange={formik.handleChange} onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200" required />
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200" required />
                   {formik.touched.mobile && formik.errors.mobile && <p className="text-red-500 text-sm">{formik.errors.mobile}</p>}
                 </div>
               </div>

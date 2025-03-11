@@ -370,6 +370,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NotificationDropdown from "../Dropdowns/NotificationDropdown";
 import DashboardDropdown from "../Dropdowns/DashboardDropdown";
+import toast from "react-hot-toast";
 import Modal from  "../Modals/tradingModal"
 import { useDispatch, useSelector } from "react-redux";
 
@@ -386,6 +387,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    toast.success("Logout Successfully");
     navigate("/login");
   };
 
