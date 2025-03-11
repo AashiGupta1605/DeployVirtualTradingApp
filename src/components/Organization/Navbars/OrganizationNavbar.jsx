@@ -17,7 +17,7 @@ const {orgId, orgName} = useSelector((state) => state.organization.auth);
   }, [dispatch, orgId]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-10 bg-white shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 z-4 bg-white shadow-lg">
       <div className="w-full mx-auto flex items-center justify-between p-4 md:px-10 px-4">
         {/* Brand with Logo */}
         <a

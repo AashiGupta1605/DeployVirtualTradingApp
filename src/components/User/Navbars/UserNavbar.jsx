@@ -94,6 +94,11 @@ export default function UserNavbar({ sidebarExpanded }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate(); // Hook for navigation
+  const user = JSON.parse(localStorage.getItem("user"));
+console.log(user);
+
+  
+  
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
@@ -108,7 +113,7 @@ export default function UserNavbar({ sidebarExpanded }) {
     <nav
       className="sticky top-0 w-full z-5 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out"
     >
-      <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
+      <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4 gap-x-3">
         {/* Brand with Icon */}
         <a
           className={`text-gray-700 text-lg uppercase lg:flex hidden items-center space-x-4 font-bold hover:text-gray-900 transition-colors ${
@@ -150,6 +155,12 @@ export default function UserNavbar({ sidebarExpanded }) {
             />
           </div>
         </form>
+
+
+        <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all">
+          <p title="username" className="text-lg">{user.name}</p>
+        </div>
+
 
         {/* Logout Dropdown */}
         <div className="relative">

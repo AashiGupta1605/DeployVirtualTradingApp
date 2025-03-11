@@ -87,8 +87,9 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+    <div className="fixed inset-0 z-45 flex items-center justify-center overflow-y-auto">
       <Toaster />
+
       <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
       <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
 
