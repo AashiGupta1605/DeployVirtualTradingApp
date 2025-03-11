@@ -190,7 +190,7 @@ const OrganizationUsersFeedbacks = () => {
                   focus-within:border-gray-300 focus-within:ring-1 
                   focus-within:ring-lightBlue-500 transition-colors ">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon size={16} className="text-gray-400" />
+                    <SearchIcon size={18} className="text-gray-400" />
                   </div>
                   <input
                     type="text"

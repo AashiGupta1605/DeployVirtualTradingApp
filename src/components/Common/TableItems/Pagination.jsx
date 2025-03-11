@@ -21,9 +21,9 @@ const Pagination = ({
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="form-select px-4 rounded-md border-gray-300 shadow-sm 
+            className="form-select px-6 py-2 rounded-md border-gray-300 shadow-sm 
                      focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
-                     focus:ring-opacity-50 text-sm py-2"
+                     focus:ring-opacity-50 text-sm "
           >
             {[ 10, 50, 100, 200].map((num) => (
               <option key={num} value={num} className="text-gray-700">

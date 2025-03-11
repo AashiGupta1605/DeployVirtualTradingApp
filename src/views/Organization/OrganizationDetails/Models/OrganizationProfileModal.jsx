@@ -342,7 +342,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
       <Toaster />
       <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
 
-      <div className="relative w-full max-w-4xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
+      <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
@@ -374,7 +374,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter organization name"
                     required
                   />
@@ -392,7 +395,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.address}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter organization address"
                     required
                   />
@@ -410,7 +416,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.website}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter organization website"
                   />
                   {formik.touched.website && formik.errors.website ? (
@@ -427,7 +436,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.contactPerson}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter contact person name"
                   />
                   {formik.touched.contactPerson && formik.errors.contactPerson ? (
@@ -447,7 +459,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter organization email"
                     required
                   />
@@ -465,7 +480,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.mobile}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter organization mobile number"
                   />
                   {formik.touched.mobile && formik.errors.mobile ? (
@@ -482,7 +500,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
                     placeholder="Enter new password (leave blank to keep current)"
                   />
                   {formik.touched.password && formik.errors.password ? (

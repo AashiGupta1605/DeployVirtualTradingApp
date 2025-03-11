@@ -644,7 +644,9 @@ ActiveFiltersDisplay.propTypes = {
 
 // Search Bar Component
 const SearchBar = ({ searchQuery, setSearchQuery, setActiveFilters }) => (
-  <div className="relative w-[300px]">
+  <div className="relative w-[300px] border border-gray-50 rounded-lg 
+                  focus-within:border-gray-300 focus-within:ring-1 
+                  focus-within:ring-lightBlue-500 transition-colors">
     <SearchIcon 
       size={18} 
       className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" 
@@ -802,8 +804,8 @@ const TableFilters = ({
           {/* Filter Button */}
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="h-10 px-4 rounded-lg mr-4 border border-gray-300 
-                     hover:bg-gray-50 transition-colors flex items-center space-x-2"
+            className="h-10 px-4 rounded-lg mr-4 border border-gray-400 
+                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600  transition-colors flex items-center space-x-2"
           >
             <Filter size={18} />
             {activeFiltersCount > 0 && (

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+// import toast from "react-hot-toast";
 import {
   loginUser,
   selectAuthStatus,
@@ -39,6 +40,7 @@ const LoginForm = ({ onClose }) => {
         const resultAction = await dispatch(loginUser(values));
         
         if (loginUser.fulfilled.match(resultAction)) {
+          // toast.success('Login successful!');
           const user = resultAction.payload?.user;
           
           setTimeout(() => {
