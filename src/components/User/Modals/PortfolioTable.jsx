@@ -15,16 +15,16 @@ const PortfolioTable = ({ holdings, transactions, onStockClick }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-white rounded shadow-lg overflow-hidden w-full">
       <table className="min-w-full">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg. Price</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Value</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Trades</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Performance</th>
+            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Stock</th>
+            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Quantity</th>
+            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Avg. Price</th>
+            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Current Value</th>
+            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Trades</th>
+            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Performance</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
