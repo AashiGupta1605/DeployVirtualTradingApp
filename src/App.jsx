@@ -19,6 +19,7 @@ import ServicePage from './views/GuestUser/ServicePage';
 import Show_Nifty50Data_Page from './views/GuestUser/Show_Nifty50Data_Page';
 import Show_ETFData_Page from './views/GuestUser/Show_ETFData_Page';
 import PricingPage from './views/GuestUser/PricingPage';
+// import OrganizationAllFeedbacksTable from './components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationAllFeedbacksTable';
 import BackToTop from './components/GuestUser/BackToTop';
 
 import { Toaster } from 'react-hot-toast';
@@ -46,6 +47,7 @@ const App = () => {
       <Route path="/nifty50" element={<Show_Nifty50Data_Page/>} />
       <Route path="/etf" element={<Show_ETFData_Page/>} />
       <Route path="/pricing" element={<PricingPage/>} />
+      {/* <Route path="/feed" element={<OrganizationAllFeedbacksTable/>} /> */}
 
       {/* Redirect for unknown routes */}
       <Route path="*" element={<Navigate to="/" />} />

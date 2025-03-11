@@ -1,0 +1,486 @@
+import { Filter, Star, ThumbsUp, ThumbsDown } from "lucide-react";
+import { FaTimes, FaComments } from "react-icons/fa";
+import { IoIosArrowUp } from "react-icons/io";
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { BASE_API_URL } from "../../../../../utils/BaseUrl";
+
+const CATEGORY_COLORS = {
+  "Website UI/UX": "bg-blue-100 text-blue-800",
+  "Trading Features": "bg-green-100 text-green-800",
+  "Data Accuracy": "bg-purple-100 text-purple-800",
+  "Performance & Speed": "bg-yellow-100 text-yellow-800",
+  "Customer Support": "bg-orange-100 text-orange-800",
+  Other: "bg-gray-100 text-gray-800",
+};
+
+const OrganizationAllFeedbacksTable = ({ closeModal }) => {
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const [expandedRow, setExpandedRow] = useState(null);
+  const toggleRow = (id) => {
+    setExpandedRow(expandedRow === id ? null : id);
+  };
+
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [orgData, setOrgData] = useState([]);
+  
+  const [err, setErr] = useState("");
+
+  const [category, setCategory] = useState("all");
+  const [organization, setOrganization] = useState("All");
+  const [recommend, setRecommend] = useState("all");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("createdDate");
+  const [order, setOrder] = useState("decreasing");
+
+  const fetchOrganizationFeedbacks = async () => {
+    try {
+      const searchQuery = search.trim() === "" ? "all" : search;
+      const response = await axios.get(
+        `${BASE_API_URL}/guestUser/organizationFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
+      );
+      setFeedbacks(response.data.feedbackData);
+      console.log("Users Feedbacks Object: ", response.data);
+    } catch (error) {
+      setErr(error.response?.data?.message || "Something went wrong.");
+    }
+  };
+
+  const fetchOrganizationsData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_API_URL}/guestUser/getAllOrganizations`
+      );
+      setOrgData(response.data.data);
+      setErr("");
+    } catch (error) {
+      setErr(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        fetchOrganizationFeedbacks();
+        fetchOrganizationsData();
+        setErr("");
+      } catch (error) {
+        setErr(error.response?.data?.message || "Something went wrong.");
+      }
+    };
+    fetchData();
+  }, [sortBy, order, category, recommend, organization, search]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(17,24,38,0.4)] pt-19" // Light background
+      onClick={closeModal}
+    >
+      <div
+        className="relative bg-white pl-1 pr-1 pt-0 rounded-xl shadow-lg w-[85%] h-[83vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
+      >
+        <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-100 p-4 mt-1">
+          {/* Top Header */}
+          <div className="flex justify-between items-center">
+            {/* Left Side (Icon + Heading) */}
+            <div className="flex items-center gap-2">
+              <FaComments className="text-[#2474ff] text-[27px]" />
+              <h2 className="text-[18px] font-bold text-gray-600">
+                Organizations' Feedbacks
+              </h2>
+            </div>
+
+            {/* Right Side (Total Feedbacks + Filter Icon + Close Button) */}
+            <div className="flex items-center gap-4">
+              <h6 className="text-base font-semibold text-gray-400">
+                Total Feedbacks: {feedbacks.length}
+              </h6>
+
+              {/* Filter Icon */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-3 px-2 py-1 h-[37px] border rounded-lg transition-all duration-200 
+                ${
+                  showFilters
+                    ? "border-gray-300 shadow-md w-[90px]"
+                    : "border-gray-200 w-[90px] hover:border-gray-300"
+                }`}
+              >
+                <Filter className="text-gray-500 text-lg hover:text-gray-700 transition-colors duration-200" />
+                {/* <span className="text-gray-700 font-medium">Filter</span> */}
+                <IoIosArrowUp
+                  className={`text-gray-500 text-lg transition-transform duration-200 ${
+                    showFilters ? "rotate-0" : "rotate-180"
+                  }`}
+                />
+              </button>
+
+              {/* Search bar */}
+              <div className="relative">
+                <div className="relative w-[270px]">
+                  {/* Search Icon */}
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+                    alt="search"
+                    className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
+                  />
+                  {/* Search Input */}
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value || "")}
+                    className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[36px] focus:outline-none focus:shadow-md focus:border-black"
+                  />
+                </div>
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+              >
+                <FaTimes className="text-gray-400 hover:text-gray-600 text-lg" />
+              </button>
+            </div>
+          </div>
+
+          {/* Filters Section (Visible only when showFilters is true) */}
+          {showFilters && (
+            <div className="flex justify-end items-center mt-5">
+              <div className="flex gap-4 mr-auto">
+              
+                {/* Organization Select */}
+                <div className="flex flex-col relative">
+                  {/* Label */}
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Organization
+                  </label>
+
+                  <div className="relative">
+                    {/* Clickable Select Box */}
+                    <button
+                      onClick={() => setShowDropdown(!showDropdown)}
+                      className={`border rounded-lg px-5 py-[7px] text-sm w-38 text-left flex justify-between items-center 
+                      bg-white transition-colors duration-200 
+                      ${
+                        showDropdown
+                          ? "border-blue-500 bg-blue-100"
+                          : "border-gray-300 hover:border-blue-300"
+                      }`}
+                    >
+                      <span className="text-gray-600">
+                        {organization || "All"}
+                      </span>
+                      <IoIosArrowUp
+                        className={`text-gray-500 text-lg transition-transform duration-200 
+                        ${showDropdown ? "rotate-180" : "rotate-0"}`}
+                      />
+                    </button>
+
+                    {/* Scrollable Organization Options */}
+                    <div className="relative">
+                    {showDropdown && (
+                      <div className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-lg max-h-56 overflow-y-auto z-50">
+                        {/* "All" Option */}
+                        <div
+                          onClick={() => {
+                            setOrganization("All");
+                            setShowDropdown(false);
+                          }}
+                          className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
+                        >
+                          All
+                        </div>
+
+                        {/* Organization List */}
+                        {orgData.map((org) => (
+                          <div
+                            key={org._id}
+                            onClick={() => {
+                              setOrganization(org.name);
+                              setShowDropdown(false);
+                            }}
+                            className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
+                          >
+                          {org.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Category Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Category
+                  </label>
+                  <div className="relative">
+                    <select
+                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value || "all")}
+                    >
+                      <option disabled>Category</option>
+                      <option value="all">All</option>
+                      <option value="Website UI">Website UI/UX</option>
+                      <option value="Data Accuracy">Data Accuracy</option>
+                      <option value="Trading Features">Trading Features</option>
+                      <option value="Customer Support">Customer Support</option>
+                      <option value="Performance & Speed">Performance & Speed</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Recommendation Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Recommend
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="Recommend"
+                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      value={recommend}
+                      onChange={(e) => setRecommend(e.target.value || "all")}
+                    >
+                      <option disabled>Recommend</option>
+                      <option value="all">All</option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Sort By Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    SortBy
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="sortBy"
+                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      value={sortBy}
+                      onChange={(e) =>
+                        setSortBy(e.target.value || "createdDate")
+                      }
+                    >
+                      <option disabled>SortBy</option>
+                      <option value="createdDate">Recent Feedback</option>
+                      <option value="rating">Ratings</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Order Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Order
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="Order"
+                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      value={order}
+                      onChange={(e) => setOrder(e.target.value || "decreasing")}
+                    >
+                      <option disabled>Order</option>
+                      <option value="decreasing">High</option>
+                      <option value="increasing">Low</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {err && <p className="text-red-500">{err}</p>}
+
+        {/* List of Feedbacks */}
+        <div className={`flex ${showFilters ? "h-[51vh]" : "h-[63vh]"}`}>
+          <div className="inset-0 overflow-y-auto w-full max-h-[500px] rounded-lg shadow-md">
+            <table className="inset-0 min-w-full table-fixed divide-y divide-gray-200 border-collapse bg-white">
+              <thead className="bg-gray-50 sticky top-0 z-10">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Organization Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Feedbacks
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ratings
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Recommendations
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Suggestions
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {feedbacks.length > 0 ? (
+                  feedbacks.map((feedbackData, index) => {
+                    const organizationName = orgData.find(
+                      (org) => org._id === feedbackData.organizationId?._id
+                    );
+                    return (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {organizationName
+                            ? organizationName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                            : "Anonymous Organization"
+                          }
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              CATEGORY_COLORS[feedbackData.feedbackCategory]
+                            }`}
+                          >
+                            {feedbackData.feedbackCategory}
+                          </span>
+                        </td>
+
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {expandedRow === feedbackData._id ? (
+                            <>
+                              {feedbackData.feedbackMessage}
+                              <button
+                                onClick={() => toggleRow(feedbackData._id)}
+                                className="ml-2 text-blue-500 hover:text-blue-700"
+                              >
+                                Show less
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {feedbackData.feedbackMessage?.length > 50
+                                ? `${feedbackData.feedbackMessage.substring(0, 50)}...`
+                                : feedbackData.feedbackMessage ||
+                                  "No feedbacks provided"}
+                              {feedbackData.feedbackMessage?.length > 50 && (
+                                <button
+                                  onClick={() => toggleRow(feedbackData._id)}
+                                  className="ml-2 text-blue-500 hover:text-blue-700"
+                                >
+                                  Show more
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex justify-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                size={18}
+                                className={`mx-0.5 ${
+                                  i < feedbackData.rating
+                                    ? "text-yellow-400 fill-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          {feedbackData.recommend ? (
+                            <ThumbsUp
+                              size={20}
+                              className="text-green-500 inline"
+                            />
+                          ) : (
+                            <ThumbsDown
+                              size={20}
+                              className="text-red-500 inline"
+                            />
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {expandedRow === `suggestion-${feedbackData._id}` ? (
+                            <>
+                              {feedbackData.suggestions}
+                              <button
+                                onClick={() =>
+                                  toggleRow(`suggestion-${feedbackData._id}`)
+                                }
+                                className="ml-2 text-blue-500 hover:text-blue-700"
+                              >
+                                Show less
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {feedbackData.suggestions?.length > 50
+                                ? `${feedbackData.suggestions.substring(0, 50)}...`
+                                : feedbackData.suggestions || "No suggestions provided"}
+                              {feedbackData.suggestions?.length > 50 && (
+                                <button
+                                  onClick={() =>
+                                    toggleRow(`suggestion-${feedbackData._id}`)
+                                  }
+                                  className="ml-2 text-blue-500 hover:text-blue-700"
+                                >
+                                  Show more
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(feedbackData.createdDate).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="p-4 text-center text-gray-500">
+                      No feedbacks available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Close Button */}
+        <div className="sticky bottom-0 -pb-2 bg-white py-1 border-t border-gray-100 flex justify-end">
+          <button
+            onClick={closeModal}
+            className="px-6 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-400 hover:text-white transition mt-1 -mb-2 mr-2"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrganizationAllFeedbacksTable;

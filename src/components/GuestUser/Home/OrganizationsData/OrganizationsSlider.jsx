@@ -4,12 +4,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../../utils/BaseUrl';
 
+import { HiOfficeBuilding } from "react-icons/hi";
+// import { FaBuilding } from "react-icons/fa";
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import "./OrganizationsSliderCSS.css"
 
-import "./ShowAllOrganizationsModal"
 import ShowAllOrganizationsModal from './ShowAllOrganizationsModal';
 
 const OrganizationsSlider = () => {
@@ -60,7 +62,11 @@ const OrganizationsSlider = () => {
 
       <div className="flex justify-between items-center mb-4">
         {/* Left-most heading */}
-        <h3 className="text-xl font-bold text-[#1a2c47]">Partnered Organizations</h3>
+        <div className='flex gap-3 items-center'>
+        <HiOfficeBuilding className="text-blue-500 text-[34px]" />
+        {/* <FaBuilding className="text-blue-500 text-[34px]" /> */}
+        <h3 className="text-xl font-bold text-gray-700">Partnered Organizations</h3>
+        </div>
 
         {/* Right side container */}
         <div className="flex items-center gap-4">

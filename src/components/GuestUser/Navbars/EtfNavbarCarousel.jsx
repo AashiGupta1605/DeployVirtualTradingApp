@@ -52,8 +52,8 @@ const EtfNavbarCarousel = () => {
 
   return (
     <>
-    <div className="fixed left-0 top-24 w-full py-[2px] z-30 bg-white"/>
-    <div className="fixed left-0 top-25 w-full bg-black text-white py-[1px] z-30 flex items-center">
+    <div className="fixed left-0 top-23 w-full py-[2px] z-30 bg-white"/>
+    <div className="fixed left-0 top-24 w-full bg-[#014668] text-white py-[1px] z-30 flex items-center">
   {/* Left Fixed Heading */}
   <div className="ml-4 font-bold text-sm whitespace-nowrap">ETF Stocks: &nbsp;</div>
 
@@ -66,7 +66,7 @@ const EtfNavbarCarousel = () => {
     ) : (
       <Slider {...settings}>
         {stockData.map((stock, index) => (
-          <div key={index} className="flex items-center space-x-1 bg-black px-2 py-[1px] rounded-md">
+          <div key={index} className="flex items-center space-x-1 bg-[#012d44] px-2 py-[1px] rounded-md">
             <span className="font-bold text-[13px]">{stock.name}</span>
             <span className="text-gray-300 text-[13px]">{stock.price}</span>
             <span className={`font-semibold ${stock.change.startsWith("+") ? "text-green-400" : "text-red-400"}`}>

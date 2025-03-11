@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { FaChartLine } from "react-icons/fa";
+// import { FaCheckCircle } from "react-icons/fa";
 
 const StartScreenPopupModal = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -15,7 +17,7 @@ const StartScreenPopupModal = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 mt-10 flex items-center justify-center overflow-y-auto"
+      className="fixed inset-0 z-50 mt-8 flex items-center justify-center overflow-y-auto"
       onClick={() => setIsOpen(false)} // Close modal when clicking outside
     >
       {/* Background Overlay */}
@@ -28,20 +30,25 @@ const StartScreenPopupModal = () => {
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
       >
         {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-400">
-          <h2 className="text-2xl font-bold text-gray-800">&nbsp;Welcome</h2>
-          {/* <button
-            onClick={() => setIsOpen(false)}
-            className="w-15 text-bold text-2xl text-red-500 hover:text-white hover:bg-red-300 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-600"
-          >
-            <i className="fas fa-times"></i>
-          </button> */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="w-10 p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-          >
-            <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
-          </button>
+        <div className="p-3 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            {/* Left Side: Icon + Heading */}
+            <div className="flex gap-3 items-center">
+              <FaChartLine className="text-blue-500 text-3xl" />
+              <h2 className="text-base font-semibold text-gray-700">
+                <span className="font-bold text-lg">Welcome:</span> Virtual
+                Trading With PGR
+              </h2>
+            </div>
+
+            {/* Right Side: Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-10 p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+            >
+              <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
+            </button>
+          </div>
         </div>
 
         {/* Content Area with Scrollable Image */}
