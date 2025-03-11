@@ -108,10 +108,11 @@ export const fetchHoldings = createAsyncThunk(
       const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}`);
       return response.data.holdings || [];
     } catch (error) {
-      // return rejectWithValue('Failed to fetch holdings');
+      console.error('Fetch Holdings Error:', error);
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
     }
   }
-); 
+);
 
 // tradingSlice.js
 export const placeOrder = createAsyncThunk(
