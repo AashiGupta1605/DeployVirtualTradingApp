@@ -31,7 +31,7 @@ export const getSubscription = createAsyncThunk(
 
 // redux/User/userSubscriptionPlan/userSubscriptionPlansSlice.js
 
-export const getUserSubscriptions = createAsyncThunk(
+export const getUserSubscriptions = createAsyncThunk(    // get user amount - from this slice in buy sell
     'subscriptionPlan/getUserPlans',
     async (userId, { rejectWithValue }) => {
       try {

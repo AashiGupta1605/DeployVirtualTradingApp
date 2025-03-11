@@ -17,6 +17,7 @@ import {
   selectStatistics,
   selectLoadingState 
 } from '../../../../../redux/User/trading/tradingSlice';
+import toast from 'react-hot-toast';
 
 // Default values for statistics
 const defaultStatistics = {
