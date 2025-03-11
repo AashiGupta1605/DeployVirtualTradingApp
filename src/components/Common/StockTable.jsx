@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDown, ChevronRight, ChevronLeft, Filter } from "lucide-react";
 import { fetchStockData } from "../../redux/Common/etfSlice";
+import {  X, SearchIcon } from "lucide-react";
 import CompanyDetailModal from "../../components/Admin/Modals/companyDetailModal/CompanyDetailModal";
 import "../../assets/styles/table.css";
 
@@ -146,22 +147,29 @@ const StockTable = () => {
       <h2 className="flex items-center text-xl font-bold text-gray-800">
         <Filter className="mr-2 text-gray-600" size={20} /> ETF Data
       </h2>
-      <div className="relative">
-<input
-  type="text"
-  placeholder="Search by symbol..."
-  className="border p-2 pr-10 rounded w-full"
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-/>
-{searchTerm && (
-  <button
-    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-0"
-    onClick={() => setSearchTerm("")}
-  >
-    ✕
-  </button>
-)}
+      <div className="relative w-[300px] border border-gray-50 rounded-lg 
+                  focus-within:border-gray-300 focus-within:ring-1 
+                  focus-within:ring-lightBlue-500 transition-colors">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <SearchIcon size={18} className="text-gray-400" />
+                  </div>
+                <input
+                 type="text"
+                 placeholder="Search by symbol..."
+                 className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                 text-sm placeholder-gray-500"
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)} 
+                />
+       {searchTerm && (
+         <button
+            className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-0"
+            onClick={() => setSearchTerm("")}
+         >
+          <X size={16} />
+          </button>
+          )}
 </div>
     </div>
 
@@ -229,21 +237,23 @@ const StockTable = () => {
 
     <div className="flex justify-between items-center mt-4 px-4 py-3">
  <div className="flex items-center space-x-4">
-  <span className="text-sm text-gray-700">Rows per page:</span>
+  <span className="text-sm font-medium text-gray-700">Rows per page:</span>
   <select
           value={itemsPerPage} 
           onChange={(e) => {
             setItemsPerPage(Number(e.target.value));
             setCurrentPage(1);
           }}
-          className="border rounded px-6 py-2 text-sm text-gray-600"
+          className="form-select px-6 py-2 rounded-md border-gray-300 shadow-sm 
+                     focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
+                     focus:ring-opacity-50 text-sm "
         >
           {[10, 50, 100, 200].map((num) => (
             <option key={num} value={num}>{num}</option>
           ))}
         </select>
         <span></span>
-        <span className="text-sm text-gray-600">
+        <span className="text-sm font-medium text-gray-600">
           {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedData.length)} {" "}
            of {" "} {sortedData.length}
         </span>

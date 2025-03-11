@@ -44,24 +44,65 @@ export const getUserSubscriptions = createAsyncThunk(    // get user amount - fr
     }
   );
 
-// redux/User/userSubscriptionPlan/userSubscriptionPlansSlice.js
-
+// userSubscriptionPlansSlice.js
 export const updateSubscription = createAsyncThunk(
   'subscriptionPlan/update',
   async ({ id, updateData }, { rejectWithValue }) => {
     try {
-      // Make sure you're using the correct id parameter
-      const response = await axios.patch(`${BASE_API_URL}/user/subscription/${id}`, updateData);
-      
-      // Check if response.data exists
+      console.log('Updating Subscription:', { id, updateData }); // Debugging log
+
+      // Validate input
+      if (!id) {
+        throw new Error('Subscription ID is required');
+      }
+
+      if (!updateData || Object.keys(updateData).length === 0) {
+        throw new Error('Update data is required');
+      }
+
+      // Validate vertualAmount if it's being updated
+      if ('vertualAmount' in updateData) {
+        if (typeof updateData.vertualAmount !== 'number') {
+          throw new Error('vertualAmount must be a number');
+        }
+        if (updateData.vertualAmount < 0) {
+          throw new Error('vertualAmount cannot be negative');
+        }
+      }
+
+      // Make the API call
+      const response = await axios.patch(
+        `${BASE_API_URL}/user/subscription/${id}`, 
+        updateData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      // Log the response for debugging
+      console.log('Update Subscription Response:', response.data);
+
+      // Validate response
       if (!response.data) {
         throw new Error('No data received from server');
       }
-      
+
       return response.data;
     } catch (error) {
+      // Log the full error for debugging
+      console.error('Update Subscription Error:', {
+        message: error.message,
+        response: error.response?.data,
+        stack: error.stack
+      });
+
+      // Return a more informative error message
       return rejectWithValue(
-        error.response?.data?.message || error.message || 'Failed to update subscription'
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to update subscription'
       );
     }
   }

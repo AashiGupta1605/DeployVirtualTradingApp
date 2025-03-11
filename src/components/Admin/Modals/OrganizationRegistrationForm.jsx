@@ -175,7 +175,7 @@ useEffect(() => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50" />
-      <div className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+      <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
@@ -312,7 +312,7 @@ useEffect(() => {
 };
 
 // Form Field Component
-const FormField = ({ name, label, required = false, type = "text", placeholder }) => (
+const FormField = ({ name, label, required = false, type = "text", placeholder, className = "" }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-2">
       {label} {required && <span className="text-red-500">*</span>}
@@ -320,7 +320,10 @@ const FormField = ({ name, label, required = false, type = "text", placeholder }
     <Field
       type={type}
       name={name}
-      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+      className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+                        bg-white text-gray-900 
+                        focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                        focus:outline-none transition-all duration-200"
       placeholder={placeholder}
     />
     <ErrorMessage
@@ -336,7 +339,8 @@ FormField.propTypes = {
   label: PropTypes.string.isRequired,
   required: PropTypes.bool,
   type: PropTypes.string,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  className: PropTypes.string,
 };
 
 OrganizationRegistrationForm.propTypes = {
