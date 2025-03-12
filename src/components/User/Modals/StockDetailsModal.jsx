@@ -1,3 +1,4 @@
+
 // import React from 'react';
 // import CompanyDetailModal from "../../Common/CompanyDetailModal";
 // const StockDetailsModal = ({ stock, onClose }) => {

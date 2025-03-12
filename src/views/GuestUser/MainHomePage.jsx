@@ -8,10 +8,8 @@ import StartScreenPopupModal from "../../components/GuestUser/Home/StartScreenPo
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 
 import Footer from "../../components/GuestUser/Footers/Footer";
-// import PricingModalFooter from "../../components/GuestUser/Footers/PricingModalFooter";
 
 import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
-// import FooterSlider3 from "../../components/GuestUser/Footers/FooterSlider3";
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
@@ -19,9 +17,13 @@ import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackD
 import { Link } from "react-router-dom";
 import Stock from "../../assets/stock.jpg";
 
+// import BackToTop from "../../components/GuestUser/BackToTop";
+
 const MainHomePage = () => {
   return (
     <>
+      {/* <BackToTop/> */}
+
       <StartScreenPopupModal />
       <MainHomeNavbar fixed />
       <NiftyNavbarCarousel fixed />
@@ -66,10 +68,8 @@ const MainHomePage = () => {
       <UserFeedbackCards />
       <OrganizationFeedbackCards />
 
-      {/* <FooterSlider3/> */}
       <div className="mb-25"></div>
       <Footer/>
-      {/* <PricingModalFooter/> */}
     </>
   );
 };

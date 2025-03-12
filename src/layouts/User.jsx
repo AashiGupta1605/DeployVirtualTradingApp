@@ -13,6 +13,7 @@ import Dashboard from "../views/user/userDashboard";
 import Profile from "../views/user/Profile";
 import EtfTable from "../views/user/etfTable";
 import NiftyTable from "../views/user/niftyTable";
+import Nifty500Table from "../views/user/nifty500table";
 import FeedbackTable from "../views/user/feedbacktable";
 import TradingNifty from "../views/user/tradingnifty";
 
@@ -42,6 +43,7 @@ export default function User() {
               <Routes>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="niftytable" element={<NiftyTable />} />
+                <Route path="nifty500table" element={<Nifty500Table />} />
                 <Route path="etftable" element={<EtfTable />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="feedback" element={<FeedbackTable />} />

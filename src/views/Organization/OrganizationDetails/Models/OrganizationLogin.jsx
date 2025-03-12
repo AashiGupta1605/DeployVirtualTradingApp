@@ -38,12 +38,13 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
         const resultAction = await dispatch(loginOrganization(credentials));
 
         if (loginOrganization.fulfilled.match(resultAction)) {
-          toast.success('Login successful!');
+        
           // localStorage.setItem('orgName', resultAction.payload.orgName);
           // localStorage.setItem('token', resultAction.payload.token);
           // localStorage.setItem('orgId', resultAction.payload.orgId);
           // localStorage.setItem('org', JSON.stringify(resultAction.payload.org));
           navigate('/organization/dashboard');
+          toast.success('Login successful!');
         } else if (loginOrganization.rejected.match(resultAction)) {
           toast.error(resultAction.payload?.message || 'Login failed. Please try again.');
         }

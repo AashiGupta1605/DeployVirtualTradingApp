@@ -46,6 +46,7 @@ const App = () => {
       <Route path="/nifty50" element={<Show_Nifty50Data_Page/>} />
       <Route path="/etf" element={<Show_ETFData_Page/>} />
       <Route path="/pricing" element={<PricingPage/>} />
+      {/* <Route path="/feed" element={<OrganizationAllFeedbacksTable/>} /> */}
 
       {/* Redirect for unknown routes */}
       <Route path="*" element={<Navigate to="/" />} />
