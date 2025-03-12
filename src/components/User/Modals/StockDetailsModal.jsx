@@ -117,8 +117,6 @@
 // export default StockDetailsModal;
 
 
-
-
 import React, { useState } from 'react';
 import CompanyDetailModal from "../../Common/CompanyDetailModal";
 
