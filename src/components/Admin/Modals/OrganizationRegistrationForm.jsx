@@ -216,66 +216,67 @@ useEffect(() => {
             onSubmit={handleSubmit}
             enableReinitialize
           >
-            {({ isSubmitting }) => (
-              <Form className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-6">
-                  {/* Organization Details Section */}
-                  <div className="bg-gray-50 p-6 rounded-xl flex-1">
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase mb-6">
-                      Organization Details
-                    </h3>
-                    <div className="space-y-6">
-                      <FormField
-                        name="name"
-                        label="Organization Name"
-                        required
-                        placeholder="Enter organization name"
-                      />
-                      <FormField
-                        name="website"
-                        label="Website"
-                        placeholder="Enter website URL"
-                      />
-                      <FormField
-                        name="contactPerson"
-                        label="Contact Person"
-                        required
-                        placeholder="Enter contact person name"
-                      />
-                    </div>
-                  </div>
+           {({ isSubmitting }) => (
+  <Form className="space-y-6">
+    <div className="flex flex-col md:flex-row gap-6">
+      {/* Organization Details Section */}
+      <div className="p-6 rounded-xl flex-1">
+        <div className="space-y-6">
+          <FormField
+            name="name"
+            label="Organization Name"
+            required
+            placeholder="Enter organization name"
+          />
+          <FormField
+            name="website"
+            label="Website"
+            placeholder="Enter website URL"
+          />
+          <FormField
+            name="contactPerson"
+            label="Contact Person"
+            required
+            placeholder="Enter contact person name"
+          />
+        </div>
+      </div>
 
-                  {/* Contact Information Section */}
-                  <div className="bg-gray-50 p-6 rounded-xl flex-1">
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase mb-6">
-                      Contact Information
-                    </h3>
-                    <div className="space-y-6">
-                      <FormField
-                        name="email"
-                        type="email"
-                        label="Email"
-                        required
-                        placeholder="Enter email address"
-                      />
-                      <FormField
-                        name="address"
-                        label="Address"
-                        required
-                        placeholder="Enter address"
-                      />
-                      <FormField
-                        name="mobile"
-                        label="Mobile"
-                        required
-                        placeholder="Enter mobile number"
-                      />
-                    </div>
-                  </div>
-                </div>
+      {/* Contact Information Section */}
+      <div className="p-6 rounded-xl flex-1">
+        <div className="space-y-6">
+          <FormField
+            name="email"
+            type="email"
+            label="Email"
+            required
+            placeholder="Enter email address"
+          />
+          <FormField
+            name="address"
+            label="Address"
+            required
+            placeholder="Enter address"
+          />
+          <FormField
+            name="mobile"
+            label="Mobile"
+            required
+            placeholder="Enter mobile number"
+          />
+           {/* <FormField
+            name="accreditation"
+            label="Accreditation"
+            required
+            placeholder="Enter accreditation details"
+          /> */}
+        
+        </div>
+      </div>
+    </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+    {/* Action Buttons */}
+    <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
                   <button
                     type="button"
                     onClick={onClose}
@@ -302,8 +303,9 @@ useEffect(() => {
                     )}
                   </button>
                 </div>
-              </Form>
-            )}
+  </Form>
+)}
+
           </Formik>
         </div>
       </div>

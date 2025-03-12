@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   loginUser,
   selectAuthStatus,
@@ -24,42 +24,61 @@ const LoginForm = ({ onClose }) => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      identifier: "", // Can be email or mobile
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
+      identifier: Yup.string()
+        .required("Email or Mobile is required")
+        .test("is-email-or-mobile", "Invalid email or mobile format", (value) => {
+          // Check if the input is a valid email or a valid mobile number
+          const isEmail = Yup.string().email().isValidSync(value);
+          const isMobile = /^[6-9]\d{9}$/.test(value); // Valid 10-digit mobile number (starting 6-9)
+          return isEmail || isMobile;
+        }),
       password: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const resultAction = await dispatch(loginUser(values));
-        
+        // setSubmitting(true);
+          // Determine if the input is an email or mobile number
+        const isEmail = Yup.string().email().isValidSync(values.identifier);
+        const credentials = isEmail
+          ? { email: values.identifier, password: values.password }
+          : { mobile: values.identifier, password: values.password };
+  
+        const resultAction = await dispatch(loginUser(credentials));
+  
         if (loginUser.fulfilled.match(resultAction)) {
-          // toast.success('Login successful!');
+         
           const user = resultAction.payload?.user;
-          
+  
           setTimeout(() => {
             setSubmitting(false);
             if (user?.role === "admin") {
               navigate("/admin");
+              toast.success("Login successful!");
             } else {
               navigate("/user");
+              toast.success("Login successful!");
             }
             onClose();
           }, 2000);
         } else {
           setSubmitting(false);
+          toast.error(resultAction.payload?.message || "Login failed. Please try again.");
         }
       } catch (error) {
-        setSubmitting(false);
-      }
+        console.error("Error during login:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      } //finally {
+      //   resetForm();
+      // }
     },
   });
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
@@ -106,21 +125,21 @@ const LoginForm = ({ onClose }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
+                Email or Mobile
                 </label>
                 <input
-                  type="email"
-                  name="email"
+                  type="text"
+                  name="identifier"
                   className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
              focus:outline-none transition-all duration-200"
-                  placeholder="Enter your email"
-                  {...formik.getFieldProps("email")}
+                  placeholder="Enter email or mobile number"
+                  {...formik.getFieldProps("identifier")}
                 />
-                {formik.touched.email && formik.errors.email ? (
+                {formik.touched.identifier && formik.errors.identifier ? (
                   <div className="text-red-500 text-sm mt-1">
-                    {formik.errors.email}
+                    {formik.errors.identifier}
                   </div>
                 ) : null}
               </div>
@@ -146,8 +165,6 @@ const LoginForm = ({ onClose }) => {
               </div>
             </div>
 
-
-
             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
@@ -165,7 +182,6 @@ const LoginForm = ({ onClose }) => {
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>
