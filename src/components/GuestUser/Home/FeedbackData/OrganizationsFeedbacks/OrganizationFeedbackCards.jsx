@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
-import OrganizationAllFeedsModal from "./OrganizationAllFeedsModal";
+import OrganizationAllFeedbacksTable from "./OrganizationAllFeedbacksTable";
+
+import { Star } from "lucide-react";
+// import { MdFeedback } from "react-icons/md";
+import { BiMessageDetail } from "react-icons/bi";
 
 const OrganizationFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -57,8 +61,13 @@ const OrganizationFeedbackCards = () => {
         {/* Flex container for headings and button */}
         <div className="flex justify-between items-center mb-6">
           {/* Left-most heading */}
-          <h3 className="text-xl font-bold text-[#1a2c47]">Organizations Feedbacks</h3>
-
+          <div className="flex gap-3 items-center">
+            {/* <MdFeedback className="text-blue-500 text-[34px]" /> */}
+            <BiMessageDetail className="text-blue-500 text-[26px] mt-[5px]" />
+            <h3 className="text-xl font-bold text-gray-700">
+              Organizations Feedbacks
+            </h3>
+          </div>
           {/* Right side container */}
           <div className="flex items-center gap-4">
             {/* Second heading before the button */}
@@ -95,36 +104,30 @@ const OrganizationFeedbackCards = () => {
         <div className="flex justify-center gap-6">
           {feedbacks.length > 0 ? (
             feedbacks.slice(0, 3).map((card, index) => {
-              const org = orgData?.find(
-                (org) => org._id === card.organizationId
+              const orgName = orgData?.find(
+                (org) => org._id === card.organizationId?._id
               );
               console.log(
                 "Get user data by stored userID refrence in Feedback modal",
-                org
+                orgName
               );
               return (
                 <div
                   key={index}
-                  className="w-[400px] h-[130px] bg-white shadow-lg p-6 rounded-lg border overflow-hidden"
+                  className="w-[400px] h-[136px] bg-white shadow-lg p-6 rounded-lg border overflow-hidden"
                 >
                   {/* Star Ratings */}
-                  <div className="flex -mt-4 mb-2">
+                  <div className="flex -mt-2 mb-2">
                     {[...Array(5)].map((_, i) => (
-                      <svg
+                      <Star
                         key={i}
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill={i < card.rating ? "gold" : "none"} // Fill stars based on rating
-                        viewBox="0 0 24 24"
-                        stroke="gold"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M12 17.27l6.18 3.73-1.64-7.03L21 9.24l-7.19-.61L12 2 10.19 8.63 3 9.24l5.46 4.73-1.64 7.03z"
-                        />
-                      </svg>
+                        size={18}
+                        className={`mx-0.5 ${
+                          i < card.rating
+                            ? "text-yellow-400 fill-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
                     ))}
                   </div>
                   <p className="text-gray-700 italic">
@@ -133,8 +136,8 @@ const OrganizationFeedbackCards = () => {
                     </span>
                     {card.feedbackMessage}
                   </p>
-                  <h4 className="mt-4 font-semibold text-right text-sm text-gray-600">
-                    - {org ? org.name : "Anonymous Organization"}
+                  <h4 className="mt-7 font-semibold text-right text-sm text-gray-600">
+                    - {orgName ? orgName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : "Organization"}
                   </h4>
                 </div>
               );
@@ -150,7 +153,7 @@ const OrganizationFeedbackCards = () => {
           )}
         </div>
       </section>
-      {showModal && <OrganizationAllFeedsModal closeModal={closeModal} />}
+      {showModal && <OrganizationAllFeedbacksTable closeModal={closeModal} />}
     </div>
   );
 };
