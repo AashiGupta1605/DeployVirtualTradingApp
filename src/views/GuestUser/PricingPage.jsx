@@ -18,7 +18,7 @@ const PricingPage = () => {
             <PricingPageTopMost />
             <SubscriptionModal/>
           </div>
-        </div> 
+        </div>
       </div>
       <Footer />
     </>
