@@ -85,15 +85,15 @@ const NiftyNavbarCarousel = () => {
             {stockData.map((stock, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-1 bg-[#015986] px-2 py-[1px] rounded-md"
+                className="flex items-center space-x-1 bg-[#014668] px-2 py-[1px] rounded-md"
               >
                 <span className="font-bold text-[13px]">{stock.name}</span>
                 <span className="text-gray-300 text-[13px]">{stock.price}</span>
                 <span
                   className={`font-semibold ${
                     stock.change.startsWith("+")
-                      ? "text-green-300"
-                      : "text-red-300"
+                      ? "text-green-400"
+                      : "text-red-400"
                   }`}
                 >
                   {stock.change}

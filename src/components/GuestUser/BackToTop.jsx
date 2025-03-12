@@ -1,34 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const BackToTop = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    console.log("BackToTop component mounted");
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
-    <span
-      className={`fixed bottom-6 right-6 bg-white bg-opacity-50 text-black p-3 rounded-full shadow-md cursor-pointer transition-opacity duration-300 backdrop-blur-sm border border-gray-300 ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
-      onClick={scrollToTop}
-    >
-      <i className="fas fa-chevron-up text-lg"></i>
-    </span>
+    <button className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition-all">
+      Click Me
+    </button>
   );
 };
 

@@ -63,7 +63,7 @@ const OrganizationsSlider = () => {
       <div className="flex justify-between items-center mb-4">
         {/* Left-most heading */}
         <div className='flex gap-3 items-center'>
-        <HiOfficeBuilding className="text-blue-500 text-[34px]" />
+        <HiOfficeBuilding className="text-blue-500 text-[30px]" />
         {/* <FaBuilding className="text-blue-500 text-[34px]" /> */}
         <h3 className="text-xl font-bold text-gray-700">Partnered Organizations</h3>
         </div>

@@ -4,8 +4,8 @@ import { BASE_API_URL } from "../../../../../utils/BaseUrl";
 import UserAllFeedbacksTable from "./UserAllFeedbacksTable";
 
 import { Star } from "lucide-react";
-import { MdFeedback } from "react-icons/md";
-// import { BiMessageDetail } from "react-icons/bi";
+// import { MdFeedback } from "react-icons/md";
+import { BiMessageDetail } from "react-icons/bi";
 
 const UserFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -61,8 +61,7 @@ const UserFeedbackCards = () => {
         <div className="flex justify-between items-center mb-6">
           {/* Left-most heading */}
           <div className="flex gap-3 items-center">
-            <MdFeedback className="text-blue-500 text-[34px]" />
-            {/* <BiMessageDetail className="text-blue-500 text-[34px]" /> */}
+            <BiMessageDetail className="text-blue-500 text-[26px] mt-[5px]" />
             <h3 className="text-xl font-bold text-gray-700">Users Feedbacks</h3>
           </div>
           {/* Right side container */}

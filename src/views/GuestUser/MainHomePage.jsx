@@ -17,9 +17,13 @@ import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackD
 import { Link } from "react-router-dom";
 import Stock from "../../assets/stock.jpg";
 
+// import BackToTop from "../../components/GuestUser/BackToTop";
+
 const MainHomePage = () => {
   return (
     <>
+      {/* <BackToTop/> */}
+
       <StartScreenPopupModal />
       <MainHomeNavbar fixed />
       <NiftyNavbarCarousel fixed />
