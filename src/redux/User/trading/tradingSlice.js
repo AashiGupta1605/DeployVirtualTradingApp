@@ -114,6 +114,7 @@ export const fetchHoldings = createAsyncThunk(
   }
 ); 
 
+
 // tradingSlice.js
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
