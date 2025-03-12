@@ -40,6 +40,7 @@ export default function ETFTable() {
       percentColor: "text-emerald-500",
       description: "Total Amount Invested"
     },
+
     // {
     //   subtitle: "Current Holdings Value",
     //   title: statistics.currentHoldingsValue,
@@ -70,6 +71,15 @@ export default function ETFTable() {
         : "text-red-500",
       description: "Success Rate"
     },
+    {
+      subtitle: "Total Trades",
+      title: `${statistics.buyTrades + statistics.sellTrades}`,
+      iconName: "fas fa-exchange-alt",
+      iconColor: "bg-pink-500",
+      percentColor: "text-gray-500",
+      description: "Buy & Sell Trades"
+    },
+    // Add Virtual Amount Card
     // {
     //   subtitle: "Total Trades",
     //   title: `${statistics.buyTrades + statistics.sellTrades}`,
@@ -89,6 +99,7 @@ export default function ETFTable() {
         : "text-red-500",
       description: `Realized P&L: ₹${statistics.realizedPL.toLocaleString()}`
     },
+
   ];
 
   // Fetch data on component mount

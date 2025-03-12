@@ -112,7 +112,7 @@ export const fetchHoldings = createAsyncThunk(
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
     }
   }
-);
+); 
 
 
 // tradingSlice.js
