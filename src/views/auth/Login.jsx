@@ -104,7 +104,7 @@ const LoginForm = ({ onClose }) => {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-user text-white"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Login</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">User Login</h2>
           </div>
           <button
             onClick={onClose}

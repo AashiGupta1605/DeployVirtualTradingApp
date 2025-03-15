@@ -33,7 +33,6 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
   const [err, setErr] = useState("");
 
   const [category, setCategory] = useState("all");
-  const [organization, setOrganization] = useState("All");
   const [recommend, setRecommend] = useState("all");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("createdDate");
@@ -46,10 +45,6 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
     if (category !== "all") {
       count++;
       filters["Category"] = category;
-    }
-    if (organization !== "All" && organization !== "all") {
-      count++;
-      filters["Organization"] = organization;
     }
     if (recommend !== "all") {
       count++;
@@ -69,7 +64,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
     }
     setFilterCount(count);
     setAppliedFilters(filters);
-  }, [category, organization, recommend, search, sortBy, order]);
+  }, [category, recommend, search, sortBy, order]);
 
   const removeFilter = (key) => {
     setAppliedFilters((prev) => {
@@ -84,9 +79,6 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
     switch (key) {
       case "Category":
         setCategory("all");
-        break;
-      case "Organization":
-        setOrganization("All");
         break;
       case "Recommend":
         setRecommend("all");
@@ -105,7 +97,6 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
   const clearAllFilters = () => {
     setAppliedFilters({});  // Reset all filters
     setCategory("all")
-    setOrganization("All")
     setRecommend("all")
     setSearch("")
     setSortBy("createdDate")
@@ -117,7 +108,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
     try {
       const searchQuery = search.trim() === "" ? "all" : search;
       const response = await axios.get(
-        `${BASE_API_URL}/guestUser/organizationFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
+        `${BASE_API_URL}/guestUser/organizationFeedbacks/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
       );
       setFeedbacks(response.data.feedbackData);
       console.log("Users Feedbacks Object: ", response.data);
@@ -149,7 +140,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
       }
     };
     fetchData();
-  }, [sortBy, order, category, recommend, organization, search]);
+  }, [sortBy, order, category, recommend, search]);
 
   return (
     <div
@@ -194,14 +185,15 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
 
                   {/* Filter Count - Positioned Bottom Right */}
                   {filterCount > 0 && (
-                    <span className="absolute -bottom-1 -right-6 bg-blue-500 text-white px-3 py-[2px] rounded-lg text-xs">
+                    //<span className="absolute -bottom-1 -right-6 bg-blue-500 text-white px-3 py-[2px] rounded-lg text-xs">
+                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
                       {filterCount}
                     </span>
                   )}
                 </div>
                 {/* Arrow Icon */}
                 <IoIosArrowUp
-                  className={`text-gray-500 text-lg transition-transform duration-200 ${
+                  className={`pl-[2px] text-gray-500 text-lg transition-transform duration-200 ${
                     showFilters ? "rotate-0" : "rotate-180"
                   }`}
                 />
@@ -241,75 +233,6 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
           {showFilters && (
             <div className="flex justify-end items-center mt-5">
               <div className="flex gap-4 mr-auto">
-                {/* Organization Select */}
-                <div className="flex flex-col relative">
-                  {/* Label */}
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Organization
-                  </label>
-
-                  <div className="relative">
-                    {/* Clickable Select Box */}
-                    <button
-                      onClick={() => setShowDropdown(!showDropdown)}
-                      className={`border rounded-lg px-5 py-[7px] text-sm w-38 text-left flex justify-between items-center 
-                      bg-white transition-colors duration-200 
-                      ${
-                        showDropdown
-                          ? "border-blue-500 bg-blue-100"
-                          : "border-gray-300 hover:border-blue-300"
-                      }`}
-                    >
-                      <span className="text-gray-600">
-                        {organization || "All"}
-                      </span>
-                      <IoIosArrowUp
-                        className={`text-gray-500 text-lg transition-transform duration-200 
-                        ${showDropdown ? "rotate-180" : "rotate-0"}`}
-                      />
-                    </button>
-
-                    {/* Scrollable Organization Options */}
-                    <div className="relative">
-                      {showDropdown && (
-                        <div className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-lg max-h-56 overflow-y-auto z-50">
-                          {/* "All" Option */}
-                          <div
-                            onClick={() => {
-                              setOrganization("All");
-                              setShowDropdown(false);
-                            }}
-                            className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
-                          >
-                            All
-                          </div>
-
-                          {/* Organization List */}
-                          {orgData.map((org) => (
-                            <div
-                              key={org._id}
-                              onClick={() => {
-                                setOrganization(org.name);
-                                setShowDropdown(false);
-                              }}
-                              className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
-                            >
-                              {org.name
-                                .split(" ")
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() +
-                                    word.slice(1).toLowerCase()
-                                )
-                                .join(" ")}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
                 {/* Category Select */}
                 <div className="flex flex-col">
                   <label className="text-sm font-medium text-gray-600 mb-1">

@@ -1,18 +1,9 @@
 import React from "react";
-
-import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
-import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
-import Footer from "../../components/GuestUser/Footers/Footer";
 import StockMarket from "../../assets/stock-market.jpg";
 
 const AboutPage = () => {
   return (
     <>
-      <MainHomeNavbar fixed/>
-      <NiftyNavbarCarousel fixed/>
-      <EtfNavbarCarousel fixed/>
-
       {/* About Us hell Section */}
       <div className="mt-4 min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20">
         {/* Left - Content */}
@@ -60,8 +51,6 @@ const AboutPage = () => {
           />
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };

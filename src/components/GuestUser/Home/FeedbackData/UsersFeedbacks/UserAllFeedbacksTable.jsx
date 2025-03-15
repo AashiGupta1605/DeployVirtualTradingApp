@@ -16,16 +16,17 @@ const CATEGORY_COLORS = {
 };
 
 const UserAllFeedbacksTable = ({ closeModal }) => {
-
   const [showFilters, setShowFilters] = useState(false);
-  
+  const [filterCount, setFilterCount] = useState(0);
+  const [appliedFilters, setAppliedFilters] = useState({});
+
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
   const [expandedRow, setExpandedRow] = useState(null);
   const toggleRow = (id) => {
     setExpandedRow(expandedRow === id ? null : id);
   };
-  
+
   const [feedbacks, setFeedbacks] = useState([]);
   const [userData, setUserData] = useState([]);
   const [orgData, setOrgData] = useState([]);
@@ -39,12 +40,86 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
   const [sortBy, setSortBy] = useState("createdDate");
   const [order, setOrder] = useState("decreasing");
 
+  useEffect(() => {
+    let count = 0;
+    let filters = {};
+
+    if (category !== "all") {
+      count++;
+      filters["Category"] = category;
+    }
+    if (organization !== "All" && organization !== "all") {
+      count++;
+      filters["Organization"] = organization;
+    }
+    if (recommend !== "all") {
+      count++;
+      filters["Recommend"] = recommend;
+    }
+    if (search.trim() !== "") {
+      count++;
+      filters["Search"] = search;
+    }
+    if (sortBy !== "createdDate") {
+      count++;
+      filters["Sort By"] = sortBy;
+    }
+    if (order !== "decreasing") {
+      count++;
+      filters["Order"] = order;
+    }
+    setFilterCount(count);
+    setAppliedFilters(filters);
+  }, [category, organization, recommend, search, sortBy, order]);
+
+  const removeFilter = (key) => {
+    setAppliedFilters((prev) => {
+      const updatedFilters = { ...prev }; // Copy the previous state
+      delete updatedFilters[key]; // Remove the specific filter
+      return updatedFilters; // Update the state
+    });
+
+    setFilterCount((prev) => Math.max(prev - 1, 0)); // Decrease filter count safely
+
+    //Reset
+    switch (key) {
+      case "Category":
+        setCategory("all");
+        break;
+      case "Organization":
+        setOrganization("All");
+        break;
+      case "Recommend":
+        setRecommend("all");
+        break;
+      case "SortBy":
+        setSortBy("createdDate");
+        break;
+      case "Order":
+        setOrder("decreasing");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters({}); // Reset all filters
+    setCategory("all");
+    setOrganization("All");
+    setRecommend("all");
+    setSearch("");
+    setSortBy("createdDate");
+    setOrder("decreasing");
+    setFilterCount(0); // Reset filter count
+  };
+
   const fetchUserFeedbacks = async () => {
     try {
       const searchQuery = search.trim() === "" ? "all" : search;
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
-        `http://localhost:5000/v1/api/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
+        `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
+        // `http://localhost:5000/v1/api/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
       );
       setFeedbacks(response.data.feedbackData);
 
@@ -57,8 +132,8 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
 
   const fetchUsersData = async () => {
     try {
-      // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
-      const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
+      const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
+      // const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
       setUserData(response.data.data);
       console.log("User Data", response.data);
     } catch (error) {
@@ -69,8 +144,8 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
   const fetchOrganizationsData = async () => {
     try {
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/getAllOrganizations`
-        `http://localhost:5000/v1/api/guestUser/getAllOrganizations`
+        `${BASE_API_URL}/guestUser/getAllOrganizations`
+        // `http://localhost:5000/v1/api/guestUser/getAllOrganizations`
       );
       setOrgData(response.data.data);
       setErr("");
@@ -122,17 +197,28 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
               {/* Filter Icon */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-3 px-2 py-1 h-[37px] border rounded-lg transition-all duration-200 
-                ${
-                  showFilters
-                    ? "border-gray-300 shadow-md w-[90px]"
-                    : "border-gray-200 w-[90px] hover:border-gray-300"
-                }`}
+                className={`relative flex items-center gap-9 px-4 py-2 h-[40px] border rounded-lg transition-all duration-200 
+                            ${
+                              showFilters
+                                ? "border-gray-300 shadow-md w-[110px]"
+                                : "border-gray-200 w-[110px] hover:shadow-sm hover:border-gray-300"
+                            }
+                          `}
               >
-                <Filter className="text-gray-500 text-lg hover:text-gray-700 transition-colors duration-200" />
-                {/* <span className="text-gray-700 font-medium">Filter</span> */}
+                {/* Filter Icon */}
+                <div className="relative">
+                  <Filter className="text-gray-500 text-xl hover:text-gray-700 transition-colors duration-200" />
+
+                  {/* Filter Count - Positioned Bottom Right */}
+                  {filterCount > 0 && (
+                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                      {filterCount}
+                    </span>
+                  )}
+                </div>
+                {/* Arrow Icon */}
                 <IoIosArrowUp
-                  className={`text-gray-500 text-lg transition-transform duration-200 ${
+                  className={`pl-[2px] text-gray-500 text-lg transition-transform duration-200 ${
                     showFilters ? "rotate-0" : "rotate-180"
                   }`}
                 />
@@ -172,7 +258,6 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
           {showFilters && (
             <div className="flex justify-end items-center mt-5">
               <div className="flex gap-4 mr-auto">
-              
                 {/* Organization Select */}
                 <div className="flex flex-col relative">
                   {/* Label */}
@@ -203,34 +288,41 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
 
                     {/* Scrollable Organization Options */}
                     <div className="relative">
-                    {showDropdown && (
-                      <div className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-lg max-h-56 overflow-y-auto z-50">
-                        {/* "All" Option */}
-                        <div
-                          onClick={() => {
-                            setOrganization("All");
-                            setShowDropdown(false);
-                          }}
-                          className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
-                        >
-                          All
-                        </div>
-
-                        {/* Organization List */}
-                        {orgData.map((org) => (
+                      {showDropdown && (
+                        <div className="absolute top-full left-0 w-[150px] bg-white border rounded-lg shadow-lg max-h-56 overflow-y-auto z-50">
+                          {/* "All" Option */}
                           <div
-                            key={org._id}
                             onClick={() => {
-                              setOrganization(org.name);
+                              setOrganization("All");
                               setShowDropdown(false);
                             }}
                             className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
                           >
-                          {org.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                            All
                           </div>
-                        ))}
-                      </div>
-                    )}
+
+                          {/* Organization List */}
+                          {orgData.map((org) => (
+                            <div
+                              key={org._id}
+                              onClick={() => {
+                                setOrganization(org.name);
+                                setShowDropdown(false);
+                              }}
+                              className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
+                            >
+                              {org.name
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -252,7 +344,9 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                       <option value="Data Accuracy">Data Accuracy</option>
                       <option value="Trading Features">Trading Features</option>
                       <option value="Customer Support">Customer Support</option>
-                      <option value="Performance & Speed">Performance & Speed</option>
+                      <option value="Performance & Speed">
+                        Performance & Speed
+                      </option>
                       <option value="Other">Other</option>
                     </select>
                   </div>
@@ -320,12 +414,44 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
               </div>
             </div>
           )}
+
+          {filterCount > 0 && (
+            <div className="mt-2 -mb-1 -ml-1 -mr-1 p-2 bg-gray-100 rounded-lg shadow-md flex justify-between items-center">
+              <div className="flex flex-wrap gap-2 flex items-center">
+                {Object.entries(appliedFilters).map(([key, value]) => (
+                  <span
+                    key={key}
+                    className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold"
+                  >
+                    {key}: {value}
+                    <button
+                      onClick={() => removeFilter(key)}
+                      className="ml-6 mr-1 mt-1 border-none outline-none bg-transparent"
+                    >
+                      <FaTimes className="text-blue-300 hover:text-blue-800 text-sm" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={clearAllFilters}
+                className="flex items-center gap-2 px-4 py-[6px] bg-gray-200 text-gray-700 text-sm font-semibold rounded-full transition-all duration-200 hover:bg-gray-500 hover:text-white shadow-sm"
+              >
+              Clear All &nbsp;&nbsp;&nbsp;<FaTimes className="text-gray-500 hover:text-gray-700 text-base" />
+              </button>
+            </div>
+          )}
         </div>
 
         {err && <p className="text-red-500">{err}</p>}
 
         {/* List of Feedbacks */}
-        <div className={`flex ${showFilters ? "h-[51vh]" : "h-[63vh]"}`}>
+        <div  className={`flex 
+        ${
+          showFilters
+          ? filterCount > 0 ? "h-[43vh]" : "h-[51vh]"
+          : filterCount > 0 ? "h-[55vh]" : "h-[63vh]"
+        }`}>
           <div className="inset-0 overflow-y-auto w-full max-h-[500px] rounded-lg shadow-md">
             <table className="inset-0 min-w-full table-fixed divide-y divide-gray-200 border-collapse bg-white">
               <thead className="bg-gray-50 sticky top-0 z-10">
@@ -372,12 +498,26 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                       >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {organizationName
-                            ? organizationName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                            ? organizationName.name
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")
                             : "Anonymous Organization"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {userName
-                            ? userName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                            ? userName.name
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")
                             : "Anonymous"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -404,7 +544,10 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           ) : (
                             <>
                               {feedbackData.feedbackMessage?.length > 50
-                                ? `${feedbackData.feedbackMessage.substring(0, 50)}...`
+                                ? `${feedbackData.feedbackMessage.substring(
+                                    0,
+                                    50
+                                  )}...`
                                 : feedbackData.feedbackMessage ||
                                   "No feedbacks provided"}
                               {feedbackData.feedbackMessage?.length > 50 && (
@@ -463,8 +606,12 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           ) : (
                             <>
                               {feedbackData.suggestions?.length > 50
-                                ? `${feedbackData.suggestions.substring(0, 50)}...`
-                                : feedbackData.suggestions || "No suggestions provided"}
+                                ? `${feedbackData.suggestions.substring(
+                                    0,
+                                    50
+                                  )}...`
+                                : feedbackData.suggestions ||
+                                  "No suggestions provided"}
                               {feedbackData.suggestions?.length > 50 && (
                                 <button
                                   onClick={() =>
@@ -479,7 +626,9 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(feedbackData.createdDate).toLocaleDateString()}
+                          {new Date(
+                            feedbackData.createdDate
+                          ).toLocaleDateString()}
                         </td>
                       </tr>
                     );

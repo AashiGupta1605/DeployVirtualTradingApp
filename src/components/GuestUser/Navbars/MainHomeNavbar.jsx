@@ -83,7 +83,7 @@ const MainHomeNavbar = () => {
               className="text-black text-[17px] font-bold leading-relaxed uppercase cursor-pointer"
               onClick={() => handleNavigation("/")}
             >
-              PGR VIRTUAL-TRADING APP
+              PGR - VIRTUAL TRADING APP
             </span>
           </div>
 
@@ -104,7 +104,9 @@ const MainHomeNavbar = () => {
             id="navbar-links"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto space-x-6">
-              <li className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40" onClick={() => handleNavigation("/")}>
+              <li className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40" 
+              onClick={() => handleNavigation("/")}
+              >
                 Home
               </li>
               <li
