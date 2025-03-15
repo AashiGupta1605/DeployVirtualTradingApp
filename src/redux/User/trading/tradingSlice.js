@@ -1,12 +1,11 @@
-// tradingSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
 
 // Helper Functions
 const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) => {
-  if (!transactions.length) {
+  if (!transactions || !Array.isArray(transactions) || transactions.length === 0) {
     return {
       totalInvestment: 0,
       currentHoldingsValue: 0,
@@ -23,23 +22,26 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
     const buyTransactions = transactions.filter(t => t.type === 'buy');
     const sellTransactions = transactions.filter(t => t.type === 'sell');
 
+    // Ensure holdings is an array
+    const safeHoldings = Array.isArray(holdings) ? holdings : [];
+
     // Calculate total investment from current holdings
-    const totalInvestment = holdings.reduce((sum, holding) => 
-      sum + (holding.quantity * holding.averageBuyPrice), 0);
+    const totalInvestment = safeHoldings.reduce((sum, holding) => 
+      sum + ((holding.quantity || 0) * (holding.averageBuyPrice || 0)), 0);
 
     // Calculate total holdings value
-    const totalHoldingsValue = holdings.reduce((sum, holding) => 
-      sum + (holding.quantity * (currentPrice || holding.averageBuyPrice)), 0);
+    const totalHoldingsValue = safeHoldings.reduce((sum, holding) => 
+      sum + ((holding.quantity || 0) * (currentPrice || holding.averageBuyPrice || 0)), 0);
 
     // Calculate realized P&L from completed trades
     const realizedPL = sellTransactions.reduce((sum, trade) => {
       const buyPrice = buyTransactions.find(bt => bt.companySymbol === trade.companySymbol)?.price || 0;
-      return sum + ((trade.price - buyPrice) * trade.numberOfShares);
+      return sum + ((trade.price - buyPrice) * (trade.numberOfShares || 0));
     }, 0);
 
     // Calculate current holdings value
-    const currentHoldingsValue = holdings.reduce((sum, holding) => 
-      sum + (holding.quantity * currentPrice), 0);
+    const currentHoldingsValue = safeHoldings.reduce((sum, holding) => 
+      sum + ((holding.quantity || 0) * currentPrice), 0);
 
     // Calculate success rate
     const successfulTrades = sellTransactions.filter(trade => {
@@ -141,7 +143,6 @@ export const fetchHoldings = createAsyncThunk(
   }
 );
 
-// tradingSlice.js
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
   async (orderDetails, { dispatch, rejectWithValue }) => {
@@ -254,10 +255,10 @@ const tradingSlice = createSlice({
     builder
       // Fetch Holdings
       .addCase(fetchHoldings.pending, (state) => {
-        state.loading = true;
+        state.loading.general = true;
       })
       .addCase(fetchHoldings.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.holdings = action.payload;
         state.statistics = calculateAnalytics(
           state.transactions,
@@ -265,18 +266,18 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(fetchHoldings.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.error = action.payload;
       })
 
       // Place Order
       .addCase(placeOrder.pending, (state) => {
-        state.loading = true;
+        state.loading.trading = true;
         state.error = null;
         state.orderStatus = 'pending';
       })
       .addCase(placeOrder.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.trading = false;
         state.orderStatus = 'success';
         
         if (!Array.isArray(state.transactions)) {
@@ -295,18 +296,18 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(placeOrder.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.trading = false;
         state.error = action.payload;
         state.orderStatus = 'failed';
       })
 
       // Fetch Transaction History
       .addCase(fetchTransactionHistory.pending, (state) => {
-        state.loading = true;
+        state.loading.general = true;
         state.error = null;
       })
       .addCase(fetchTransactionHistory.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.transactions = action.payload.transactions;
         state.holdings = action.payload.holdings;
         state.statistics = calculateAnalytics(
@@ -315,28 +316,76 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(fetchTransactionHistory.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.error = action.payload;
       });
   }
 });
 
-// Selectors
-export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
-export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
-export const selectStatistics = (state) => state.user.tradingModal.statistics;
-export const selectLoadingState = (state) => ({
-  loading: state.user.tradingModal.loading,
-  orderStatus: state.user.tradingModal.orderStatus
-});
-export const selectError = (state) => state.user.tradingModal.error;
-export const selectHoldingBySymbol = (state, symbol) => 
-  (state.user.tradingModal.holdings || []).find(h => h.companySymbol === symbol);
-export const selectTotalHoldingsValue = (state) => 
-  (state.user.tradingModal.holdings || []).reduce((total, holding) => 
-    total + (holding.quantity * holding.averageBuyPrice), 0);
 
-// Actions
+const selectTradingState = (state) => state.user?.tradingModal || initialState;
+
+// Transactions Selector
+export const selectTransactions = createSelector(
+  [selectTradingState],
+  (tradingState) => {
+    const transactions = tradingState.transactions;
+    return Array.isArray(transactions) ? transactions : [];
+  }
+);
+
+// Holdings Selector
+export const selectHoldings = createSelector(
+  [selectTradingState],
+  (tradingState) => {
+    const holdings = tradingState.holdings;
+    return Array.isArray(holdings) ? holdings : [];
+  }
+);
+
+// Total Holdings Value Selector
+export const selectTotalHoldingsValue = createSelector(
+  [selectHoldings],
+  (holdings) => holdings.reduce((total, holding) => {
+    const quantity = Number(holding?.quantity) || 0;
+    const averageBuyPrice = Number(holding?.averageBuyPrice) || 0;
+    return total + (quantity * averageBuyPrice);
+  }, 0)
+);
+
+// Holding by Symbol Selector
+export const selectHoldingBySymbol = createSelector(
+  [selectHoldings, (_, symbol) => symbol],
+  (holdings, symbol) => {
+    if (!symbol) return null;
+    return holdings.find(h => 
+      h.companySymbol?.toLowerCase() === symbol.toLowerCase()
+    ) || null;
+  }
+);
+
+// Statistics Selector
+export const selectStatistics = createSelector(
+  [selectTradingState],
+  (tradingState) => tradingState.statistics || initialState.statistics
+);
+
+// Loading State Selector
+export const selectLoadingState = createSelector(
+  [selectTradingState],
+  (tradingState) => ({
+    loading: tradingState.loading || { general: false, trading: false },
+    orderStatus: tradingState.orderStatus || null
+  })
+);
+
+// Error Selector
+export const selectError = createSelector(
+  [selectTradingState],
+  (tradingState) => tradingState.error || null
+);
+
+// Actions (keep existing actions)
 export const { 
   clearOrderStatus, 
   updateStatistics,

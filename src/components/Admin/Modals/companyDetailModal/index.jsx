@@ -115,9 +115,8 @@ const CompanyDetailModal = ({
   // Helper Functions
   const calculateRemainingBalance = () => {
     if (!activeSubscription?.vertualAmount) return 0;
-    return activeSubscription.vertualAmount - totalHoldingsValue;
+    return activeSubscription.vertualAmount - (totalHoldingsValue || 0);
   };
-
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
@@ -162,10 +161,14 @@ const CompanyDetailModal = ({
   }, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
-    if (isOpen && userId) {
-      dispatch(fetchHoldings(userId));
+    // Only fetch holdings if user is logged in and has an active subscription
+    if (isOpen && userId && activeSubscription) {
+      dispatch(fetchHoldings({
+        userId, 
+        subscriptionPlanId: activeSubscription._id
+      }));
     }
-  }, [isOpen, userId, dispatch]);
+  }, [isOpen, userId, activeSubscription, dispatch]);
 
   // Event Handlers
   const handleTabChange = (tab) => {
@@ -183,14 +186,25 @@ const CompanyDetailModal = ({
 
   const handleRefresh = async () => {
     if (isRefreshing || loading) return;
-
+  
     dispatch(setIsRefreshing(true));
     try {
-      await Promise.all([
+      const refreshPromises = [
         dispatch(fetchCompanyDetails({ symbol, type })),
-        dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter })),
-        dispatch(fetchHoldings(userId))
-      ]);
+        dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter }))
+      ];
+  
+      // Only add holdings fetch if user is logged in and has an active subscription
+      if (userId && activeSubscription) {
+        refreshPromises.push(
+          dispatch(fetchHoldings({
+            userId, 
+            subscriptionPlanId: activeSubscription._id
+          }))
+        );
+      }
+  
+      await Promise.all(refreshPromises);
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {
