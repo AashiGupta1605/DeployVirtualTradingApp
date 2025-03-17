@@ -1,3 +1,5 @@
+// add feedback and suggestion card onclick of show more
+
 import { Filter, Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { FaTimes, FaComments } from "react-icons/fa";
 import { FolderOpen } from "lucide-react";
