@@ -1,5 +1,6 @@
 import { Filter, Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { FaTimes, FaComments } from "react-icons/fa";
+import { FolderOpen } from "lucide-react";
 import { IoIosArrowUp } from "react-icons/io";
 
 import React, { useState, useEffect } from "react";
@@ -19,8 +20,6 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [filterCount, setFilterCount] = useState(0);
   const [appliedFilters, setAppliedFilters] = useState({});
-
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const [expandedRow, setExpandedRow] = useState(null);
   const toggleRow = (id) => {
@@ -240,7 +239,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                   </label>
                   <div className="relative">
                     <select
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={category}
                       onChange={(e) => setCategory(e.target.value || "all")}
                     >
@@ -266,7 +265,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                   <div className="relative">
                     <select
                       name="Recommend"
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={recommend}
                       onChange={(e) => setRecommend(e.target.value || "all")}
                     >
@@ -286,7 +285,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                   <div className="relative">
                     <select
                       name="sortBy"
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={sortBy}
                       onChange={(e) =>
                         setSortBy(e.target.value || "createdDate")
@@ -307,7 +306,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                   <div className="relative">
                     <select
                       name="Order"
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={order}
                       onChange={(e) => setOrder(e.target.value || "decreasing")}
                     >
@@ -349,7 +348,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
           )}
         </div>
 
-        {err && <p className="text-red-500">{err}</p>}
+        {/* {err && <p className="text-red-500">{err}</p>} */}
 
         {/* List of Feedbacks */}
         <div  className={`flex 
@@ -385,6 +384,51 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                   </th>
                 </tr>
               </thead>
+
+              {/* {err && 
+                <tbody className="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td colSpan="7">
+                    <div className="mt-18 ml-95 flex flex-col items-center justify-center h-50 w-100 bg-gray-100 rounded-lg shadow-md p-4">
+                      <span className="text-red-500 text-2xl">
+                        <i className="fas fa-exclamation-circle"></i>
+                      </span>
+                      <b className="text-lg text-gray-700 mt-2">Loading...</b>
+                      <h4 className="text-gray-500 text-sm">No content available</h4>
+                      <p className="text-red-500 text-sm">{err}</p>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              } */}
+
+              {err && (
+              <tbody className="bg-white divide-y divide-gray-200">
+                <tr>
+                <td colSpan="7">
+                  <div className="mt-12 ml-15 flex justify-center items-center min-h-[200px]">
+                  <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg p-6">
+                    <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+                      <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+                    </div>
+                    <b className="text-lg text-gray-800 mt-4">Oops! Something went wrong.</b>
+                    <p className="text-gray-600 text-sm text-center mt-2">
+                      We couldn’t load the content. Please try again later.
+                    </p>
+                    <p className="text-red-600 font-medium mt-2">{err}</p>
+                    <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                  </div>
+                </td>
+                </tr>
+              </tbody>
+              )}
+
               <tbody className="bg-white divide-y divide-gray-200">
                 {feedbacks.length > 0 ? (
                   feedbacks.map((feedbackData, index) => {
@@ -396,7 +440,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                         key={index}
                         className="hover:bg-gray-50 transition-colors"
                       >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap min-w-[185px] text-sm font-medium text-gray-900">
                           {organizationName
                             ? organizationName.name
                                 .split(" ")
@@ -418,7 +462,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                           </span>
                         </td>
 
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 min-w-[195px] text-sm text-gray-500">
                           {expandedRow === feedbackData._id ? (
                             <>
                               {feedbackData.feedbackMessage}
@@ -478,7 +522,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             />
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 min-w-[195px] text-sm text-gray-500">
                           {expandedRow === `suggestion-${feedbackData._id}` ? (
                             <>
                               {feedbackData.suggestions}
@@ -521,11 +565,16 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                       </tr>
                     );
                   })
-                ) : (
+                ) : (!err &&
                   <tr>
-                    <td colSpan="7" className="p-4 text-center text-gray-500">
-                      No feedbacks available.
-                    </td>
+                  <td colSpan="7"
+                  className="p-6 text-center text-gray-500 text-base font-medium bg-gray-50 rounded-md mt-4"
+                  >
+                    <div className="pt-20 pb-42 flex flex-col items-center space-y-2">
+                    <FolderOpen className="w-10 h-10 text-gray-400" /> 
+                    <span>No feedbacks available.</span>
+                    </div>
+                  </td>
                   </tr>
                 )}
               </tbody>

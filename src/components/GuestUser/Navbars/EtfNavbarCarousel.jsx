@@ -62,7 +62,7 @@ const EtfNavbarCarousel = () => {
     {loading ? (
       <p className="text-center text-white">Loading...</p>
     ) : error ? (
-      <p className="text-center text-red-500">{error}</p>
+      <p className="text-center text-red-400">{error}</p>
     ) : (
       <Slider {...settings}>
         {stockData.map((stock, index) => (
