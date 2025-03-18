@@ -103,42 +103,38 @@ const initialState = {
 };
 
 // Async Thunks
+// In your async thunks (e.g., fetchHoldings, fetchTransactionHistory)
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
   async (params, { rejectWithValue }) => {
     try {
-      const { userId, subscriptionPlanId } = params;
+      console.log('Fetching Holdings with Params:', params);
       
-      // Validate inputs with more detailed error
-      if (!userId) {
+      // Validate inputs
+      if (!params.userId) {
+        console.error('Missing User ID');
         return rejectWithValue('User ID is required');
       }
       
-      if (!subscriptionPlanId) {
+      if (!params.subscriptionPlanId) {
+        console.error('Missing Subscription Plan ID');
         return rejectWithValue('Subscription Plan ID is required');
       }
 
       const response = await axios.get(
-        `${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`
+        `${BASE_API_URL}/user/trading/holdings/${params.userId}/${params.subscriptionPlanId}`
       );
       
+      console.log('Holdings Response:', response.data);
       return response.data || [];
     } catch (error) {
-      console.error('Fetch Holdings Error:', error);
+      console.error('Fetch Holdings Error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       
-      // Detailed error handling
-      if (error.response) {
-        switch (error.response.status) {
-          case 404:
-            return []; // No holdings found
-          case 403:
-            return rejectWithValue('Unauthorized access to holdings');
-          default:
-            return rejectWithValue(error.response.data.message || 'Failed to fetch holdings');
-        }
-      }
-      
-      return rejectWithValue('Network error or server unavailable');
+      return rejectWithValue(error.message || 'Failed to fetch holdings');
     }
   }
 );

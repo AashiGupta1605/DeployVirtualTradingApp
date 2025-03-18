@@ -37,31 +37,40 @@ const LoadingOverlay = ({ message = "Loading data..." }) => (
 );
 
 // Error Display Component
-const ErrorDisplay = ({ error, onRetry, onClose }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-    <div className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full mx-4">
-      <div className="flex flex-col items-center">
-        <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Data</h3>
-        <p className="text-gray-600 text-center mb-6">{error}</p>
-        <div className="flex space-x-4">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Close
-          </button>
-          <button
-            onClick={onRetry}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Retry
-          </button>
+const ErrorDisplay = ({ error, onRetry, onClose }) => {
+  // Normalize error to a string
+  const errorMessage = error 
+    ? (typeof error === 'object' 
+      ? (error.message || error.toString() || 'An unknown error occurred')
+      : error.toString())
+    : 'An unknown error occurred';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full mx-4">
+        <div className="flex flex-col items-center">
+          <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+          <p className="text-gray-600 text-center mb-6">{errorMessage}</p>
+          <div className="flex space-x-4">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Close
+            </button>
+            <button
+              onClick={onRetry}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CompanyDetailModal = ({
   isOpen,
@@ -70,6 +79,35 @@ const CompanyDetailModal = ({
   type = 'nifty50'
 }) => {
   const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    // Enhanced symbol validation
+    const validateSymbol = (sym) => {
+      if (!sym || sym === 'null' || sym.trim() === '') {
+        console.error('Invalid symbol received:', sym);
+        
+        // Show a toast notification
+        toast.error('Invalid company symbol', {
+          position: 'top-right',
+          duration: 3000
+        });
+
+        // Close the modal
+        onClose();
+        return false;
+      }
+      return true;
+    };
+
+    // Only proceed if symbol is valid
+    if (isOpen && validateSymbol(symbol)) {
+      dispatch(fetchCompanyDetails({ 
+        symbol: symbol.trim().toUpperCase(), 
+        type 
+      }));
+    }
+  }, [isOpen, symbol, type, dispatch, onClose]);
 
   // User ID selector
   const userId = useSelector(state => state.user.auth?.user?._id);
@@ -149,16 +187,7 @@ const CompanyDetailModal = ({
   }, []);
 
   // Effects
-  useEffect(() => {
-    if (isOpen && symbol) {
-      dispatch(fetchCompanyDetails({ symbol, type })); // Pass both symbol and type
-    }
-    return () => {
-      if (!isOpen) {
-        dispatch(resetCompanyDetails());
-      }
-    };
-  }, [isOpen, symbol, type, dispatch]);
+
 
   useEffect(() => {
     // Only fetch holdings if user is logged in and has an active subscription
@@ -270,6 +299,7 @@ const CompanyDetailModal = ({
   if (!isOpen) return null;
 
   if (error) {
+    console.error('Detailed Error:', error);
     return (
       <ErrorDisplay
         error={error}
@@ -288,16 +318,7 @@ const CompanyDetailModal = ({
 
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="relative w-[90%] h-[90%] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full transition-all duration-200 z-10 group"
-            aria-label="Close modal"
-          >
-            <X 
-              size={24} 
-              className="group-hover:scale-110 transition-transform duration-200" 
-            />
-          </button>
+
 
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="sticky top-0 z-20 bg-gray-50">

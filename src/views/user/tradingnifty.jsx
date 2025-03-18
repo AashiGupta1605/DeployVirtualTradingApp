@@ -61,16 +61,16 @@ export default function ETFTable() {
     //     : "text-red-500",
     //   description: "Profit/Loss Percentage"
     // },
-    {
-      subtitle: "Trading Performance",
-      title: `${statistics.successRate.toFixed(2)}%`,
-      iconName: "fas fa-chart-pie",
-      iconColor: "bg-orange-500",
-      percentColor: statistics.successRate >= 50 
-        ? "text-emerald-500" 
-        : "text-red-500",
-      description: "Success Rate"
-    },
+    // {
+    //   subtitle: "Trading Performance",
+    //   title: `${statistics.successRate.toFixed(2)}%`,
+    //   iconName: "fas fa-chart-pie",
+    //   iconColor: "bg-orange-500",
+    //   percentColor: statistics.successRate >= 50 
+    //     ? "text-emerald-500" 
+    //     : "text-red-500",
+    //   description: "Success Rate"
+    // },
     {
       subtitle: "Total Trades",
       title: `${statistics.buyTrades + statistics.sellTrades}`,
