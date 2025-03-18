@@ -405,7 +405,6 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
           </div>
         </div>
       </div>
-
       <CompanyDetailModal
         isOpen={!!selectedSymbol}
         onClose={handleCloseModal}

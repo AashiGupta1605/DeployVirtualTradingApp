@@ -31,30 +31,67 @@ const LoginForm = ({ onClose }) => {
       identifier: Yup.string()
         .required("Email or Mobile is required")
         .test("is-email-or-mobile", "Invalid email or mobile format", (value) => {
-          // Check if the input is a valid email or a valid mobile number
           const isEmail = Yup.string().email().isValidSync(value);
-          const isMobile = /^[6-9]\d{9}$/.test(value); // Valid 10-digit mobile number (starting 6-9)
+          const isMobile = /^[6-9]\d{9}$/.test(value);
           return isEmail || isMobile;
         }),
       password: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    // onSubmit: async (values, { setSubmitting }) => {
+    //   // setSubmitting(true);
+    //   try {
+    //     const isEmail = Yup.string().email().isValidSync(values.identifier);
+    //     const credentials = isEmail
+    //       ? { email: values.identifier, password: values.password }
+    //       : { mobile: values.identifier, password: values.password };
+
+    //     const resultAction = await dispatch(loginUser(credentials));
+
+    //     if (loginUser.fulfilled.match(resultAction)) {
+    //       const user = resultAction.payload?.user;
+
+    //       if (user?.isDeleted) {
+    //         toast.error("Your account has been deactivated.");
+    //         setSubmitting(false);
+    //         return;
+    //       }
+
+    //       setTimeout(() => {
+    //         setSubmitting(false);
+    //         if (user?.role === "admin") {
+    //           navigate("/admin");
+    //           toast.success("Login successful!");
+    //         } else {
+    //           navigate("/user");
+    //           toast.success("Login successful!");
+    //         }
+    //         onClose();
+    //       }, 2000);
+    //     } else {
+    //       setSubmitting(false);
+    //       toast.error(resultAction.payload?.message || "Login failed. Please try again.");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error during login:", error);
+    //     toast.error("An unexpected error occurred. Please try again.");
+    //   }//finally {
+    //   //   resetForm();
+    //   // }
+    // },
+    onSubmit: async (values, { setSubmitting }) => {
       try {
-        // setSubmitting(true);
-          // Determine if the input is an email or mobile number
         const isEmail = Yup.string().email().isValidSync(values.identifier);
         const credentials = isEmail
           ? { email: values.identifier, password: values.password }
           : { mobile: values.identifier, password: values.password };
-  
+    
         const resultAction = await dispatch(loginUser(credentials));
-  
+    
         if (loginUser.fulfilled.match(resultAction)) {
-         
           const user = resultAction.payload?.user;
-  
+          
           setTimeout(() => {
             setSubmitting(false);
             if (user?.role === "admin") {
@@ -68,17 +105,15 @@ const LoginForm = ({ onClose }) => {
           }, 2000);
         } else {
           setSubmitting(false);
-          toast.error(resultAction.payload?.message || "Login failed. Please try again.");
+          toast.error(resultAction.payload || "Login failed. Please try again.");
         }
       } catch (error) {
         console.error("Error during login:", error);
         toast.error("An unexpected error occurred. Please try again.");
-      } //finally {
-      //   resetForm();
-      // }
+      }
     },
+    
   });
-  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
@@ -125,7 +160,7 @@ const LoginForm = ({ onClose }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email or Mobile
+                  Email or Mobile
                 </label>
                 <input
                   type="text"
