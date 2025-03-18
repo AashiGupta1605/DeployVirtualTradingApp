@@ -418,10 +418,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-45 flex items-center justify-center overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <Toaster />
 
-      <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
+      <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
       <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
@@ -440,7 +440,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto max-h-[80vh]">
+        <div className="p-6 overflow-y-auto max-h-[80vh] z-50">
           <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column */}

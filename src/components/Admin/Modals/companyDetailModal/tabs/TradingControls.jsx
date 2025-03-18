@@ -47,6 +47,8 @@ const TradingControls = ({
   const incrementQuantity = () => handleQuantityChange(quantity + 1);
   const decrementQuantity = () => handleQuantityChange(quantity - 1);
 
+  const isButtonDisabled = isDisabled || quantity === 0;
+
   return (
     <div className="bg-gray-50 rounded-2xl shadow-lg p-4 space-y-4">
       {/* Order Type Selection */}
@@ -193,10 +195,11 @@ const TradingControls = ({
       {/* Place Order Button */}
       <button 
         onClick={() => setShowConfirmation(true)} 
-        disabled={isDisabled} 
+        // disabled={isDisabled} 
+        disabled={isButtonDisabled} 
         className={`
           w-full py-2.5 rounded-lg font-semibold transition-colors 
-          ${isDisabled 
+          ${isButtonDisabled
             ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
             : activeTab === "sell" 
               ? "bg-red-500 hover:bg-red-600 text-white" 

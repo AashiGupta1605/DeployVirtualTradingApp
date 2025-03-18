@@ -39,9 +39,9 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
   }, [dispatch]);
 
   // Show loader while data is being fetched
-  if (loading) {
-    return <Loader />;
-  }
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   // Show error message if there's an error
   if (error) {
