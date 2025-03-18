@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -20,14 +20,32 @@ import Show_Nifty50Data_Page from './views/GuestUser/Show_Nifty50Data_Page';
 import Show_ETFData_Page from './views/GuestUser/Show_ETFData_Page';
 import PricingPage from './views/GuestUser/PricingPage';
 import BackToTop from './components/GuestUser/BackToTop';
-
-import { Toaster } from 'react-hot-toast';
-
+import SessionExpiredModal from './components/Organization/Session/SessionExpiredModal';
+import { logoutOrganization } from './redux/Organization/auth/organizationAuthSlice';
+import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const App = () => {
+  const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+    const handleLogout = () => {
+      dispatch(logoutOrganization()); // Dispatch logout action
+      toast.success("Login Again");
+      navigate("/"); // Redirect to home page
+    };
+  
   return (
     <div>
       <Toaster/>
       {/* <BackToTop /> */}
+      <SessionExpiredModal
+        show={showSessionExpiredModal}
+        onHide={() => {
+          setShowSessionExpiredModal(false);
+          handleLogout();
+        }}
+      />
     <Routes>
       {/* Routes with layouts */}
       <Route path="/admin/*" element={<Admin />} />

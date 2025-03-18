@@ -139,7 +139,7 @@ const UserPortfolioPage = () => {
   };
 
   return (
-    <div className="px-8 mx-8 -mt-12 h-19 p-4 mb-8.5"> {/* Increased padding and max-width */}
+    <div className="px-8 mx-4 -mt-12 h-19 p-4 mb-8.5"> {/* Increased padding and max-width */}
       <PortfolioHeader 
         user={user}
         statistics={statistics}

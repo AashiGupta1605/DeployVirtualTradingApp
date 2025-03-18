@@ -59,6 +59,9 @@ const OrganizationUsersFeedbacks = () => {
   const [localStartDate, setLocalStartDate] = useState(startDate ? new Date(startDate) : null);
   const [localEndDate, setLocalEndDate] = useState(endDate ? new Date(endDate) : null);
   const orgName = localStorage.getItem("orgName");
+  const userId = localStorage.getItem("user");
+  console.log(userId);
+  
 
   useEffect(() => {
     dispatch(
@@ -332,3 +335,28 @@ const OrganizationUsersFeedbacks = () => {
 };
 
 export default OrganizationUsersFeedbacks;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -26,7 +26,7 @@ export default function ETFTable() {
   const cardConfigurations = [
     {
       subtitle: "Virtual Amount",
-      title: activeSubscription?.vertualAmount || 0,
+      title: activeSubscription?.vertualAmount ? `${activeSubscription?.vertualAmount.toFixed(2)}₹` : 0,
       iconName: "fas fa-wallet",
       iconColor: "bg-indigo-500",
       percentColor: "text-gray-500",
@@ -34,7 +34,7 @@ export default function ETFTable() {
     },
     {
       subtitle: "Total Investment",
-      title: statistics.totalInvestment,
+      title: `${statistics.totalInvestment ? statistics.totalInvestment.toFixed(2) : '0.00'}₹`,
       iconName: "fas fa-money-bill-wave",
       iconColor: "bg-green-500",
       percentColor: "text-emerald-500",
@@ -71,14 +71,14 @@ export default function ETFTable() {
         : "text-red-500",
       description: "Success Rate"
     },
-    {
-      subtitle: "Total Trades",
-      title: `${statistics.buyTrades + statistics.sellTrades}`,
-      iconName: "fas fa-exchange-alt",
-      iconColor: "bg-pink-500",
-      percentColor: "text-gray-500",
-      description: "Buy & Sell Trades"
-    },
+    // {
+    //   subtitle: "Total Trades",
+    //   title: `${statistics.buyTrades + statistics.sellTrades}`,
+    //   iconName: "fas fa-exchange-alt",
+    //   iconColor: "bg-pink-500",
+    //   percentColor: "text-gray-500",
+    //   description: "Buy & Sell Trades"
+    // },
     // Add Virtual Amount Card
     // {
     //   subtitle: "Total Trades",
@@ -91,13 +91,13 @@ export default function ETFTable() {
     // Add Virtual Amount Card
     {
       subtitle: "Trades & P&L",
-      title: `${statistics.buyTrades + statistics.sellTrades} Trades`,
+      title: `${statistics.buyTrades + statistics.sellTrades}`,
       iconName: "fas fa-exchange-alt",
       iconColor: "bg-pink-500",
       percentColor: statistics.realizedPLPercentage >= 0 
         ? "text-emerald-500" 
         : "text-red-500",
-      description: `Realized P&L: ₹${statistics.realizedPL.toLocaleString()}`
+      description: `Realized P&L: ${statistics.realizedPL.toLocaleString()}%`
     },
 
   ];
@@ -126,7 +126,7 @@ export default function ETFTable() {
                 >
                   <CardStats
                     statSubtitle={card.subtitle}
-                    statTitle={`₹${card.title.toLocaleString()}`}
+                    statTitle={`${card.title.toLocaleString()}`}
                     statArrow={
                       card.title >= 0 ? "up" : "down"
                     }

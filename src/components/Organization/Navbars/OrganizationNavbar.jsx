@@ -32,7 +32,7 @@ const {orgId, orgName} = useSelector((state) => state.organization.auth);
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-xl">PGR VirtualTrading App</span>
+          <span className="text-xl">PGR Virtual Trading App</span>
         </a>
 
         {/* Form */}
@@ -53,13 +53,25 @@ const {orgId, orgName} = useSelector((state) => state.organization.auth);
                 />
               </svg>
             </div>
+
+            <div>
             <input
               type="text"
               placeholder="Search here..."
               className="border border-gray-200 px-3 py-2 placeholder-gray-400 text-gray-700 relative bg-white rounded-lg text-sm shadow-sm outline-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full pl-10 transition-all duration-200"
             />
+            </div>
+        
           </div>
         </form>
+
+        {/* organization name */}
+
+        
+        <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all mx-4">
+          <p title="organization name" className="text-lg uppercase">{orgName}</p>
+        </div>
+
 
         {/* User */}
         <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
