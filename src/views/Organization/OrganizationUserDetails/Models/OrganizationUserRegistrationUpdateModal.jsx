@@ -42,12 +42,13 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
         if (initialValues) {
           // Update existing user
           await dispatch(updateOrganizationUser({ id: initialValues._id, userData: values }));
+        onClose(); // Close the modal after successful submission
         } else {
           // Register new user
           await dispatch(registerOrganizationUser(values));
         }
-        resetForm(); // Reset form values
-        onClose(); // Close the modal after successful submission
+        // resetForm(); // Reset form values
+        // onClose(); // Close the modal after successful submission
         refreshStudents();
         refreshDashboard();
       } catch (error) {
