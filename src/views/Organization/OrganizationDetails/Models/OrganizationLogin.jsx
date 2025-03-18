@@ -73,6 +73,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
           <button
             onClick={() => {
               onClose();
+              formik.resetForm();
               dispatch(resetAuthState());
             }}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
@@ -129,8 +130,8 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    formik.resetForm();
                     onClose();
+                    formik.resetForm();
                     dispatch(resetAuthState());
                   }}
                   className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
