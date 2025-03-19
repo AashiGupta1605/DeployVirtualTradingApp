@@ -3,9 +3,9 @@ import { User, Wallet, TrendingUp, TrendingDown, BookUser } from 'lucide-react';
 
 const PortfolioHeader = ({ user, statistics, balance }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 w-full">
+    <div className="bg-white rounded-lg shadow-lg px-6 py-3 w-full">
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
 
         {/* Left - User Info */}
         <div className="flex items-center space-x-2">

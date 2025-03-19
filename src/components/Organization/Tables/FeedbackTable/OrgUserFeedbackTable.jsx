@@ -69,6 +69,7 @@ const OrgUserFeedbackTable = ({ feedbacks, onDelete, onEdit }) => {
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [feedbackToDelete, setFeedbackToDelete] = useState(null);
   const [toggleStates, setToggleStates] = useState({});
+console.log(feedbacks);
 
   useEffect(() => {
     const initialToggleStates = feedbacks.reduce(

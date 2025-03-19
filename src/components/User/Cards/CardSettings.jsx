@@ -4,6 +4,7 @@ import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../re
 import UpdateProfileForm from "./UpdateProfileForm";
 import ConfirmationModal from "./ConfirmationModal";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-hot-toast';
 
 export default function CardSettings({ isOpen, onClose }) {
   const dispatch = useDispatch();
@@ -27,8 +28,9 @@ export default function CardSettings({ isOpen, onClose }) {
   const handleDelete = async () => {
     await dispatch(deleteUserProfile());
     setIsDeleteModalOpen(false);
-    localStorage.removeItem("token"); // Remove token from local storage
+    localStorage.removeItem("token");// Remove token from local storage
     navigate("/login"); // Redirect to login page after deletion
+    toast.success('Account deleted sucessfully!');
   };
 
   return (
