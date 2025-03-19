@@ -245,6 +245,7 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
         </div>
 
         <div className="bg-white shadow-md rounded-lg overflow-x-auto h-[28rem] overflow-y-auto">
+        <div className="min-w-full">
           <table className="w-full">
             <thead className="bg-gray-50 border-b sticky top-0">
               <tr>
@@ -326,6 +327,7 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
                 ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         <div className="flex justify-between items-center mt-4 px-4 py-3">

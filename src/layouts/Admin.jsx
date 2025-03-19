@@ -1,4 +1,3 @@
-// Admin.jsx
 import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -33,19 +32,21 @@ export default function Admin() {
         } transition-all duration-300 ease-in-out`}
       >
         <AdminNavbar sidebarExpanded={sidebarExpanded} />
-        <div className="flex-1 overflow-y-auto">
-          <Routes>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="niftytable" element={<NiftyTable />} />
-            <Route path="nifty500table" element={<Nifty500Table />} />
-            <Route path="etftable" element={<ETFTable />} />
-            <Route path="queries" element={<Queries />} />
-            <Route path="feedback" element={<FeedbackList />} />
-            <Route path="RegisteredUsers" element={<RegisteredUsers />} />
-            <Route path="OrgRegister" element={<OrgRegister />} />
-            <Route path="*" element={<Navigate to="dashboard" replace />} />
-          </Routes>
+        <div className="flex-1 relative"> {/* Changed to relative */}
+          <div className="absolute inset-0 overflow-auto"> {/* Added this wrapper */}
+            <Routes>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="niftytable" element={<NiftyTable />} />
+              <Route path="nifty500table" element={<Nifty500Table />} />
+              <Route path="etftable" element={<ETFTable />} />
+              <Route path="queries" element={<Queries />} />
+              <Route path="feedback" element={<FeedbackList />} />
+              <Route path="RegisteredUsers" element={<RegisteredUsers />} />
+              <Route path="OrgRegister" element={<OrgRegister />} />
+              <Route path="*" element={<Navigate to="dashboard" replace />} />
+            </Routes>
+          </div>
         </div>
         <FooterAdmin />
       </div>

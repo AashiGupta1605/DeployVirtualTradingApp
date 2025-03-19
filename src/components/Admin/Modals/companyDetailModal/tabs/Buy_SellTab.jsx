@@ -1,3 +1,4 @@
+// Buy_SellTab.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +18,8 @@ import ConfirmationModal from '../../ConformationModal';
 import PraedicoAnalysis from './PraedicoAnalysis';
 import TransactionHistory from './TransactionHistory';
 import TradingControls from './TradingControls';
+import MarketStatusOverlay from './../parts/MarketStatusOverlay';
+import { isMarketOpen } from '../../../../../utils/marketStatus';
 
 const Buy_SellTab = ({ symbol, data, loading, error }) => {
   const dispatch = useDispatch();
@@ -25,7 +28,6 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
 
   const [activeTab, setActiveTab] = useState('buy');
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [virtualAmount, setVirtualAmount] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [orderType, setOrderType] = useState('market');
   const [price, setPrice] = useState(currentMarketPrice);
@@ -52,6 +54,8 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
     );
     return activeSubscription.vertualAmount - totalHoldings;
   };
+
+  const marketOpen = isMarketOpen();
 
   useEffect(() => {
     setPrice(currentMarketPrice);
@@ -117,7 +121,7 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
   };
 
   const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance() > 0;
-  const isDisabled = loading || tradingLoading;
+  const isDisabled = loading || tradingLoading || !marketOpen;
 
   if (loading || tradingLoading) {
     return (
@@ -154,7 +158,9 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
   }
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6">
+    <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6 relative">
+      {!marketOpen && <MarketStatusOverlay />}
+
       <div className="flex gap-6">
         {/* Left Side: Account Summary, Buy/Sell Tabs, and Trading Controls */}
         <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 60%' }}>

@@ -268,11 +268,11 @@ const CompanyDetailModal = ({
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity z-0" 
         onClick={onClose}
       />
 
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center z-10">
         <div className="relative w-[90%] h-[90%] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <button
             onClick={onClose}
