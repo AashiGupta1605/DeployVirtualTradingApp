@@ -190,6 +190,8 @@ const handleSymbolClick = (symbol, e) => {
                 )}
               </div>
             )}
+            {console.log(userData)
+            }
           </div>
           <div className="relative w-[300px] border border-gray-50 rounded-lg 
                   focus-within:border-gray-300 focus-within:ring-1 

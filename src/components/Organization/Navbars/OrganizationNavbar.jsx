@@ -4,7 +4,6 @@ import UserDropdown from "../DropDowns/UserDropdown";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchOrgById} from "../../../redux/Organization/auth/organizationAuthSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useSelect } from "@material-tailwind/react";
 
 export default function OrganizationNavbar({ sidebarExpanded }) {
   const dispatch = useDispatch();

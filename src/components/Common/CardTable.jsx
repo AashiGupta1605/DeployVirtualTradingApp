@@ -1,7 +1,6 @@
 // components/Common/CardTable.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-hot-toast'; 
 import { 
   X, 
   SearchIcon,
@@ -81,48 +80,13 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
   }, [dispatch, currentPage, itemsPerPage, searchTerm, tableType]);
 
-  const handleSymbolClick = (row, e) => {
+  const handleSymbolClick = (symbol, e) => {
     e.preventDefault();
     e.stopPropagation();
-  
-    // Robust symbol extraction
-    let symbol;
-    
-    // If row is an object, try to extract symbol
-    if (typeof row === 'object') {
-      // Check for different possible symbol locations
-      symbol = row.symbol 
-        || row.name 
-        || (row.stockData && row.stockData.symbol)
-        || null;
-    } else {
-      // If row is already a string, use it directly
-      symbol = row;
-    }
-  
-    // Sanitize symbol
-    const sanitizedSymbol = symbol 
-      ? symbol.toString().trim().toUpperCase().replace('&', 'AND')
-      : null;
-    
-    // Validate sanitized symbol
-    if (!sanitizedSymbol || sanitizedSymbol === 'NULL' || sanitizedSymbol === '[OBJECT OBJECT]') {
-      console.error('Invalid symbol:', row);
-      toast.error('Unable to fetch company details', {
-        position: 'top-right',
-        duration: 3000
-      });
-      return;
-    }
-  
     const setSymbolAction = getAction(setNifty50SelectedSymbol, setNifty500SelectedSymbol);
     const fetchDetailsAction = getAction(fetchNifty50CompanyDetails, fetchNifty500CompanyDetails);
-    
-    dispatch(setSymbolAction(sanitizedSymbol));
-    dispatch(fetchDetailsAction({ 
-      symbol: sanitizedSymbol, 
-      type: tableType 
-    }));
+    dispatch(setSymbolAction(symbol));
+    dispatch(fetchDetailsAction(symbol));
   };
 
   const handleTimeRangeChange = (range) => {
