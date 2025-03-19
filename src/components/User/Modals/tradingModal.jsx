@@ -126,7 +126,7 @@ const UserPortfolioPage = () => {
   const handleStockClick = (symbol) => {
     const stockTransactions = transactions
       .filter(t => t.companySymbol === symbol)
-      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // Sort by date in ascending order
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by date in ascending order
 
     const stockHolding = holdings.find(h => h.companySymbol === symbol);
     

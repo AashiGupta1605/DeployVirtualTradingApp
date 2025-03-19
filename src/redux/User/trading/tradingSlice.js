@@ -1,8 +1,6 @@
 // tradingSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { createSelector } from '@reduxjs/toolkit';
-
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
 
@@ -105,16 +103,40 @@ const initialState = {
 // Async Thunks
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
-  async ( { userId, subscriptionPlanId }, { rejectWithValue, getState }) => {  // Pass both IDs
+  async (params, { rejectWithValue }) => {
     try {
-      if (!subscriptionPlanId || !userId) { // Handle missing IDs
-        return rejectWithValue('User ID and Subscription Plan ID are required.');
+      const { userId, subscriptionPlanId } = params;
+      
+      // Validate inputs with more detailed error
+      if (!userId) {
+        return rejectWithValue('User ID is required');
+      }
+      
+      if (!subscriptionPlanId) {
+        return rejectWithValue('Subscription Plan ID is required');
       }
 
-      const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`); // Correct URL
-      return response.data.holdings || [];
+      const response = await axios.get(
+        `${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`
+      );
+      
+      return response.data || [];
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings'); // Improved error handling
+      console.error('Fetch Holdings Error:', error);
+      
+      // Detailed error handling
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            return []; // No holdings found
+          case 403:
+            return rejectWithValue('Unauthorized access to holdings');
+          default:
+            return rejectWithValue(error.response.data.message || 'Failed to fetch holdings');
+        }
+      }
+      
+      return rejectWithValue('Network error or server unavailable');
     }
   }
 );
@@ -303,14 +325,10 @@ const tradingSlice = createSlice({
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
 export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
 export const selectStatistics = (state) => state.user.tradingModal.statistics;
-
-const selectTradingState = (state) => state.user.tradingModal; // Select the trading slice
-
-export const selectLoadingState = createSelector(
-  selectTradingState,
-  (tradingState) => tradingState.loading // Directly return the loading state
-);
-
+export const selectLoadingState = (state) => ({
+  loading: state.user.tradingModal.loading,
+  orderStatus: state.user.tradingModal.orderStatus
+});
 export const selectError = (state) => state.user.tradingModal.error;
 export const selectHoldingBySymbol = (state, symbol) => 
   (state.user.tradingModal.holdings || []).find(h => h.companySymbol === symbol);

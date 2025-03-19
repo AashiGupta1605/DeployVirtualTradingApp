@@ -50,10 +50,11 @@ export default function Org() {
   return (
     <>
       <OrganizationSidebar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
+
       <div className={`relative ${sidebarExpanded ? "md:ml-64" : "md:ml-20"} ml-16 bg-blueGray-100 transition-all duration-300 ease-in-out`}>
-        <div className="z-0">
+        {/* <div className="z-0"> */}
         <OrganizationNavbar sidebarExpanded={sidebarExpanded}/>
-        </div>
+        {/* </div> */}
         <div className="mx-auto w-full -m-24">
           <div id="root">
           <main>
