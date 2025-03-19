@@ -115,7 +115,7 @@ const userprofileSlice = createSlice({
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "failed to update profile";
       })
       .addCase(deleteUserProfile.pending, (state) => {
         state.loading = true;

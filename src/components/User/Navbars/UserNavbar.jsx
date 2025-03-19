@@ -85,6 +85,10 @@
 //     </nav>
 //   );
 // }
+
+
+// real one
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
@@ -194,4 +198,5 @@ console.log(user);
     </nav>
   );
 }
+
 
