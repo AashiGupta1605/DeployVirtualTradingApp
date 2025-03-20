@@ -134,7 +134,7 @@ export default function UserNavbar({ sidebarExpanded }) {
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-xl">PGR VirtualTrading App</span>
+          <span className="text-xl">PGR Virtual Trading App</span>
         </a>
 
         {/* Search Form */}

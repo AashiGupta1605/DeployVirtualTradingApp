@@ -4,8 +4,11 @@ import StockTable from "../../components/Common/StockTable";
 import CardPageVisits from "../../components/User/Cards/CardPageVisits";
 import CardSocialTraffic from "../../components/User/Cards/CardSocialTraffic";
 import CardStats from "../../components/User/Cards/CardStats";
+import { useSelector } from "react-redux";
 
 export default function etfTable() {
+  const userData = useSelector((state) => state.user.auth.user);
+
   return (
     <>
     <div className="mt-12 overflow-hidden">
@@ -69,7 +72,7 @@ export default function etfTable() {
           </div>
      <div className="flex flex-wrap -mt-1.5">
         <div className="w-full mb-12 px-4 -mt-42">
-          <StockTable />
+          <StockTable userData={userData} />
         </div>
       </div>
     </>
