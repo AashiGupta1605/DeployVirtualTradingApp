@@ -218,7 +218,11 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, userData, onSuccess 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
         <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-        <div className="relative w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl">
+        <div 
+            style={{ width: "100%", maxWidth: "80%", maxHeight: "80vh" }} 
+            className="relative w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl overflow-y-auto"
+            >
+
           {/* Header */}
           <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-lightBlue-50 to-lightBlue-100 rounded-t-2xl">
             <div className="flex items-center space-x-4">
