@@ -152,7 +152,7 @@ const CompanyDetailModal = ({
   // Effects
   useEffect(() => {
     if (isOpen && symbol) {
-      dispatch(fetchCompanyDetails({ symbol, type })); // Pass both symbol and type
+      dispatch(fetchCompanyDetails({ symbol, type }));
     }
     return () => {
       if (!isOpen) {
@@ -162,10 +162,14 @@ const CompanyDetailModal = ({
   }, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
-    if (isOpen && userId) {
-      dispatch(fetchHoldings(userId));
+    // Only fetch holdings if user is logged in and has an active subscription
+    if (isOpen && userId && activeSubscription) {
+      dispatch(fetchHoldings({
+        userId, 
+        subscriptionPlanId: activeSubscription._id
+      }));
     }
-  }, [isOpen, userId, dispatch]);
+  }, [isOpen, userId, activeSubscription, dispatch]);
 
   // Event Handlers
   const handleTabChange = (tab) => {

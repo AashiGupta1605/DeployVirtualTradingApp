@@ -68,11 +68,12 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-user text-white"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Login</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Organization Login</h2>
           </div>
           <button
             onClick={() => {
               onClose();
+              formik.resetForm();
               dispatch(resetAuthState());
             }}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
@@ -129,8 +130,8 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    formik.resetForm();
                     onClose();
+                    formik.resetForm();
                     dispatch(resetAuthState());
                   }}
                   className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"

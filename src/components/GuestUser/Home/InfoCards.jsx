@@ -14,8 +14,8 @@ const InfoCards = () => {
 
     const fetchOrgData = async () =>{
       try{
-        // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
-        const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllOrganizations`);
+        const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
+        // const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllOrganizations`);
         setOrgData(response.data.data);
         setErr("")
       }
@@ -27,8 +27,8 @@ const InfoCards = () => {
     
     const fetchUserData = async () =>{
       try{
-        // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
-        const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
+        const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
+        // const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
         setUserData(response.data.data);
 
         const activeCount = response.data.data.filter((data) => data.status === true).length;
