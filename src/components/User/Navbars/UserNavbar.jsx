@@ -85,7 +85,7 @@
 //     </nav>
 //   );
 // }
-import React, { useState } from "react";
+import React, { useState ,useEffect, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
@@ -93,12 +93,15 @@ import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../re
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UserNavbar({ sidebarExpanded }) {
-    const dispatch = useDispatch();
-     const { userData } = useSelector((state) => state.user.profile);
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user.profile);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate(); // Hook for navigation
+  const dropdownRef = useRef(null);
+
  // Fetch user data when sidebar is expanded
+ 
   React.useEffect(() => {
     if (sidebarExpanded) {
       dispatch(fetchUserData()); // Fetch user profile when sidebar opens
@@ -115,6 +118,22 @@ export default function UserNavbar({ sidebarExpanded }) {
   const handleProfile = () => {
     setIsProfileModalOpen(true); // Open profile modal instead of navigating
   };
+
+ // Close dropdown when clicking outside
+ useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+
 
   return (
     <nav
@@ -134,7 +153,7 @@ export default function UserNavbar({ sidebarExpanded }) {
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-xl">PGR Virtual Trading App</span>
+          <span className="text-xl">PGR - Virtual Trading App</span>
         </a>
 
         {/* Search Form */}
@@ -170,7 +189,7 @@ export default function UserNavbar({ sidebarExpanded }) {
 
 
         {/* Logout Dropdown */}
-        <div className="relative">
+        <div className="relative"  ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none"
