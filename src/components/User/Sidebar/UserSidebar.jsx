@@ -217,6 +217,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NotificationDropdown from "../Dropdowns/NotificationDropdown";
 import DashboardDropdown from "../Dropdowns/DashboardDropdown";
+import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -226,6 +227,12 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const { userData } = useSelector((state) => state.user.profile);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Fetch user data when sidebar is expanded
+  React.useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
+  
 
   const userName = userData ? userData.name : "User";
 
