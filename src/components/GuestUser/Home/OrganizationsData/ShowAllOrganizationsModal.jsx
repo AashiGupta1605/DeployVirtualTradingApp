@@ -3,6 +3,7 @@ import { BASE_API_URL } from "../../../../utils/BaseUrl";
 import axios from "axios";
 import { FaBuilding } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
+import { FolderOpen } from "lucide-react";
 
 const Dummy = ({ closeModal }) => {
 
@@ -14,8 +15,8 @@ const Dummy = ({ closeModal }) => {
     try {
       const searchQuery = search.trim() === "" ? "all" : search;
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/searchOrganization/${searchQuery}`
-        `http://localhost:5000/v1/api/guestUser/getAllOrganizations/${searchQuery}`
+        `${BASE_API_URL}/guestUser/getAllOrganizations/${searchQuery}`
+        // `http://localhost:5000/v1/api/guestUser/getAllOrganizations/${searchQuery}`
       );
       setOrgData(response.data.data);
       setErr("");
@@ -87,7 +88,7 @@ const Dummy = ({ closeModal }) => {
           </div>
         </div>
 
-        {err && <p className="text-red-500">{err}</p>}
+        {/* {err && <p className="text-red-500">{err}</p>} */}
 
         {/* List of Feedbacks */}
         <div className="flex h-[64vh]">
@@ -95,20 +96,65 @@ const Dummy = ({ closeModal }) => {
             <table className="inset-0 min-w-full table-fixed divide-y divide-gray-200 border-collapse bg-white">
               <thead className="bg-gray-50 sticky top-0 z-10">
                 <tr>
-                  <th className="px-6 py-3 w-1/4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Organization Name
                   </th>
-                  <th className="px-6 py-3 w-1/4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Website
                   </th>
-                  <th className="px-6 py-3 w-1/4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Address
                   </th>
-                  <th className="px-6 py-3 w-1/4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Associated Date
                   </th>
                 </tr>
               </thead>
+
+              {/* {err && 
+                <tbody className="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td colSpan="4">
+                    <div className="mt-18 ml-95 flex flex-col items-center justify-center h-50 w-100 bg-gray-100 rounded-lg shadow-md p-4">
+                      <span className="text-red-500 text-2xl">
+                        <i className="fas fa-exclamation-circle"></i>
+                      </span>
+                      <b className="text-lg text-gray-700 mt-2">Loading...</b>
+                      <h4 className="text-gray-500 text-sm">No content available</h4>
+                      <p className="text-red-500 text-sm">{err}</p>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              } */}
+
+              {err && (
+              <tbody className="bg-white divide-y divide-gray-200">
+                <tr>
+                <td colSpan="4">
+                  <div className="mt-12 ml-15 flex justify-center items-center min-h-[200px]">
+                  <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg p-6">
+                    <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+                      <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+                    </div>
+                    <b className="text-lg text-gray-800 mt-4">Oops! Something went wrong.</b>
+                    <p className="text-gray-600 text-sm text-center mt-2">
+                      We couldn’t load the content. Please try again later.
+                    </p>
+                    <p className="text-red-600 font-medium mt-2">{err}</p>
+                    <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                  </div>
+                </td>
+                </tr>
+              </tbody>
+              )}
+
               <tbody className="bg-white divide-y divide-gray-200">
                 {orgData.length > 0 ? (
                   orgData.map((org, index) => {
@@ -117,13 +163,13 @@ const Dummy = ({ closeModal }) => {
                         key={index}
                         className="hover:bg-gray-50 transition-colors"
                       >
-                        <td className="px-6 py-4 w-1/4 break-words text-base font-medium text-gray-800">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {org.name 
                             ? org.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                             : 'Organization Name is not available'
                           } 
                         </td>
-                        <td className="px-6 py-4 w-1/4 break-words text-sm">
+                        <td className="px-6 py-4 min-w-[270px] max-w-[300px] break-words truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm">
                           {org.website ? (
                             <a
                               href={org.website}
@@ -138,23 +184,28 @@ const Dummy = ({ closeModal }) => {
                             "No website found"
                           )}
                         </td>
-                        <td className="px-6 py-4 w-1/4 break-words text-sm">
+                        <td className="px-6 py-4 min-w-[340px] max-w-[360px] break-words text-sm">
                           {org.address 
                             ? org.address.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                             : 'No address found'
                           } 
                         </td>
 
-                        <td className="px-6 py-4 w-1/4 break-words text-sm">
+                        <td className="px-6 py-4 break-words text-sm">
                           {new Date(org.createDate).toISOString().split("T")[0]}
                         </td>
                       </tr>
                     );
                   })
-                ) : (
+                ) : (!err &&
                   <tr>
-                    <td colSpan="4" className="p-4 text-center text-gray-500">
-                      No feedbacks available.
+                    <td colSpan="4"
+                    className="p-6 text-center text-gray-500 text-base font-medium bg-gray-50 rounded-md mt-4"
+                    >
+                      <div className="pt-20 pb-42 flex flex-col items-center space-y-2">
+                      <FolderOpen className="w-10 h-10 text-gray-400" /> 
+                      <span>No Organizations available.</span>
+                      </div>
                     </td>
                   </tr>
                 )}

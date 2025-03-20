@@ -406,7 +406,7 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-building text-white"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Sign Up</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Organization Sign Up</h2>
           </div>
           {/* Close button */}
           <button

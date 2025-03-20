@@ -3,6 +3,7 @@ import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
 
 import { Filter, Star, ThumbsUp, ThumbsDown } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { FaTimes, FaComments } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
 
@@ -16,16 +17,17 @@ const CATEGORY_COLORS = {
 };
 
 const UserAllFeedbacksTable = ({ closeModal }) => {
-
   const [showFilters, setShowFilters] = useState(false);
-  
+  const [filterCount, setFilterCount] = useState(0);
+  const [appliedFilters, setAppliedFilters] = useState({});
+
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
   const [expandedRow, setExpandedRow] = useState(null);
   const toggleRow = (id) => {
     setExpandedRow(expandedRow === id ? null : id);
   };
-  
+
   const [feedbacks, setFeedbacks] = useState([]);
   const [userData, setUserData] = useState([]);
   const [orgData, setOrgData] = useState([]);
@@ -39,12 +41,86 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
   const [sortBy, setSortBy] = useState("createdDate");
   const [order, setOrder] = useState("decreasing");
 
+  useEffect(() => {
+    let count = 0;
+    let filters = {};
+
+    if (category !== "all") {
+      count++;
+      filters["Category"] = category;
+    }
+    if (organization !== "All" && organization !== "all") {
+      count++;
+      filters["Organization"] = organization;
+    }
+    if (recommend !== "all") {
+      count++;
+      filters["Recommend"] = recommend;
+    }
+    if (search.trim() !== "") {
+      count++;
+      filters["Search"] = search;
+    }
+    if (sortBy !== "createdDate") {
+      count++;
+      filters["Sort By"] = sortBy;
+    }
+    if (order !== "decreasing") {
+      count++;
+      filters["Order"] = order;
+    }
+    setFilterCount(count);
+    setAppliedFilters(filters);
+  }, [category, organization, recommend, search, sortBy, order]);
+
+  const removeFilter = (key) => {
+    setAppliedFilters((prev) => {
+      const updatedFilters = { ...prev }; // Copy the previous state
+      delete updatedFilters[key]; // Remove the specific filter
+      return updatedFilters; // Update the state
+    });
+
+    setFilterCount((prev) => Math.max(prev - 1, 0)); // Decrease filter count safely
+
+    //Reset
+    switch (key) {
+      case "Category":
+        setCategory("all");
+        break;
+      case "Organization":
+        setOrganization("All");
+        break;
+      case "Recommend":
+        setRecommend("all");
+        break;
+      case "SortBy":
+        setSortBy("createdDate");
+        break;
+      case "Order":
+        setOrder("decreasing");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters({}); // Reset all filters
+    setCategory("all");
+    setOrganization("All");
+    setRecommend("all");
+    setSearch("");
+    setSortBy("createdDate");
+    setOrder("decreasing");
+    setFilterCount(0); // Reset filter count
+  };
+
   const fetchUserFeedbacks = async () => {
     try {
       const searchQuery = search.trim() === "" ? "all" : search;
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
-        `http://localhost:5000/v1/api/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
+        `${BASE_API_URL}/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
+        // `http://localhost:5000/v1/api/guestUser/userFeedbacks/${organization}/${category}/${recommend}/${searchQuery}/${sortBy}/${order}`
       );
       setFeedbacks(response.data.feedbackData);
 
@@ -57,8 +133,8 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
 
   const fetchUsersData = async () => {
     try {
-      // const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
-      const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
+      const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
+      // const response = await axios.get(`http://localhost:5000/v1/api/guestUser/getAllUsers`);
       setUserData(response.data.data);
       console.log("User Data", response.data);
     } catch (error) {
@@ -69,8 +145,8 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
   const fetchOrganizationsData = async () => {
     try {
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/getAllOrganizations`
-        `http://localhost:5000/v1/api/guestUser/getAllOrganizations`
+        `${BASE_API_URL}/guestUser/getAllOrganizations`
+        // `http://localhost:5000/v1/api/guestUser/getAllOrganizations`
       );
       setOrgData(response.data.data);
       setErr("");
@@ -122,17 +198,28 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
               {/* Filter Icon */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-3 px-2 py-1 h-[37px] border rounded-lg transition-all duration-200 
-                ${
-                  showFilters
-                    ? "border-gray-300 shadow-md w-[90px]"
-                    : "border-gray-200 w-[90px] hover:border-gray-300"
-                }`}
+                className={`relative flex items-center gap-9 px-4 py-2 h-[40px] border rounded-lg transition-all duration-200 
+                            ${
+                              showFilters
+                                ? "border-gray-300 shadow-md w-[110px]"
+                                : "border-gray-200 w-[110px] hover:shadow-sm hover:border-gray-300"
+                            }
+                          `}
               >
-                <Filter className="text-gray-500 text-lg hover:text-gray-700 transition-colors duration-200" />
-                {/* <span className="text-gray-700 font-medium">Filter</span> */}
+                {/* Filter Icon */}
+                <div className="relative">
+                  <Filter className="text-gray-500 text-xl hover:text-gray-700 transition-colors duration-200" />
+
+                  {/* Filter Count - Positioned Bottom Right */}
+                  {filterCount > 0 && (
+                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                      {filterCount}
+                    </span>
+                  )}
+                </div>
+                {/* Arrow Icon */}
                 <IoIosArrowUp
-                  className={`text-gray-500 text-lg transition-transform duration-200 ${
+                  className={`pl-[2px] text-gray-500 text-lg transition-transform duration-200 ${
                     showFilters ? "rotate-0" : "rotate-180"
                   }`}
                 />
@@ -172,7 +259,6 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
           {showFilters && (
             <div className="flex justify-end items-center mt-5">
               <div className="flex gap-4 mr-auto">
-              
                 {/* Organization Select */}
                 <div className="flex flex-col relative">
                   {/* Label */}
@@ -184,12 +270,12 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                     {/* Clickable Select Box */}
                     <button
                       onClick={() => setShowDropdown(!showDropdown)}
-                      className={`border rounded-lg px-5 py-[7px] text-sm w-38 text-left flex justify-between items-center 
+                      className={`border rounded-lg px-5 py-[6px] text-sm w-38 text-left flex justify-between items-center 
                       bg-white transition-colors duration-200 
                       ${
                         showDropdown
                           ? "border-blue-500 bg-blue-100"
-                          : "border-gray-300 hover:border-blue-300"
+                          : "border-gray-300 hover:border-blue-400"
                       }`}
                     >
                       <span className="text-gray-600">
@@ -197,40 +283,49 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                       </span>
                       <IoIosArrowUp
                         className={`text-gray-500 text-lg transition-transform duration-200 
-                        ${showDropdown ? "rotate-180" : "rotate-0"}`}
+                        ${showDropdown ? "rotate-180" : "rotate-180"}`}
                       />
                     </button>
 
                     {/* Scrollable Organization Options */}
                     <div className="relative">
-                    {showDropdown && (
-                      <div className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-lg max-h-56 overflow-y-auto z-50">
-                        {/* "All" Option */}
-                        <div
-                          onClick={() => {
-                            setOrganization("All");
-                            setShowDropdown(false);
-                          }}
-                          className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
-                        >
-                          All
-                        </div>
-
-                        {/* Organization List */}
-                        {orgData.map((org) => (
+                      {showDropdown && (
+                        <div className="absolute mt-2 top-full left-0 w-[150px] bg-white border rounded-md shadow-lg max-h-53 overflow-y-auto z-50">
+                          {/* "All" Option */}
+                          <div>
                           <div
-                            key={org._id}
                             onClick={() => {
-                              setOrganization(org.name);
+                              setOrganization("All");
                               setShowDropdown(false);
                             }}
                             className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
                           >
-                          {org.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                            All
                           </div>
-                        ))}
-                      </div>
-                    )}
+
+                          {/* Organization List */}
+                          {orgData.map((org) => (
+                            <div
+                              key={org._id}
+                              onClick={() => {
+                                setOrganization(org.name);
+                                setShowDropdown(false);
+                              }}
+                              className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
+                            >
+                              {org.name
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")}
+                            </div>
+                          ))}
+                        </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -242,7 +337,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                   </label>
                   <div className="relative">
                     <select
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={category}
                       onChange={(e) => setCategory(e.target.value || "all")}
                     >
@@ -252,7 +347,9 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                       <option value="Data Accuracy">Data Accuracy</option>
                       <option value="Trading Features">Trading Features</option>
                       <option value="Customer Support">Customer Support</option>
-                      <option value="Performance & Speed">Performance & Speed</option>
+                      <option value="Performance & Speed">
+                        Performance & Speed
+                      </option>
                       <option value="Other">Other</option>
                     </select>
                   </div>
@@ -266,7 +363,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                   <div className="relative">
                     <select
                       name="Recommend"
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={recommend}
                       onChange={(e) => setRecommend(e.target.value || "all")}
                     >
@@ -286,7 +383,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                   <div className="relative">
                     <select
                       name="sortBy"
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={sortBy}
                       onChange={(e) =>
                         setSortBy(e.target.value || "createdDate")
@@ -307,7 +404,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                   <div className="relative">
                     <select
                       name="Order"
-                      className="border rounded-lg px-5 py-[7px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
                       value={order}
                       onChange={(e) => setOrder(e.target.value || "decreasing")}
                     >
@@ -320,12 +417,44 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
               </div>
             </div>
           )}
+
+          {filterCount > 0 && (
+            <div className="mt-2 -mb-1 -ml-1 -mr-1 p-2 bg-gray-100 rounded-lg shadow-md flex justify-between items-center">
+              <div className="flex flex-wrap gap-2 flex items-center">
+                {Object.entries(appliedFilters).map(([key, value]) => (
+                  <span
+                    key={key}
+                    className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold"
+                  >
+                    {key}: {value}
+                    <button
+                      onClick={() => removeFilter(key)}
+                      className="ml-6 mr-1 mt-1 border-none outline-none bg-transparent"
+                    >
+                      <FaTimes className="text-blue-300 hover:text-blue-800 text-sm" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={clearAllFilters}
+                className="flex items-center gap-2 px-4 py-[6px] bg-gray-200 text-gray-700 text-sm font-semibold rounded-full transition-all duration-200 hover:bg-gray-500 hover:text-white shadow-sm"
+              >
+              Clear All &nbsp;&nbsp;&nbsp;<FaTimes className="text-gray-500 hover:text-gray-700 text-base" />
+              </button>
+            </div>
+          )}
         </div>
 
-        {err && <p className="text-red-500">{err}</p>}
+        {/* {err && <p className="text-red-500">{err}</p>} */}
 
         {/* List of Feedbacks */}
-        <div className={`flex ${showFilters ? "h-[51vh]" : "h-[63vh]"}`}>
+        <div  className={`flex 
+        ${
+          showFilters
+          ? filterCount > 0 ? "h-[43vh]" : "h-[51vh]"
+          : filterCount > 0 ? "h-[55vh]" : "h-[63vh]"
+        }`}>
           <div className="inset-0 overflow-y-auto w-full max-h-[500px] rounded-lg shadow-md">
             <table className="inset-0 min-w-full table-fixed divide-y divide-gray-200 border-collapse bg-white">
               <thead className="bg-gray-50 sticky top-0 z-10">
@@ -356,6 +485,51 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                   </th>
                 </tr>
               </thead>
+
+              {/* {err && 
+                <tbody className="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td colSpan="8">
+                    <div className="mt-18 ml-95 flex flex-col items-center justify-center h-50 w-100 bg-gray-100 rounded-lg shadow-md p-4">
+                      <span className="text-red-500 text-2xl">
+                        <i className="fas fa-exclamation-circle"></i>
+                      </span>
+                      <b className="text-lg text-gray-700 mt-2">Loading...</b>
+                      <h4 className="text-gray-500 text-sm">No content available</h4>
+                      <p className="text-red-500 text-sm">{err}</p>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              } */}
+
+              {err && (
+              <tbody className="bg-white divide-y divide-gray-200">
+                <tr>
+                <td colSpan="8">
+                  <div className="mt-12 ml-15 flex justify-center items-center min-h-[200px]">
+                  <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg p-6">
+                    <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+                      <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+                    </div>
+                    <b className="text-lg text-gray-800 mt-4">Oops! Something went wrong.</b>
+                    <p className="text-gray-600 text-sm text-center mt-2">
+                      We couldn’t load the content. Please try again later.
+                    </p>
+                    <p className="text-red-600 font-medium mt-2">{err}</p>
+                    <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                  </div>
+                </td>
+                </tr>
+              </tbody>
+              )}
+
               <tbody className="bg-white divide-y divide-gray-200">
                 {feedbacks.length > 0 ? (
                   feedbacks.map((feedbackData, index) => {
@@ -370,14 +544,28 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                         key={index}
                         className="hover:bg-gray-50 transition-colors"
                       >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap min-w-[185px] text-sm font-medium text-gray-900">
                           {organizationName
-                            ? organizationName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                            ? organizationName.name
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")
                             : "Anonymous Organization"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap min-w-[185px] text-sm font-medium text-gray-900">
                           {userName
-                            ? userName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                            ? userName.name
+                                .split(" ")
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase()
+                                )
+                                .join(" ")
                             : "Anonymous"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -390,7 +578,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           </span>
                         </td>
 
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 min-w-[195px] text-sm text-gray-500">
                           {expandedRow === feedbackData._id ? (
                             <>
                               {feedbackData.feedbackMessage}
@@ -404,7 +592,10 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           ) : (
                             <>
                               {feedbackData.feedbackMessage?.length > 50
-                                ? `${feedbackData.feedbackMessage.substring(0, 50)}...`
+                                ? `${feedbackData.feedbackMessage.substring(
+                                    0,
+                                    50
+                                  )}...`
                                 : feedbackData.feedbackMessage ||
                                   "No feedbacks provided"}
                               {feedbackData.feedbackMessage?.length > 50 && (
@@ -447,7 +638,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                             />
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 min-w-[195px] text-sm text-gray-500">
                           {expandedRow === `suggestion-${feedbackData._id}` ? (
                             <>
                               {feedbackData.suggestions}
@@ -463,8 +654,12 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           ) : (
                             <>
                               {feedbackData.suggestions?.length > 50
-                                ? `${feedbackData.suggestions.substring(0, 50)}...`
-                                : feedbackData.suggestions || "No suggestions provided"}
+                                ? `${feedbackData.suggestions.substring(
+                                    0,
+                                    50
+                                  )}...`
+                                : feedbackData.suggestions ||
+                                  "No suggestions provided"}
                               {feedbackData.suggestions?.length > 50 && (
                                 <button
                                   onClick={() =>
@@ -479,16 +674,23 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(feedbackData.createdDate).toLocaleDateString()}
+                          {new Date(
+                            feedbackData.createdDate
+                          ).toLocaleDateString()}
                         </td>
                       </tr>
                     );
                   })
-                ) : (
+                ) : (!err &&
                   <tr>
-                    <td colSpan="7" className="p-4 text-center text-gray-500">
-                      No feedbacks available.
-                    </td>
+                  <td colSpan="8"
+                  className="p-6 text-center text-gray-500 text-base font-medium bg-gray-50 rounded-md mt-4"
+                  >
+                    <div className="pt-20 pb-42 flex flex-col items-center space-y-2">
+                    <FolderOpen className="w-10 h-10 text-gray-400" /> 
+                    <span>No feedbacks available.</span>
+                    </div>
+                  </td>
                   </tr>
                 )}
               </tbody>
