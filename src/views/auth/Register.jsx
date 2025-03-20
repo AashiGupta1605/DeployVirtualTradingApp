@@ -106,7 +106,7 @@ if (response.ok) {
               <i className="fas fa-building text-white"></i>
             </div>
             <h2 className="text-2xl font-semibold text-gray-800">
-              {initialValues ? "Edit User" : "Sign Up"}
+              {initialValues ? "Edit User" : "User Sign Up"}
             </h2>
           </div>
           <button
@@ -268,7 +268,7 @@ if (response.ok) {
                 type="submit"
                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
               >
-                {initialValues ? "Update User" : "Sign Up"}
+                {initialValues ? "Update User" : "Register User"}
               </button>
             </div>
             {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}

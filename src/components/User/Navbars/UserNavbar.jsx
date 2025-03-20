@@ -89,16 +89,23 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
+import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function UserNavbar({ sidebarExpanded }) {
+    const dispatch = useDispatch();
+     const { userData } = useSelector((state) => state.user.profile);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate(); // Hook for navigation
-  const user = JSON.parse(localStorage.getItem("user"));
-console.log(user);
+ // Fetch user data when sidebar is expanded
+  React.useEffect(() => {
+    if (sidebarExpanded) {
+      dispatch(fetchUserData()); // Fetch user profile when sidebar opens
+    }
+  }, [sidebarExpanded, dispatch]);
 
-  
-  
+  const userName = userData ? userData.name : "User";
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
@@ -158,7 +165,7 @@ console.log(user);
 
 
         <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all">
-          <p title="username" className="text-lg">{user.name}</p>
+          <p title="username" className="text-lg">{userName}</p>
         </div>
 
 

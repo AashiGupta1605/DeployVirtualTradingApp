@@ -68,7 +68,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-user text-white"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Login</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Organization Login</h2>
           </div>
           <button
             onClick={() => {
