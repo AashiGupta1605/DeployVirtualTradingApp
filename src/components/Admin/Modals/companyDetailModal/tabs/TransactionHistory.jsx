@@ -44,8 +44,9 @@ const TransactionHistory = ({ currentPrice, symbol }) => {
   // Redux selectors with safe defaults
   const transactions = useSelector(selectTransactions) || [];
   const statistics = useSelector(selectStatistics) || defaultStatistics;
-  const { loading } = useSelector(selectLoadingState) || { loading: false };
+  // const { loading } = useSelector(selectLoadingState) || { loading: false };
 
+  const loading = useSelector(selectLoadingState); 
     // Filtered and sorted transactions with error handling
     const filteredTransactions = useMemo(() => {
       try {

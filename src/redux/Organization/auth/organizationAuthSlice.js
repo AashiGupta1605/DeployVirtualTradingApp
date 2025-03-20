@@ -57,14 +57,36 @@ export const updateOrgDetails = createAsyncThunk(
   }
 );
 
+// export const loginOrganization = createAsyncThunk(
+//   'organizations/login',
+//   async (credentials, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.post(`${BASE_API_URL}/organization/login`, credentials);
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   }
+// );
+
 export const loginOrganization = createAsyncThunk(
   'organizations/login',
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_API_URL}/organization/login`, credentials);
-      return response.data;
+      console.log(response.data);
+      return response.data; // Return the successful response data
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      // Check if the error has a response and data
+      if (error.response && error.response.data) {
+        // Pass the error message from the backend to the frontend
+        console.log(error.response.data);
+        
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle cases where the error does not have a response (e.g., network error)
+        return rejectWithValue({ message: 'An unexpected error occurred. Please try again.' });
+      }
     }
   }
 );

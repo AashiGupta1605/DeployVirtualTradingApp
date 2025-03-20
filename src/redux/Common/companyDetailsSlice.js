@@ -30,31 +30,48 @@ const calculateSMA = (data, period = 20) => {
   return sma;
 };
 
-// Async thunks
 export const fetchCompanyDetails = createAsyncThunk(
   'companyDetails/fetchCompanyDetails',
-  async ({ symbol, type }, { rejectWithValue }) => {
+  async ({ symbol, type = 'nifty50' }, { rejectWithValue }) => {
+    // Validate symbol
+    if (!symbol || symbol === 'null' || symbol.trim() === '') {
+      return rejectWithValue('Invalid symbol provided');
+    }
+
     try {
-      let endpoint;
-      switch (type) {
-        case 'nifty50':
-          endpoint = `${BASE_API_URL}/admin/nifty/company/${symbol}`;
-          break;
-        case 'nifty500':
-          endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
-          break;
-        case 'etf':
-          endpoint = `${BASE_API_URL}/admin/etf/${symbol}`; // Updated endpoint
-          break;
-        default:
-          throw new Error(`Unsupported type: ${type}`);
+      // Determine endpoints based on type
+      const endpoints = type === 'nifty50' 
+        ? [
+            `${BASE_API_URL}/admin/nifty/company/${symbol}`,
+            `${BASE_API_URL}/user/trading/stock/${symbol}`
+          ]
+        : type === 'nifty500'
+          ? [
+              `${BASE_API_URL}/admin/nifty500/company/${symbol}`,
+              `${BASE_API_URL}/user/trading/stock/${symbol}`
+            ]
+          : [
+              `${BASE_API_URL}/admin/etf/${symbol}`,
+              `${BASE_API_URL}/user/trading/stock/${symbol}`
+            ];
+
+      for (const endpoint of endpoints) {
+        try {
+          const response = await axios.get(endpoint);
+          if (response.data) {
+            return response.data;
+          }
+        } catch (error) {
+          console.warn(`Failed to fetch from ${endpoint}:`, error.message);
+          continue;
+        }
       }
-      
-      const response = await axios.get(endpoint);
-      return response.data;
+
+      // If all endpoints fail
+      return rejectWithValue(`Could not find details for symbol: ${symbol}`);
     } catch (error) {
       console.error('Error fetching company details:', error);
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message || `Failed to fetch details for ${symbol}`);
     }
   }
 );
@@ -210,7 +227,10 @@ const companyDetailsSlice = createSlice({
       })
       .addCase(fetchCompanyDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        // Ensure error is always a string
+        state.error = typeof action.payload === 'string' 
+          ? action.payload 
+          : (action.payload?.message || 'An unknown error occurred');
       })
 
       // Handle fetchHistoricalData

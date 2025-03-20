@@ -70,7 +70,7 @@ toast.success('User updated successfully!');
 } else {
 const result = await dispatch(registerUser(values)).unwrap();
 await dispatch(fetchUsers());
-toast.success('User registered successfully!');
+// toast.success('User registered successfully!');
 }
 onSuccess?.();
 resetForm();

@@ -216,29 +216,36 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, userData, onSuccess 
     };
   
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-        <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-        <div className="relative w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
+      <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
+      <div className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl" 
+           style={{ 
+             maxHeight: '80vh', 
+             height: '80vh', 
+             overflowY: 'auto' 
+           }}
+      >
           {/* Header */}
-          <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-lightBlue-50 to-lightBlue-100 rounded-t-2xl">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <i className="fas fa-credit-card text-white text-xl"></i>
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {activePlan ? "Subscription Details" : "New Subscription"}
-                </h2>
-                <p className="text-sm text-gray-600">Manage subscription plan details</p>
-              </div>
+          <div className="sticky top-0 z-10 flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-lightBlue-50 to-lightBlue-100 rounded-t-2xl">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <i className="fas fa-credit-card text-white text-xl"></i>
             </div>
-            <button 
-              onClick={onClose} 
-              className="p-2 hover:bg-gray-200 rounded-xl transition-all duration-200"
-            >
-              <i className="fas fa-times text-gray-500 text-xl"></i>
-            </button>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">
+                {activePlan ? "Subscription Details" : "New Subscription"}
+              </h2>
+              <p className="text-sm text-gray-600">Manage subscription plan details</p>
+            </div>
           </div>
+          <button 
+            onClick={onClose} 
+            className="p-2 hover:bg-gray-200 rounded-xl transition-all duration-200"
+          >
+            <i className="fas fa-times text-gray-500 text-xl"></i>
+          </button>
+        </div>
+        <div className="overflow-y-auto" style={{ maxHeight: 'calc(80vh - 100px)' }}>
   
           {/* User Info */}
           <div className="p-6 bg-white border-b border-gray-200">
@@ -478,6 +485,7 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, userData, onSuccess 
                       </form>
                     )}
                   </div>
+                </div>
                 </div>
           
                 {/* Confirmation Modal */}

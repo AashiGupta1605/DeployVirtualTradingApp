@@ -3,12 +3,25 @@ import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import axiosInstance from "../../../utils/axiosConfig";
 
+// export const fetchOrganizationUsersFeedbacks = createAsyncThunk(
+//   "organizationUsersFeedbacks/fetchOrganizationUsersFeedbacks",
+//   async ({ orgName, page, limit, search, startDate, endDate }) => {
+//     const response = await axiosInstance.get(`${BASE_API_URL}/user/feedback/${orgName}/users/feedbacks`, {
+//       params: { page, limit, search, startDate, endDate },
+//     });
+//     console.log(response.data);
+//     return response.data;
+//   }
+// );
+
 export const fetchOrganizationUsersFeedbacks = createAsyncThunk(
   "organizationUsersFeedbacks/fetchOrganizationUsersFeedbacks",
   async ({ orgName, page, limit, search, startDate, endDate }) => {
     const response = await axiosInstance.get(`${BASE_API_URL}/user/feedback/${orgName}/users/feedbacks`, {
       params: { page, limit, search, startDate, endDate },
     });
+    console.log("API Response:", response.data); // Log API response
+    console.log(`${BASE_API_URL}/user/feedback/${orgName}/users/feedbacks`)
     return response.data;
   }
 );
@@ -117,3 +130,9 @@ export const {
 } = organizationUsersFeedbackSlice.actions;
 
 export default organizationUsersFeedbackSlice.reducer;
+
+
+
+
+
+

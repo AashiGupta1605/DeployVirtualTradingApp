@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
 
+import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Layouts
@@ -19,12 +19,32 @@ import StartScreenPopupModal from './components/GuestUser/Home/StartScreenPopupM
 import { Toaster } from 'react-hot-toast';
 
 const App = () => {
-
+import SessionExpiredModal from './components/Organization/Session/SessionExpiredModal';
+import { logoutOrganization } from './redux/Organization/auth/organizationAuthSlice';
+import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+const App = () => {
+  const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+    const handleLogout = () => {
+      dispatch(logoutOrganization()); // Dispatch logout action
+      toast.success("Login Again");
+      navigate("/"); // Redirect to home page
+    };
   return (
     <div>
       <StartScreenPopupModal/>
       <Toaster/>
       {/* <BackToTop /> */}
+      <SessionExpiredModal
+        show={showSessionExpiredModal}
+        onHide={() => {
+          setShowSessionExpiredModal(false);
+          handleLogout();
+        }}
+      />
     <Routes>
       {/* Routes with layouts */}
       <Route path="/admin/*" element={<Admin />} />

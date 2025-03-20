@@ -23,15 +23,52 @@ export const fetchNiftyData = createAsyncThunk(
 
 export const fetchCompanyDetails = createAsyncThunk(
   'nifty50/fetchCompanyDetails',
-  async (symbol, { rejectWithValue }) => {
+  async ({ symbol, type = 'nifty50' }, { rejectWithValue }) => {
+    // Validate symbol
+    if (!symbol || symbol === 'null' || symbol.toString().trim() === '') {
+      return rejectWithValue('Invalid symbol provided');
+    }
+
+    // Ensure symbol is a string and sanitized
+    const sanitizedSymbol = symbol.toString().trim().toUpperCase().replace('&', 'AND');
+
     try {
-      const response = await axios.get(`${BASE_API_URL}/admin/nifty/company/${symbol}`);
-      return {
-        stockData: response.data,
-        chartData: null // Remove chart data handling
-      };
+      // Determine appropriate endpoint based on type
+      const endpoints = type === 'nifty50'
+        ? [
+            `${BASE_API_URL}/admin/nifty/company/${sanitizedSymbol}`,
+            `${BASE_API_URL}/user/trading/stock/${sanitizedSymbol}`
+          ]
+        : type === 'nifty500'
+          ? [
+              `${BASE_API_URL}/admin/nifty500/company/${sanitizedSymbol}`,
+              `${BASE_API_URL}/user/trading/stock/${sanitizedSymbol}`
+            ]
+          : [
+              `${BASE_API_URL}/admin/etf/${sanitizedSymbol}`,
+              `${BASE_API_URL}/user/trading/stock/${sanitizedSymbol}`
+            ];
+
+      for (const endpoint of endpoints) {
+        try {
+          const response = await axios.get(endpoint);
+          if (response.data) {
+            return {
+              stockData: response.data,
+              chartData: null
+            };
+          }
+        } catch (error) {
+          console.warn(`Failed to fetch from ${endpoint}:`, error.message);
+          continue;
+        }
+      }
+
+      // If all endpoints fail
+      return rejectWithValue(`Could not find details for symbol: ${sanitizedSymbol}`);
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to fetch company details');
+      console.error('Error fetching company details:', error);
+      return rejectWithValue(error.message || `Failed to fetch details for ${sanitizedSymbol}`);
     }
   }
 );

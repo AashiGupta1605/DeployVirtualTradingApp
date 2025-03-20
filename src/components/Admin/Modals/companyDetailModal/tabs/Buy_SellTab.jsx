@@ -66,17 +66,18 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
   }, [activeTab, currentMarketPrice]);
 
   useEffect(() => {
-    if (userId) {
-      dispatch(getUserSubscriptions(userId));
-      dispatch(fetchHoldings(userId));
-      if (activeSubscription?._id) {
-        dispatch(fetchTransactionHistory({ 
-          userId, 
-          subscriptionPlanId: activeSubscription._id 
-        }));
-      }
+    if (userId && activeSubscription?._id) {
+      dispatch(fetchHoldings({ userId, subscriptionPlanId: activeSubscription._id }));
+      dispatch(fetchTransactionHistory({ userId, subscriptionPlanId: activeSubscription._id }));
+    } else if (userId && !activeSubscription?._id) {
+      // Handle the case where the user has no active subscription
+      // Option 1: Display a message to the user (preferred)
+      toast.error("You need an active subscription to trade."); // Or a more user-friendly message in your UI
+  
+      // Option 2 (Less common - only if you're NOT fetching subscriptions elsewhere):
+      // dispatch(getUserSubscriptions(userId)); // Fetch subscriptions if not present
     }
-  }, [dispatch, userId, activeSubscription?._id]);
+  }, [dispatch, userId, activeSubscription]); // Dependency is activeSubscription, not activeSubscription?._id
 
   const handleQuantityChange = (value) => {
     let newValue = Math.max(0, parseInt(value) || 0);

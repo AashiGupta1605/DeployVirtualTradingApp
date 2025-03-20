@@ -146,7 +146,7 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
                     {/* Average User Age Card */}
                     <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                       <CardStats
-                        statSubtitle="AVERAGE USER AGE"
+                        statSubtitle="AVERAGE AGE"
                         statTitle={averageUserAge.toString()}
                         statArrow="up"
                         statPercent=""
@@ -160,7 +160,7 @@ export default function Dashboard({ type, showAllCards, showCardsTable }) {
                       {/* Average User Age Card */}
                       <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                       <CardStats
-                        statSubtitle="AVERAGE USER AGE"
+                        statSubtitle="AVERAGE AGE"
                         statTitle={averageUserAge.toString()}
                         statArrow="up"
                         statPercent=""

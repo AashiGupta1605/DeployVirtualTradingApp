@@ -2,7 +2,7 @@
 
 
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Components
@@ -18,10 +18,35 @@ import OrganizationUsersFeedback from "../views/Organization/OrganizationUserDet
 import OrganizationFeedback from "../views/Organization/OrganizationDetails/OrganizationFeedback";
 import ProtectedRoute from "../components/Organization/ProtectedRoutes/ProtectedRoute";
 // const orgName = localStorage.getItem("orgName");
-
+import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
+import { logoutOrganization } from "../redux/Organization/auth/organizationAuthSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 export default function Org() {
   const [sidebarExpanded, setSidebarExpanded] = React.useState(false);
+  const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setShowSessionExpiredModal(true);
+    };
 
+    // Listen for the custom event
+    window.addEventListener('show-session-expired-modal', handleSessionExpired);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('show-session-expired-modal', handleSessionExpired);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    dispatch(logoutOrganization()); // Dispatch logout action
+    toast.success("Login Again");
+    navigate("/"); // Redirect to home page
+  };
   return (
     <>
       <OrganizationSidebar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
@@ -47,6 +72,15 @@ export default function Org() {
           <OrganizationFooter />
         </div>
       </div>
+
+        {/* Session Expired Modal */}
+        <SessionExpiredModal
+        show={showSessionExpiredModal}
+        onHide={() => {
+          setShowSessionExpiredModal(false);
+          handleLogout();
+        }}
+      />
     </>
   );
 }
