@@ -258,6 +258,8 @@
 // photo uplaod problem after push 
 // deepsekk photo new slice with remove photo
 
+// deepsekk photo new slice with remove photo
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';

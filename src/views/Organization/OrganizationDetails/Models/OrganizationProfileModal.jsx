@@ -653,6 +653,9 @@
 // new code after oush iomaeg upaod not working so to reolsbe this isuue 
 
 
+
+// updapte and remove iimage
+
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -668,6 +671,7 @@ const validationSchema = Yup.object({
   contactPerson: Yup.string(),
   email: Yup.string().email("Invalid email format").required("Email is required"),
   mobile: Yup.string().matches(/^[9876]\d{9}$/, "Mobile number must start with 9, 8, 7, or 6 and contain 10 digits"),
+  password: Yup.string().min(6, "Password must be at least 6 characters"),
   photo: Yup.string().url("Invalid URL format"),
 });
 
@@ -699,6 +703,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
       contactPerson: "",
       email: "",
       mobile: "",
+      password: "",
       photo: "",
     },
     validationSchema: validationSchema,
@@ -730,7 +735,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
 
   // Handle photo removal
   const handleRemovePhoto = () => {
-    toast.success("Photo removed. Click on update profile to save the changes");
+    toast.success("photo removed. click on update profile to save the changes");
     setPhoto("https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png");
   };
 
@@ -742,6 +747,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
 
       <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
       <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
+
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
@@ -887,6 +893,26 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                   />
                   {formik.touched.mobile && formik.errors.mobile ? (
                     <div className="text-red-500 text-sm mt-1">{formik.errors.mobile}</div>
+                  ) : null}
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+             bg-white text-gray-900 
+             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:outline-none transition-all duration-200"
+                    placeholder="Enter new password (leave blank to keep current)"
+                  />
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
                   ) : null}
                 </div>
 
