@@ -1,17 +1,16 @@
-// Buy_SellTab.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { 
-  placeOrder, 
-  selectLoadingState, 
-  fetchTransactionHistory, 
-  selectTransactions, 
-  selectHoldings, 
-  selectStatistics, 
-  selectHoldingBySymbol, 
-  fetchHoldings 
+import {
+  placeOrder,
+  selectLoadingState,
+  fetchTransactionHistory,
+  selectTransactions,
+  selectHoldings,
+  selectStatistics,
+  selectHoldingBySymbol,
+  fetchHoldings
 } from '../../../../../redux/User/trading/tradingSlice';
 import { getUserSubscriptions } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
 import ConfirmationModal from '../../ConformationModal';
@@ -19,7 +18,12 @@ import PraedicoAnalysis from './PraedicoAnalysis';
 import TransactionHistory from './TransactionHistory';
 import TradingControls from './TradingControls';
 import MarketStatusOverlay from './../parts/MarketStatusOverlay';
-import { isMarketOpen } from '../../../../../utils/marketStatus';
+import { 
+  isMarketOpen, 
+  getNextMarketOpenTime, 
+  getTimeRemaining, 
+  getMarketTimes 
+} from '../../../../../utils/marketStatus';
 
 const Buy_SellTab = ({ symbol, data, loading, error }) => {
   const dispatch = useDispatch();
@@ -33,6 +37,12 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
   const [price, setPrice] = useState(currentMarketPrice);
   const [stopPrice, setStopPrice] = useState(currentMarketPrice);
 
+  // Market-related states
+  const [marketCurrentlyOpen, setMarketCurrentlyOpen] = useState(isMarketOpen());
+  const [nextMarketOpenTime, setNextMarketOpenTime] = useState(getNextMarketOpenTime());
+  const [timeToMarketOpen, setTimeToMarketOpen] = useState(getTimeRemaining(nextMarketOpenTime));
+  const [marketTimes, setMarketTimes] = useState(getMarketTimes());
+
   const userId = useSelector(state => state.user.auth?.user?._id);
   const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
   const transactions = useSelector(selectTransactions);
@@ -41,21 +51,23 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
   const statistics = useSelector(selectStatistics);
   const { loading: tradingLoading, orderStatus } = useSelector(selectLoadingState);
 
-  const activeSubscription = useMemo(() => 
+  const activeSubscription = useMemo(() =>
     userSubscriptions.find(sub => sub.status === 'Active' && !sub.isDeleted),
     [userSubscriptions]
   );
 
-  const calculateRemainingBalance = () => {
-    if (!activeSubscription) return 0;
-    const totalHoldings = holdings.reduce(
-      (total, holding) => total + (holding.quantity * holding.averageBuyPrice), 
-      0
-    );
-    return activeSubscription.vertualAmount - totalHoldings;
-  };
+  // Market status update effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMarketCurrentlyOpen(isMarketOpen());
+      const newNextMarketOpenTime = getNextMarketOpenTime();
+      setNextMarketOpenTime(newNextMarketOpenTime);
+      setTimeToMarketOpen(getTimeRemaining(newNextMarketOpenTime));
+      setMarketTimes(getMarketTimes());
+    }, 1000);
 
-  const marketOpen = isMarketOpen();
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     setPrice(currentMarketPrice);
@@ -74,13 +86,22 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
       dispatch(getUserSubscriptions(userId));
       dispatch(fetchHoldings(userId));
       if (activeSubscription?._id) {
-        dispatch(fetchTransactionHistory({ 
-          userId, 
-          subscriptionPlanId: activeSubscription._id 
+        dispatch(fetchTransactionHistory({
+          userId,
+          subscriptionPlanId: activeSubscription._id
         }));
       }
     }
   }, [dispatch, userId, activeSubscription?._id]);
+
+  const calculateRemainingBalance = () => {
+    if (!activeSubscription) return 0;
+    const totalHoldings = holdings.reduce(
+      (total, holding) => total + (holding.quantity * holding.averageBuyPrice),
+      0
+    );
+    return activeSubscription.vertualAmount - totalHoldings;
+  };
 
   const handleQuantityChange = (value) => {
     let newValue = Math.max(0, parseInt(value) || 0);
@@ -103,7 +124,7 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
         symbol: orderDetails.symbol,
         currentMarketPrice: orderDetails.currentMarketPrice
       })).unwrap();
-      
+
       toast.success(
         `Successfully placed ${orderDetails.type.toUpperCase()} order for ${orderDetails.numberOfShares} shares at ₹${orderDetails.price.toFixed(2)}`,
         { position: 'top-right' }
@@ -120,9 +141,15 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
     }
   };
 
-  const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance() > 0;
-  const isDisabled = loading || tradingLoading || !marketOpen;
+  // Market open logic
+  const canTradeNow = activeSubscription?.tradingPreference === "Market Hours" 
+    ? marketCurrentlyOpen 
+    : !marketCurrentlyOpen;
 
+  const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance() > 0;
+  const isDisabled = loading || tradingLoading || !canTradeNow;
+
+  // Loading state
   if (loading || tradingLoading) {
     return (
       <div className="w-full bg-white rounded-xl shadow-lg p-6 animate-pulse">
@@ -131,6 +158,7 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
     );
   }
 
+  // Error state
   if (error) {
     return (
       <div className="w-full bg-white rounded-xl shadow-lg p-6 text-center text-red-500">
@@ -139,16 +167,17 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
     );
   }
 
+  // No active subscription or insufficient balance
   if (!canTrade) {
     return (
       <div className="w-full h-96 flex items-center justify-center flex-col gap-4">
         <div className="text-xl text-gray-600">
-          {!activeSubscription 
-            ? "Please subscribe to start trading" 
+          {!activeSubscription
+            ? "Please subscribe to start trading"
             : "Your subscription has expired or has insufficient balance"}
         </div>
-        <button 
-          onClick={() => toast.error('Subscription feature coming soon')} 
+        <button
+          onClick={() => toast.error('Subscription feature coming soon')}
           className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           View Subscription Plans
@@ -159,12 +188,15 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
 
   return (
     <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6 relative">
-      {!marketOpen && <MarketStatusOverlay />}
+      {/* Market Status Overlay */}
+      <MarketStatusOverlay 
+        tradingPreference={activeSubscription?.tradingPreference} 
+      />
 
       <div className="flex gap-6">
         {/* Left Side: Account Summary, Buy/Sell Tabs, and Trading Controls */}
         <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 60%' }}>
-          {/* Account Summary - Small Cards */}
+          {/* Account Summary Cards */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             {/* Shares Card */}
             <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 shadow-sm border border-blue-100">
@@ -251,7 +283,7 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
         </div>
       </div>
 
-      {/* Transaction History at the Bottom */}
+      {/* Transaction History */}
       <div className="bg-gray-50 rounded-xl p-6">
         <TransactionHistory currentPrice={currentMarketPrice} symbol={symbol} />
       </div>
@@ -275,6 +307,18 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
           title="Confirm Order"
           message={`Are you sure you want to ${activeTab} ${quantity} shares at ₹${(orderType === "market" ? currentMarketPrice : price).toFixed(2)}?`}
         />
+      )}
+
+      {/* Optional: Debug market information */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-gray-100 p-4 rounded-md">
+          <h3>Market Debug Information</h3>
+          <p>Market Open: {marketCurrentlyOpen ? 'Yes' : 'No'}</p>
+          <p>Next Market Open: {nextMarketOpenTime.toLocaleString()}</p>
+          <p>Time to Market Open: {timeToMarketOpen.formattedTime}</p>
+          <p>Market Open Time: {marketTimes.open.toLocaleTimeString()}</p>
+          <p>Market Close Time: {marketTimes.close.toLocaleTimeString()}</p>
+        </div>
       )}
     </div>
   );
