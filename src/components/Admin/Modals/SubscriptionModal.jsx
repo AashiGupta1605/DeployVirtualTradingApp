@@ -219,7 +219,15 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, userData, onSuccess 
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
         <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
         <div 
-            style={{ width: "100%", maxWidth: "80%", maxHeight: "80vh" }} 
+            style={{
+              width: "100%",
+              maxWidth: "80%",
+              maxHeight: "80vh",
+              overflowY: "auto",
+              paddingRight: "10px", // Ensures scrollbar doesn't break border-radius
+              borderRadius: "1rem", // Ensures rounding
+              clipPath: "inset(0 0 0 0 round 1rem)" // Forces corners to stay rounded
+            }}
             className="relative w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl overflow-y-auto"
             >
 
