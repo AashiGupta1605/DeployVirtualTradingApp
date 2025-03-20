@@ -152,7 +152,7 @@ const CompanyDetailModal = ({
   // Effects
   useEffect(() => {
     if (isOpen && symbol) {
-      dispatch(fetchCompanyDetails({ symbol, type }));
+      dispatch(fetchCompanyDetails({ symbol, type })); // Pass both symbol and type
     }
     return () => {
       if (!isOpen) {
@@ -162,14 +162,10 @@ const CompanyDetailModal = ({
   }, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
-    // Only fetch holdings if user is logged in and has an active subscription
-    if (isOpen && userId && activeSubscription) {
-      dispatch(fetchHoldings({
-        userId, 
-        subscriptionPlanId: activeSubscription._id
-      }));
+    if (isOpen && userId) {
+      dispatch(fetchHoldings(userId));
     }
-  }, [isOpen, userId, activeSubscription, dispatch]);
+  }, [isOpen, userId, dispatch]);
 
   // Event Handlers
   const handleTabChange = (tab) => {
@@ -272,11 +268,11 @@ const CompanyDetailModal = ({
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity z-0" 
         onClick={onClose}
       />
 
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center z-10">
         <div className="relative w-[90%] h-[90%] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <button
             onClick={onClose}

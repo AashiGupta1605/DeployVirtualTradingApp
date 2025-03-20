@@ -42,7 +42,7 @@ const EtfNavbarCarousel = () => {
     dots: false,
     infinite: true,
     speed: 2000,
-    slidesToShow: 7, 
+    slidesToShow: 6, 
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 500,
@@ -62,11 +62,11 @@ const EtfNavbarCarousel = () => {
     {loading ? (
       <p className="text-center text-white">Loading...</p>
     ) : error ? (
-      <p className="text-center text-red-500">{error}</p>
+      <p className="text-center text-red-400">{error}</p>
     ) : (
       <Slider {...settings}>
         {stockData.map((stock, index) => (
-          <div key={index} className="flex items-center space-x-1 bg-[#014668] px-2 py-[1px] rounded-md">
+          <div key={index} className="flex items-center space-x-1 bg-[#014668] px-1 py-[1px] rounded-md">
             <span className="font-bold text-[13px]">{stock.name}</span>
             <span className="text-gray-300 text-[13px]">{stock.price}</span>
             <span className={`font-semibold ${stock.change.startsWith("+") ? "text-green-400" : "text-red-400"}`}>
@@ -78,7 +78,6 @@ const EtfNavbarCarousel = () => {
     )}
   </div>
 </div>
-
     </>
   );
 };

@@ -1,25 +1,16 @@
 import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
-import MainHomeNavbar from "../../components/GuestUser/Navbars/MainHomeNavbar";
-import NiftyNavbarCarousel from "../../components/GuestUser/Navbars/NiftyNavbarCarousel";
-import EtfNavbarCarousel from "../../components/GuestUser/Navbars/EtfNavbarCarousel";
-import Footer from "../../components/GuestUser/Footers/Footer";
 import StockP from "../../assets/p-stock.jpg";
 import "../../components/GuestUser/Contact/ContactPage.css"; 
 
 import { BASE_API_URL } from "../../utils/BaseUrl";
-
 
 const ContactPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <MainHomeNavbar fixed/>
-      <NiftyNavbarCarousel fixed/>
-      <EtfNavbarCarousel fixed/>
-
       {/* Contact Section */}
       <div className="mt-7 min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">
         {/* Left - Content */}
@@ -71,8 +62,6 @@ const ContactPage = () => {
 
       {/* Contact Modal */}
       {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
-
-      <Footer />
     </>
   );
 };

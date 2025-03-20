@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 
@@ -7,31 +7,7 @@ const TradingViewTab = ({ symbol, loading }) => {
   const scriptRef = useRef(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [error, setError] = useState(null);
 
-  // Robust symbol formatting function
-  const formatSymbolForTradingView = useCallback((inputSymbol) => {
-    if (!inputSymbol) {
-      console.warn('Invalid symbol provided');
-      return 'BSE:SENSEX'; // Fallback symbol
-    }
-
-    // Remove any whitespace
-    inputSymbol = inputSymbol.trim().toUpperCase();
-
-    // Check if symbol already has exchange prefix
-    if (inputSymbol.includes(':')) {
-      return inputSymbol;
-    }
-
-    // Default to BSE, but check for common NSE prefixes
-    const nseSymbols = ['NIFTY', 'BANKNIFTY'];
-    return nseSymbols.some(prefix => inputSymbol.startsWith(prefix)) 
-      ? `NSE:${inputSymbol}` 
-      : `BSE:${inputSymbol}`;
-  }, []);
-
-  // Fullscreen toggle function
   const toggleFullScreen = () => {
     setIsFullScreen((prev) => !prev);
     if (!isFullScreen) {
@@ -43,13 +19,10 @@ const TradingViewTab = ({ symbol, loading }) => {
     }
   };
 
-  // Chart refresh function
   const refreshChart = () => {
-    setError(null);
     setRefreshKey((prev) => prev + 1);
   };
 
-  // Add custom styles
   useEffect(() => {
     const styleSheet = document.createElement('style');
     styleSheet.textContent = `
@@ -72,32 +45,17 @@ const TradingViewTab = ({ symbol, loading }) => {
     };
   }, []);
 
-  // Main TradingView widget loading effect
   useEffect(() => {
-    // Reset error state
-    setError(null);
-
-    // Validate symbol
-    const formattedSymbol = formatSymbolForTradingView(symbol);
-
-    // Remove previous script if exists
     if (scriptRef.current) {
       scriptRef.current.remove();
     }
 
-    // Create new script element
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
     script.async = true;
 
-    // Error handling for script loading
-    script.onerror = (error) => {
-      console.error('Failed to load TradingView script:', error);
-      setError('Failed to load TradingView chart');
-    };
-
-    // Widget configuration
+    const formattedSymbol = symbol.includes(':') ? symbol : `BSE:${symbol}`;
     const widgetConfig = {
       autosize: true,
       symbol: formattedSymbol,
@@ -116,46 +74,28 @@ const TradingViewTab = ({ symbol, loading }) => {
       popup_width: '1000',
       popup_height: '650',
       support_host: 'https://www.tradingview.com',
-      
-      // Ensure a valid container is specified
-      container_id: 'tradingview-widget-container'
     };
 
-    try {
-      // Ensure the container exists before setting innerHTML
-      if (containerRef.current) {
-        // Clear previous content
-        containerRef.current.innerHTML = '';
+    script.innerHTML = JSON.stringify(widgetConfig);
+    scriptRef.current = script;
 
-        // Create widget container
-        const widgetContainer = document.createElement('div');
-        widgetContainer.id = 'tradingview-widget-container';
-        widgetContainer.className = 'tradingview-widget-container__widget';
-        widgetContainer.style.height = '100%';
-        widgetContainer.style.width = '100%';
+    if (containerRef.current) {
+      containerRef.current.innerHTML = '';
+      const widgetContainer = document.createElement('div');
+      widgetContainer.className = 'tradingview-widget-container__widget';
+      widgetContainer.style.height = '100%';
+      widgetContainer.style.width = '100%';
 
-        // Append container
-        containerRef.current.appendChild(widgetContainer);
-
-        // Set script content
-        script.innerHTML = JSON.stringify(widgetConfig);
-        scriptRef.current = script;
-
-        // Append script
-        containerRef.current.appendChild(script);
-      }
-    } catch (err) {
-      console.error('Error setting up TradingView widget:', err);
-      setError('Failed to configure TradingView chart');
+      containerRef.current.appendChild(widgetContainer);
+      containerRef.current.appendChild(script);
     }
 
-    // Cleanup function
     return () => {
       if (scriptRef.current) {
         scriptRef.current.remove();
       }
     };
-  }, [symbol, refreshKey, formatSymbolForTradingView]);
+  }, [symbol, refreshKey]);
 
   return (
     <div

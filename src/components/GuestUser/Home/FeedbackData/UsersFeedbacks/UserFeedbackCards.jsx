@@ -5,6 +5,7 @@ import UserAllFeedbacksTable from "./UserAllFeedbacksTable";
 
 import { Star } from "lucide-react";
 // import { MdFeedback } from "react-icons/md";
+import { FolderOpen } from "lucide-react";
 import { BiMessageDetail } from "react-icons/bi";
 
 const UserFeedbackCards = () => {
@@ -20,8 +21,8 @@ const UserFeedbackCards = () => {
   const fetchUserFeedbacks = async () => {
     try {
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/userFeedbacks/createdDate/decreasing`
-        `http://localhost:5000/v1/api/guestUser/userFeedbacks/createdDate/decreasing`
+        `${BASE_API_URL}/guestUser/userFeedbacks/createdDate/decreasing`
+        // `http://localhost:5000/v1/api/guestUser/userFeedbacks/createdDate/decreasing`
       );
       setFeedbacks(response.data.feedbackData);
 
@@ -35,8 +36,8 @@ const UserFeedbackCards = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        // `${BASE_API_URL}/guestUser/getAllUsers`
-        `http://localhost:5000/v1/api/guestUser/getAllUsers`
+        `${BASE_API_URL}/guestUser/getAllUsers`
+        // `http://localhost:5000/v1/api/guestUser/getAllUsers`
       );
       setUserData(response.data.data);
       console.log("User Data", response.data);
@@ -95,9 +96,41 @@ const UserFeedbackCards = () => {
           </div>
         </div>
 
-        {err && <p className="text-red-500">{err}</p>}
+        {/* {err && <p className="text-red-500">{err}</p>} */}
 
         <div className="flex justify-center gap-6">
+
+        {/* {err && 
+        <div className="flex flex-col items-center justify-center h-40 w-80 bg-gray-100 rounded-lg shadow-md border-t border-gray-200 p-4">
+          <span className="text-red-500 text-2xl">
+            <i className="fas fa-exclamation-circle"></i>
+          </span>
+          <b className="text-lg text-gray-700 mt-2">Loading...</b>
+          <h4 className="text-gray-500 text-sm">No content available</h4>
+          <p className="text-red-500">{err}</p>
+        </div>} */}
+
+        {err && (
+          <div className="flex justify-center items-center min-h-[200px]">
+          <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+            <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+          </div>
+          <b className="text-lg text-gray-800 mt-4">Oops! Something went wrong.</b>
+          <p className="text-gray-600 text-sm text-center mt-2">
+            We couldn’t load the content. Please try again later.
+          </p>
+          <p className="text-red-600 font-medium mt-2">{err}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
+          >
+            Retry
+          </button>
+          </div>
+          </div>
+        )}
+
           {feedbacks.length > 0 ? (
             feedbacks.slice(0, 3).map((card, index) => {
               const user = userData.find((user) => user._id === card.userId?._id);
@@ -136,13 +169,12 @@ const UserFeedbackCards = () => {
                 </div>
               );
             })
-          ) : (
-            <div className="flex flex-col items-center justify-center h-40 bg-gray-100 rounded-lg shadow-md p-4">
-              <span className="text-red-500 text-2xl">
-                <i className="fas fa-exclamation-circle"></i>
+          ) : (!err && 
+            <div className="pt-6 pb-6 flex flex-col items-center space-y-2">
+              <span>
+                <FolderOpen className="w-10 h-10 text-gray-400" />
               </span>
-              <b className="text-lg text-gray-700 mt-2">Loading...</b>
-              <h4 className="text-gray-500 text-sm">No content available</h4>
+              <h4 className="text-gray-500 text-sm">No feedbacks available.</h4>
             </div>
           )}
         </div>

@@ -61,7 +61,7 @@ const NiftyNavbarCarousel = () => {
     dots: false,
     infinite: true,
     speed: 2000,
-    slidesToShow: 7, // Show multiple stocks at once
+    slidesToShow: 6, // Show multiple stocks at once
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 500,
@@ -79,13 +79,13 @@ const NiftyNavbarCarousel = () => {
         {loading ? (
           <p className="text-center text-white">Loading...</p>
         ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
+          <p className="text-center text-red-400">{error}</p>
         ) : (
           <Slider {...settings}>
             {stockData.map((stock, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-1 bg-[#014668] px-2 py-[1px] rounded-md"
+                className="flex items-center space-x-1 bg-[#014668] px-1 py-[1px] rounded-md"
               >
                 <span className="font-bold text-[13px]">{stock.name}</span>
                 <span className="text-gray-300 text-[13px]">{stock.price}</span>
