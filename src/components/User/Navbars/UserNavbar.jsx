@@ -85,7 +85,7 @@
 //     </nav>
 //   );
 // }
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
@@ -117,19 +117,19 @@ export default function UserNavbar({ sidebarExpanded }) {
     setIsProfileModalOpen(true); // Open profile modal
   };
 
- // Close dropdown when clicking outside
- useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsDropdownOpen(false);
-    }
-  };
+//  // Close dropdown when clicking outside
+//  useEffect(() => {
+//   const handleClickOutside = (event) => {
+//     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//       setIsDropdownOpen(false);
+//     }
+//   };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+//   document.addEventListener("mousedown", handleClickOutside);
+//   return () => {
+//     document.removeEventListener("mousedown", handleClickOutside);
+//   };
+// }, []);
 
 
 
