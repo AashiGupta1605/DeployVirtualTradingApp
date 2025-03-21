@@ -90,6 +90,7 @@ import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
+import ConfirmationModal from "../Cards/ConfirmationModal";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UserNavbar({ sidebarExpanded }) {
@@ -107,6 +108,7 @@ export default function UserNavbar({ sidebarExpanded }) {
       dispatch(fetchUserData()); // Fetch user profile when sidebar opens
     }
   }, [sidebarExpanded, dispatch]);
+
 
   const userName = userData ? userData.name : "User";
 
