@@ -79,7 +79,7 @@ const PortfolioTable = ({ holdings, transactions, onStockClick }) => {
     return combinedList;
   }, [holdings, transactions]);
 
-  // Sort combined stocks in descending order based on `lastUpdated`
+  // Sort combined stocks in descending order based on lastUpdated
   const sortedStocks = [...combinedStocks].sort((a, b) => {
     return new Date(b.lastUpdated) - new Date(a.lastUpdated);
   });
