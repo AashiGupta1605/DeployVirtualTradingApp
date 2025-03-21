@@ -85,7 +85,7 @@
 //     </nav>
 //   );
 // }
-import React, { useState ,useEffect, useRef} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
@@ -98,10 +98,7 @@ export default function UserNavbar({ sidebarExpanded }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate(); // Hook for navigation
-  const dropdownRef = useRef(null);
-
  // Fetch user data when sidebar is expanded
- 
   React.useEffect(() => {
     if (sidebarExpanded) {
       dispatch(fetchUserData()); // Fetch user profile when sidebar opens
@@ -109,6 +106,7 @@ export default function UserNavbar({ sidebarExpanded }) {
   }, [sidebarExpanded, dispatch]);
 
   const userName = userData ? userData.name : "User";
+  const userPhoto = userData?.userPhoto || "https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"; // Default image
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
@@ -116,7 +114,7 @@ export default function UserNavbar({ sidebarExpanded }) {
   };
 
   const handleProfile = () => {
-    setIsProfileModalOpen(true); // Open profile modal instead of navigating
+    setIsProfileModalOpen(true); // Open profile modal
   };
 
  // Close dropdown when clicking outside
@@ -136,9 +134,7 @@ export default function UserNavbar({ sidebarExpanded }) {
 
 
   return (
-    <nav
-      className="sticky top-0 w-full z-5 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out"
-    >
+    <nav className="sticky top-0 w-full z-5 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out">
       <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4 gap-x-3">
         {/* Brand with Icon */}
         <a
@@ -182,19 +178,23 @@ export default function UserNavbar({ sidebarExpanded }) {
           </div>
         </form>
 
-
+        {/* User Name */}
         <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all">
           <p title="username" className="text-lg">{userName}</p>
         </div>
 
 
         {/* Logout Dropdown */}
-        <div className="relative"  ref={dropdownRef}>
+        <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none"
           >
-            <i className="fas fa-user-circle text-2xl"></i>
+            <img
+              src={userPhoto}
+              alt="Profile"
+              className="h-10 w-10 rounded-full object-cover cursor-pointer"
+            />
           </button>
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -204,20 +204,21 @@ export default function UserNavbar({ sidebarExpanded }) {
               >
                 Profile
               </button>
-              {/* <button
+              <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 Logout
-              </button> */}
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Profile Modal */}
       {isProfileModalOpen && (
         <CardSettings isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
       )}
     </nav>
   );
 }
-

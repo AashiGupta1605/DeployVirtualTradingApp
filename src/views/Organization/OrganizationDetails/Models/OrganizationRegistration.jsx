@@ -318,6 +318,671 @@
 
 
 
+// add confitm password field
+// import React from 'react';
+// import { useFormik } from 'formik';
+// import * as Yup from 'yup';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { registerOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
+// import toast from 'react-hot-toast';
+
+// // Updated validation schema for the registration form
+// const validationSchema = Yup.object({
+//   name: Yup.string().required('Name is required'),
+//   address: Yup.string().required('Address is required'),
+//   website: Yup.string().url('Invalid URL format').nullable(),
+//   contactPerson: Yup.string().nullable(),
+//   email: Yup.string().email('Invalid email format').required('Email is required'),
+//   accreditation: Yup.string().required('Accreditation is Required'),
+//   mobile: Yup.string()
+//     .matches(/^[9876]\d{9}$/, 'Mobile number must start with 9, 8, 7, or 6 and contain 10 digits')
+//     .nullable(),
+//   approvalStatus: Yup.string()
+//     .oneOf(['approved', 'rejected', 'pending'], 'Invalid approval status')
+//     .default('pending'),
+//   password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+//   confirmPassword: Yup.string()
+//     .oneOf([Yup.ref('password'), null], 'Passwords must match') // Ensure confirmPassword matches password
+//     .required('Confirm Password is required'),
+// });
+
+// const OrganizationRegistration = ({ isOpen, onClose }) => {
+//   const dispatch = useDispatch();
+
+//   // Access the auth state from the Redux store
+//   const { loading, error, success } = useSelector((state) => state.organization.auth);
+
+//   // Formik setup for form handling
+//   const formik = useFormik({
+//     initialValues: {
+//       name: '',
+//       address: '',
+//       website: '',
+//       contactPerson: '',
+//       email: '',
+//       mobile: '',
+//       accreditation: '',
+//       approvalStatus: 'pending',
+//       password: '',
+//       confirmPassword: '', // Add confirmPassword field
+//     },
+//     validationSchema: validationSchema,
+//     onSubmit: async (values, { resetForm }) => {
+//       try {
+//         // Dispatch the registerOrganization action
+//         const resultAction = await dispatch(registerOrganization(values));
+
+//         // Handle the result of the registration action
+//         if (registerOrganization.fulfilled.match(resultAction)) {
+//           toast.success(resultAction.payload.message);
+//           resetForm(); // Reset the form
+//           onClose(); // Close the modal
+//         } else if (registerOrganization.rejected.match(resultAction)) {
+//           toast.error(resultAction.payload.message); // Show error message
+//         }
+//       } catch (error) {
+//         console.error('Error registering organization:', error);
+//         toast.error(error?.resultAction?.payload?.message);
+//       }
+//     },
+//   });
+
+//   // If the modal is not open, return null
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+//       {/* Background overlay */}
+//       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
+
+//       {/* Modal container */}
+//       <div
+//         style={{ width: '100%', maxWidth: '90%' }}
+//         className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
+//       >
+//         {/* Modal header */}
+//         <div className="flex justify-between items-center p-6 border-b border-gray-100">
+//           <div className="flex items-center space-x-3">
+//             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+//               <i className="fas fa-building text-white"></i>
+//             </div>
+//             <h2 className="text-2xl font-semibold text-gray-800">Sign Up</h2>
+//           </div>
+//           {/* Close button */}
+//           <button
+//             onClick={() => {
+//               onClose();
+//               formik.resetForm();
+//               dispatch(resetAuthState()); // Reset the auth state when closing the modal
+//             }}
+//             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+//           >
+//             <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
+//           </button>
+//         </div>
+
+//         {/* Modal body */}
+//         <div className="p-6 overflow-y-auto max-h-[80vh]">
+//           <form onSubmit={formik.handleSubmit} className="space-y-6">
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               {/* Left Column */}
+//               <div className="space-y-4">
+//                 {/* Name input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+//                   <input
+//                     type="text"
+//                     name="name"
+//                     value={formik.values.name}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter name"
+//                     required
+//                   />
+//                   {formik.touched.name && formik.errors.name ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.name}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Address input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+//                   <input
+//                     type="text"
+//                     name="address"
+//                     value={formik.values.address}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//                              bg-white text-gray-900 
+//                            focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//                             focus:outline-none transition-all duration-200"
+//                     placeholder="Enter address"
+//                     required
+//                   />
+//                   {formik.touched.address && formik.errors.address ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.address}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Website input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+//                   <input
+//                     type="text"
+//                     name="website"
+//                     value={formik.values.website}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter website URL"
+//                   />
+//                   {formik.touched.website && formik.errors.website ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.website}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Contact Person input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+//                   <input
+//                     type="text"
+//                     name="contactPerson"
+//                     value={formik.values.contactPerson}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter contact person name"
+//                   />
+//                   {formik.touched.contactPerson && formik.errors.contactPerson ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.contactPerson}</div>
+//                   ) : null}
+//                 </div>
+//               </div>
+
+//               {/* Right Column */}
+//               <div className="space-y-4">
+//                 {/* Email input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+//                   <input
+//                     type="email"
+//                     name="email"
+//                     value={formik.values.email}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter email address"
+//                     required
+//                   />
+//                   {formik.touched.email && formik.errors.email ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.email}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Mobile input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+//                   <input
+//                     type="text"
+//                     name="mobile"
+//                     value={formik.values.mobile}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter mobile number"
+//                   />
+//                   {formik.touched.mobile && formik.errors.mobile ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.mobile}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Password input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+//                   <input
+//                     type="password"
+//                     name="password"
+//                     value={formik.values.password}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter password"
+//                     required
+//                   />
+//                   {formik.touched.password && formik.errors.password ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.password}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Confirm Password input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+//                   <input
+//                     type="password"
+//                     name="confirmPassword"
+//                     value={formik.values.confirmPassword}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Confirm password"
+//                     required
+//                   />
+//                   {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.confirmPassword}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Accreditation input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Accreditation</label>
+//                   <input
+//                     type="text"
+//                     name="accreditation"
+//                     value={formik.values.accreditation}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter accreditation"
+//                     required
+//                   />
+//                   {formik.touched.accreditation && formik.errors.accreditation ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.accreditation}</div>
+//                   ) : null}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Form actions */}
+//             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
+//               {/* Cancel button */}
+//               <button
+//                 type="button"
+//                 onClick={() => {
+//                   onClose();
+//                   formik.resetForm();
+//                   dispatch(resetAuthState()); // Reset the auth state
+//                 }}
+//                 className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+//               >
+//                 Cancel
+//               </button>
+
+//               {/* Submit button */}
+//               <button
+//                 type="submit"
+//                 disabled={loading}
+//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+//               >
+//                 {loading ? 'Registering...' : 'Register Organization'}
+//               </button>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrganizationRegistration;
+
+
+
+
+
+
+
+
+
+
+
+// no confirm passswor and accrediation is there - but photo is working
+// new org toolkit separate registration
+// import React from 'react';
+// import { useFormik } from 'formik';
+// import * as Yup from 'yup';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { registerOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
+// import toast from 'react-hot-toast';
+
+// // Validation schema for the registration form
+// const validationSchema = Yup.object({
+//   name: Yup.string().required('Name is required'),
+//   address: Yup.string().required('Address is required'),
+//   website: Yup.string().url('Invalid URL format').nullable(),
+//   contactPerson: Yup.string().nullable(),
+//   email: Yup.string().email('Invalid email format').required('Email is required'),
+//   accreditation:Yup.string().required('Accreditation is Required'),
+//   mobile: Yup.string()
+//     .matches(/^[9876]\d{9}$/, 'Mobile number must start with 9, 8, 7, or 6 and contain 10 digits')
+//     .nullable(),
+//   approvalStatus: Yup.string()
+//     .oneOf(['approved', 'rejected', 'pending'], 'Invalid approval status')
+//     .default('pending'),
+//   password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+// });
+
+// const OrganizationRegistration = ({ isOpen, onClose }) => {
+//   const dispatch = useDispatch();
+
+//   // Access the auth state from the Redux store
+//   const { loading, error, success } = useSelector((state) => state.organization.auth);
+
+//   // Formik setup for form handling
+//   const formik = useFormik({
+//     initialValues: {
+//       name: '',
+//       address: '',
+//       website: '',
+//       contactPerson: '',
+//       email: '',
+//       mobile: '',
+//       accreditation:'',
+//       approvalStatus: 'pending',
+//       password: '',
+//       // photo:'https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png',
+//     },
+//     validationSchema: validationSchema,
+//     onSubmit: async (values, { resetForm }) => {
+//       try {
+//         // Dispatch the registerOrganization action
+//         const resultAction = await dispatch(registerOrganization(values));
+
+//         // Handle the result of the registration action
+//         if (registerOrganization.fulfilled.match(resultAction)) {
+//           toast.success(resultAction.payload.message);
+//           resetForm(); // Reset the form
+//           onClose(); // Close the modal
+//         } else if (registerOrganization.rejected.match(resultAction)) {
+//           toast.error(resultAction.payload.message); // Show error message
+//         }
+//       } catch (error) {
+//         console.error('Error registering organization:', error);
+//         toast.error(error?.resultAction?.payload?.message);
+//       }
+//     },
+//   });
+
+//   // If the modal is not open, return null
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+//       {/* Background overlay */}
+//       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
+
+//       {/* Modal container */}
+//       <div
+//         style={{ width: '100%', maxWidth: '90%' }}
+//         className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
+//       >
+//         {/* Modal header */}
+//         <div className="flex justify-between items-center p-6 border-b border-gray-100">
+//           <div className="flex items-center space-x-3">
+//             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+//               <i className="fas fa-building text-white"></i>
+//             </div>
+//             <h2 className="text-2xl font-semibold text-gray-800">Organization Sign Up</h2>
+//           </div>
+//           {/* Close button */}
+//           <button
+//             onClick={() => {
+//               onClose();
+//               formik.resetForm();
+//               dispatch(resetAuthState()); // Reset the auth state when closing the modal
+//             }}
+//             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+//           >
+//             <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
+//           </button>
+//         </div>
+
+//         {/* Modal body */}
+//         <div className="p-6 overflow-y-auto max-h-[80vh]">
+//           <form onSubmit={formik.handleSubmit} className="space-y-6">
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               {/* Left Column */}
+//               <div className="space-y-4">
+//                 {/* Name input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+//                   <input
+//                     type="text"
+//                     name="name"
+//                     value={formik.values.name}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter name"
+//                     required
+//                   />
+//                   {formik.touched.name && formik.errors.name ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.name}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Address input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+//                   <input
+//                     type="text"
+//                     name="address"
+//                     value={formik.values.address}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//                              bg-white text-gray-900 
+//                            focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//                             focus:outline-none transition-all duration-200"
+//                     placeholder="Enter address"
+//                     required
+//                   />
+//                   {formik.touched.address && formik.errors.address ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.address}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Website input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+//                   <input
+//                     type="text"
+//                     name="website"
+//                     value={formik.values.website}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter website URL"
+//                   />
+//                   {formik.touched.website && formik.errors.website ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.website}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Contact Person input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+//                   <input
+//                     type="text"
+//                     name="contactPerson"
+//                     value={formik.values.contactPerson}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter contact person name"
+//                   />
+//                   {formik.touched.contactPerson && formik.errors.contactPerson ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.contactPerson}</div>
+//                   ) : null}
+//                 </div>
+//               </div>
+
+//               {/* Right Column */}
+//               <div className="space-y-4">
+//                 {/* Email input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+//                   <input
+//                     type="email"
+//                     name="email"
+//                     value={formik.values.email}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter email address"
+//                     required
+//                   />
+//                   {formik.touched.email && formik.errors.email ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.email}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Mobile input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+//                   <input
+//                     type="text"
+//                     name="mobile"
+//                     value={formik.values.mobile}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter mobile number"
+//                   />
+//                   {formik.touched.mobile && formik.errors.mobile ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.mobile}</div>
+//                   ) : null}
+//                 </div>
+
+//                 {/* Password input */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+//                   <input
+//                     type="password"
+//                     name="password"
+//                     value={formik.values.password}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter password"
+//                     required
+//                   />
+//                   {formik.touched.password && formik.errors.password ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.password}</div>
+//                   ) : null}
+//                 </div>
+
+
+//                  {/* accreditation input */}
+//                  <div>
+//                   <label className="block text-sm font-medium text-gray-700 mb-1">Accreditation</label>
+//                   <input
+//                     type="text"
+//                     name="accreditation"
+//                     value={formik.values.accreditation}
+//                     onChange={formik.handleChange}
+//                     onBlur={formik.handleBlur}
+//                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//              bg-white text-gray-900 
+//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:outline-none transition-all duration-200"
+//                     placeholder="Enter password"
+//                     required
+//                   />
+//                   {formik.touched.accreditation && formik.errors.accreditation ? (
+//                     <div className="text-red-500 text-sm">{formik.errors.accreditation}</div>
+//                   ) : null}
+//                 </div>
+
+//               </div>
+//             </div>
+
+            
+
+            
+
+//             {/* Form actions */}
+//             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
+//               {/* Cancel button */}
+//               <button
+//                 type="button"
+//                 onClick={() => {
+//                   onClose();
+//                   formik.resetForm();
+//                   dispatch(resetAuthState()); // Reset the auth state
+//                 }}
+//                 className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+//               >
+//                 Cancel
+//               </button>
+
+//               {/* Submit button */}
+//               <button
+//                 type="submit"
+//                 disabled={loading}
+//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+//               >
+//                 {loading ? 'Registering...' : 'Register Organization'}
+//               </button>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrganizationRegistration;
+
+
+
+
+
+
+// remove accreadtion and add confirm password  
 
 import React from 'react';
 import { useFormik } from 'formik';
@@ -326,14 +991,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
 import toast from 'react-hot-toast';
 
-// Updated validation schema for the registration form
+// Validation schema for the registration form
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
   address: Yup.string().required('Address is required'),
   website: Yup.string().url('Invalid URL format').nullable(),
   contactPerson: Yup.string().nullable(),
   email: Yup.string().email('Invalid email format').required('Email is required'),
-  accreditation: Yup.string().required('Accreditation is Required'),
   mobile: Yup.string()
     .matches(/^[9876]\d{9}$/, 'Mobile number must start with 9, 8, 7, or 6 and contain 10 digits')
     .nullable(),
@@ -342,7 +1006,7 @@ const validationSchema = Yup.object({
     .default('pending'),
   password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match') // Ensure confirmPassword matches password
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Confirm Password is required'),
 });
 
@@ -361,10 +1025,9 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
       contactPerson: '',
       email: '',
       mobile: '',
-      accreditation: '',
       approvalStatus: 'pending',
       password: '',
-      confirmPassword: '', // Add confirmPassword field
+      confirmPassword: '',
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -592,27 +1255,6 @@ const OrganizationRegistration = ({ isOpen, onClose }) => {
                   />
                   {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
                     <div className="text-red-500 text-sm">{formik.errors.confirmPassword}</div>
-                  ) : null}
-                </div>
-
-                {/* Accreditation input */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Accreditation</label>
-                  <input
-                    type="text"
-                    name="accreditation"
-                    value={formik.values.accreditation}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-                    placeholder="Enter accreditation"
-                    required
-                  />
-                  {formik.touched.accreditation && formik.errors.accreditation ? (
-                    <div className="text-red-500 text-sm">{formik.errors.accreditation}</div>
                   ) : null}
                 </div>
               </div>
