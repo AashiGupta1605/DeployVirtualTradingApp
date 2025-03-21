@@ -45,15 +45,15 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
       { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
       { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
     ],
-    user: [
-      { to: "/profile", icon: "fas fa-user-circle", label: "Profile" },
-      { to: "/auth/register", icon: "fas fa-user-plus", label: "Register" },
-      { to: "/auth/login", icon: "fas fa-sign-in-alt", label: "Login" },
-    ],
-    organization: [
-      { to: "/admin/organization/register", icon: "fas fa-users", label: "Student Register" },
-      { to: "/admin/organization/login", icon: "fas fa-sign-in-alt", label: "Student Login" },
-    ],
+    // user: [
+    //   { to: "/profile", icon: "fas fa-user-circle", label: "Profile" },
+    //   { to: "/auth/register", icon: "fas fa-user-plus", label: "Register" },
+    //   { to: "/auth/login", icon: "fas fa-sign-in-alt", label: "Login" },
+    // ],
+    // organization: [
+    //   { to: "/admin/organization/register", icon: "fas fa-users", label: "Student Register" },
+    //   { to: "/admin/organization/login", icon: "fas fa-sign-in-alt", label: "Student Login" },
+    // ],
   };
 
   return (

@@ -63,6 +63,9 @@ export default function CardSettings({ isOpen, onClose }) {
             <p><strong>Date of Birth:</strong> {userData?.dob}</p>
             <p><strong>Mobile:</strong> {userData?.mobile}</p>
             <p><strong>Gender:</strong> {userData?.gender}</p>
+            {/* <p><strong>Image:</strong> {userData?.userPhoto}</p> */}
+            <img src={userData?.userPhoto} className="w-30 h-30 rounded-full" alt="user-image" />
+
 
             </div>
             <div className="mt-6 flex justify-end space-x-4">

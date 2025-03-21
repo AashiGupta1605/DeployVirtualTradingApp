@@ -452,6 +452,10 @@ const organizationAuthSlice = createSlice({
         state.loading = false;
         state.currentOrg = action.payload; // Update the current organization
         state.success = true;
+        if (action.payload.name) {
+          state.orgName = action.payload.name;
+          localStorage.setItem('orgName', action.payload.name);
+        }
       })
       .addCase(updateOrgDetails.rejected, (state, action) => {
         state.loading = false;

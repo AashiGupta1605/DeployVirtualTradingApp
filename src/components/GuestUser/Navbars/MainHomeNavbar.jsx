@@ -255,7 +255,10 @@ const MainHomeNavbar = () => {
   const loginDropdownRef = useRef(null);
 
   // Get organization authentication state from Redux
-  const { orgName, orgId, org } = useSelector((state) => state.organization.auth);
+  const { orgName, orgId, org, currentOrg } = useSelector((state) => state.organization.auth);
+console.log( currentOrg);
+console.log( currentOrg?.name);
+  
   const isAuthenticated = !!orgName; // Check if organization is logged in
 
   useEffect(() => {

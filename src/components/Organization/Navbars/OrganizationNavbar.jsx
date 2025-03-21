@@ -101,7 +101,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function OrganizationNavbar({ sidebarExpanded }) {
   const dispatch = useDispatch();
   // const orgName = localStorage.getItem("orgName"); // Assuming orgName is stored in localStorage
-const {orgId, orgName} = useSelector((state) => state.organization.auth);
+const {orgId, orgName, currentOrg} = useSelector((state) => state.organization.auth);
   useEffect(() => {
     if (orgId) {
       dispatch(fetchOrgById(orgId));
@@ -161,7 +161,7 @@ const {orgId, orgName} = useSelector((state) => state.organization.auth);
 
         
         <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all mx-4">
-          <p title="organization name" className="text-lg uppercase">{orgName}</p>
+          <p title="organization name" className="text-lg uppercase">{currentOrg?.name}</p>
         </div>
 
 

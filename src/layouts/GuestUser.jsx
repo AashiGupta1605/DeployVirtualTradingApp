@@ -14,6 +14,7 @@ import Show_ETFData_Page from '../views/GuestUser/Show_ETFData_Page';
 import PricingPage from '../views/GuestUser/PricingPage';
 
 import Footer from "../components/GuestUser/Footers/Footer";
+import StartScreenPopupModal from '../components/GuestUser/Home/StartScreenPopupModal';
 
 const GuestUser = () => {
   return (
@@ -21,6 +22,7 @@ const GuestUser = () => {
     <MainHomeNavbar fixed />
     <NiftyNavbarCarousel fixed />
     <EtfNavbarCarousel fixed />
+    <StartScreenPopupModal/>
     <Routes>
       <Route index element={<MainHomePage/>} />
       <Route path="about" element={<AboutPage/>} />
