@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
+import { createSelector } from '@reduxjs/toolkit';
 
 // Helper Functions
 const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) => {
@@ -327,14 +328,22 @@ const tradingSlice = createSlice({
   }
 });
 
+export const selectLoadingState = createSelector(
+  (state) => state.trading, // adjust this based on your actual state structure
+  (trading) => ({
+    loading: trading.loading,
+    orderStatus: trading.orderStatus
+  })
+);
+
 // Selectors
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
 export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
 export const selectStatistics = (state) => state.user.tradingModal.statistics;
-export const selectLoadingState = (state) => ({
-  loading: state.user.tradingModal.loading,
-  orderStatus: state.user.tradingModal.orderStatus
-});
+// export const selectLoadingState = (state) => ({
+//   loading: state.user.tradingModal.loading,
+//   orderStatus: state.user.tradingModal.orderStatus
+// });
 export const selectError = (state) => state.user.tradingModal.error;
 export const selectHoldingBySymbol = (state, symbol) => 
   (state.user.tradingModal.holdings || []).find(h => h.companySymbol === symbol);

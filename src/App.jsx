@@ -16,8 +16,6 @@ import CompanyDetailsPage from "./views/admin/CompanyDetail";
 // import BackToTop from './components/GuestUser/BackToTop';
 // import StartScreenPopupModal from './components/GuestUser/Home/StartScreenPopupModal';
 
-
-
 import SessionExpiredModal from './components/Organization/Session/SessionExpiredModal';
 import { logoutOrganization } from './redux/Organization/auth/organizationAuthSlice';
 import toast, { Toaster } from 'react-hot-toast';
@@ -143,4 +141,4 @@ export default App;
 //   );
 // };
 
-// export default App;
+
