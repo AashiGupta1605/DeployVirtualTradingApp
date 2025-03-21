@@ -23,6 +23,7 @@ export const fetchUserData = createAsyncThunk(
         mobile: data.user?.mobile || "",
         gender: data.user?.gender || "",
         dob: data.user?.dob ? data.user.dob.split("T")[0] : "",
+        userPhoto:data.user?.userPhoto || "",
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -115,7 +116,7 @@ const userprofileSlice = createSlice({
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "failed to update profile";
       })
       .addCase(deleteUserProfile.pending, (state) => {
         state.loading = true;

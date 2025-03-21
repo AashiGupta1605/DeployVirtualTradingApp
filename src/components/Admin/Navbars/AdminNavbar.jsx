@@ -10,6 +10,12 @@ export default function AdminNavbar({ sidebarExpanded }) {
   //   setIsProfileModalOpen(true); // Open profile modal instead of navigating
   // };
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  console.log(user.name);
+  
+
+  
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 bg-white shadow-lg">
@@ -55,6 +61,10 @@ export default function AdminNavbar({ sidebarExpanded }) {
             />
           </div>
         </form>
+
+        <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all mx-4">
+          <p title="username" className="text-lg">{user.name}</p>
+        </div>
 
         {/* Logout Dropdown */}
         <div className="relative">
