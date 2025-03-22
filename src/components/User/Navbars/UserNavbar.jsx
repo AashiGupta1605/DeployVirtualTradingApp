@@ -85,12 +85,13 @@
 //     </nav>
 //   );
 // }
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
 import ConfirmationModal from "../Cards/ConfirmationModal";
+import ChangePasswordModal from "../Cards/ChangePasswordModal"; // Import Change Password Modal
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UserNavbar({ sidebarExpanded }) {
@@ -98,7 +99,10 @@ export default function UserNavbar({ sidebarExpanded }) {
   const { userData } = useSelector((state) => state.user.profile);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false); // State for change password modal
   const navigate = useNavigate(); // Hook for navigation
+  const dropdownRef = useRef(null);
+
  // Fetch user data when sidebar is expanded
   React.useEffect(() => {
     if (sidebarExpanded) {
@@ -119,19 +123,21 @@ export default function UserNavbar({ sidebarExpanded }) {
     setIsProfileModalOpen(true); // Open profile modal
   };
 
-//  // Close dropdown when clicking outside
-//  useEffect(() => {
-//   const handleClickOutside = (event) => {
-//     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-//       setIsDropdownOpen(false);
-//     }
-//   };
+  const handleChangePassword = () => setIsChangePasswordModalOpen(true); // Open password change modal
 
-//   document.addEventListener("mousedown", handleClickOutside);
-//   return () => {
-//     document.removeEventListener("mousedown", handleClickOutside);
-//   };
-// }, []);
+ // Close dropdown when clicking outside
+ useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
 
 
@@ -187,7 +193,7 @@ export default function UserNavbar({ sidebarExpanded }) {
 
 
         {/* Logout Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none"
@@ -206,11 +212,14 @@ export default function UserNavbar({ sidebarExpanded }) {
               >
                 Profile
               </button>
-              <button
+              {/* <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 Logout
+              </button> */}
+               <button onClick={handleChangePassword} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                Change Password
               </button>
             </div>
           )}
@@ -221,6 +230,8 @@ export default function UserNavbar({ sidebarExpanded }) {
       {isProfileModalOpen && (
         <CardSettings isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
       )}
+
+{isChangePasswordModalOpen && <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={() => setIsChangePasswordModalOpen(false)} />}
     </nav>
   );
 }
