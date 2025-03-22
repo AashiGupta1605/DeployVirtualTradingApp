@@ -9,7 +9,7 @@ import UserNavbar from "../components/User/Navbars/UserNavbar";
 import UserSidebar from "../components/User/Sidebar/UserSidebar";
 
 // import SessionExpiredModal from "../components/User/Modals/SessionExpiredModal";
-import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
+// import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
 
 import SessionExpiredModal from "../components/User/Modals/SessionExpiredModal";
 
