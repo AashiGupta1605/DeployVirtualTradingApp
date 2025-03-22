@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
-import { createSelector } from '@reduxjs/toolkit';
 
 // Helper Functions
 const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) => {
@@ -110,40 +109,14 @@ const initialState = {
 // Async Thunks
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
-  async (params, { rejectWithValue }) => {
+  async ({ userId, subscriptionPlanId }, { rejectWithValue }) => {
     try {
-      const { userId, subscriptionPlanId } = params;
-      
-      // Validate inputs with more detailed error
-      if (!userId) {
-        return rejectWithValue('User ID is required');
-      }
-      
-      if (!subscriptionPlanId) {
-        return rejectWithValue('Subscription Plan ID is required');
-      }
-
-      const response = await axios.get(
-        `${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`
-      );
-      
+      console.log('Fetching holdings for User ID:', userId, 'Subscription Plan ID:', subscriptionPlanId);
+      const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`);
       return response.data || [];
     } catch (error) {
       console.error('Fetch Holdings Error:', error);
-      
-      // Detailed error handling
-      if (error.response) {
-        switch (error.response.status) {
-          case 404:
-            return []; // No holdings found
-          case 403:
-            return rejectWithValue('Unauthorized access to holdings');
-          default:
-            return rejectWithValue(error.response.data.message || 'Failed to fetch holdings');
-        }
-      }
-      
-      return rejectWithValue('Network error or server unavailable');
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
     }
   }
 );
@@ -328,22 +301,14 @@ const tradingSlice = createSlice({
   }
 });
 
-export const selectLoadingState = createSelector(
-  (state) => state.trading, // adjust this based on your actual state structure
-  (trading) => ({
-    loading: trading.loading,
-    orderStatus: trading.orderStatus
-  })
-);
-
 // Selectors
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
 export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
 export const selectStatistics = (state) => state.user.tradingModal.statistics;
-// export const selectLoadingState = (state) => ({
-//   loading: state.user.tradingModal.loading,
-//   orderStatus: state.user.tradingModal.orderStatus
-// });
+export const selectLoadingState = (state) => ({
+  loading: state.user.tradingModal.loading,
+  orderStatus: state.user.tradingModal.orderStatus
+});
 export const selectError = (state) => state.user.tradingModal.error;
 export const selectHoldingBySymbol = (state, symbol) => 
   (state.user.tradingModal.holdings || []).find(h => h.companySymbol === symbol);
