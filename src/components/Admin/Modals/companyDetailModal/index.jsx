@@ -264,8 +264,9 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      <div
-        className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity z-0"
+
+      <div 
+        className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity z-0" 
         onClick={onClose}
       />
 

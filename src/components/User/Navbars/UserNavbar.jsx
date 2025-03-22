@@ -91,7 +91,10 @@ import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
 import ConfirmationModal from "../Cards/ConfirmationModal";
+
 import ChangePasswordModal from "../Cards/ChangePasswordModal"; // Import Change Password Modal
+
+
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UserNavbar({ sidebarExpanded }) {
