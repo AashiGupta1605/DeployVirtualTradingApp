@@ -73,20 +73,22 @@ export const fetchHistoricalData = createAsyncThunk(
       let endpoint;
       switch (type) {
         case 'nifty50':
-          endpoint = `${BASE_API_URL}/admin/nifty/company/chart/${symbol}?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}?timeRange=${timeRange}`;
           break;
         case 'nifty500':
-          endpoint = `${BASE_API_URL}/admin/nifty500/company/chart/${symbol}?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/nifty500/symbol/${symbol}/historical?timeRange=${timeRange}`;
           break;
         case 'etf':
-          endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}?timeRange=${timeRange}`; // Updated endpoint
+          endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}?timeRange=${timeRange}`;
           break;
         default:
           throw new Error(`Unsupported type: ${type}`);
       }
 
+      console.log(`Fetching historical data from: ${endpoint}`); // Log the endpoint
+
       const response = await axios.get(endpoint);
-      return processChartData(response.data);
+      return response.data; // Assuming the data is already in the format you need for the table
     } catch (error) {
       console.error('Error fetching historical data:', error);
       return rejectWithValue(error.response?.data?.message || error.message);
