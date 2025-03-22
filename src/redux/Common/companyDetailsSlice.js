@@ -30,35 +30,41 @@ const calculateSMA = (data, period = 20) => {
   return sma;
 };
 
-// Async thunks
 export const fetchCompanyDetails = createAsyncThunk(
   'companyDetails/fetchCompanyDetails',
   async ({ symbol, type }, { rejectWithValue }) => {
     try {
-      let endpoint;
-      switch (type) {
-        case 'nifty50':
-          endpoint = `${BASE_API_URL}/admin/nifty/company/${symbol}`;
-          break;
-        case 'nifty500':
-          endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
-          break;
-        case 'etf':
-          endpoint = `${BASE_API_URL}/admin/etf/${symbol}`; // Updated endpoint
-          break;
-        default:
-          throw new Error(`Unsupported type: ${type}`);
+      // Multiple potential endpoints
+      const endpoints = [
+        `${BASE_API_URL}/admin/nifty/company/${symbol}`,
+        `${BASE_API_URL}/admin/nifty500/company/${symbol}`,
+        `${BASE_API_URL}/admin/etf/${symbol}`,
+        `${BASE_API_URL}/user/trading/stock/${symbol}`
+      ];
+
+      for (const endpoint of endpoints) {
+        try {
+          const response = await axios.get(endpoint);
+          if (response.data) {
+            return response.data;
+          }
+        } catch (error) {
+          console.warn(`Failed to fetch from ${endpoint}:`, error.message);
+          continue;
+        }
       }
-      
-      const response = await axios.get(endpoint);
-      return response.data;
+
+      // If all endpoints fail
+      throw new Error(`Could not find details for symbol: ${symbol}`);
     } catch (error) {
       console.error('Error fetching company details:', error);
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue({
+        message: error.message || `Failed to fetch details for ${symbol}`,
+        symbol
+      });
     }
   }
 );
-
 // Updated fetchHistoricalData thunk
 export const fetchHistoricalData = createAsyncThunk(
   'companyDetails/fetchHistoricalData',
@@ -67,20 +73,22 @@ export const fetchHistoricalData = createAsyncThunk(
       let endpoint;
       switch (type) {
         case 'nifty50':
-          endpoint = `${BASE_API_URL}/admin/nifty/company/chart/${symbol}?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}?timeRange=${timeRange}`;
           break;
         case 'nifty500':
-          endpoint = `${BASE_API_URL}/admin/nifty500/company/chart/${symbol}?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/nifty500/symbol/${symbol}/historical?timeRange=${timeRange}`;
           break;
         case 'etf':
-          endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}?timeRange=${timeRange}`; // Updated endpoint
+          endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}?timeRange=${timeRange}`;
           break;
         default:
           throw new Error(`Unsupported type: ${type}`);
       }
 
+      console.log(`Fetching historical data from: ${endpoint}`); // Log the endpoint
+
       const response = await axios.get(endpoint);
-      return processChartData(response.data);
+      return response.data; // Assuming the data is already in the format you need for the table
     } catch (error) {
       console.error('Error fetching historical data:', error);
       return rejectWithValue(error.response?.data?.message || error.message);

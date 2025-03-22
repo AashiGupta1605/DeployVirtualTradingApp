@@ -85,20 +85,37 @@
 //     </nav>
 //   );
 // }
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
+import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
+import ConfirmationModal from "../Cards/ConfirmationModal";
+
+import ChangePasswordModal from "../Cards/ChangePasswordModal"; // Import Change Password Modal
+
+
+import { useDispatch, useSelector } from "react-redux";
 
 export default function UserNavbar({ sidebarExpanded }) {
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user.profile);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false); // State for change password modal
   const navigate = useNavigate(); // Hook for navigation
-  const user = JSON.parse(localStorage.getItem("user"));
-console.log(user);
+  const dropdownRef = useRef(null);
 
-  
-  
+ // Fetch user data when sidebar is expanded
+  React.useEffect(() => {
+    if (sidebarExpanded) {
+      dispatch(fetchUserData()); // Fetch user profile when sidebar opens
+    }
+  }, [sidebarExpanded, dispatch]);
+
+
+  const userName = userData ? userData.name : "User";
+  const userPhoto = userData?.userPhoto || "https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png"; // Default image
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token from localStorage
@@ -106,13 +123,29 @@ console.log(user);
   };
 
   const handleProfile = () => {
-    setIsProfileModalOpen(true); // Open profile modal instead of navigating
+    setIsProfileModalOpen(true); // Open profile modal
   };
 
+  const handleChangePassword = () => setIsChangePasswordModalOpen(true); // Open password change modal
+
+ // Close dropdown when clicking outside
+ useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+
+
   return (
-    <nav
-      className="sticky top-0 w-full z-5 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out"
-    >
+    <nav className="sticky top-0 w-full z-5 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out">
       <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4 gap-x-3">
         {/* Brand with Icon */}
         <a
@@ -127,7 +160,7 @@ console.log(user);
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-xl">PGR VirtualTrading App</span>
+          <span className="text-xl">PGR - Virtual Trading App</span>
         </a>
 
         {/* Search Form */}
@@ -156,19 +189,23 @@ console.log(user);
           </div>
         </form>
 
-
+        {/* User Name */}
         <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all">
-          <p title="username" className="text-lg">{user.name}</p>
+          <p title="username" className="text-lg">{userName}</p>
         </div>
 
 
         {/* Logout Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none"
           >
-            <i className="fas fa-user-circle text-2xl"></i>
+            <img
+              src={userPhoto}
+              alt="Profile"
+              className="h-10 w-10 rounded-full object-cover cursor-pointer"
+            />
           </button>
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -184,14 +221,20 @@ console.log(user);
               >
                 Logout
               </button> */}
+               <button onClick={handleChangePassword} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                Change Password
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Profile Modal */}
       {isProfileModalOpen && (
         <CardSettings isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
       )}
+
+{isChangePasswordModalOpen && <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={() => setIsChangePasswordModalOpen(false)} />}
     </nav>
   );
 }
-

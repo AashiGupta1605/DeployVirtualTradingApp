@@ -23,6 +23,13 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
     const buyTransactions = transactions.filter(t => t.type === 'buy');
     const sellTransactions = transactions.filter(t => t.type === 'sell');
 
+    // Calculate total shares bought and sold
+    const buyTrades = buyTransactions.reduce((total, transaction) => 
+      total + transaction.numberOfShares, 0);
+    
+    const sellTrades = sellTransactions.reduce((total, transaction) => 
+      total + transaction.numberOfShares, 0);
+
     // Calculate total investment from current holdings
     const totalInvestment = holdings.reduce((sum, holding) => 
       sum + (holding.quantity * holding.averageBuyPrice), 0);
@@ -58,8 +65,8 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
       realizedPLPercentage: totalInvestment > 0 
         ? (realizedPL / totalInvestment) * 100 
         : 0,
-      buyTrades: buyTransactions.length,
-      sellTrades: sellTransactions.length,
+      buyTrades,     // Changed from buyTransactions.length
+      sellTrades,    // Changed from sellTransactions.length
       successRate,
       totalHoldingsValue
     };
@@ -77,7 +84,6 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
     };
   }
 };
-
 // Initial State
 const initialState = {
   transactions: [],
@@ -103,17 +109,17 @@ const initialState = {
 // Async Thunks
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
-  async (userId, { rejectWithValue }) => {
+  async ({ userId, subscriptionPlanId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}`);
-      return response.data.holdings || [];
+      console.log('Fetching holdings for User ID:', userId, 'Subscription Plan ID:', subscriptionPlanId);
+      const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`);
+      return response.data || [];
     } catch (error) {
       console.error('Fetch Holdings Error:', error);
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
     }
   }
-); 
-
+);
 
 // tradingSlice.js
 export const placeOrder = createAsyncThunk(

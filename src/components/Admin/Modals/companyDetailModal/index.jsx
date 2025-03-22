@@ -1,8 +1,9 @@
-// index.jsx
-import React, { useEffect, useMemo } from 'react';
+// CompanyDetailModal.jsx
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { X, AlertCircle } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 import {
   fetchCompanyDetails,
   fetchHistoricalData,
@@ -11,23 +12,23 @@ import {
   setCurrentPage,
   setItemsPerPage,
   setIsRefreshing,
-  resetCompanyDetails
+  resetCompanyDetails,
 } from '../../../../redux/Common/companyDetailsSlice';
-import { 
+import {
   fetchHoldings,
   selectHoldings,
-  selectTotalHoldingsValue 
+  selectTotalHoldingsValue,
 } from '../../../../redux/User/trading/tradingSlice';
-
 import ModalHeader from './parts/ModalHeader';
 import TabNavigation from './parts/TabNavigation';
 import OverviewTab from './tabs/OverviewTab';
 import HistoricalTab from './tabs/HistoricalTab';
 import Buy_SellTab from './tabs/Buy_SellTab';
 import TradingViewTab from './tabs/TradingViewTab';
+import SubscriptionModal from '../SubscriptionModal';
 
 // Loading Overlay Component
-const LoadingOverlay = ({ message = "Loading data..." }) => (
+const LoadingOverlay = ({ message = 'Loading data...' }) => (
   <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
     <div className="flex flex-col items-center">
       <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -63,16 +64,17 @@ const ErrorDisplay = ({ error, onRetry, onClose }) => (
   </div>
 );
 
-const CompanyDetailModal = ({
-  isOpen,
-  onClose,
-  symbol,
-  type = 'nifty50'
-}) => {
+const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
   const dispatch = useDispatch();
 
   // User ID selector
-  const userId = useSelector(state => state.user.auth?.user?._id);
+  const userId = useSelector((state) => state.user.auth?.user?._id);
+  const user = useSelector((state) => state.user.auth?.user); // Fetch the entire user object
+  const subscriptionPlanId = useSelector((state) =>
+    state.user.subscriptionPlan?.activeSubscription?._id
+  );
+  // State for SubscriptionModal
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   // Company Details Selectors
   const {
@@ -85,9 +87,9 @@ const CompanyDetailModal = ({
         technicalIndicators: {
           sma20: [],
           sma50: [],
-          sma200: []
-        }
-      }
+          sma200: [],
+        },
+      },
     },
     loading = false,
     historicalLoading = false,
@@ -96,17 +98,18 @@ const CompanyDetailModal = ({
     activeFilter = '1D',
     currentPage = 1,
     itemsPerPage = 5,
-    isRefreshing = false
-  } = useSelector(state => state.common.companyDetails) || {};
+    isRefreshing = false,
+  } = useSelector((state) => state.common.companyDetails) || {};
 
   // User Subscription and Holdings Selectors with memoization
-  const activeSubscription = useSelector(state => 
-    state.user?.subscriptionPlan?.userSubscriptions?.find(sub => 
-      sub.status === 'Active' && !sub.isDeleted
+  const activeSubscription = useSelector((state) =>
+    state.user?.subscriptionPlan?.userSubscriptions?.find(
+      (sub) => sub.status === 'Active' && !sub.isDeleted
     )
   );
 
-  const holdings = useSelector(selectHoldings, 
+  const holdings = useSelector(
+    selectHoldings,
     (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
   );
 
@@ -124,7 +127,7 @@ const CompanyDetailModal = ({
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
       });
     } catch (error) {
       console.error('Date formatting error:', error);
@@ -140,7 +143,7 @@ const CompanyDetailModal = ({
       balance: calculateRemainingBalance(),
       plan: activeSubscription.plan || 'Basic',
       validTill: formatDate(activeSubscription.endDate),
-      initialAmount: activeSubscription.vertualAmount || 0
+      initialAmount: activeSubscription.vertualAmount || 0,
     };
   }, [activeSubscription, totalHoldingsValue]);
 
@@ -162,10 +165,10 @@ const CompanyDetailModal = ({
   }, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
-    if (isOpen && userId) {
-      dispatch(fetchHoldings(userId));
+    if (isOpen && userId && subscriptionPlanId) {
+      dispatch(fetchHoldings({ userId, subscriptionPlanId }));
     }
-  }, [isOpen, userId, dispatch]);
+  }, [isOpen, userId, subscriptionPlanId, dispatch]);
 
   // Event Handlers
   const handleTabChange = (tab) => {
@@ -189,7 +192,7 @@ const CompanyDetailModal = ({
       await Promise.all([
         dispatch(fetchCompanyDetails({ symbol, type })),
         dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter })),
-        dispatch(fetchHoldings(userId))
+        dispatch(fetchHoldings(userId)),
       ]);
     } catch (error) {
       console.error('Error refreshing data:', error);
@@ -203,19 +206,16 @@ const CompanyDetailModal = ({
     switch (activeTab) {
       case 'overview':
         return (
-          <OverviewTab 
-            data={data} 
-            loading={loading || isRefreshing} 
-            error={error} 
+          <OverviewTab
+            data={data}
+            loading={loading || isRefreshing}
+            error={error}
             onRefresh={handleRefresh}
           />
         );
       case 'trading-view':
         return (
-          <TradingViewTab
-            symbol={symbol}
-            loading={loading || isRefreshing}
-          />
+          <TradingViewTab symbol={symbol} loading={loading || isRefreshing} />
         );
       case 'historical':
         return (
@@ -246,6 +246,7 @@ const CompanyDetailModal = ({
             loading={loading || isRefreshing}
             error={error}
             onRefresh={handleRefresh}
+            onOpenSubscriptionModal={() => setIsSubscriptionModalOpen(true)} // Pass the handler
           />
         );
       default:
@@ -257,31 +258,28 @@ const CompanyDetailModal = ({
 
   if (error) {
     return (
-      <ErrorDisplay
-        error={error}
-        onRetry={handleRefresh}
-        onClose={onClose}
-      />
+      <ErrorDisplay error={error} onRetry={handleRefresh} onClose={onClose} />
     );
   }
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
+
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity z-0" 
         onClick={onClose}
       />
 
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center z-10">
         <div className="relative w-[90%] h-[90%] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full transition-all duration-200 z-10 group"
             aria-label="Close modal"
           >
-            <X 
-              size={24} 
-              className="group-hover:scale-110 transition-transform duration-200" 
+            <X
+              size={24}
+              className="group-hover:scale-110 transition-transform duration-200"
             />
           </button>
 
@@ -319,20 +317,29 @@ const CompanyDetailModal = ({
 
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
             <div className="flex flex-row items-center justify-between text-sm text-gray-500">
-              <p className="text-gray-400">
-                Data provided by NSE India
-              </p>
+              <p className="text-gray-400">Data provided by NSE India</p>
               <p className="flex items-center">
                 <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-                Last updated: {data?.lastUpdateTime ? 
-                  new Date(data.lastUpdateTime).toLocaleString() : 
-                  'N/A'
-                }
+                Last updated:{' '}
+                {data?.lastUpdateTime
+                  ? new Date(data.lastUpdateTime).toLocaleString()
+                  : 'N/A'}
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Subscription Modal */}
+      <SubscriptionModal
+        isOpen={isSubscriptionModalOpen}
+        onClose={() => setIsSubscriptionModalOpen(false)}
+        selectedUser={user} // Pass the entire user object
+        onSuccess={() => {
+          toast.success('Subscription updated successfully');
+          setIsSubscriptionModalOpen(false);
+        }}
+      />
     </div>
   );
 };
@@ -404,7 +411,7 @@ CompanyDetailModal.propTypes = {
 };
 
 CompanyDetailModal.defaultProps = {
-  type: 'nifty50'
+  type: 'nifty50',
 };
 
 export default CompanyDetailModal;
