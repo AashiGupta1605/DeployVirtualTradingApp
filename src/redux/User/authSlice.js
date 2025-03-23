@@ -1,7 +1,5 @@
-// src/redux/User/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-//import axios from 'axios';
-import axiosInstance from '../../utils/axiosConfig';
+import axios from 'axios';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 
 // Admin credentials (Consider moving to environment variables)
@@ -44,8 +42,7 @@ export const loginUser = createAsyncThunk(
       }
 
       // Regular user login
-      const response = await axiosInstance.post('/user/auth/login', credentials);
-
+      const response = await axios.post(`${BASE_API_URL}/user/auth/login`, credentials);
       
       if (!response.data || !response.data.user) {
         throw new Error('Invalid response from server');
@@ -91,8 +88,11 @@ export const checkAuthStatus = createAsyncThunk(
         throw new Error('No token found');
       }
 
-      const response = await axiosInstance.get('/user/auth/status');
-
+      const response = await axios.get(`${BASE_API_URL}/user/auth/status`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
       return response.data;
     } catch (error) {
@@ -106,8 +106,15 @@ export const updateUserProfile = createAsyncThunk(
   async (userData, { getState, rejectWithValue }) => {
     try {
       const { token } = getState().user.auth;
-      const response = await axiosInstance.patch('/user/profile/update', userData);
-
+      const response = await axios.patch(
+        `${BASE_API_URL}/user/profile/update`,
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(
