@@ -7,6 +7,7 @@ import { Star } from "lucide-react";
 // import { MdFeedback } from "react-icons/md";
 import { FolderOpen } from "lucide-react";
 import { BiMessageDetail } from "react-icons/bi";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 const UserFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -55,9 +56,40 @@ const UserFeedbackCards = () => {
     }
   }, []);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 3;
+
+  useEffect(() => {
+    setCurrentIndex(0); // Reset pagination when feedbacks change
+  }, [feedbacks]);
+
+  const visibleFeedbacks = feedbacks.slice(currentIndex, currentIndex + itemsPerPage);
+
+  const handleNext = () => {
+    if (currentIndex + itemsPerPage < feedbacks.length) {
+      setCurrentIndex(currentIndex + itemsPerPage);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - itemsPerPage);
+    }
+  };
+
   return (
     <div>
-      <section className="mb-8 bg-gray-100 border-2 border-gray-200 mx-6 p-6 rounded-lg">
+      <section className="relative mb-8 bg-gray-100 border-2 border-gray-200 mx-6 p-6 rounded-lg">
+
+        {/* Previous Button */}
+        <button 
+          onClick={handlePrev} 
+          disabled={currentIndex === 0} 
+          className="absolute left-0 mr-8 top-[52%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
+          >
+          <BiChevronLeft />
+        </button>
+
         {/* Flex container for headings and button */}
         <div className="flex justify-between items-center mb-6">
           {/* Left-most heading */}
@@ -132,7 +164,7 @@ const UserFeedbackCards = () => {
         )}
 
           {feedbacks.length > 0 ? (
-            feedbacks.slice(0, 3).map((card, index) => {
+            visibleFeedbacks.map((card, index) => {
               const user = userData.find((user) => user._id === card.userId?._id);
               console.log(
                 "Get user data by stored userID refrence in Feedback modal",
@@ -141,10 +173,10 @@ const UserFeedbackCards = () => {
               return (
                 <div
                   key={index}
-                  className="w-[400px] h-[130px] bg-white shadow-lg p-6 rounded-lg border overflow-hidden"
+                  className="w-[400px] h-[140px] bg-white shadow-lg p-6 rounded-lg border overflow-hidden"
                 >
                   {/* Star Ratings */}
-                  <div className="flex -mt-2 mb-2">
+                  <div className="flex -mt-2 mb-3">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
@@ -157,13 +189,15 @@ const UserFeedbackCards = () => {
                       />
                     ))}
                   </div>
+                  <div className="max-h-13 min-h-13 overflow-y-auto">
                   <p className="text-gray-700 italic">
                     <span className="font-semibold">
                       {card.feedbackCategory}:{" "}
                     </span>
                     {card.feedbackMessage}
                   </p>
-                  <h4 className="mt-7 font-semibold text-right text-sm text-gray-600">
+                  </div>
+                  <h4 className="mt-3 font-semibold text-right text-sm text-gray-600">
                     - {user ? user.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : "Anonymous"}
                   </h4>
                 </div>
@@ -178,6 +212,16 @@ const UserFeedbackCards = () => {
             </div>
           )}
         </div>
+
+      {/* Next Button */}
+      <button 
+        onClick={handleNext} 
+        disabled={currentIndex + itemsPerPage >= feedbacks.length} 
+        className="absolute right-0 ml-8 top-[52%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
+        >
+        <BiChevronRight />
+      </button>
+
       </section>
       {showModal && <UserAllFeedbacksTable closeModal={closeModal} />}
     </div>

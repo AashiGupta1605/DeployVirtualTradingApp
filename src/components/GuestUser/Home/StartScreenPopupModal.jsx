@@ -34,7 +34,7 @@ const StartScreenPopupModal = () => {
             {/* Right Side: Close Button */}
             <button
               onClick={() => setIsOpen(false)}
-              className="w-10 p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+              className="w-10 p-2 hover:bg-gray-100 rounded-md transition-colors duration-200 focus:outline-none"
             >
               <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
             </button>

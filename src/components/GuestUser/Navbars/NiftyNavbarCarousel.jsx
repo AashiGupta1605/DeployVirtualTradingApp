@@ -70,7 +70,8 @@ const NiftyNavbarCarousel = () => {
   };
 
   return (
-    <div className="fixed left-0 top-16 w-full bg-[#014e74] text-white py-[1px] z-30 flex items-center">
+    // <div className="fixed left-0 top-16 w-full bg-[#014e74] text-white py-[1px] z-30 flex items-center">
+    <div className="fixed left-0 top-16 w-full bg-[#313b4c] text-white py-[1px] z-30 flex items-center">
       {/* Left Fixed Heading */}
       <div className="ml-4 font-bold text-sm whitespace-nowrap">NIFTY50 Stocks: &nbsp;</div>
 
@@ -85,7 +86,8 @@ const NiftyNavbarCarousel = () => {
             {stockData.map((stock, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-1 bg-[#014668] px-1 py-[1px] rounded-md"
+                // className="flex items-center space-x-1 bg-[#014668] px-1 py-[1px] rounded-md"
+                className="flex items-center space-x-1 bg-[#1e293b] px-1 py-[1px] rounded-md"
               >
                 <span className="font-bold text-[13px]">{stock.name}</span>
                 <span className="text-gray-300 text-[13px]">{stock.price}</span>
