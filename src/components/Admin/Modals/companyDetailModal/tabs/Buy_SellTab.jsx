@@ -1,17 +1,16 @@
-// Buy_SellTab.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { 
-  placeOrder, 
-  selectLoadingState, 
-  fetchTransactionHistory, 
-  selectTransactions, 
-  selectHoldings, 
-  selectStatistics, 
-  selectHoldingBySymbol, 
-  fetchHoldings 
+import {
+  placeOrder,
+  selectLoadingState,
+  fetchTransactionHistory,
+  selectTransactions,
+  selectHoldings,
+  selectStatistics,
+  selectHoldingBySymbol,
+  fetchHoldings,
 } from '../../../../../redux/User/trading/tradingSlice';
 import { getUserSubscriptions } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
 import ConfirmationModal from '../../ConformationModal';
@@ -21,7 +20,7 @@ import TradingControls from './TradingControls';
 import MarketStatusOverlay from './../parts/MarketStatusOverlay';
 import { isMarketOpen } from '../../../../../utils/marketStatus';
 
-const Buy_SellTab = ({ symbol, data, loading, error }) => {
+const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) => {
   const dispatch = useDispatch();
   const safeData = useMemo(() => data || {}, [data]);
   const currentMarketPrice = useMemo(() => safeData.currentPrice || 0, [safeData]);
@@ -33,29 +32,31 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
   const [price, setPrice] = useState(currentMarketPrice);
   const [stopPrice, setStopPrice] = useState(currentMarketPrice);
 
-  const userId = useSelector(state => state.user.auth?.user?._id);
-  const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
+  const userId = useSelector((state) => state.user.auth?.user?._id);
+  const userSubscriptions = useSelector((state) => state.user.subscriptionPlan?.userSubscriptions || []);
   const transactions = useSelector(selectTransactions);
   const holdings = useSelector(selectHoldings);
-  const currentHolding = useSelector(state => selectHoldingBySymbol(state, symbol));
+  const currentHolding = useSelector((state) => selectHoldingBySymbol(state, symbol));
   const statistics = useSelector(selectStatistics);
   const { loading: tradingLoading, orderStatus } = useSelector(selectLoadingState);
 
-  const activeSubscription = useMemo(() => 
-    userSubscriptions.find(sub => sub.status === 'Active' && !sub.isDeleted),
+  const activeSubscription = useMemo(
+    () => userSubscriptions.find((sub) => sub.status === 'Active' && !sub.isDeleted),
     [userSubscriptions]
   );
 
   const calculateRemainingBalance = () => {
     if (!activeSubscription) return 0;
     const totalHoldings = holdings.reduce(
-      (total, holding) => total + (holding.quantity * holding.averageBuyPrice), 
+      (total, holding) => total + holding.quantity * holding.averageBuyPrice,
       0
     );
     return activeSubscription.vertualAmount - totalHoldings;
   };
 
   const marketOpen = isMarketOpen();
+
+  console.log('User ID:', userId);
 
   useEffect(() => {
     setPrice(currentMarketPrice);
@@ -74,10 +75,12 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
       dispatch(getUserSubscriptions(userId));
       dispatch(fetchHoldings(userId));
       if (activeSubscription?._id) {
-        dispatch(fetchTransactionHistory({ 
-          userId, 
-          subscriptionPlanId: activeSubscription._id 
-        }));
+        dispatch(
+          fetchTransactionHistory({
+            userId,
+            subscriptionPlanId: activeSubscription._id,
+          })
+        );
       }
     }
   }, [dispatch, userId, activeSubscription?._id]);
@@ -98,24 +101,27 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
 
   const handlePlaceOrder = async (orderDetails) => {
     try {
-      const result = await dispatch(placeOrder({
-        ...orderDetails,
-        symbol: orderDetails.symbol,
-        currentMarketPrice: orderDetails.currentMarketPrice
-      })).unwrap();
-      
+      const result = await dispatch(
+        placeOrder({
+          ...orderDetails,
+          symbol: orderDetails.symbol,
+          currentMarketPrice: orderDetails.currentMarketPrice,
+        })
+      ).unwrap();
+
       toast.success(
-        `Successfully placed ${orderDetails.type.toUpperCase()} order for ${orderDetails.numberOfShares} shares at ₹${orderDetails.price.toFixed(2)}`,
+        `Successfully placed ${orderDetails.type.toUpperCase()} order for ${
+          orderDetails.numberOfShares
+        } shares at ₹${orderDetails.price.toFixed(2)}`,
         { position: 'top-right' }
       );
-      
+
       setShowConfirmation(false);
     } catch (error) {
       console.error('Order Placement Error:', error);
-      toast.error(
-        error.message || 'Failed to place order. Please try again.',
-        { position: 'top-right' }
-      );
+      toast.error(error.message || 'Failed to place order. Please try again.', {
+        position: 'top-right',
+      });
       setShowConfirmation(false);
     }
   };
@@ -143,12 +149,12 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
     return (
       <div className="w-full h-96 flex items-center justify-center flex-col gap-4">
         <div className="text-xl text-gray-600">
-          {!activeSubscription 
-            ? "Please subscribe to start trading" 
-            : "Your subscription has expired or has insufficient balance"}
+          {!activeSubscription
+            ? 'Please subscribe to start trading'
+            : 'Your subscription has expired or has insufficient balance'}
         </div>
-        <button 
-          onClick={() => toast.error('Subscription feature coming soon')} 
+        <button
+          onClick={onOpenSubscriptionModal} // Use the prop passed from the parent
           className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           View Subscription Plans
@@ -159,7 +165,7 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
 
   return (
     <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6 relative">
-      {!marketOpen && <MarketStatusOverlay />}
+      {!marketOpen && <MarketStatusOverlay tradingPreference={activeSubscription?.tradingPreference} />}
 
       <div className="flex gap-6">
         {/* Left Side: Account Summary, Buy/Sell Tabs, and Trading Controls */}
@@ -193,21 +199,21 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
 
           {/* Buy/Sell Tabs */}
           <div className="bg-gray-100 p-0.5 rounded-lg inline-flex gap-1 shadow-md mb-2">
-            <button 
-              onClick={() => setActiveTab('buy')} 
+            <button
+              onClick={() => setActiveTab('buy')}
               className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
-                activeTab === 'buy' 
-                  ? 'bg-green-500 text-white shadow-lg' 
+                activeTab === 'buy'
+                  ? 'bg-green-500 text-white shadow-lg'
                   : 'text-gray-600 hover:bg-green-50'
               }`}
             >
               Buy
             </button>
-            <button 
-              onClick={() => setActiveTab('sell')} 
+            <button
+              onClick={() => setActiveTab('sell')}
               className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
-                activeTab === 'sell' 
-                  ? 'bg-red-500 text-white shadow-lg' 
+                activeTab === 'sell'
+                  ? 'bg-red-500 text-white shadow-lg'
                   : 'text-gray-600 hover:bg-red-50'
               }`}
             >
@@ -229,24 +235,24 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
             setStopPrice={setStopPrice}
             isDisabled={isDisabled}
             setShowConfirmation={setShowConfirmation}
-            calculateTotal={() => quantity * (orderType === "market" ? currentMarketPrice : price)}
+            calculateTotal={() => quantity * (orderType === 'market' ? currentMarketPrice : price)}
           />
         </div>
 
         {/* Right Side: Praedico Analysis */}
         <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 40%' }}>
-          <PraedicoAnalysis 
-            data={{ 
-              ...safeData, 
-              signals: { 
-                strongBuy: safeData.change > 5 ? 12 : 6, 
-                buy: safeData.pChange > 2 ? 8 : 4, 
-                hold: safeData.change === 0 ? 3 : 2, 
-                sell: safeData.change < -2 ? 2 : 1, 
-                strongSell: safeData.change < -5 ? 1 : 0 
-              } 
-            }} 
-            timeframe="1D" 
+          <PraedicoAnalysis
+            data={{
+              ...safeData,
+              signals: {
+                strongBuy: safeData.change > 5 ? 12 : 6,
+                buy: safeData.pChange > 2 ? 8 : 4,
+                hold: safeData.change === 0 ? 3 : 2,
+                sell: safeData.change < -2 ? 2 : 1,
+                strongSell: safeData.change < -5 ? 1 : 0,
+              },
+            }}
+            timeframe="1D"
           />
         </div>
       </div>
@@ -261,19 +267,23 @@ const Buy_SellTab = ({ symbol, data, loading, error }) => {
         <ConfirmationModal
           isOpen={showConfirmation}
           onClose={() => setShowConfirmation(false)}
-          onConfirm={() => handlePlaceOrder({
-            userId,
-            subscriptionPlanId: activeSubscription._id,
-            symbol,
-            type: activeTab,
-            numberOfShares: quantity,
-            price: orderType === "market" ? currentMarketPrice : price,
-            orderType,
-            total: quantity * (orderType === "market" ? currentMarketPrice : price),
-            currentMarketPrice
-          })}
+          onConfirm={() =>
+            handlePlaceOrder({
+              userId,
+              subscriptionPlanId: activeSubscription._id,
+              symbol,
+              type: activeTab,
+              numberOfShares: quantity,
+              price: orderType === 'market' ? currentMarketPrice : price,
+              orderType,
+              total: quantity * (orderType === 'market' ? currentMarketPrice : price),
+              currentMarketPrice,
+            })
+          }
           title="Confirm Order"
-          message={`Are you sure you want to ${activeTab} ${quantity} shares at ₹${(orderType === "market" ? currentMarketPrice : price).toFixed(2)}?`}
+          message={`Are you sure you want to ${activeTab} ${quantity} shares at ₹${(
+            orderType === 'market' ? currentMarketPrice : price
+          ).toFixed(2)}?`}
         />
       )}
     </div>
@@ -296,6 +306,7 @@ Buy_SellTab.propTypes = {
   }),
   loading: PropTypes.bool,
   error: PropTypes.string,
+  onOpenSubscriptionModal: PropTypes.func.isRequired, // Add this prop type
 };
 
 Buy_SellTab.defaultProps = {

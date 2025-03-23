@@ -1,4 +1,3 @@
-// components/MarketStatusOverlay.jsx
 import React, { useEffect, useState } from 'react';
 import { Clock, AlertCircle, Calendar } from 'lucide-react';
 import { isMarketOpen, getNextMarketOpenTime, getTimeRemaining } from '../../../../../utils/marketStatus';
@@ -30,9 +29,9 @@ const CountdownStyles = `
   }
 `;
 
-const MarketStatusOverlay = () => {
-  const [marketOpen, setMarketOpen] = useState(isMarketOpen());
-  const [timeRemaining, setTimeRemaining] = useState(getTimeRemaining(getNextMarketOpenTime()));
+const MarketStatusOverlay = ({ tradingPreference }) => {
+  const [marketOpen, setMarketOpen] = useState(isMarketOpen(tradingPreference));
+  const [timeRemaining, setTimeRemaining] = useState(getTimeRemaining(getNextMarketOpenTime(tradingPreference)));
 
   useEffect(() => {
     // Add styles to document
@@ -41,17 +40,23 @@ const MarketStatusOverlay = () => {
     document.head.appendChild(styleSheet);
 
     const interval = setInterval(() => {
-      setMarketOpen(isMarketOpen());
-      setTimeRemaining(getTimeRemaining(getNextMarketOpenTime()));
+      setMarketOpen(isMarketOpen(tradingPreference));
+      setTimeRemaining(getTimeRemaining(getNextMarketOpenTime(tradingPreference)));
     }, 1000);
 
     return () => {
       clearInterval(interval);
       styleSheet.remove();
     };
-  }, []);
+  }, [tradingPreference]);
 
-  if (marketOpen) {
+  // If trading preference is "Market Hours", show overlay only when market is closed
+  if (tradingPreference === 'Market Hours' && marketOpen) {
+    return null;
+  }
+
+  // If trading preference is "Off-Market Hours", show overlay only when market is open
+  if (tradingPreference === 'Off-Market Hours' && !marketOpen) {
     return null;
   }
 
@@ -62,15 +67,18 @@ const MarketStatusOverlay = () => {
         <div className="bg-lightBlue-600 p-3 text-white">
           <div className="flex items-center justify-center space-x-3">
             <AlertCircle className="w-8 h-8 text-white" strokeWidth={2} />
-            <h3 className="text-lg font-bold tracking-wide">Market is Closed</h3>
+            <h3 className="text-lg font-bold tracking-wide">
+              {tradingPreference === 'Market Hours' ? 'Market is Closed' : 'Market is Open'}
+            </h3>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-3 text-center bg-gray-50">
           <p className="text-gray-800 mb-3 text-base font-medium">
-            Trading is{" "}
-            <span className="text-red-500 font-semibold">currently unavailable</span>. The market will reopen soon.
+            {tradingPreference === 'Market Hours'
+              ? 'Trading is currently unavailable. The market will reopen soon.'
+              : 'Trading is currently available. The market will close soon.'}
           </p>
 
           {/* Time Remaining Section */}
@@ -153,7 +161,9 @@ const MarketStatusOverlay = () => {
         {/* Footer */}
         <div className="bg-gray-100 border-t border-gray-200 p-3 text-center">
           <p className="text-xs text-gray-500 font-medium">
-            Next trading session will begin shortly
+            {tradingPreference === 'Market Hours'
+              ? 'Next trading session will begin shortly'
+              : 'Market will close shortly'}
           </p>
         </div>
       </div>
