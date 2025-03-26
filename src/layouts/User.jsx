@@ -7,13 +7,8 @@ import toast from "react-hot-toast";
 import DashboardFooter from "../components/User/Footers/DashboardFooter";
 import UserNavbar from "../components/User/Navbars/UserNavbar";
 import UserSidebar from "../components/User/Sidebar/UserSidebar";
-
-
 // import SessionExpiredModal from "../components/User/Modals/SessionExpiredModal";
-// import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
-
-import SessionExpiredModal from "../components/User/Modals/SessionExpiredModal";
-
+import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
 
 // Views
 import Dashboard from "../views/user/userDashboard";

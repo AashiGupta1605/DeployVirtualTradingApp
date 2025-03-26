@@ -1,6 +1,6 @@
-.slick-slide {
-    margin-right: 25px; /* Adjust the value to your preferred gap */
-  }
+/* .slick-slide {
+    margin-right: 1px; /* Adjust the value to your preferred gap 
+  }*/
   
   .slick-track {
     display: flex; /* Ensure the slides are laid out in a row */
@@ -11,5 +11,15 @@
   }
   .slick-slide > div {
     width: 300px !important;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  
+  .animate-marquee {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 5s linear infinite;
   }
   

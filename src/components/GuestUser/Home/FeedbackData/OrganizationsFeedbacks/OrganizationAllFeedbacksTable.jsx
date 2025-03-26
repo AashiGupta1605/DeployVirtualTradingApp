@@ -5,7 +5,7 @@ import { FaTimes, FaComments } from "react-icons/fa";
 import { FolderOpen } from "lucide-react";
 import { IoIosArrowUp } from "react-icons/io";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
 
@@ -23,10 +23,35 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
   const [filterCount, setFilterCount] = useState(0);
   const [appliedFilters, setAppliedFilters] = useState({});
 
-  const [expandedRow, setExpandedRow] = useState(null);
-  const toggleRow = (id) => {
-    setExpandedRow(expandedRow === id ? null : id);
+  // const [expandedRow, setExpandedRow] = useState(null);
+  // const toggleRow = (id) => {
+  //   setExpandedRow(expandedRow === id ? null : id);
+  // };
+
+  const [popoverRow1, setPopoverRow1] = useState(null);
+  const popoverRef1 = useRef(null);
+  const togglePopover1 = (id) => {
+    setPopoverRow1(popoverRow1 === id ? null : id);
   };
+  const [popoverRow2, setPopoverRow2] = useState(null);
+  const popoverRef2 = useRef(null);
+  const togglePopover2 = (id) => {
+    setPopoverRow2(popoverRow2 === id ? null : id);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef1.current && !popoverRef1.current.contains(event.target)) {
+        setPopoverRow1(null);
+      }
+      if (popoverRef2.current && !popoverRef2.current.contains(event.target)) {
+        setPopoverRow2(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const [feedbacks, setFeedbacks] = useState([]);
   const [orgData, setOrgData] = useState([]);
@@ -223,7 +248,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
               {/* Close Button */}
               <button
                 onClick={closeModal}
-                className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+                className="p-2 hover:bg-gray-100 rounded-md transition-colors duration-200 focus:outline-none"
               >
                 <FaTimes className="text-gray-400 hover:text-gray-600 text-lg" />
               </button>
@@ -333,7 +358,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                     {key}: {value}
                     <button
                       onClick={() => removeFilter(key)}
-                      className="ml-6 mr-1 mt-1 border-none outline-none bg-transparent"
+                      className="ml-6 mr-1 mt-1 focus:outline-none bg-transparent"
                     >
                       <FaTimes className="text-blue-300 hover:text-blue-800 text-sm" />
                     </button>
@@ -454,6 +479,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                                 .join(" ")
                             : "Anonymous Organization"}
                         </td>
+                        
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
@@ -465,35 +491,35 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                         </td>
 
                         <td className="px-6 py-4 min-w-[195px] text-sm text-gray-500">
-                          {expandedRow === feedbackData._id ? (
+                          {feedbackData.feedbackMessage?.length > 50 ? (
                             <>
-                              {feedbackData.feedbackMessage}
+                            {`${feedbackData.feedbackMessage.substring(0, 50)}...`}
+                            <button
+                            onClick={() => togglePopover1(feedbackData._id)}
+                            className="ml-2 text-blue-500 hover:text-blue-700"
+                            > Show more </button>
+                            {popoverRow1 === feedbackData._id && (
+                              <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef1}>
+                              <div className="flex justify-between items-center bg-gray-100 pt-1 pb-[2px] pr-3 pl-3">
+                              <div className="flex items-center text-gray-600"><h6>Feedbacks</h6></div>
                               <button
-                                onClick={() => toggleRow(feedbackData._id)}
-                                className="ml-2 text-blue-500 hover:text-blue-700"
-                              >
-                                Show less
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              {feedbackData.feedbackMessage?.length > 50
-                                ? `${feedbackData.feedbackMessage.substring(
-                                    0,
-                                    50
-                                  )}...`
-                                : feedbackData.feedbackMessage ||
-                                  "No feedbacks provided"}
-                              {feedbackData.feedbackMessage?.length > 50 && (
-                                <button
-                                  onClick={() => toggleRow(feedbackData._id)}
-                                  className="ml-2 text-blue-500 hover:text-blue-700"
-                                >
-                                  Show more
-                                </button>
-                              )}
-                            </>
-                          )}
+                              onClick={() => togglePopover1(null)}
+                              className="text-base"
+                              > <i className="fas fa-times rounded-sm w-6 flex items-center justify-center text-red-500 bg-red-100 hover:text-red-700 hover:bg-red-200"></i></button>
+                              </div>
+                              <div className="max-h-50 min-h-21 overflow-y-auto">
+                              <p className="text-gray-700 mt-2.5 mb-2 pr-2 pl-3">{feedbackData.feedbackMessage}</p>
+                              </div>
+                              <div className="bg-gray-100">
+                              <p className="text-gray-700 text-[13px] text-right pb-[2px] pt-[1px] pr-2">- {organizationName.name}</p>
+                              </div>
+                              {/* <button
+                              onClick={() => togglePopover(null)}
+                              className="text-base text-right text-red-500 hover:text-red-700"
+                              > Close </button> */}
+                              </div>
+                            )}
+                            </>) : (feedbackData.feedbackMessage || "No feedback provided")}
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -511,6 +537,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             ))}
                           </div>
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           {feedbackData.recommend ? (
                             <ThumbsUp
@@ -524,8 +551,34 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             />
                           )}
                         </td>
+
                         <td className="px-6 py-4 min-w-[195px] text-sm text-gray-500">
-                          {expandedRow === `suggestion-${feedbackData._id}` ? (
+                        {feedbackData.suggestions?.length > 50 ? (
+                            <>
+                            {`${feedbackData.suggestions.substring(0, 50)}...`}
+                            <button
+                            onClick={() => togglePopover2(feedbackData._id)}
+                            className="ml-2 text-blue-500 hover:text-blue-700"
+                            > Show more </button>
+                            {popoverRow2 === feedbackData._id && (
+                              <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef2}>
+                              <div className="flex justify-between items-center bg-gray-100 pt-1 pb-[2px] pr-3 pl-3">
+                              <div className="flex items-center text-gray-600"><h6>Suggestions</h6></div>
+                              <button
+                              onClick={() => togglePopover2(null)}
+                              className="text-base"
+                              > <i className="fas fa-times rounded-sm w-6 flex items-center justify-center text-red-500 bg-red-100 hover:text-red-700 hover:bg-red-200"></i></button>
+                              </div>
+                              <div className="max-h-50 min-h-21 overflow-y-auto">
+                              <p className="text-gray-700 mt-2.5 mb-2 pr-2 pl-3">{feedbackData.suggestions}</p>
+                              </div>
+                              <div className="bg-gray-100">
+                              <p className="text-gray-700 text-[13px] text-right pb-[2px] pt-[1px] pr-2">- {organizationName.name}</p>
+                              </div>
+                              </div>
+                            )}
+                            </>) : (feedbackData.suggestions || "No suggestion provided")}
+                          {/* {expandedRow === `suggestion-${feedbackData._id}` ? (
                             <>
                               {feedbackData.suggestions}
                               <button
@@ -557,7 +610,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                                 </button>
                               )}
                             </>
-                          )}
+                          )} */}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(

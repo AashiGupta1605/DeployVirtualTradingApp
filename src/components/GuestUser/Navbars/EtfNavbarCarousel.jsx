@@ -1,3 +1,5 @@
+// text-[#4472a6] hover:text-[#03396b]
+
 import React, { useState, useEffect } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -53,7 +55,8 @@ const EtfNavbarCarousel = () => {
   return (
     <>
     <div className="fixed left-0 top-23 w-full py-[2px] z-30 bg-white"/>
-    <div className="fixed left-0 top-24 w-full bg-[#014e74] text-white py-[1px] z-30 flex items-center">
+    {/* <div className="fixed left-0 top-24 w-full bg-[#014e74] text-white py-[1px] z-30 flex items-center"> */}
+    <div className="fixed left-0 top-24 w-full bg-[#313b4c] text-white py-[1px] z-30 flex items-center">
   {/* Left Fixed Heading */}
   <div className="ml-4 font-bold text-sm whitespace-nowrap">ETF Stocks: &nbsp;</div>
 
@@ -66,7 +69,10 @@ const EtfNavbarCarousel = () => {
     ) : (
       <Slider {...settings}>
         {stockData.map((stock, index) => (
-          <div key={index} className="flex items-center space-x-1 bg-[#014668] px-1 py-[1px] rounded-md">
+          <div key={index} 
+          // className="flex items-center space-x-1 bg-[#014668] px-1 py-[1px] rounded-md"
+          className="flex items-center space-x-1 bg-[#1e293b] px-1 py-[1px] rounded-md"
+          >
             <span className="font-bold text-[13px]">{stock.name}</span>
             <span className="text-gray-300 text-[13px]">{stock.price}</span>
             <span className={`font-semibold ${stock.change.startsWith("+") ? "text-green-400" : "text-red-400"}`}>

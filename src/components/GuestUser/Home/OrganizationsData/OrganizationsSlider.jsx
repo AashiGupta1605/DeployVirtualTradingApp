@@ -7,6 +7,7 @@ import { BASE_API_URL } from '../../../../utils/BaseUrl';
 import { HiOfficeBuilding } from "react-icons/hi";
 import { FolderOpen } from "lucide-react";
 // import { FaBuilding } from "react-icons/fa";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
@@ -45,6 +46,26 @@ const OrganizationsSlider = () => {
       }
   }, []);
 
+  // Custom Previous Arrow Component
+  const CustomPrevArrow = ({ onClick }) => (
+    <button 
+    onClick={onClick} 
+    className="absolute -left-8 top-[51%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 z-10 focus:outline-none"
+    >
+    <BiChevronLeft className="text-3xl" />
+    </button>
+  );
+
+// Custom Next Arrow Component
+  const CustomNextArrow = ({ onClick }) => (
+    <button 
+    onClick={onClick} 
+    className="absolute -right-8 top-[51%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 z-10 focus:outline-none"
+    >
+    <BiChevronRight className="text-3xl" />
+    </button>
+  );
+
   const settings = {
     infinite: true,
     speed: 3500,
@@ -53,7 +74,10 @@ const OrganizationsSlider = () => {
     autoplay: true,
     autoplaySpeed: 0, // Makes it a continuous scroll effect
     cssEase: "linear",
-    arrows: false, // Hides navigation arrows
+    // arrows: false, // Hides navigation arrows
+    arrows: true, // Enable arrows to use custom ones
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
     adaptiveHeight: false,
   };
 
@@ -137,8 +161,8 @@ return (
   {orgData.length > 0 ? 
     (
       <Slider {...settings}>
-        {orgData.map((card, index) => (
-          <div key={index} className="card h-80 min-w-[300px] max-w-[300px] bg-white rounded-lg shadow-lg border p-6 overflow-hidden ease-in-out hover:scale-103 mb-3 mt-3" style={{}}>
+        {[...orgData].reverse().map((card, index) => (
+          <div key={index} className="card group h-85 min-w-[295px] max-w-[295px] bg-white rounded-lg shadow-lg border p-6 overflow-hidden ease-in-out hover:scale-104 mb-3 mt-3" style={{}}>
           <div className="flex justify-center items-center">
             <img
             src={card.photo || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s"}
@@ -148,8 +172,23 @@ return (
             />
             </div>
             <div className="card-content justify-between overflow-hidden">
-              <h2 className="text-[20px] font-bold text-gray-600 mb-5 uppercase mt-4 decoration-3 border-b-2 border-gray-700 pb-2">{card.name}</h2>
-              <p className="mt-2 text-sm font-medium text-left pl-4">
+              <h4 className="text-[18px] break-words truncate font-semibold text-gray-800 mb-5 mt-4 decoration-3 border-b-2 border-gray-700 pb-2 whitespace-nowrap overflow-hidden group-hover:overflow-visible group-hover:animate-marquee">
+              {card.name 
+              ? card.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+              : 'Organization Name is not available'
+              }
+              </h4>
+
+              {/* <h4 className="text-[18px] break-words truncate font-semibold text-gray-800 mb-5 mt-4 decoration-3 border-b-2 border-gray-700 pb-2 whitespace-nowrap overflow-hidden relative group-hover:overflow-visible">
+                <span className="inline-block group-hover:animate-marquee">
+                {card.name 
+                ? card.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                : 'Organization Name is not available'}
+                </span>
+              </h4> */}
+
+              <div className="max-h-24 min-h-24 overflow-y-auto pr-5">
+              <p className="text-sm font-medium text-left pl-4">
               <a href={card.website || '#'} className="text-blue-600 hover:text-blue-800 break-words line-clamp-1" target="_blank" rel="noopener noreferrer">
                 {card.website || 'No website available'}
               </a>
@@ -164,6 +203,7 @@ return (
                   ? card.contactPerson.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                   : 'No contact person available'}                  
               </p>
+              </div>
             </div>
           </div>
         ))}
