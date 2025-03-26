@@ -1,7 +1,9 @@
+// Buy_SellTab.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+
 import {
   placeOrder,
   selectLoadingState,
@@ -32,6 +34,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
   const [price, setPrice] = useState(currentMarketPrice);
   const [stopPrice, setStopPrice] = useState(currentMarketPrice);
 
+
   const userId = useSelector((state) => state.user.auth?.user?._id);
   const userSubscriptions = useSelector((state) => state.user.subscriptionPlan?.userSubscriptions || []);
   const transactions = useSelector(selectTransactions);
@@ -39,6 +42,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
   const currentHolding = useSelector((state) => selectHoldingBySymbol(state, symbol));
   const statistics = useSelector(selectStatistics);
   const { loading: tradingLoading, orderStatus } = useSelector(selectLoadingState);
+
 
   const activeSubscription = useMemo(
     () => userSubscriptions.find((sub) => sub.status === 'Active' && !sub.isDeleted),
@@ -48,6 +52,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
   const calculateRemainingBalance = () => {
     if (!activeSubscription) return 0;
     const totalHoldings = holdings.reduce(
+
       (total, holding) => total + holding.quantity * holding.averageBuyPrice,
       0
     );
@@ -55,6 +60,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
   };
 
   const marketOpen = isMarketOpen();
+
 
   console.log('User ID:', userId);
 
@@ -70,21 +76,45 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
     setStopPrice(currentMarketPrice);
   }, [activeTab, currentMarketPrice]);
 
+
+  // roshni code
+  // useEffect(() => {
+  //   if (userId) {
+  //     dispatch(getUserSubscriptions(userId));
+  //     dispatch(fetchHoldings(userId));
+  //     if (activeSubscription?._id) {
+
+  //       dispatch(
+  //         fetchTransactionHistory({
+  //           userId,
+  //           subscriptionPlanId: activeSubscription._id,
+  //         })
+  //       );
+  //     }
+  //   }
+  // }, [dispatch, userId, activeSubscription?._id]);
+
+
+  // my code
+
   useEffect(() => {
     if (userId) {
       dispatch(getUserSubscriptions(userId));
       dispatch(fetchHoldings(userId));
-      if (activeSubscription?._id) {
-        dispatch(
-          fetchTransactionHistory({
-            userId,
-            subscriptionPlanId: activeSubscription._id,
-          })
-        );
-      }
+    }
+  }, [dispatch, userId]);
+  
+  useEffect(() => {
+    if (userId && activeSubscription?._id) { // Ensure activeSubscription._id is defined
+      dispatch(
+        fetchTransactionHistory({
+          userId,
+          subscriptionPlanId: activeSubscription._id,
+        })
+      );
     }
   }, [dispatch, userId, activeSubscription?._id]);
-
+  
   const handleQuantityChange = (value) => {
     let newValue = Math.max(0, parseInt(value) || 0);
 
@@ -101,6 +131,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
 
   const handlePlaceOrder = async (orderDetails) => {
     try {
+
       const result = await dispatch(
         placeOrder({
           ...orderDetails,
@@ -149,6 +180,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
     return (
       <div className="w-full h-96 flex items-center justify-center flex-col gap-4">
         <div className="text-xl text-gray-600">
+
           {!activeSubscription
             ? 'Please subscribe to start trading'
             : 'Your subscription has expired or has insufficient balance'}
@@ -165,6 +197,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
 
   return (
     <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6 relative">
+
       {!marketOpen && <MarketStatusOverlay tradingPreference={activeSubscription?.tradingPreference} />}
 
       <div className="flex gap-6">
@@ -199,6 +232,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
 
           {/* Buy/Sell Tabs */}
           <div className="bg-gray-100 p-0.5 rounded-lg inline-flex gap-1 shadow-md mb-2">
+
             <button
               onClick={() => setActiveTab('buy')}
               className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
@@ -209,6 +243,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
             >
               Buy
             </button>
+
             <button
               onClick={() => setActiveTab('sell')}
               className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
@@ -220,6 +255,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
               Sell
             </button>
           </div>
+
 
           {/* Trading Controls */}
           <TradingControls
@@ -267,6 +303,7 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
         <ConfirmationModal
           isOpen={showConfirmation}
           onClose={() => setShowConfirmation(false)}
+
           onConfirm={() =>
             handlePlaceOrder({
               userId,

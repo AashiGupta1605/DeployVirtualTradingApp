@@ -17,6 +17,7 @@ import CompanyDetailsPage from "./views/admin/CompanyDetail";
 // import StartScreenPopupModal from './components/GuestUser/Home/StartScreenPopupModal';
 
 
+
 import SessionExpiredModal from './components/Organization/Session/SessionExpiredModal';
 import { logoutOrganization } from './redux/Organization/auth/organizationAuthSlice';
 import { logout } from './redux/User/authSlice';
@@ -189,4 +190,4 @@ export default App;
 //   );
 // };
 
-
+// export default App;
