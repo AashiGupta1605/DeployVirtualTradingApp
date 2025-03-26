@@ -76,22 +76,45 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
     setStopPrice(currentMarketPrice);
   }, [activeTab, currentMarketPrice]);
 
+
+  // roshni code
+  // useEffect(() => {
+  //   if (userId) {
+  //     dispatch(getUserSubscriptions(userId));
+  //     dispatch(fetchHoldings(userId));
+  //     if (activeSubscription?._id) {
+
+  //       dispatch(
+  //         fetchTransactionHistory({
+  //           userId,
+  //           subscriptionPlanId: activeSubscription._id,
+  //         })
+  //       );
+  //     }
+  //   }
+  // }, [dispatch, userId, activeSubscription?._id]);
+
+
+  // my code
+
   useEffect(() => {
     if (userId) {
       dispatch(getUserSubscriptions(userId));
       dispatch(fetchHoldings(userId));
-      if (activeSubscription?._id) {
-
-        dispatch(
-          fetchTransactionHistory({
-            userId,
-            subscriptionPlanId: activeSubscription._id,
-          })
-        );
-      }
+    }
+  }, [dispatch, userId]);
+  
+  useEffect(() => {
+    if (userId && activeSubscription?._id) { // Ensure activeSubscription._id is defined
+      dispatch(
+        fetchTransactionHistory({
+          userId,
+          subscriptionPlanId: activeSubscription._id,
+        })
+      );
     }
   }, [dispatch, userId, activeSubscription?._id]);
-
+  
   const handleQuantityChange = (value) => {
     let newValue = Math.max(0, parseInt(value) || 0);
 
