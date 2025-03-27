@@ -240,7 +240,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     toast.success("Logout Successfully");
-    navigate("/login");
+    navigate("/");
   };
 
   const toggleSidebar = () => {
