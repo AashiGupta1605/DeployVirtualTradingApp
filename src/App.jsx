@@ -12,7 +12,8 @@ import GuestUser from './layouts/GuestUser';
 // Views without layouts
 import Profile from './views/user/Profile';
 import CompanyDetailsPage from "./views/admin/CompanyDetail";
-
+import ForgotPasswordModal from "./views/auth/ForgetPasswordModal";
+import ResetPasswordModal from "./views/auth/ResetPasswordModal"; // New Component
 // import BackToTop from './components/GuestUser/BackToTop';
 // import StartScreenPopupModal from './components/GuestUser/Home/StartScreenPopupModal';
 
@@ -96,12 +97,16 @@ const App = () => {
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/organization/*" element={<Org />} />
       <Route path="/user/*" element={<User/>}/>
+     
+
       <Route path="/*" element={<GuestUser/>}/>
+
+      <Route path="/reset-password/:token" element={<ResetPasswordModal />} />
 
       {/* Routes without layouts */}
       <Route path="/company/:symbol" element={<CompanyDetailsPage />} />
       <Route path="/profile" element={<Profile />} />
-
+      
       {/* Redirect for unknown routes */}
       <Route path="*" element={<Navigate to="/" />} />
 

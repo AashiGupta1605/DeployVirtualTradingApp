@@ -77,7 +77,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
 if (response.ok) {
   toast.success(`${initialValues ? "User updated" : "Registration"} successful! Redirecting to login...`);
   setTimeout(() => {
-    navigate("/login");
+    navigate("/");
     onClose();
   }, 2000);
 } else {
