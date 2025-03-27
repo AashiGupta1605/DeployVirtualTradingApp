@@ -41,6 +41,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
+
 // components
 import Navbar from "../components/User/Navbars/AuthNavbar";
 import FooterSmall from "../components/User/Footers/FooterSmall";
@@ -48,6 +49,7 @@ import FooterSmall from "../components/User/Footers/FooterSmall";
 // views
 import Login from "../views/auth/Login";
 import Register from "../views/auth/Register";
+import ResetPasswordModal from "../views/auth/ResetPasswordModal"; 
 
 export default function Auth() {
   return (
@@ -65,6 +67,7 @@ export default function Auth() {
           <Routes>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="reset-password/:token" element={<ResetPasswordModal />} />
             <Route path="*" element={<Navigate to="login" replace />} />
           </Routes>
           <FooterSmall absolute />
