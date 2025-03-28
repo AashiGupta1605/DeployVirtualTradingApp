@@ -18,6 +18,7 @@ import NiftyTable from "../views/user/niftyTable";
 import Nifty500Table from "../views/user/nifty500table";
 import FeedbackTable from "../views/user/feedbacktable";
 import TradingNifty from "../views/user/tradingnifty";
+import EventsPage from "../views/user/eventsPage";
 
 // Redux Actions
 import { logout } from "../redux/User/authSlice";
@@ -73,6 +74,7 @@ export default function User() {
                 <Route path="profile" element={<Profile />} />
                 <Route path="feedback" element={<FeedbackTable />} />
                 <Route path="tradingnifty" element={<TradingNifty />} />
+                <Route path="eventspage" element={<EventsPage />} />
                 <Route path="*" element={<Navigate to="dashboard" replace />} />
               </Routes>
             </main>
