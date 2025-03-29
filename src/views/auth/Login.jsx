@@ -120,6 +120,8 @@ const LoginForm = ({ onClose }) => {
   });
 
   return (
+    <>
+      {!isForgotPasswordOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
       <div
@@ -234,12 +236,14 @@ const LoginForm = ({ onClose }) => {
           </form>
         </div>
       </div>
-       {/* Forgot Password Modal */}
-       {isForgotPasswordOpen && (
+      </div>
+       ) : (
+       
+       
         <ForgotPasswordModal onClose={() => setForgotPasswordOpen(false)} />
       )}
+    </>
     
-    </div>
   );
 };
 

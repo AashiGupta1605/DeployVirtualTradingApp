@@ -24,6 +24,9 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
+      confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match") // ✅ Match password
+    .required("Confirm Password is required"), // ✅ Required field
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Invalid mobile number")
       .required("Mobile number is required"),

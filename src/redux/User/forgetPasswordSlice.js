@@ -11,7 +11,7 @@ export const forgotPassword = createAsyncThunk(
       return response.data.message;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to send reset link"
+        error.response?.data?.message || "Failed to send reset link. Please try again."
       );
     }
   }
@@ -28,9 +28,17 @@ export const resetPassword = createAsyncThunk(
       });
       return response.data.message;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to reset password"
-      );
+      let errorMessage = "Failed to reset password. Please try again.";
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.status === 400) {
+        errorMessage = "Invalid or expired reset link.";
+      } else if (error.response?.status === 404) {
+        errorMessage = "User not found.";
+      }
+
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -52,6 +60,9 @@ const forgetPasswordSlice = createSlice({
       state.isAuthenticated = false;
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+    },
+    clearError: (state) => {
+      state.error = null; // Clear error when needed
     },
   },
   extraReducers: (builder) => {
@@ -84,5 +95,5 @@ const forgetPasswordSlice = createSlice({
   },
 });
 
-export const { logout } = forgetPasswordSlice.actions;
+export const { logout, clearError } = forgetPasswordSlice.actions;
 export default forgetPasswordSlice.reducer;
