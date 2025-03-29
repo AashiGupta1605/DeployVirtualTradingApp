@@ -6,21 +6,22 @@ import { toast } from "react-hot-toast";
 
 const ForgotPasswordModal = ({ onClose }) => {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.user.forgetpassword);
 
   useEffect(() => {
     if (status === "succeeded") {
-      toast.success("Reset password link sent successfully!");
-      onClose(); // Close modal after success
+      setMessage("✅ Reset password link sent successfully! Check your email.");
     }
     if (error) {
-      toast.error(error);
+      setMessage(`❌ ${error}`);
     }
-  }, [status, error, onClose]);
+  }, [status, error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage(""); 
     dispatch(forgotPassword(email));
   };
 
@@ -75,6 +76,12 @@ const ForgotPasswordModal = ({ onClose }) => {
               {status === "loading" ? "Sending..." : "Send Reset Link"}
             </button>
           </form>
+          {/* Message Display (Success/Error) */}
+          {message && (
+            <p className={`mt-2 text-sm ${status === "succeeded" ? "text-green-600" : "text-red-600"}`}>
+              {message}
+            </p>
+          )}
 
           {/* Close Button */}
           <div className="text-right mt-4">

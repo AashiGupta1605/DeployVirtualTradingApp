@@ -5,14 +5,11 @@ import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsDa
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
-import { useLocation } from "react-router-dom";
-import ResetPasswordModal from "../../views/auth/ResetPasswordModal";
 import { Link } from "react-router-dom";
 import Stock from "../../assets/stock.jpg";
 
 const MainHomePage = () => {
-  const location = useLocation();
-  const showResetModal = location.pathname.startsWith("/reset-password");
+  
   return (
     <>
       <HomeCarousel />
@@ -53,8 +50,7 @@ const MainHomePage = () => {
       <OrganizationsSlider />
       <UserFeedbackCards />
       <OrganizationFeedbackCards />
-       {/* Show ResetPasswordModal only when the URL matches /reset-password/:token */}
-       {showResetModal && <ResetPasswordModal />}
+      
     </>
   );
 };
