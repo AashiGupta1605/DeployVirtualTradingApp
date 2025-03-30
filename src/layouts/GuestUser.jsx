@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, useLocation} from "react-router-dom";
+import { Routes, Route} from "react-router-dom";
 
 import MainHomeNavbar from "../components/GuestUser/Navbars/MainHomeNavbar";
 import NiftyNavbarCarousel from "../components/GuestUser/Navbars/NiftyNavbarCarousel";
@@ -16,11 +16,10 @@ import EventsPage from '../views/GuestUser/GuestEventPage';
 
 import Footer from "../components/GuestUser/Footers/Footer";
 import StartScreenPopupModal from '../components/GuestUser/Home/StartScreenPopupModal';
-import ResetPasswordModal from '../views/auth/ResetPasswordModal'; 
+
 
 const GuestUser = () => {
-  const location = useLocation();
-  const showResetModal = location.pathname.startsWith("/reset-password");
+  
   return (
     <>
     <MainHomeNavbar fixed />
@@ -37,8 +36,7 @@ const GuestUser = () => {
       <Route path="pricing" element={<PricingPage/>} />
       <Route path="event" element={<EventsPage/>} />
     </Routes>
-      {/* Show Reset Password Modal Over the Home Page */}
-      {showResetModal && <ResetPasswordModal />}
+      
 
     <div className="mb-20"></div>
     <Footer/>

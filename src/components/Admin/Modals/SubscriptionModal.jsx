@@ -2567,6 +2567,14 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
         description: `${formik.values.plan} Subscription Plan`,
         image: '/logo.png', // Your logo
         order_id: orderData.order.id,
+        method: {
+          netbanking: false,
+          wallet: true,
+          card: true,
+          upi: true,
+          emi: false,    // Disable EMI
+          paylater: false,
+        },
         handler: async function (response) {
           console.log("Payment completed, verifying...", response);
           try {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPassword } from "../../redux/User/forgetPasswordSlice";
 import { useParams, useNavigate } from "react-router-dom";
+
 import { toast } from "react-hot-toast";
 
 const ResetPasswordModal = () => {
@@ -9,16 +10,18 @@ const ResetPasswordModal = () => {
   console.log("Reset Token from URL:", token);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.user.forgetpassword);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage("");
     dispatch(resetPassword({ token, newPassword, confirmPassword })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
-        toast.success("Password reset successfully! Please log in.");
-        navigate("/");
+        setMessage("Password reset successfully! Please log in.");
+        //setTimeout(() => navigate("/"), 2000);
       }
     });
   };
@@ -27,7 +30,7 @@ const ResetPasswordModal = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       {/* Background Overlay (Removed onClose) */}
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-
+       
       {/* Modal Content */}
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 z-50 p-6">
         {/* Modal Header */}
@@ -81,7 +84,9 @@ const ResetPasswordModal = () => {
           >
             {status === "loading" ? "Resetting..." : "Reset Password"}
           </button>
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {/* Display error or success message below the button */}
+          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+          {message && <p className="text-sm text-green-500 mt-2">{message}</p>}
         </form>
 
         {/* Close Button (Redirect to login instead of closing modal) */}
@@ -90,7 +95,7 @@ const ResetPasswordModal = () => {
             onClick={() => navigate("/")}
             className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
           >
-            Close
+            Go To Home
           </button>
         </div>
       </div>
