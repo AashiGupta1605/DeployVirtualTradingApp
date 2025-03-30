@@ -214,6 +214,7 @@ const getSectionIcon = (section) => {
     queries: "envelope",
     feedback: "comments",
     events: "calendar-alt",
+    gallery: "fas fa-images",
   };
   return icons[section] || "circle";
 };
