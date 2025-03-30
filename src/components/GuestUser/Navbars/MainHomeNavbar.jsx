@@ -419,13 +419,22 @@ console.log( currentOrg?.name);
                       <ul className="absolute left-[-20px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
                         <li
                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => setUserLoginModalOpen(true)}
+                          // onClick={() => setUserLoginModalOpen(true)}
+
+                          onClick={() => {
+                            setLoginDropdownOpen(false);
+                            setUserLoginModalOpen(true);
+                          }}
                         >
                           User
                         </li>
                         <li
                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => setIsModalLoginOpen(true)}
+                          // onClick={() => setIsModalLoginOpen(true)}
+                          onClick={() => {
+                            setLoginDropdownOpen(false);
+                            setIsModalLoginOpen(true);
+                          }}
                         >
                           Organization
                         </li>
@@ -445,13 +454,21 @@ console.log( currentOrg?.name);
                       <ul className="absolute left-[-30px] top-[110%] w-48 bg-white border rounded shadow-lg z-50">
                         <li
                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => setUserRegisterModalOpen(true)}
+                          // onClick={() => setUserRegisterModalOpen(true)}
+                          onClick={() => {
+                            setRegisterDropdownOpen(false);
+                            setUserRegisterModalOpen(true);
+                          }}
                         >
                           User
                         </li>
                         <li
                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => setModalOpen(true)}
+                          // onClick={() => setModalOpen(true)}
+                          onClick={() => {
+                            setRegisterDropdownOpen(false);
+                            setModalOpen(true);
+                          }}
                         >
                           Organization
                         </li>
