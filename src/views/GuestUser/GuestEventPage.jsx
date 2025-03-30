@@ -12,11 +12,8 @@ import {
   Medal,
   Zap,
   Award,
-  ChevronDown,
-  ChevronUp,
   BarChart2,
   DollarSign,
-  Bitcoin,
   TrendingUp,
   Shield,
   BadgeCheck,
@@ -24,6 +21,9 @@ import {
   X
 } from 'lucide-react';
 import { fetchEvents, selectEvents, selectEventsStatus } from '../../redux/Admin/EventManage/eventSlice';
+import { useNavigate } from 'react-router-dom';
+import LoginModal from '../../views/auth/Login';
+import RegisterModal from '../../views/auth/Register';
 
 const EventDetailsModal = ({ event, onClose, onJoin }) => {
   if (!event) return null;
@@ -232,27 +232,94 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
 
 const EventsPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const events = useSelector(selectEvents);
   const status = useSelector(selectEventsStatus);
   const [activeTab, setActiveTab] = useState('ongoing');
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  
+  // Updated authentication state access
+  const authState = useSelector((state) => state.auth);
+  const isAuthenticated = authState?.isAuthenticated || false;
 
   useEffect(() => {
     dispatch(fetchEvents());
   }, [dispatch]);
 
-  const handleJoinEvent = () => {
-    console.log('Joining event:', selectedEvent?.title);
-    setSelectedEvent(null);
+  // Calculate stats from existing events data
+  const calculateStats = () => {
+    const now = new Date();
+    let activeTraders = 0;
+    let activeEvents = 0;
+    let upcomingEvents = 0;
+    let totalPrizePool = 0;
+
+    events.forEach(event => {
+      const startDate = new Date(event.startDate);
+      const endDate = new Date(event.endDate);
+      
+      // Sum participants for active traders count
+      activeTraders += event.participants || 0;
+      
+      // Calculate prize pool (remove non-numeric characters and sum)
+      const prizeValue = parseFloat(event.prize?.replace(/[^0-9.]/g, '')) || 0;
+      totalPrizePool += prizeValue;
+
+      // Count active and upcoming events
+      if (startDate <= now && endDate >= now) {
+        activeEvents++;
+      } else if (startDate > now) {
+        upcomingEvents++;
+      }
+    });
+
+    return {
+      activeTraders,
+      activeEvents,
+      upcomingEvents,
+      totalPrizePool: `$${totalPrizePool.toLocaleString()}`,
+    };
   };
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const stats = calculateStats();
+
+  const handleJoinEvent = () => {
+    if (isAuthenticated) {
+      console.log('Joining event:', selectedEvent?.title);
+      setSelectedEvent(null);
+    } else {
+      setShowLoginModal(true);
+      setSelectedEvent(null);
+    }
+  };
+
+  const handleQuickJoin = (event) => {
+    if (isAuthenticated) {
+      console.log('Quick joining event:', event.title);
+    } else {
+      setShowLoginModal(true);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+    if (selectedEvent) {
+      console.log('Joining event after login:', selectedEvent?.title);
+      setSelectedEvent(null);
+    }
+  };
+
+  const handleRegisterClick = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
+
+  const handleLoginClick = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
 
   const getIconComponent = (iconName) => {
     const icons = {
@@ -284,6 +351,14 @@ const EventsPage = () => {
     return true;
   });
 
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Main Content */}
@@ -294,7 +369,7 @@ const EventsPage = () => {
           <div className="absolute -bottom-12 -right-8 w-32 h-32 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
           <div className="absolute top-0 right-20 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
 
-          <div className="relative z-10">
+          <div className="relative mt-16">
             <h1 className="text-4xl font-extrabold text-gray-900">
               DreamNifty Trading Events
             </h1>
@@ -307,45 +382,45 @@ const EventsPage = () => {
 
         {/* Stats Bar */}
         <div className="bg-white rounded-lg shadow-xs p-4 mb-6 grid grid-cols-3 gap-4 border border-gray-100">
-  {/* Active Traders Stat */}
-  <div className="flex items-center space-x-3">
-    <div className="p-2 bg-green-50 rounded-lg">
-      <Users className="text-green-600" size={18} />
-    </div>
-    <div>
-      <p className="text-xs text-gray-500">Active Traders</p>
-      <p className="text-base font-semibold">
-        {events.reduce((sum, event) => sum + (event.participants || 0), 0)}+
-      </p>
-    </div>
-  </div>
+          {/* Active Traders Stat */}
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-green-50 rounded-lg">
+              <Users className="text-green-600" size={18} />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Active Traders</p>
+              <p className="text-base font-semibold">
+                {stats.activeTraders.toLocaleString()}+
+              </p>
+            </div>
+          </div>
 
-  {/* Active Events Stat */}
-  <div className="flex items-center space-x-3">
-    <div className="p-2 bg-yellow-50 rounded-lg">
-      <TrendingUp className="text-yellow-600" size={18} />
-    </div>
-    <div>
-      <p className="text-xs text-gray-500">Active Events</p>
-      <p className="text-base font-semibold">
-        {events.filter(e => e.type === 'ongoing').length}
-      </p>
-    </div>
-  </div>
+          {/* Active Events Stat */}
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-yellow-50 rounded-lg">
+              <TrendingUp className="text-yellow-600" size={18} />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Active Events</p>
+              <p className="text-base font-semibold">
+                {stats.activeEvents}
+              </p>
+            </div>
+          </div>
 
-  {/* Upcoming Events Stat */}
-  <div className="flex items-center space-x-3">
-    <div className="p-2 bg-blue-50 rounded-lg">
-      <Award className="text-blue-600" size={18} />
-    </div>
-    <div>
-      <p className="text-xs text-gray-500">Upcoming Events</p>
-      <p className="text-base font-semibold">
-        {events.filter(e => e.type === 'upcoming').length}
-      </p>
-    </div>
-  </div>
-</div>
+          {/* Upcoming Events Stat */}
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <Award className="text-blue-600" size={18} />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Upcoming Events</p>
+              <p className="text-base font-semibold">
+                {stats.upcomingEvents}
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Event Tabs */}
         <div className="flex justify-center mb-10">
@@ -432,7 +507,10 @@ const EventsPage = () => {
                     <Info className="mr-1" size={16} />
                     View Details
                   </button>
-                  <button className="px-4 py-2 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm">
+                  <button 
+                    onClick={() => handleQuickJoin(event)}
+                    className="px-4 py-2 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+                  >
                     Quick Join
                   </button>
                 </div>
@@ -466,63 +544,6 @@ const EventsPage = () => {
             onClose={() => setSelectedEvent(null)}
             onJoin={handleJoinEvent}
           />
-        )}
-
-        {/* Testimonials Section */}
-        {filteredEvents.length > 0 && (
-          <div className="mt-16 bg-white rounded-xl shadow-sm p-8 border border-gray-200">
-            <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">What Our Traders Say</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-purple-600 font-bold">JD</span>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">John D.</h4>
-                    <div className="flex">
-                      {[1,2,3,4,5].map((star) => (
-                        <Star key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600">"Won $8,500 in the Options Challenge! The competition pushed me to refine my strategies and the rewards were incredible."</p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-blue-600 font-bold">SM</span>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Sarah M.</h4>
-                    <div className="flex">
-                      {[1,2,3,4,5].map((star) => (
-                        <Star key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600">"As a beginner, the Bootcamp was perfect. I learned so much and still won $1,200! The community support was amazing."</p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-green-600 font-bold">RK</span>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Raj K.</h4>
-                    <div className="flex">
-                      {[1,2,3,4,5].map((star) => (
-                        <Star key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600">"The cashback alone makes these events worth it. I've earned over $2,300 in cashback rewards this year!"</p>
-              </div>
-            </div>
-          </div>
         )}
 
         {/* FAQ Section */}
@@ -559,6 +580,21 @@ const EventsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLoginSuccess={handleLoginSuccess}
+        onRegisterClick={handleRegisterClick}
+      />
+
+      {/* Register Modal */}
+      <RegisterModal
+        isOpen={showRegisterModal}
+        onClose={() => setShowRegisterModal(false)}
+        onLoginClick={handleLoginClick}
+      />
 
       {/* Animated Background Elements */}
       <style jsx>{`

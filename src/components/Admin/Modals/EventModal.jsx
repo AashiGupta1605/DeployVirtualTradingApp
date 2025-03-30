@@ -1,148 +1,22 @@
-// src/pages/Admin/Events/EventModal.js
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
 import {
   Trophy, Medal, Gift, Award, Star, Zap,
-  Users, BarChart2, Coins, Plus, Trash2
+  Users, BarChart2, Coins, Plus, Trash2, X
 } from 'lucide-react';
 
 const EventModal = ({ event, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState(event ? { 
-    ...event,
-    startDate: event.startDate ? new Date(event.startDate).toISOString().split('T')[0] : '',
-    endDate: event.endDate ? new Date(event.endDate).toISOString().split('T')[0] : '',
-    prizeBreakdown: event.prizeBreakdown || [{ position: '', reward: '' }],
-    rewards: event.rewards || [''],
-    participants: event.participants || 0,
-    cashbackPercentage: event.cashbackPercentage || 0,
-    entryFee: event.entryFee || 0,
-    backgroundColor: event.backgroundColor || 'bg-gradient-to-br from-blue-50 to-blue-100',
-    highlight: event.highlight || '',
-    requirements: event.requirements || '',
-    progress: event.progress || 0,
-    progressText: event.progressText || '',
-    icon: event.icon || 'Trophy',
-  } : {
-    title: '',
-    type: 'ongoing',
-    description: '',
-    startDate: '',
-    endDate: '',
-    participants: 0,
-    prize: '',
-    prizeBreakdown: [{ position: '', reward: '' }],
-    cashbackPercentage: 0,
-    difficulty: 'Beginner',
-    entryFee: 0,
-    rewards: [''],
-    backgroundColor: 'bg-gradient-to-br from-blue-50 to-blue-100',
-    highlight: '',
-    requirements: '',
-    progress: 0,
-    progressText: '',
-    icon: 'Trophy',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handlePrizeBreakdownChange = (index, field, value) => {
-    const newPrizeBreakdown = [...formData.prizeBreakdown];
-    newPrizeBreakdown[index][field] = value;
-    setFormData(prev => ({
-      ...prev,
-      prizeBreakdown: newPrizeBreakdown
-    }));
-  };
-
-  const addPrizeBreakdownRow = () => {
-    setFormData(prev => ({
-      ...prev,
-      prizeBreakdown: [...prev.prizeBreakdown, { position: '', reward: '' }]
-    }));
-  };
-
-  const removePrizeBreakdownRow = (index) => {
-    if (formData.prizeBreakdown.length > 1) {
-      const newPrizeBreakdown = formData.prizeBreakdown.filter((_, i) => i !== index);
-      setFormData(prev => ({
-        ...prev,
-        prizeBreakdown: newPrizeBreakdown
-      }));
-    }
-  };
-
-  const handleRewardsChange = (index, value) => {
-    const newRewards = [...formData.rewards];
-    newRewards[index] = value;
-    setFormData(prev => ({
-      ...prev,
-      rewards: newRewards
-    }));
-  };
-
-  const addReward = () => {
-    setFormData(prev => ({
-      ...prev,
-      rewards: [...prev.rewards, '']
-    }));
-  };
-
-  const removeReward = (index) => {
-    if (formData.rewards.length > 1) {
-      const newRewards = formData.rewards.filter((_, i) => i !== index);
-      setFormData(prev => ({
-        ...prev,
-        rewards: newRewards
-      }));
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    // Validation
-    const errors = [];
-  
-    if (!formData.title.trim()) errors.push('Event title is required');
-    if (!formData.description.trim()) errors.push('Event description is required');
-    if (!formData.startDate) errors.push('Start date is required');
-    if (!formData.endDate) errors.push('End date is required');
-  
-    const start = new Date(formData.startDate);
-    const end = new Date(formData.endDate);
-  
-    if (end < start) errors.push('End date must be after start date');
-  
-    if (errors.length > 0) {
-      errors.forEach(error => toast.error(error));
-      return;
-    }
-  
-    // Clean up empty reward entries before submitting
-    const cleanedFormData = {
-      ...formData,
-      rewards: formData.rewards.filter(reward => reward.trim() !== '')
-    };
-  
-    onSubmit(cleanedFormData);
-  };
-
   const iconOptions = [
-    { value: 'Trophy', label: 'Trophy', icon: <Trophy className="inline mr-2" size={16} /> },
-    { value: 'Medal', label: 'Medal', icon: <Medal className="inline mr-2" size={16} /> },
-    { value: 'Gift', label: 'Gift', icon: <Gift className="inline mr-2" size={16} /> },
-    { value: 'Award', label: 'Award', icon: <Award className="inline mr-2" size={16} /> },
-    { value: 'Star', label: 'Star', icon: <Star className="inline mr-2" size={16} /> },
-    { value: 'Zap', label: 'Zap', icon: <Zap className="inline mr-2" size={16} /> },
-    { value: 'Users', label: 'Users', icon: <Users className="inline mr-2" size={16} /> },
-    { value: 'BarChart2', label: 'Chart', icon: <BarChart2 className="inline mr-2" size={16} /> },
-    { value: 'Coins', label: 'Coins', icon: <Coins className="inline mr-2" size={16} /> },
+    { value: 'Trophy', label: 'Trophy', icon: <Trophy className="text-lightBlue-600" size={16} /> },
+    { value: 'Medal', label: 'Medal', icon: <Medal className="text-yellow-500" size={16} /> },
+    { value: 'Gift', label: 'Gift', icon: <Gift className="text-purple-500" size={16} /> },
+    { value: 'Award', label: 'Award', icon: <Award className="text-green-500" size={16} /> },
+    { value: 'Star', label: 'Star', icon: <Star className="text-orange-500" size={16} /> },
+    { value: 'Zap', label: 'Zap', icon: <Zap className="text-red-500" size={16} /> },
+    { value: 'Users', label: 'Users', icon: <Users className="text-green-500" size={16} /> },
+    { value: 'BarChart2', label: 'Chart', icon: <BarChart2 className="text-red-500" size={16} /> },
+    { value: 'Coins', label: 'Coins', icon: <Coins className="text-amber-500" size={16} /> },
   ];
 
   const backgroundOptions = [
@@ -155,340 +29,517 @@ const EventModal = ({ event, onClose, onSubmit }) => {
     { value: 'bg-gradient-to-br from-amber-50 to-amber-100', label: 'Amber Gradient' },
   ];
 
+  // Business-focused prize distribution calculation
+  const calculatePrizeBreakdown = (values) => {
+    const totalPrize = parseFloat(values.prize.replace(/[^0-9.]/g, '')) || 0;
+    const participants = parseInt(values.participants) || 0;
+
+    if (totalPrize <= 0 || participants <= 0) {
+      return [{ position: 'Enter prize and participants', reward: 'to see breakdown' }];
+    }
+
+    const breakdown = [];
+    const numberOfWinners = Math.max(1, Math.floor(participants * 0.2)); // Top 20%
+
+    // 1. Organizer Fee (20%)
+    // const organizerFee = totalPrize * 0.20;
+    // breakdown.push({
+    //   position: 'Organizer Fee',
+    //   reward: `$${organizerFee.toFixed(2)} (20%)`
+    // });
+
+    // 2. Cashback Pool (15%)
+    // const cashbackPool = totalPrize * 0.15;
+    // breakdown.push({
+    //   position: 'Cashback Pool',
+    //   reward: `$${cashbackPool.toFixed(2)} (15%)`
+    // });
+
+    // 3. Winner Prizes (65%)
+    const winnerPool = totalPrize * 0.65;
+    
+    // Calculate prize distribution for top 20%
+    if (numberOfWinners >= 1) {
+      breakdown.push({
+        position: '1st Place',
+        reward: `$${(winnerPool * 0.35).toFixed(2)} (35% of winner pool)`
+      });
+    }
+    
+    if (numberOfWinners >= 2) {
+      breakdown.push({
+        position: '2nd Place',
+        reward: `$${(winnerPool * 0.25).toFixed(2)} (25% of winner pool)`
+      });
+    }
+    
+    if (numberOfWinners >= 3) {
+      breakdown.push({
+        position: '3rd Place',
+        reward: `$${(winnerPool * 0.15).toFixed(2)} (15% of winner pool)`
+      });
+    }
+
+    // Remaining 25% distributed among other winners (4th to 20%)
+    if (numberOfWinners > 3) {
+      const remainingWinners = numberOfWinners - 3;
+      const remainingPrize = winnerPool * 0.25;
+      breakdown.push({
+        position: `4th-${numberOfWinners}th Places`,
+        reward: `$${(remainingPrize / remainingWinners).toFixed(2)} each (Total $${remainingPrize.toFixed(2)})`
+      });
+    }
+
+    return breakdown;
+  };
+
+  const formik = useFormik({
+    initialValues: event ? { 
+      ...event,
+      startDate: event.startDate ? new Date(event.startDate).toISOString().split('T')[0] : '',
+      endDate: event.endDate ? new Date(event.endDate).toISOString().split('T')[0] : '',
+      prizeBreakdown: event.prizeBreakdown || calculatePrizeBreakdown(event),
+      rewards: event.rewards || [''],
+      participants: event.participants || 0,
+      cashbackPercentage: event.cashbackPercentage || 0,
+      entryFee: event.entryFee || 0,
+      backgroundColor: event.backgroundColor || 'bg-gradient-to-br from-blue-50 to-blue-100',
+      highlight: event.highlight || '',
+      requirements: event.requirements || '',
+      progress: event.progress || 0,
+      progressText: event.progressText || '',
+      icon: event.icon || 'Trophy',
+    } : {
+      title: '',
+      type: 'ongoing',
+      description: '',
+      startDate: '',
+      endDate: '',
+      participants: 0,
+      prize: '',
+      prizeBreakdown: [{ position: 'Enter prize and participants', reward: 'to see breakdown' }],
+      cashbackPercentage: 0,
+      difficulty: 'Beginner',
+      entryFee: 0,
+      rewards: [''],
+      backgroundColor: 'bg-gradient-to-br from-blue-50 to-blue-100',
+      highlight: '',
+      requirements: '',
+      progress: 0,
+      progressText: '',
+      icon: 'Trophy',
+    },
+    validate: (values) => {
+      const errors = {};
+      
+      if (!values.title) errors.title = 'Required';
+      if (!values.type) errors.type = 'Required';
+      if (!values.prize) errors.prize = 'Required';
+      if (!values.startDate) errors.startDate = 'Required';
+      if (!values.endDate) errors.endDate = 'Required';
+      if (!values.entryFee && values.entryFee !== 0) errors.entryFee = 'Required';
+      if (!values.participants && values.participants !== 0) errors.participants = 'Required';
+      
+      if (values.startDate && values.endDate) {
+        const start = new Date(values.startDate);
+        const end = new Date(values.endDate);
+        if (end < start) errors.endDate = 'End date must be after start date';
+      }
+      
+      if (values.entryFee && isNaN(values.entryFee)) errors.entryFee = 'Must be a number';
+      if (values.participants && isNaN(values.participants)) errors.participants = 'Must be a number';
+      if (values.cashbackPercentage && (isNaN(values.cashbackPercentage) || values.cashbackPercentage < 0 || values.cashbackPercentage > 100)) {
+        errors.cashbackPercentage = 'Must be between 0 and 100';
+      }
+      
+      return errors;
+    },
+    onSubmit: (values) => {
+      const finalValues = {
+        ...values,
+        prizeBreakdown: calculatePrizeBreakdown(values),
+        rewards: values.rewards.filter(reward => reward.trim() !== '')
+      };
+      onSubmit(finalValues);
+    },
+  });
+
+  // Update prize breakdown when relevant fields change
+  useEffect(() => {
+    if (formik.values.prize && formik.values.participants !== undefined) {
+      const calculatedBreakdown = calculatePrizeBreakdown(formik.values);
+      formik.setFieldValue('prizeBreakdown', calculatedBreakdown);
+    }
+  }, [formik.values.prize, formik.values.participants]);
+
+  const handleRewardsChange = (index, value) => {
+    const newRewards = [...formik.values.rewards];
+    newRewards[index] = value;
+    formik.setFieldValue('rewards', newRewards);
+  };
+
+  const addReward = () => {
+    formik.setFieldValue('rewards', [...formik.values.rewards, '']);
+  };
+
+  const removeReward = (index) => {
+    if (formik.values.rewards.length > 1) {
+      const newRewards = formik.values.rewards.filter((_, i) => i !== index);
+      formik.setFieldValue('rewards', newRewards);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">
-            {event ? 'Edit Event' : 'Create New Event'}
-          </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+      <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
+      <div className="relative w-full max-w-[60%] max-h-[80%] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
+        {/* Modal Header */}
+        <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-white">
+          <div className="flex items-center space-x-4">
+            <div className="p-2 bg-lightBlue-100 rounded-xl">
+              <Trophy className="text-lightBlue-600" size={24} />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">
+              {event ? 'Edit Event' : 'Create New Event'}
+            </h2>
+          </div>
           <button 
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-            aria-label="Close modal"
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
           >
-            ✕
+            <X className="text-gray-500" size={24} />
           </button>
         </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Basic Event Details */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Title *</label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="Event Title"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Type *</label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              >
-                <option value="ongoing">Ongoing</option>
-                <option value="upcoming">Upcoming</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto flex-1 p-6">
+          <form onSubmit={formik.handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Basic Event Details */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formik.values.title}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="Event Title"
+                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                  />
+                  {formik.errors.title && formik.touched.title && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.title}</p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Start Date *</label>
-              <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Type *</label>
+                  <select
+                    name="type"
+                    value={formik.values.type}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.type && formik.touched.type ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                  >
+                    <option value="ongoing">Ongoing</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                  {formik.errors.type && formik.touched.type && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.type}</p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">End Date *</label>
-              <input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
-                onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Start Date *</label>
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={formik.values.startDate}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.startDate && formik.touched.startDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                  />
+                  {formik.errors.startDate && formik.touched.startDate && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.startDate}</p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Difficulty *</label>
-              <select
-                name="difficulty"
-                value={formData.difficulty}
-                onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              >
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Expert">Expert</option>
-              </select>
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">End Date *</label>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={formik.values.endDate}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.endDate && formik.touched.endDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                  />
+                  {formik.errors.endDate && formik.touched.endDate && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.endDate}</p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Total Prize *</label>
-              <input
-                type="text"
-                name="prize"
-                value={formData.prize}
-                onChange={handleChange}
-                placeholder="Total Prize Pool"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Entry Fee</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
-                <input
-                  type="number"
-                  name="entryFee"
-                  value={formData.entryFee}
-                  onChange={handleChange}
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                  className="w-full pl-8 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty *</label>
+                  <select
+                    name="difficulty"
+                    value={formik.values.difficulty}
+                    onChange={formik.handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  >
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Expert">Expert</option>
+                  </select>
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Cashback Percentage</label>
-              <div className="relative">
-                <input
-                  type="number"
-                  name="cashbackPercentage"
-                  value={formData.cashbackPercentage}
-                  onChange={handleChange}
-                  placeholder="0"
-                  min="0"
-                  max="100"
-                  className="w-full p-2 pr-8 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">%</span>
-              </div>
-            </div>
+              {/* Financial Details */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Total Prize *</label>
+                  <input
+                    type="text"
+                    name="prize"
+                    value={formik.values.prize}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="Total Prize Pool (e.g., $10,000)"
+                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.prize && formik.touched.prize ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                  />
+                  {formik.errors.prize && formik.touched.prize && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.prize}</p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Participants</label>
-              <input
-                type="number"
-                name="participants"
-                value={formData.participants}
-                onChange={handleChange}
-                min="0"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Icon</label>
-              <select
-                name="icon"
-                value={formData.icon}
-                onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {iconOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.icon} {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Background</label>
-              <select
-                name="backgroundColor"
-                value={formData.backgroundColor}
-                onChange={handleChange}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {backgroundOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Description *</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Event description"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                rows="3"
-                required
-              />
-            </div>
-
-            {/* Prize Breakdown */}
-            <div className="space-y-2 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Prize Breakdown</label>
-              <div className="space-y-2">
-                {formData.prizeBreakdown.map((breakdown, index) => (
-                  <div key={index} className="flex gap-2 items-center">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Entry Fee *</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">$</span>
                     <input
-                      type="text"
-                      placeholder="Position (e.g., 1st)"
-                      value={breakdown.position}
-                      onChange={(e) => handlePrizeBreakdownChange(index, 'position', e.target.value)}
-                      className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      type="number"
+                      name="entryFee"
+                      value={formik.values.entryFee}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className={`w-full px-4 py-3 pl-10 rounded-xl border ${formik.errors.entryFee && formik.touched.entryFee ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                     />
-                    <input
-                      type="text"
-                      placeholder="Reward"
-                      value={breakdown.reward}
-                      onChange={(e) => handlePrizeBreakdownChange(index, 'reward', e.target.value)}
-                      className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removePrizeBreakdownRow(index)}
-                      className="p-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={formData.prizeBreakdown.length <= 1}
-                    >
-                      <Trash2 size={18} />
-                    </button>
                   </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addPrizeBreakdownRow}
-                  className="mt-2 flex items-center text-blue-500 hover:text-blue-700 text-sm"
-                >
-                  <Plus size={16} className="mr-1" /> Add Prize Position
-                </button>
-              </div>
-            </div>
+                  {formik.errors.entryFee && formik.touched.entryFee && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.entryFee}</p>
+                  )}
+                </div>
 
-            {/* Rewards */}
-            <div className="space-y-2 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Rewards</label>
-              <div className="space-y-2">
-                {formData.rewards.map((reward, index) => (
-                  <div key={index} className="flex gap-2 items-center">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Cashback Percentage</label>
+                  <div className="relative">
                     <input
-                      type="text"
-                      placeholder="Reward description"
-                      value={reward}
-                      onChange={(e) => handleRewardsChange(index, e.target.value)}
-                      className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      type="number"
+                      name="cashbackPercentage"
+                      value={formik.values.cashbackPercentage}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      placeholder="0"
+                      min="0"
+                      max="100"
+                      className={`w-full px-4 py-3 pr-10 rounded-xl border ${formik.errors.cashbackPercentage && formik.touched.cashbackPercentage ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                     />
-                    <button
-                      type="button"
-                      onClick={() => removeReward(index)}
-                      className="p-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={formData.rewards.length <= 1}
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
                   </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addReward}
-                  className="mt-2 flex items-center text-blue-500 hover:text-blue-700 text-sm"
-                >
-                  <Plus size={16} className="mr-1" /> Add Reward
-                </button>
+                  {formik.errors.cashbackPercentage && formik.touched.cashbackPercentage && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.cashbackPercentage}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Participants *</label>
+                  <input
+                    type="number"
+                    name="participants"
+                    value={formik.values.participants}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    min="0"
+                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.participants && formik.touched.participants ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                  />
+                  {formik.errors.participants && formik.touched.participants && (
+                    <p className="mt-1 text-sm text-red-600">{formik.errors.participants}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Icon</label>
+                  <select
+                    name="icon"
+                    value={formik.values.icon}
+                    onChange={formik.handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  >
+                    {iconOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
 
-            {/* Additional Fields */}
-            <div className="space-y-2 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Highlight</label>
-              <input
-                type="text"
-                name="highlight"
-                value={formData.highlight}
-                onChange={handleChange}
-                placeholder="Event highlight"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+              {/* Full Width Fields */}
+              <div className="md:col-span-2 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                  <textarea
+                    name="description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    placeholder="Event description"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    rows="3"
+                  />
+                </div>
 
-            <div className="space-y-2 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Requirements</label>
-              <input
-                type="text"
-                name="requirements"
-                value={formData.requirements}
-                onChange={handleChange}
-                placeholder="Event requirements"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Background</label>
+                  <select
+                    name="backgroundColor"
+                    value={formik.values.backgroundColor}
+                    onChange={formik.handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  >
+                    {backgroundOptions.map(option => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Progress</label>
-              <div className="relative">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Requirements</label>
+                  <input
+                    type="text"
+                    name="requirements"
+                    value={formik.values.requirements}
+                    onChange={formik.handleChange}
+                    placeholder="Event requirements"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Highlight</label>
+                  <input
+                    type="text"
+                    name="highlight"
+                    value={formik.values.highlight}
+                    onChange={formik.handleChange}
+                    placeholder="Event highlight"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  />
+                </div>
+              </div>
+
+              {/* Prize Breakdown (Auto-calculated) */}
+              <div className="md:col-span-2 space-y-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Prize Breakdown (Auto-calculated)
+                </label>
+                <div className="space-y-3">
+                  {formik.values.prizeBreakdown.map((breakdown, index) => (
+                    <div key={index} className="flex gap-3 items-center bg-gray-50 p-3 rounded-lg">
+                      <div className="font-medium w-1/3">{breakdown.position}</div>
+                      <div className="text-gray-700">{breakdown.reward}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rewards */}
+              <div className="md:col-span-2 space-y-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Rewards</label>
+                <div className="space-y-3">
+                  {formik.values.rewards.map((reward, index) => (
+                    <div key={index} className="flex gap-3 items-center">
+                      <input
+                        type="text"
+                        placeholder="Reward description"
+                        value={reward}
+                        onChange={(e) => handleRewardsChange(index, e.target.value)}
+                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeReward(index)}
+                        className="p-3 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl hover:bg-red-50 transition-colors"
+                        disabled={formik.values.rewards.length <= 1}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addReward}
+                    className="mt-2 flex items-center text-lightBlue-600 hover:text-lightBlue-800 text-sm font-medium"
+                  >
+                    <Plus size={16} className="mr-2" /> Add Reward
+                  </button>
+                </div>
+              </div>
+
+              {/* Progress */}
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Progress</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    name="progress"
+                    value={formik.values.progress}
+                    onChange={formik.handleChange}
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                    className="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  />
+                  <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Progress Text</label>
                 <input
-                  type="number"
-                  name="progress"
-                  value={formData.progress}
-                  onChange={handleChange}
-                  placeholder="0"
-                  min="0"
-                  max="100"
-                  className="w-full p-2 pr-8 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  type="text"
+                  name="progressText"
+                  value={formik.values.progressText}
+                  onChange={formik.handleChange}
+                  placeholder="Progress description"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                 />
-                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">%</span>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Progress Text</label>
-              <input
-                type="text"
-                name="progressText"
-                value={formData.progressText}
-                onChange={handleChange}
-                placeholder="Progress description"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+            {/* Footer Buttons */}
+            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+              <button 
+                type="button"
+                onClick={onClose}
+                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 transition-colors duration-200"
+              >
+                {event ? 'Update Event' : 'Create Event'}
+              </button>
             </div>
-          </div>
-
-          <div className="flex justify-end space-x-4 pt-4 border-t">
-            <button 
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              {event ? 'Update Event' : 'Create Event'}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

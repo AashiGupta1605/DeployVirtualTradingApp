@@ -378,6 +378,12 @@ console.log( currentOrg?.name);
               >
                 Pricing
               </li>
+              <li
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
+                onClick={() => handleNavigation("/event")}
+              >
+                Events
+              </li>
 
               {/* Conditional Rendering Based on Authentication */}
               {isAuthenticated ? (
