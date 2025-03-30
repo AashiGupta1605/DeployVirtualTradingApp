@@ -8,6 +8,7 @@ import organizationListReducer from './OrganizationListPage/OrganizationListSlic
 import organizationRegistrationReducer from './OrganizationListPage/OrganizationRegisterSlice';
 import userRegistrationReducer from './RegisteredUsersPage/UserRegisterSlice';
 import feedbackTableReducer from '../Admin/FeedbackListPage/FeedbackTableSlice';
+import eventTableReducer from '../Admin/EventManage/eventSlice';
 
 // Create a custom reducer to handle logout across admin slices
 const createLogoutReducer = (reducer) => {
@@ -33,6 +34,7 @@ const adminReducer = combineReducers({
   organizationRegistration: createLogoutReducer(organizationRegistrationReducer),
   userRegistration: createLogoutReducer(userRegistrationReducer),
   feedbackTable: feedbackTableReducer,
+  eventTable: eventTableReducer,
 });
 
 const rootAdminReducer = (state, action) => {

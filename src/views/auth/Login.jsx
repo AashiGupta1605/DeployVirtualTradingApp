@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
@@ -9,6 +9,7 @@ import {
   selectAuthStatus,
   selectAuthError,
 } from "../../redux/User/authSlice";
+import ForgotPasswordModal from "./ForgetPasswordModal"; 
 
 const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -21,6 +22,9 @@ const LoginForm = ({ onClose }) => {
   const authStatus = useSelector(selectAuthStatus);
   const authError = useSelector(selectAuthError);
   const loading = authStatus === "loading";
+
+    // State for forgot password modal
+    const [isForgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -116,6 +120,8 @@ const LoginForm = ({ onClose }) => {
   });
 
   return (
+    <>
+      {!isForgotPasswordOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
       <div
@@ -200,6 +206,17 @@ const LoginForm = ({ onClose }) => {
               </div>
             </div>
 
+              {/* Forgot Password Link */}
+              <div className="text-left">
+              <button
+                type="button"
+                className="text-blue-600 hover:underline focus:outline-none"
+                onClick={() => setForgotPasswordOpen(true)}
+              >
+                Forgot Password?
+              </button>
+            </div>
+
             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
@@ -219,7 +236,14 @@ const LoginForm = ({ onClose }) => {
           </form>
         </div>
       </div>
-    </div>
+      </div>
+       ) : (
+       
+       
+        <ForgotPasswordModal onClose={() => setForgotPasswordOpen(false)} />
+      )}
+    </>
+    
   );
 };
 

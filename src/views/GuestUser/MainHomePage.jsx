@@ -5,11 +5,11 @@ import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsDa
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
-
 import { Link } from "react-router-dom";
 import Stock from "../../assets/stock.jpg";
 
 const MainHomePage = () => {
+  
   return (
     <>
       <HomeCarousel />
@@ -50,6 +50,7 @@ const MainHomePage = () => {
       <OrganizationsSlider />
       <UserFeedbackCards />
       <OrganizationFeedbackCards />
+      
     </>
   );
 };

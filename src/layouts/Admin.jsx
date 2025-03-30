@@ -16,8 +16,12 @@ import Nifty500Table from "../views/admin/nifty500table";
 import RegisteredUsers from "../views/Admin/UserList";
 import Queries from "../views/Admin/QueryList";
 import FeedbackList from "../views/Admin/FeedbackList";
+<<<<<<< HEAD
 import GalleryImages from "../views/admin/gallery/GalleryImages";
 import GalleryCategories from "../views/admin/gallery/GalleryCategories";
+=======
+import AdminEventsPage from "../views/admin/AdminEventsPage";
+>>>>>>> b898d86b4bba0d1a37cf76e72978989dd79863d1
 
 export default function Admin() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
@@ -46,8 +50,12 @@ export default function Admin() {
               <Route path="feedback" element={<FeedbackList />} />
               <Route path="RegisteredUsers" element={<RegisteredUsers />} />
               <Route path="OrgRegister" element={<OrgRegister />} />
+<<<<<<< HEAD
               <Route path="gallery/images" element={<GalleryImages sidebarExpanded={sidebarExpanded}/>}/>
               <Route path="gallery/categories" element={<GalleryCategories sidebarExpanded={sidebarExpanded}/>}/>
+=======
+              <Route path="events" element={<AdminEventsPage />} />
+>>>>>>> b898d86b4bba0d1a37cf76e72978989dd79863d1
               <Route path="*" element={<Navigate to="dashboard" replace />} />
             </Routes>
           </div>

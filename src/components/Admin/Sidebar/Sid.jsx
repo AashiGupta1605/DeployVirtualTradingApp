@@ -53,6 +53,9 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
 
   // my code udapted for sidebar
   const menuItems = {
+    admin: {
+      icon: "fas fa-user-shield",
+      items: [
     dashboard: [
       { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
     ],
@@ -60,6 +63,35 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
       { to: "/admin/niftytable", icon: "fas fa-table", label: "Nifty 50" },
       { to: "/admin/nifty500table", icon: "fas fa-chart-line", label: "Nifty 500" },
       { to: "/admin/etftable", icon: "fas fa-list", label: "ETF" },
+      { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
+      { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },
+      { to: "/admin/queries", icon: "fas fa-envelope", label: "Queries" },
+      { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
+      { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
+      // { to: "/admin/gallery", icon: "fas fa-images", label:"Gallery"},
+      ]
+    },
+    gallery: {
+      icon: "fas fa-images",
+      items: [
+        { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
+        { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
+      ]
+    },
+    // user: {
+    // items: [
+    //   { to: "/profile", icon: "fas fa-user-circle", label: "Profile" },
+    //   { to: "/auth/register", icon: "fas fa-user-plus", label: "Register" },
+    //   { to: "/auth/login", icon: "fas fa-sign-in-alt", label: "Login" },
+    //  ]
+    // },
+    // organization: {
+    // items: [
+    //   { to: "/admin/organization/register", icon: "fas fa-users", label: "Student Register" },
+    //   { to: "/admin/organization/login", icon: "fas fa-sign-in-alt", label: "Student Login" },
+    //  ]
+    // },
+  };
     ],
     users: [
       { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
@@ -76,13 +108,6 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     events: [
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
     ],
-    gallery: {
-      icon: "fas fa-images",
-      items: [
-        { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
-        { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
-      ]
-    },
 };
 
   return (
@@ -102,10 +127,19 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
         </div>
 
         {/* Navigation */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+          {Object.entries(menuItems).map(([section, sectionData]) => (
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
           {Object.entries(menuItems).map(([section, items]) => (
             <div key={section} className="space-y-4">
+              {/* Section Button */}
               <button
+              onClick={() => handleMenuToggle(section)}
+              className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+              activeMenu === section
+              ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
+              : "text-gray-600"
+              }`}
                 onClick={() => handleMenuToggle(section)}
                 className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 ${ //here i do p-2 instead of p-3
                   activeMenu === section
@@ -113,18 +147,37 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
                     : "text-gray-600"
                 }`}
               >
+                {/* Section Icon + Title */}
                 <div className="flex items-center space-x-2">
-                  <div className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${activeMenu === section ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
-                    <i className={`fas fa-${getSectionIcon(section)} ${activeMenu === section ? "text-gray-500" : "text-gray-500"}`}></i>
+                  <div
+                  className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${
+                  activeMenu === section ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"
+                  }`}
+                  >
+                    {/* Section Logo */}
+                    <i className={`${sectionData.icon} ${activeMenu === section ? "text-gray-500" : "text-gray-500"}`}></i>
                   </div>
                   {sidebarExpanded && <span className="font-medium capitalize">{section}</span>}
                 </div>
+
+                {/* Expand/Collapse Arrow */}
                 {sidebarExpanded && (
-                  <i className={`fas fa-chevron-${activeMenu === section ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
+                <i className={`fas fa-chevron-${activeMenu === section ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
                 )}
               </button>
 
+              {/* Sub-menu Items (only visible if expanded & active) */}
               {sidebarExpanded && activeMenu === section && (
+                <div className="pl-4 space-y-2">
+                {sectionData.items.map((item) => (
+                <MenuLink
+                  key={item.to}
+                  to={item.to}
+                  icon={item.icon}
+                  label={item.label}
+                  isActive={location.pathname === item.to}
+                />
+                ))}
                 <div className="pl-4">
                   {items.map((item) => (
                     <MenuLink

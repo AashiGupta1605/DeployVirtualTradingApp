@@ -12,9 +12,11 @@ import GuestUser from './layouts/GuestUser';
 // Views without layouts
 import Profile from './views/user/Profile';
 import CompanyDetailsPage from "./views/admin/CompanyDetail";
-
+import ForgotPasswordModal from "./views/auth/ForgetPasswordModal";
+import ResetPasswordModal from "./views/auth/ResetPasswordModal"; // New Component
 // import BackToTop from './components/GuestUser/BackToTop';
 // import StartScreenPopupModal from './components/GuestUser/Home/StartScreenPopupModal';
+
 
 
 import SessionExpiredModal from './components/Organization/Session/SessionExpiredModal';
@@ -35,17 +37,66 @@ const App = () => {
       navigate("/"); // Redirect to home page
     };
 
+    // useEffect(() => {
+    //   const checkSession = () => {
+    //     const orgToken = localStorage.getItem("token");
+    //     const userToken = localStorage.getItem("userToken");
+        
+    //     if (!orgToken && !userToken) return; // Don't show modal if tokens are not found
+        
+    //     try {
+    //       const decodeToken = (token) => JSON.parse(atob(token.split(".")[1]));
+    //       const currentTime = Math.floor(Date.now() / 1000);
+          
+    //       if (orgToken) {
+    //         const decodedOrgToken = decodeToken(orgToken);
+    //         if (decodedOrgToken.exp < currentTime) {
+    //           setShowSessionExpiredModal(true);
+    //           return;
+    //         }
+    //       }
+          
+    //       if (userToken) {
+    //         const decodedUserToken = decodeToken(userToken);
+    //         if (decodedUserToken.exp < currentTime) {
+    //           setShowSessionExpiredModal(true);
+    //           return;
+    //         }
+    //       }
+    //     } catch (error) {
+    //       console.error("Error decoding token:", error);
+    //       return; // Prevent showing modal due to decoding errors
+    //     }
+    //   };
+      
+    //   const sessionCheckTimeout = setTimeout(checkSession, 2000); // Delay initial check to allow token storage
+    //   const interval = setInterval(checkSession, 60000);
+      
+    //   return () => {
+    //     clearTimeout(sessionCheckTimeout);
+    //     clearInterval(interval);
+    //   };
+    // }, []);
+  
     useEffect(() => {
       const checkSession = () => {
+        // Get the current path
+        const currentPath = window.location.pathname;
+    
+        // Skip session check for reset password page
+        if (currentPath.startsWith("/reset-password")) {
+          return;
+        }
+    
         const orgToken = localStorage.getItem("token");
         const userToken = localStorage.getItem("userToken");
-        
+    
         if (!orgToken && !userToken) return; // Don't show modal if tokens are not found
-        
+    
         try {
           const decodeToken = (token) => JSON.parse(atob(token.split(".")[1]));
           const currentTime = Math.floor(Date.now() / 1000);
-          
+    
           if (orgToken) {
             const decodedOrgToken = decodeToken(orgToken);
             if (decodedOrgToken.exp < currentTime) {
@@ -53,7 +104,7 @@ const App = () => {
               return;
             }
           }
-          
+    
           if (userToken) {
             const decodedUserToken = decodeToken(userToken);
             if (decodedUserToken.exp < currentTime) {
@@ -66,17 +117,16 @@ const App = () => {
           return; // Prevent showing modal due to decoding errors
         }
       };
-      
-      const sessionCheckTimeout = setTimeout(checkSession, 2000); // Delay initial check to allow token storage
+    
+      const sessionCheckTimeout = setTimeout(checkSession, 2000);
       const interval = setInterval(checkSession, 60000);
-      
+    
       return () => {
         clearTimeout(sessionCheckTimeout);
         clearInterval(interval);
       };
     }, []);
-  
-  
+    
 
   return (
     <div>
@@ -95,12 +145,18 @@ const App = () => {
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/organization/*" element={<Org />} />
       <Route path="/user/*" element={<User/>}/>
+     
       <Route path="/*" element={<GuestUser/>}/>
+
+      <Route path="/reset-password/:token" element={<ResetPasswordModal />} />
+      
+
+      
 
       {/* Routes without layouts */}
       <Route path="/company/:symbol" element={<CompanyDetailsPage />} />
       <Route path="/profile" element={<Profile />} />
-
+      
       {/* Redirect for unknown routes */}
       <Route path="*" element={<Navigate to="/" />} />
 
@@ -189,4 +245,4 @@ export default App;
 //   );
 // };
 
-
+// export default App;

@@ -240,7 +240,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     toast.success("Logout Successfully");
-    navigate("/login");
+    navigate("/");
   };
 
   const toggleSidebar = () => {
@@ -377,6 +377,26 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               {sidebarExpanded && <span className="font-medium">Feedback</span>}
             </Link>
           </div>
+
+          {/* Events Dropdown */}
+<div className="space-y-4">
+  <Link
+    to="/user/eventspage"
+    onClick={() => toggleMenu("events")}
+    className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
+      activeMenu === "events" ? "bg-lightBlue-600 text-white" : "text-gray-600"
+    }`}
+  >
+    <div
+      className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+        activeMenu === "events" ? "bg-lightBlue-500 text-white" : "hover:bg-gray-200"
+      }`}
+    >
+      <i className={`fas fa-calendar-alt ${activeMenu === "events" ? "text-white" : "text-gray-500"}`}></i>
+    </div>
+    {sidebarExpanded && <span className="font-medium">Events</span>}
+  </Link>
+</div>
         </div>
 
 
