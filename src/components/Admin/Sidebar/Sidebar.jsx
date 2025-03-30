@@ -76,13 +76,17 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     events: [
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
     ],
-    gallery: {
-      icon: "fas fa-images",
-      items: [
+    // gallery: {
+    //   icon: "fas fa-images",
+    //   items: [
+    //     { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
+    //     { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
+    //   ]
+    // },
+    gallery: [
         { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
         { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
-      ]
-    },
+    ],
 };
 
   return (
