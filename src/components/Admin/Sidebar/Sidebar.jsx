@@ -33,29 +33,50 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
+  // roshni code
+  // const menuItems = {
+  //   admin: [
+  //     { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
+  //     { to: "/admin/niftytable", icon: "fas fa-table", label: "Nifty 50" },
+  //     { to: "/admin/nifty500table", icon: "fas fa-chart-line", label: "Nifty 500" },
+  //     { to: "/admin/etftable", icon: "fas fa-list", label: "ETF" },
+  //     { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
+  //     { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },
+  //     { to: "/admin/queries", icon: "fas fa-envelope", label: "Queries" },
+  //     { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
+  //     { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
+  //   ],
+  //   events: [
+  //     { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
+  //    ],
+  // };
+
+  // my code udapted for sidebar
   const menuItems = {
-    admin: [
+    dashboard: [
       { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
+    ],
+    stocks: [
       { to: "/admin/niftytable", icon: "fas fa-table", label: "Nifty 50" },
       { to: "/admin/nifty500table", icon: "fas fa-chart-line", label: "Nifty 500" },
       { to: "/admin/etftable", icon: "fas fa-list", label: "ETF" },
+    ],
+    users: [
       { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
+    ],
+    organizations: [
       { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },
+    ],
+    queries: [
       { to: "/admin/queries", icon: "fas fa-envelope", label: "Queries" },
+    ],
+    feedback: [
       { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
-      { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
-
     ],
     events: [
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
-    //   { to: "/auth/register", icon: "fas fa-user-plus", label: "Register" },
-    //   { to: "/auth/login", icon: "fas fa-sign-in-alt", label: "Login" },
     ],
-    // organization: [
-    //   { to: "/admin/organization/register", icon: "fas fa-users", label: "Student Register" },
-    //   { to: "/admin/organization/login", icon: "fas fa-sign-in-alt", label: "Student Login" },
-    // ],
-  };
+};
 
   return (
     <nav className={`${sidebarExpanded ? "md:w-64" : "md:w-20"} fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}>
@@ -74,12 +95,12 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
           {Object.entries(menuItems).map(([section, items]) => (
             <div key={section} className="space-y-4">
               <button
                 onClick={() => handleMenuToggle(section)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 ${ //here i do p-2 instead of p-3
                   activeMenu === section
                     ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
                     : "text-gray-600"
@@ -97,7 +118,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
               </button>
 
               {sidebarExpanded && activeMenu === section && (
-                <div className="pl-4 space-y-2">
+                <div className="pl-4">
                   {items.map((item) => (
                     <MenuLink
                       key={item.to}
@@ -151,22 +172,37 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
 const MenuLink = ({ to, icon, label, isActive }) => (
   <Link
     to={to}
-    className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-      isActive ? "bg-lightBlue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"
+    className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 border-none outline-none ${
+      isActive ? "bg-lightBlue-50 text-lightBlue-600 border-none outline-none" : "text-gray-600 hover:bg-gray-100"
     }`}
   >
     <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isActive ? "bg-lightBlue-100" : "bg-gray-100"}`}>
-      <i className={`${icon} ${isActive ? "text-lightBlue-600" : "text-gray-500"}`}></i>
+      <i className={`${icon} ${isActive ? "text-lightBlue-600 border-none outline-none" : "text-gray-500"}`}></i>
     </div>
     <span className="text-sm font-medium">{label}</span>
   </Link>
 );
 
+// roshni code ---
+// const getSectionIcon = (section) => {
+//   const icons = {
+//     admin: "shield-alt",
+//     user: "user",
+//     organization: "building",
+//   };
+//   return icons[section] || "circle";
+// };
+
+// my code--
 const getSectionIcon = (section) => {
   const icons = {
-    admin: "shield-alt",
-    user: "user",
-    organization: "building",
+    dashboard: "chart-line",
+    stocks: "chart-bar",
+    users: "users",
+    organizations: "building",
+    queries: "envelope",
+    feedback: "comments",
+    events: "calendar-alt",
   };
   return icons[section] || "circle";
 };

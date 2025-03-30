@@ -3045,6 +3045,7 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     type="date"
                     name="startDate"
                     {...formik.getFieldProps('startDate')}
+                    min={new Date().toISOString().split('T')[0]} // added so that plan start date cannot be in past
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 transition-all duration-200"
                   />
                   {formik.touched.startDate && formik.errors.startDate && (

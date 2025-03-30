@@ -158,7 +158,13 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
   };
 
   const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance() > 0;
-  const isDisabled = loading || tradingLoading || !marketOpen;
+  // rohni code --
+  // const isDisabled = loading || tradingLoading || !marketOpen;
+
+  // my code --
+  const isDisabled = loading || tradingLoading;
+
+
 
   if (loading || tradingLoading) {
     return (
