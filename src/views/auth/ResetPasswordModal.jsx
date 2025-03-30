@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPassword } from "../../redux/User/forgetPasswordSlice";
+import logoImage from "../../assets/img/PGR_logo.jpeg";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { toast } from "react-hot-toast";
@@ -33,8 +34,17 @@ const ResetPasswordModal = () => {
        
       {/* Modal Content */}
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 z-50 p-6">
+        {/* 🔹 Header: Company Logo + Name */}
+        <div className="flex flex-col items-center justify-center pb-4 border-b border-gray-100">
+          <img
+            src={logoImage}  // Ensure this path is correct
+            alt="PGR Logo"
+            className="w-16 h-16 object-contain rounded-full mb-2"
+          />
+          <h1 className="text-2xl font-semibold text-gray-800">PGR - Virtual Trading App</h1>
+        </div>
         {/* Modal Header */}
-        <div className="flex justify-between items-center pb-4 border-b border-gray-200">
+        <div className="flex justify-between items-center pb-4 border-b border-gray-100 mt-4">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
               <i className="fas fa-lock text-white"></i>
