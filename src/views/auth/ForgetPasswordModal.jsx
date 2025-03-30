@@ -15,7 +15,7 @@ const ForgotPasswordModal = ({ onClose }) => {
       setMessage("✅ Reset password link sent successfully! Check your email.");
     }
     if (error) {
-      setMessage(`❌ ${error}`);
+      setMessage(` ${error}`);
     }
   }, [status, error]);
 
@@ -35,7 +35,7 @@ const ForgotPasswordModal = ({ onClose }) => {
         {/* Modal Content */}
         <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 z-50 p-6">
           {/* Modal Header */}
-          <div className="flex justify-between items-center pb-4 border-b border-gray-200">
+          <div className="flex justify-between items-center pb-4 border-b border-gray-100">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
                 <i className="fas fa-lock text-white"></i>
