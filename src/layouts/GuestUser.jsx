@@ -12,6 +12,7 @@ import ServicePage from '../views/GuestUser/ServicePage';
 import Show_Nifty50Data_Page from '../views/GuestUser/Show_Nifty50Data_Page';
 import Show_ETFData_Page from '../views/GuestUser/Show_ETFData_Page';
 import PricingPage from '../views/GuestUser/PricingPage';
+import EventsPage from '../views/GuestUser/GuestEventPage';
 
 import Footer from "../components/GuestUser/Footers/Footer";
 import StartScreenPopupModal from '../components/GuestUser/Home/StartScreenPopupModal';
@@ -34,6 +35,7 @@ const GuestUser = () => {
       <Route path="nifty50" element={<Show_Nifty50Data_Page/>} />
       <Route path="etf" element={<Show_ETFData_Page/>} />
       <Route path="pricing" element={<PricingPage/>} />
+      <Route path="event" element={<EventsPage/>} />
     </Routes>
       {/* Show Reset Password Modal Over the Home Page */}
       {showResetModal && <ResetPasswordModal />}

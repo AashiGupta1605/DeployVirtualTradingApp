@@ -12,12 +12,13 @@ import {
 } from '../../redux/Admin/EventManage/eventSlice';
 import {
   Calendar, Clock, Trophy, Gift, Users, Star, 
-  ArrowRight, Info, Medal, Zap, Award, ChevronDown, 
-  ChevronUp, BarChart2, DollarSign, Plus, Edit, 
-  Trash2, Shield, BadgeCheck, Coins
+  ArrowRight, Medal, Zap, Award, ChevronDown, 
+  BarChart2, DollarSign, Plus, Edit, 
+  Trash2, Shield, BadgeCheck, Coins, Info
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import EventModal from '../../components/Admin/Modals/EventModal';
+import EventDetailsModal from '../../components/Admin/Modals/EventDetailsModal';
 
 const AdminEventsPage = () => {
   const dispatch = useDispatch();
@@ -25,9 +26,10 @@ const AdminEventsPage = () => {
   const status = useSelector(selectEventsStatus);
   const error = useSelector(selectEventsError);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(null);
-  const [expandedEvent, setExpandedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     dispatch(fetchEvents());
@@ -41,7 +43,7 @@ const AdminEventsPage = () => {
 
   const handleCreateEvent = (eventData) => {
     dispatch(createEvent(eventData));
-    setIsModalOpen(false);
+    setIsCreateModalOpen(false);
   };
 
   const handleUpdateEvent = (eventData) => {
@@ -50,7 +52,7 @@ const AdminEventsPage = () => {
         eventId: currentEvent._id, 
         eventData 
       }));
-      setIsModalOpen(false);
+      setIsCreateModalOpen(false);
       setCurrentEvent(null);
     }
   };
@@ -63,16 +65,17 @@ const AdminEventsPage = () => {
 
   const openCreateModal = () => {
     setCurrentEvent(null);
-    setIsModalOpen(true);
+    setIsCreateModalOpen(true);
   };
 
   const openEditModal = (event) => {
     setCurrentEvent(event);
-    setIsModalOpen(true);
+    setIsCreateModalOpen(true);
   };
 
-  const toggleEventExpand = (id) => {
-    setExpandedEvent(expandedEvent === id ? null : id);
+  const openDetailsModal = (event) => {
+    setSelectedEvent(event);
+    setIsDetailsModalOpen(true);
   };
 
   if (status === 'loading') {
@@ -114,14 +117,6 @@ const AdminEventsPage = () => {
                 key={event._id} 
                 className={`rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md ${event.backgroundColor} border border-gray-200`}
               >
-                {/* Highlight Badge */}
-                {event.highlight && (
-                  <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-medium shadow-xs flex items-center">
-                    <Zap className="mr-1 text-yellow-500" size={14} />
-                    {event.highlight}
-                  </div>
-                )}
-                
                 <div className="p-5">
                   {/* Event Header */}
                   <div className="flex items-center mb-4">
@@ -147,147 +142,53 @@ const AdminEventsPage = () => {
                     </div>
                   </div>
                   
-                  <p className="text-gray-700 mb-5">{event.description}</p>
+                  <p className="text-gray-700 mb-4 line-clamp-2">{event.description}</p>
                   
-                  {/* Progress Bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
-                      <span>{event.progressText}</span>
-                      <span>{event.participants} participants</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-blue-600 h-2 rounded-full" 
-                        style={{ width: `${event.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  
-                  {/* Event Details */}
+                  {/* Basic Info */}
                   <div className="grid grid-cols-2 gap-4 mb-5">
                     <div className="flex items-center">
                       <Calendar className="mr-2 text-gray-500" size={18} />
                       <div>
-                        <p className="text-xs text-gray-500">Starts</p>
-                        <p className="text-sm font-medium">{new Date(event.startDate).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="mr-2 text-gray-500" size={18} />
-                      <div>
-                        <p className="text-xs text-gray-500">Ends</p>
-                        <p className="text-sm font-medium">{new Date(event.endDate).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Award className="mr-2 text-gray-500" size={18} />
-                      <div>
-                        <p className="text-xs text-gray-500">Level</p>
-                        <p className="text-sm font-medium">{event.difficulty}</p>
+                        <p className="text-xs text-gray-500">Date</p>
+                        <p className="text-sm font-medium">
+                          {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center">
                       <DollarSign className="mr-2 text-gray-500" size={18} />
                       <div>
-                        <p className="text-xs text-gray-500">Entry Fee</p>
-                        <p className="text-sm font-medium">${event.entryFee}</p>
+                        <p className="text-xs text-gray-500">Prize Pool</p>
+                        <p className="text-sm font-medium">{event.prize}</p>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Prize Pool Section */}
-                  <div className="bg-white/80 p-4 rounded-lg mb-5 border border-gray-200">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm text-gray-600 flex items-center">
-                        <Medal className="mr-2 text-yellow-500" size={18} />
-                        Total Prize Pool
-                      </span>
-                      <span className="font-bold text-blue-600">{event.prize}</span>
-                    </div>
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm text-gray-600 flex items-center">
-                        <BadgeCheck className="mr-2 text-green-500" size={18} />
-                        Cashback Offer
-                      </span>
-                      <span className="font-bold text-green-600">
-                        {event.cashbackPercentage}%
-                      </span>
-                    </div>
-                    <button 
-                      onClick={() => toggleEventExpand(event._id)}
-                      className="w-full text-sm text-blue-600 hover:text-blue-800 flex items-center justify-center"
-                    >
-                      {expandedEvent === event._id ? (
-                        <>
-                          <span>Hide prize breakdown</span>
-                          <ChevronUp className="ml-1" size={16} />
-                        </>
-                      ) : (
-                        <>
-                          <span>View prize breakdown</span>
-                          <ChevronDown className="ml-1" size={16} />
-                        </>
-                      )}
-                    </button>
-                    
-                    {/* Expanded Prize Breakdown */}
-                    {expandedEvent === event._id && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <h4 className="text-xs font-semibold text-gray-500 mb-2">PRIZE DISTRIBUTION</h4>
-                        <ul className="space-y-3">
-                          {event.prizeBreakdown.map((item, index) => (
-                            <li key={index} className="flex justify-between items-center">
-                              <span className="text-sm font-medium">{item.position}</span>
-                              <span className="text-sm text-gray-700">{item.reward}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Rewards List */}
-                  <div className="mb-5">
-                    <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                      <Zap className="mr-2 text-yellow-500" size={16} />
-                      EVENT REWARDS
-                    </h4>
-                    <ul className="space-y-3">
-                      {event.rewards.map((reward, index) => (
-                        <li 
-                          key={index} 
-                          className="flex items-start text-sm text-gray-600"
-                        >
-                          <div className="mt-0.5 mr-2">
-                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                          </div>
-                          {reward}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                   
                   {/* Action Buttons */}
                   <div className="flex justify-between items-center">
+                    <button 
+                      onClick={() => openDetailsModal(event)}
+                      className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      <Info className="mr-1" size={16} />
+                      View Details
+                    </button>
                     <div className="flex space-x-2">
                       <button 
                         onClick={() => openEditModal(event)}
-                        className="text-blue-500 hover:text-blue-700 transition-colors"
+                        className="text-gray-500 hover:text-blue-500 transition-colors"
                         aria-label="Edit event"
                       >
-                        <Edit size={20} />
+                        <Edit size={18} />
                       </button>
                       <button 
                         onClick={() => handleDeleteEvent(event._id)}
-                        className="text-red-500 hover:text-red-700 transition-colors"
+                        className="text-gray-500 hover:text-red-500 transition-colors"
                         aria-label="Delete event"
                       >
-                        <Trash2 size={20} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
-                    <span className="text-xs text-gray-500">
-                      Created: {new Date(event.createdAt).toLocaleDateString()}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -313,15 +214,32 @@ const AdminEventsPage = () => {
           )}
         </div>
 
-        {/* Event Modal */}
-        {isModalOpen && (
-  <EventModal 
-    isOpen={true}  // Explicitly set to true
-    onClose={() => setIsModalOpen(false)}
-    event={currentEvent}
-    onSubmit={currentEvent ? handleUpdateEvent : handleCreateEvent}
-  />
-)}
+        {/* Create/Edit Event Modal */}
+        {isCreateModalOpen && (
+          <EventModal 
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            event={currentEvent}
+            onSubmit={currentEvent ? handleUpdateEvent : handleCreateEvent}
+          />
+        )}
+
+        {/* Event Details Modal */}
+        {isDetailsModalOpen && selectedEvent && (
+          <EventDetailsModal 
+            isOpen={isDetailsModalOpen}
+            onClose={() => setIsDetailsModalOpen(false)}
+            event={selectedEvent}
+            onEdit={() => {
+              setIsDetailsModalOpen(false);
+              openEditModal(selectedEvent);
+            }}
+            onDelete={() => {
+              setIsDetailsModalOpen(false);
+              handleDeleteEvent(selectedEvent._id);
+            }}
+          />
+        )}
       </div>
     </div>
   );
