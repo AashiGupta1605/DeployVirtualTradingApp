@@ -33,7 +33,7 @@ export default function AdminNavbar({ sidebarExpanded }) {
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-xl">PGR VirtualTrading App</span>
+          <span className="text-xl">PGR - Virtual Trading App</span>
         </a>
 
         {/* Form */}
@@ -54,11 +54,25 @@ export default function AdminNavbar({ sidebarExpanded }) {
                 />
               </svg>
             </div>
-            <input
+            {/* <input
               type="text"
               placeholder="Search here..."
               className="border border-gray-200 px-3 py-2 placeholder-gray-400 text-gray-700 relative bg-white rounded-lg text-sm shadow-sm outline-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full pl-10 transition-all duration-200"
-            />
+            /> */}
+            <div className="relative w-[270px]">
+              {/* Search Icon */}
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+                alt="search"
+                className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
+              />
+              {/* Search Input */}
+              <input
+                type="text"
+                placeholder="Search..."
+                className="border border-gray-400 pl-10 pr-2 py-2 rounded-lg w-full h-[36px] focus:outline-none focus:shadow-md focus:border-black"
+              />
+            </div>
           </div>
         </form>
 

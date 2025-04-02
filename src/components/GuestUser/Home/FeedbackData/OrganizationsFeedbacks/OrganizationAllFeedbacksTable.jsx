@@ -115,6 +115,9 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
       case "Order":
         setOrder("decreasing");
         break;
+      case "Search":
+        setSearch("")
+        break;
       default:
         break;
     }
@@ -248,7 +251,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
               {/* Close Button */}
               <button
                 onClick={closeModal}
-                className="p-2 hover:bg-gray-100 rounded-md transition-colors duration-200 focus:outline-none"
+                className="p-2 hover:bg-gray-100 rounded-md transition-colors focus:outline-none"
               >
                 <FaTimes className="text-gray-400 hover:text-gray-600 text-lg" />
               </button>
@@ -496,7 +499,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             {`${feedbackData.feedbackMessage.substring(0, 50)}...`}
                             <button
                             onClick={() => togglePopover1(feedbackData._id)}
-                            className="ml-2 text-blue-500 hover:text-blue-700"
+                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
                             > Show more </button>
                             {popoverRow1 === feedbackData._id && (
                               <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef1}>
@@ -504,7 +507,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                               <div className="flex items-center text-gray-600"><h6>Feedbacks</h6></div>
                               <button
                               onClick={() => togglePopover1(null)}
-                              className="text-base"
+                              className="text-base focus:outline-none"
                               > <i className="fas fa-times rounded-sm w-6 flex items-center justify-center text-red-500 bg-red-100 hover:text-red-700 hover:bg-red-200"></i></button>
                               </div>
                               <div className="max-h-50 min-h-21 overflow-y-auto">
@@ -558,7 +561,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             {`${feedbackData.suggestions.substring(0, 50)}...`}
                             <button
                             onClick={() => togglePopover2(feedbackData._id)}
-                            className="ml-2 text-blue-500 hover:text-blue-700"
+                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
                             > Show more </button>
                             {popoverRow2 === feedbackData._id && (
                               <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef2}>
@@ -566,7 +569,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                               <div className="flex items-center text-gray-600"><h6>Suggestions</h6></div>
                               <button
                               onClick={() => togglePopover2(null)}
-                              className="text-base"
+                              className="text-base focus:outline-none"
                               > <i className="fas fa-times rounded-sm w-6 flex items-center justify-center text-red-500 bg-red-100 hover:text-red-700 hover:bg-red-200"></i></button>
                               </div>
                               <div className="max-h-50 min-h-21 overflow-y-auto">
