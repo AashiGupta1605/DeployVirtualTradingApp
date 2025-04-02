@@ -17,6 +17,7 @@ import Register from "../views/auth/Register";
 import OrganizationUsersFeedback from "../views/Organization/OrganizationUserDetails/OrganizationUsersFeedback"
 import OrganizationFeedback from "../views/Organization/OrganizationDetails/OrganizationFeedback";
 import ProtectedRoute from "../components/Organization/ProtectedRoutes/ProtectedRoute";
+import ResetPasswordModal from "../views/auth/ResetPasswordModal"; 
 // const orgName = localStorage.getItem("orgName");
 import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
 import { logoutOrganization } from "../redux/Organization/auth/organizationAuthSlice";
@@ -67,6 +68,7 @@ export default function Org() {
             </Route>
             <Route path="*" element={<Navigate to="dashboard" replace />} />
             <Route path="register" element={<Register />} />
+            <Route path="/reset-password" element={<ResetPasswordModal />} />
           </Routes>
           </main>
           </div>
