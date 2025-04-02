@@ -258,7 +258,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
     >
       <div className="flex flex-col h-full pb-0">
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between w-full h-[71px] px-6 border-b border-gray-200">
+        <div className="flex items-center justify-between w-full h-[73px] px-6 border-b border-gray-200">
           <Link
             to="/user/dashboard"
             className={`flex items-center space-x-3 text-black ${
@@ -280,8 +280,10 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
         </div>
 
         {/* Sidebar Menu */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-          {/* Dashboard Link */}
+
+        {/* <div className="flex-1 overflow-y-auto px-4 py-1 space-y-0"> */}
+        <div className={`${sidebarExpanded ? "px-3" : "px-6"} flex-1 overflow-y-auto py-1 space-y-0`}>
+      
           <Link
             to="/user/dashboard"
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
@@ -300,8 +302,13 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
           <div className="space-y-4">
             <button
               onClick={() => toggleMenu("tables")}
-              className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
-                activeMenu === "tables" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
+
+              className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${
+                activeMenu === "tables" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600"
+
+       //       className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+         //       activeMenu === "tables" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
+
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -318,7 +325,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
             </button>
 
             {sidebarExpanded && activeMenu === "tables" && (
-              <div className="pl-4 space-y-2">
+              <div className="pl-4 space-y-1">
                 <MenuLink 
                   to="/user/niftytable" 
                   icon="fas fa-chart-line" 
@@ -342,11 +349,16 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
           </div>
 
           {/* My Portfolio Dropdown */}
-          <div className="space-y-4">
+          <div className="space-y-1">
             <button
               onClick={() => toggleMenu("portfolio")}
-              className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
-                activeMenu === "portfolio" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
+
+              className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${
+                activeMenu === "portfolio" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600"
+
+           //   className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+             //   activeMenu === "portfolio" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
+
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -363,6 +375,15 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
             </button>
 
             {sidebarExpanded && activeMenu === "portfolio" && (
+
+              <div className="pl-4 space-y-1">
+ <MenuLink to="/user/tradingnifty" icon="fas fa-exchange-alt" label="Trading" isActive={location.pathname === "/user/tradingnifty"} />
+                {/* <MenuLink 
+                  to="/user/holdings" 
+                  icon="fas fa-chart-area" 
+                  label="Holdings" 
+                  isActive={location.pathname === "/user/holdings"} 
+                /> */
               <div className="pl-4 space-y-2">
                 <MenuLink 
                   to="/user/tradingnifty" 
@@ -409,9 +430,19 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                   label="My Events" 
                   isActive={location.pathname === "/user/my-events"} 
                 />
+
               </div>
             )}
           </div>
+
+
+          {/* Feedback Dropdown */}
+         {/* <div className="space-y-1">
+            <Link
+              to="/user/feedback"
+              onClick={() => toggleMenu("feedback")}
+              className={`w-full flex items-center space-x-3 p-1 rounded-lg transition-all duration-200 ${
+                activeMenu === "feedback" ? "bg-lightBlue-600 text-white" : "text-gray-600"
 
           {/* Feedback Link */}
           <div className="space-y-4">
@@ -419,6 +450,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               to="/user/feedback"
               className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
                 location.pathname === "/user/feedback" ? "bg-lightBlue-600 text-white" : "text-gray-600 hover:bg-gray-100"
+
               }`}
             >
               <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${
@@ -428,6 +460,107 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               </div>
               {sidebarExpanded && <span className="font-medium">Feedback</span>}
             </Link>
+
+          </div> */}
+
+          {/* Events Dropdown */}
+{/* <div className="space-y-1">
+  <Link
+    to="/user/eventspage"
+    onClick={() => toggleMenu("events")}
+    className={`w-full flex items-center space-x-3 p-1 rounded-lg transition-all duration-200 ${
+      activeMenu === "events" ? "bg-lightBlue-600 text-white" : "text-gray-600"
+    }`}
+  >
+    <div
+      className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+        activeMenu === "events" ? "bg-lightBlue-500 text-white" : "hover:bg-gray-200"
+      }`}
+    >
+      <i className={`fas fa-calendar-alt ${activeMenu === "events" ? "text-white" : "text-gray-500"}`}></i>
+    </div>
+    {sidebarExpanded && <span className="font-medium">Events</span>}
+  </Link>
+</div> */}
+
+
+
+
+
+{/* updateed code -- */}
+          {/* Feedback Dropdown */}
+          <div className="space-y-1">
+            <button
+              onClick={() => toggleMenu("feedback")}
+              className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${
+                activeMenu === "feedback" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${activeMenu === "feedback" ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
+                  <i className="fas fa-comment text-gray-500"></i>
+                </div>
+                {sidebarExpanded && <span className="font-medium capitalize">Feedback</span>}
+              </div>
+              {sidebarExpanded && (
+                <i className={`fas fa-chevron-${activeMenu === "feedback" ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
+              )}
+            </button>
+
+            {sidebarExpanded && activeMenu === "feedback" && (
+              <div className="pl-4 space-y-1">
+                <MenuLink 
+                  to="/user/feedback" 
+                  icon="fas fa-comment-dots" 
+                  label="Submit Feedback" 
+                  isActive={location.pathname === "/user/feedback"} 
+                />
+                {/* <MenuLink 
+                  to="/user/feedback-history" 
+                  icon="fas fa-history" 
+                  label="Feedback History" 
+                  isActive={location.pathname === "/user/feedback-history"} 
+                /> */}
+              </div>
+            )}
+          </div>
+
+          {/* Events Dropdown */}
+          <div className="space-y-1">
+            <button
+              onClick={() => toggleMenu("events")}
+              className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${
+                activeMenu === "events" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${activeMenu === "events" ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
+                  <i className="fas fa-calendar-alt text-gray-500"></i>
+                </div>
+                {sidebarExpanded && <span className="font-medium capitalize">Events</span>}
+              </div>
+              {sidebarExpanded && (
+                <i className={`fas fa-chevron-${activeMenu === "events" ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
+              )}
+            </button>
+
+            {sidebarExpanded && activeMenu === "events" && (
+              <div className="pl-4 space-y-1">
+                <MenuLink 
+                  to="/user/eventspage" 
+                  icon="fas fa-calendar-check" 
+                  label="View Events" 
+                  isActive={location.pathname === "/user/eventspage"} 
+                />
+                {/* <MenuLink 
+                  to="/user/past-events" 
+                  icon="fas fa-calendar-minus" 
+                  label="Past Events" 
+                  isActive={location.pathname === "/user/past-events"} 
+                /> */}
+              </div>
+            )}
+
           </div>
         </div>
 
@@ -468,7 +601,7 @@ const MenuLink = ({ to, icon, label, isActive }) => {
   return (
     <Link
       to={to}
-      className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+      className={`flex items-center space-x-3 px-4 py-1 rounded-xl transition-all duration-200 ${
         isActive ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-100"
       }`}
     >
