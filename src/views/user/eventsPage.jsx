@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { BASE_API_URL } from '../../utils/BaseUrl';
+import { 
+  selectCurrentUser,
+  selectIsAuthenticated 
+} from '../../redux/User/authSlice';
+import { fetchEvents, selectEvents, selectEventsStatus } from '../../redux/Admin/EventManage/eventSlice';
 import {
   Calendar,
   Clock,
@@ -12,37 +21,40 @@ import {
   Medal,
   Zap,
   Award,
-  ChevronDown,
-  ChevronUp,
-  BarChart2,
-  DollarSign,
-  Bitcoin,
   TrendingUp,
   Shield,
   BadgeCheck,
+  DollarSign,
   Coins,
-  X
+  X,
+  Percent,
+  ChevronDown,
+  BarChart2,
+  Plus,
+  Edit,
+  Trash2
 } from 'lucide-react';
-import { fetchEvents, selectEvents, selectEventsStatus } from '../../redux/Admin/EventManage/eventSlice';
 
-const EventDetailsModal = ({ event, onClose, onJoin }) => {
-  if (!event) return null;
-
-  const getIconComponent = (iconName, size = 24, className = "") => {
-    const icons = {
-      Trophy: <Trophy className={`text-blue-500 ${className}`} size={size} />,
-      Medal: <Medal className={`text-yellow-500 ${className}`} size={size} />,
-      Gift: <Gift className={`text-purple-500 ${className}`} size={size} />,
-      Award: <Award className={`text-green-500 ${className}`} size={size} />,
-      Star: <Star className={`text-orange-500 ${className}`} size={size} />,
-      Zap: <Zap className={`text-red-500 ${className}`} size={size} />,
-      Users: <Users className={`text-green-500 ${className}`} size={size} />,
-      BarChart2: <BarChart2 className={`text-red-500 ${className}`} size={size} />,
-      Coins: <Coins className={`text-amber-500 ${className}`} size={size} />,
-      Info: <Info className={`text-blue-500 ${className}`} size={size} />,
-    };
-    return icons[iconName] || <Trophy className={`text-blue-500 ${className}`} size={size} />;
+// Shared icon component function
+const getIconComponent = (iconName, size = 24, className = "") => {
+  const icons = {
+    Trophy: <Trophy className={`text-blue-600 ${className}`} size={size} />,
+    Medal: <Medal className={`text-yellow-500 ${className}`} size={size} />,
+    Gift: <Gift className={`text-purple-500 ${className}`} size={size} />,
+    Award: <Award className={`text-green-500 ${className}`} size={size} />,
+    Star: <Star className={`text-orange-500 ${className}`} size={size} />,
+    Zap: <Zap className={`text-red-500 ${className}`} size={size} />,
+    Users: <Users className={`text-green-500 ${className}`} size={size} />,
+    BarChart2: <BarChart2 className={`text-red-500 ${className}`} size={size} />,
+    Coins: <Coins className={`text-amber-500 ${className}`} size={size} />,
+    Info: <Info className={`text-blue-600 ${className}`} size={size} />,
   };
+  return icons[iconName] || <Trophy className={`text-blue-600 ${className}`} size={size} />;
+};
+
+// Event Details Modal Component
+const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
+  if (!isOpen || !event) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
@@ -51,10 +63,16 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
         {/* Modal Header */}
         <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-white">
           <div className="flex items-center space-x-4">
-            <div className="p-2 bg-blue-100 rounded-xl">
-              {getIconComponent(event.icon, 24, "text-blue-600")}
+            <div className={`p-2 rounded-xl ${event.backgroundColor || 'bg-gradient-to-br from-blue-50 to-blue-100'}`}>
+              {getIconComponent(event.icon, 24, "text-gray-100")}
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">{event.title}</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">{event.title}</h2>
+              <p className="text-sm text-gray-500 mt-1 flex items-center">
+                <Shield className="mr-1" size={14} />
+                {event.requirements || 'No requirements specified'}
+              </p>
+            </div>
           </div>
           <button 
             onClick={onClose}
@@ -64,15 +82,15 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="overflow-y-auto flex-1 p-6">
-          <div className="grid md:grid-cols-2 gap-8">
+        {/* Scrollable Content Area */}
+        <div className="overflow-y-auto flex-1">
+          <div className="p-6 grid md:grid-cols-2 gap-8">
             {/* Left Column - Event Details */}
             <div className="space-y-6">
               {/* Description */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-                  <Info className="mr-2 text-blue-500" size={18} />
+                  <Info className="mr-2 text-blue-600" size={18} />
                   Description
                 </h3>
                 <p className="text-gray-700">{event.description}</p>
@@ -81,7 +99,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Date & Time */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Calendar className="mr-2 text-blue-500" size={18} />
+                  <Calendar className="mr-2 text-blue-600" size={18} />
                   Event Schedule
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
@@ -109,11 +127,22 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Requirements */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-                  <Shield className="mr-2 text-blue-500" size={18} />
+                  <Shield className="mr-2 text-blue-600" size={18} />
                   Participation Requirements
                 </h3>
-                <p className="text-gray-700">{event.requirements}</p>
+                <p className="text-gray-700">{event.requirements || 'No requirements specified'}</p>
               </div>
+
+              {/* Highlight */}
+              {event.highlight && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
+                    <Zap className="mr-2 text-blue-600" size={18} />
+                    Event Highlight
+                  </h3>
+                  <p className="text-gray-700">{event.highlight}</p>
+                </div>
+              )}
             </div>
 
             {/* Right Column - Financial Info */}
@@ -121,7 +150,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Prize Information */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Medal className="mr-2 text-blue-500" size={18} />
+                  <Medal className="mr-2 text-blue-600" size={18} />
                   Prize Information
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
@@ -161,7 +190,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Participation */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Users className="mr-2 text-blue-500" size={18} />
+                  <Users className="mr-2 text-blue-600" size={18} />
                   Participation Stats
                 </h3>
                 <div className="flex justify-between mb-2">
@@ -175,24 +204,8 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
                   ></div>
                 </div>
                 <p className="text-xs text-gray-500 text-right">
-                  {event.progressText}
+                  {event.progressText || `${event.progress}% complete`}
                 </p>
-              </div>
-
-              {/* Prize Breakdown */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Award className="mr-2 text-blue-500" size={18} />
-                  Prize Breakdown
-                </h3>
-                <ul className="space-y-2">
-                  {event.prizeBreakdown.map((item, index) => (
-                    <li key={index} className="flex justify-between text-sm">
-                      <span className="font-medium">{item.position}</span>
-                      <span className="text-gray-700">{item.reward}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </div>
           </div>
@@ -201,14 +214,47 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
           <div className="px-6 pb-6">
             <div className="bg-gray-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <Zap className="mr-2 text-blue-500" size={18} />
+                <Zap className="mr-2 text-blue-600" size={18} />
                 Event Rewards
               </h3>
               <ul className="space-y-2">
-                {event.rewards.map((reward, index) => (
+                {event.rewards?.filter(r => r.trim() !== '').map((reward, index) => (
                   <li key={index} className="flex items-start">
                     <div className="mt-1.5 mr-2 w-2 h-2 rounded-full bg-blue-600"></div>
                     <span className="text-gray-700">{reward}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Reward Tiers Section */}
+          <div className="px-6 pb-6">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                <Percent className="mr-2 text-blue-600" size={18} />
+                Performance Reward Tiers
+              </h3>
+              <ul className="space-y-4">
+                {event.rewardTiers?.map((tier, index) => (
+                  <li key={index} className="bg-white border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center mb-2">
+                      <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-800 text-xs font-medium mr-3">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <span className="font-semibold text-gray-800 mr-2">Tier Name:</span>
+                            <span className="text-gray-700">{tier.tier}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pl-9">
+                      <span className="font-semibold text-gray-800 mr-2">Reward Description:</span>
+                      <span className="text-gray-600">{tier.description}</span>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -219,10 +265,11 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
         {/* Modal Footer */}
         <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-center">
           <button
-            onClick={onJoin}
-            className="px-8 py-3 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 transition-colors flex items-center"
+            onClick={() => user ? onJoin(event) : toast.error('Please login to join events')}
+            className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center"
           >
-            <ArrowRight className="mr-2" size={16} /> Join Event Now
+            <ArrowRight className="mr-2" size={16} /> 
+            {event.entryFee > 0 ? `Join for $${event.entryFee}` : 'Join Event Now'}
           </button>
         </div>
       </div>
@@ -230,45 +277,203 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
   );
 };
 
+// Main Events Page Component
 const EventsPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const events = useSelector(selectEvents);
   const status = useSelector(selectEventsStatus);
+  const user = useSelector(selectCurrentUser);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  
   const [activeTab, setActiveTab] = useState('ongoing');
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
+  // Load Razorpay script dynamically
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  // Initialize Razorpay when component mounts
+  useEffect(() => {
+    loadRazorpayScript();
+  }, []);
+
+  // Fetch events on component mount
   useEffect(() => {
     dispatch(fetchEvents());
   }, [dispatch]);
 
-  const handleJoinEvent = () => {
-    console.log('Joining event:', selectedEvent?.title);
-    setSelectedEvent(null);
+  // Handle event joining
+  const handleJoinEvent = async (event) => {
+    try {
+      // Validate event and user
+      if (!event) throw new Error("No event selected");
+      if (!isAuthenticated) {
+        toast.error('Please log in to join events');
+        return;
+      }
+
+      // Ensure user and user ID exist
+      if (!user?._id) {
+        toast.error('User authentication failed');
+        return;
+      }
+
+      // Logging for debugging
+      console.log('Joining Event:', {
+        eventId: event._id,
+        eventTitle: event.title,
+        eventFee: event.entryFee,
+        userId: user._id,
+        userName: user.name
+      });
+
+      // Free event registration
+      if (event.entryFee <= 0) {
+        try {
+          const response = await axios.post(
+            `${BASE_API_URL}/admin/events/register`, 
+            {
+              eventId: event._id,
+              userId: user._id
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              }
+            }
+          );
+          
+          toast.success(`Successfully registered for ${event.title}!`);
+          dispatch(fetchEvents());
+          return;
+        } catch (freeEventError) {
+          console.error('Free Event Registration Error:', freeEventError);
+          toast.error(freeEventError.response?.data?.message || 'Registration failed');
+          return;
+        }
+      }
+
+      // Paid event registration
+      try {
+        // First ensure Razorpay is loaded
+        const razorpayLoaded = await loadRazorpayScript();
+        if (!razorpayLoaded) {
+          throw new Error('Failed to load payment processor');
+        }
+
+        const response = await axios.post(
+          `${BASE_API_URL}/user/payment/create-event-order`,
+          {
+            userId: user._id,
+            eventId: event._id,
+            amount: event.entryFee
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+
+        // Validate response
+        if (!response.data.success) {
+          throw new Error(response.data.message || 'Failed to create event order');
+        }
+
+        const { order, paymentId, registrationId } = response.data;
+
+        // Razorpay payment options
+        const options = {
+          key: 'rzp_test_Wro7XGWFjBE5VK',
+          amount: order.amount,
+          currency: 'INR',
+          name: 'DreamNifty Events',
+          description: `Registration for ${event.title}`,
+          order_id: order.id,
+          handler: async function (paymentResponse) {
+            try {
+              const verificationResponse = await axios.post(
+                `${BASE_API_URL}/user/payment/verify-event`,
+                {
+                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                  razorpay_order_id: paymentResponse.razorpay_order_id,
+                  razorpay_signature: paymentResponse.razorpay_signature,
+                  paymentId,
+                  registrationId,
+                  userId: user._id,
+                  eventId: event._id
+                },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                  }
+                }
+              );
+
+              if (verificationResponse.data.success) {
+                toast.success('Payment successful! Registration complete.');
+                dispatch(fetchEvents());
+              } else {
+                throw new Error(verificationResponse.data.message || 'Payment verification failed');
+              }
+            } catch (verificationError) {
+              console.error("Verification error:", verificationError);
+              toast.error(
+                verificationError.response?.data?.message || 
+                verificationError.message || 
+                'Payment verification failed'
+              );
+            }
+          },
+          prefill: {
+            name: user.name,
+            email: user.email,
+            contact: user.phone || ''
+          },
+          theme: {
+            color: '#3399cc'
+          },
+          modal: {
+            ondismiss: function() {
+              toast.error('Payment was cancelled');
+            }
+          }
+        };
+
+        const rzp1 = new window.Razorpay(options);
+        rzp1.open();
+
+      } catch (paidEventError) {
+        console.error('Paid Event Registration Error:', paidEventError);
+        toast.error(
+          paidEventError.response?.data?.message || 
+          paidEventError.message || 
+          'Event registration failed'
+        );
+      }
+    } catch (error) {
+      console.error('Event Join Error:', error);
+      toast.error(error.message || 'Failed to join event');
+    }
   };
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  const getIconComponent = (iconName) => {
-    const icons = {
-      Trophy: <Trophy className="text-blue-500" size={24} />,
-      Medal: <Medal className="text-yellow-500" size={24} />,
-      Gift: <Gift className="text-purple-500" size={24} />,
-      Award: <Award className="text-green-500" size={24} />,
-      Star: <Star className="text-orange-500" size={24} />,
-      Zap: <Zap className="text-red-500" size={24} />,
-      Users: <Users className="text-green-500" size={24} />,
-      BarChart2: <BarChart2 className="text-red-500" size={24} />,
-      Coins: <Coins className="text-amber-500" size={24} />,
-    };
-    return icons[iconName] || <Trophy className="text-blue-500" size={24} />;
-  };
-
+  // Filter events based on active tab
   const filteredEvents = events.filter(event => {
     const now = new Date();
     const startDate = new Date(event.startDate);
@@ -284,6 +489,39 @@ const EventsPage = () => {
     return true;
   });
 
+  // Open details modal
+  const openDetailsModal = (event) => {
+    setSelectedEvent(event);
+    setIsDetailsModalOpen(true);
+  };
+
+  // Render loading state
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Render authentication required state
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Please Log In</h2>
+          <p className="mb-6">You need to be logged in to view events</p>
+          <button 
+            onClick={() => navigate('/login')} 
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Main Content */}
@@ -294,7 +532,7 @@ const EventsPage = () => {
           <div className="absolute -bottom-12 -right-8 w-32 h-32 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
           <div className="absolute top-0 right-20 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
 
-          <div className="relative z-10">
+          <div className="relative mt-10">
             <h1 className="text-4xl font-extrabold text-gray-900">
               DreamNifty Trading Events
             </h1>
@@ -306,7 +544,8 @@ const EventsPage = () => {
         </div>
 
         {/* Stats Bar */}
-        <div className="bg-white rounded-lg shadow-xs p-4 mb-6 grid grid-cols-3 gap-4 border border-gray-100">
+{/* Stats Bar */}
+<div className="bg-white rounded-lg shadow-xs p-4 mb-6 grid grid-cols-4 gap-4 border border-gray-100">
   {/* Active Traders Stat */}
   <div className="flex items-center space-x-3">
     <div className="p-2 bg-green-50 rounded-lg">
@@ -320,15 +559,20 @@ const EventsPage = () => {
     </div>
   </div>
 
-  {/* Active Events Stat */}
+  {/* Ongoing Events Stat */}
   <div className="flex items-center space-x-3">
     <div className="p-2 bg-yellow-50 rounded-lg">
       <TrendingUp className="text-yellow-600" size={18} />
     </div>
     <div>
-      <p className="text-xs text-gray-500">Active Events</p>
+      <p className="text-xs text-gray-500">Ongoing Events</p>
       <p className="text-base font-semibold">
-        {events.filter(e => e.type === 'ongoing').length}
+        {events.filter(e => {
+          const now = new Date();
+          const startDate = new Date(e.startDate);
+          const endDate = new Date(e.endDate);
+          return startDate <= now && endDate >= now;
+        }).length}
       </p>
     </div>
   </div>
@@ -336,12 +580,33 @@ const EventsPage = () => {
   {/* Upcoming Events Stat */}
   <div className="flex items-center space-x-3">
     <div className="p-2 bg-blue-50 rounded-lg">
-      <Award className="text-blue-600" size={18} />
+      <Calendar className="text-blue-600" size={18} />
     </div>
     <div>
       <p className="text-xs text-gray-500">Upcoming Events</p>
       <p className="text-base font-semibold">
-        {events.filter(e => e.type === 'upcoming').length}
+        {events.filter(e => {
+          const now = new Date();
+          const startDate = new Date(e.startDate);
+          return startDate > now;
+        }).length}
+      </p>
+    </div>
+  </div>
+
+  {/* Completed Events Stat */}
+  <div className="flex items-center space-x-3">
+    <div className="p-2 bg-purple-50 rounded-lg">
+      <Award className="text-purple-600" size={18} />
+    </div>
+    <div>
+      <p className="text-xs text-gray-500">Completed Events</p>
+      <p className="text-base font-semibold">
+        {events.filter(e => {
+          const now = new Date();
+          const endDate = new Date(e.endDate);
+          return endDate < now;
+        }).length}
       </p>
     </div>
   </div>
@@ -356,7 +621,7 @@ const EventsPage = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-2 rounded-full transition-colors duration-200 flex items-center ${
                   activeTab === tab 
-                    ? 'bg-lightBlue-600 text-white shadow-sm' 
+                    ? 'bg-blue-600 text-white shadow-sm' 
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -370,101 +635,126 @@ const EventsPage = () => {
         </div>
 
         {/* Events Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredEvents.map(event => (
-            <div 
-              key={event._id} 
-              className={`relative rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md ${event.backgroundColor} border border-gray-200`}
-            >
-              {/* Highlight Badge */}
-              {event.highlight && (
-                <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-medium shadow-xs flex items-center">
-                  <Zap className="mr-1 text-yellow-500" size={14} />
-                  {event.highlight}
-                </div>
-              )}
-              
-              <div className="p-5">
-                {/* Event Header */}
-                <div className="flex items-center mb-4">
-                  <div className="p-2 bg-white rounded-lg shadow-xs mr-4">
-                    {getIconComponent(event.icon)}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800">
-                      {event.title}
-                    </h3>
-                    <div className="flex items-center mt-1">
-                      <Award className="text-gray-400 mr-1" size={14} />
-                      <span className="text-xs text-gray-500">{event.difficulty}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map(event => (
+              <div 
+                key={event._id} 
+                className={`rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md ${event.backgroundColor || 'bg-gradient-to-br from-blue-50 to-blue-100'} border border-gray-200`}
+              >
+                <div className="p-5">
+                  {/* Event Header */}
+                  <div className="flex items-center mb-4">
+                    <div className="p-2 bg-white rounded-lg shadow-xs mr-4">
+                      {getIconComponent(event.icon, 24)}
                     </div>
-                  </div>
-                </div>
-                
-                <p className="text-gray-700 mb-4 line-clamp-2">{event.description}</p>
-                
-                {/* Basic Info */}
-                <div className="grid grid-cols-2 gap-4 mb-5">
-                  <div className="flex items-center">
-                    <Calendar className="mr-2 text-gray-500" size={18} />
                     <div>
-                      <p className="text-xs text-gray-500">Date</p>
-                      <p className="text-sm font-medium">
-                        {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
-                      </p>
+                      <h3 className="text-xl font-bold text-gray-800">
+                        {event.title}
+                      </h3>
+                      <div className="flex items-center mt-1">
+                        <Shield className="text-gray-400 mr-1" size={14} />
+                        <span className="text-xs text-gray-500">Entry: ${event.entryFee || 'Free'}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center">
-                    <DollarSign className="mr-2 text-gray-500" size={18} />
-                    <div>
-                      <p className="text-xs text-gray-500">Prize Pool</p>
-                      <p className="text-sm font-medium">{event.prize}</p>
+                  
+                  <p className="text-gray-700 mb-4 line-clamp-2">{event.description}</p>
+                  
+                  {/* Basic Info */}
+                  <div className="grid grid-cols-2 gap-4 mb-5">
+                    <div className="flex items-center">
+                      <Calendar className="mr-2 text-gray-500" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Date</p>
+                        <p className="text-sm font-medium">
+                          {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <DollarSign className="mr-2 text-gray-500" size={18} />
+                      <div>
+                        <p className="text-xs text-gray-500">Prize Pool</p>
+                        <p className="text-sm font-medium">{event.prize}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                {/* Action Buttons */}
-                <div className="flex justify-between items-center">
-                  <button 
-                    onClick={() => setSelectedEvent(event)}
-                    className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    <Info className="mr-1" size={16} />
-                    View Details
-                  </button>
-                  <button className="px-4 py-2 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm">
-                    Quick Join
-                  </button>
+                  
+                  {/* Reward Requirements Preview */}
+                  <div className="mb-4">
+                    <div className="flex items-center text-sm text-gray-700">
+                      <Percent className="mr-1 text-gray-500" size={16} />
+                      <span className="font-medium">Reward Tiers:</span>
+                      <span className="ml-1">
+                        {event.rewardTiers?.slice(0, 3).map(tier => tier.tier).join(', ')}
+                        {event.rewardTiers?.length > 3 && '...'}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {event.participants || 0} participants
+                    </div>
+                  </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                      <span>Progress</span>
+                      <span>{event.progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-blue-600 h-2 rounded-full" 
+                        style={{ width: `${event.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex justify-between items-center">
+                    <button 
+                      onClick={() => openDetailsModal(event)}
+                      className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      <Info className="mr-1" size={16} />
+                      View Details
+                    </button>
+                    <button 
+                      onClick={() => user ? handleJoinEvent(event) : toast.error('Please login to join events')}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+                    >
+                      Quick Join
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
+              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <Calendar className="text-gray-400" size={36} />
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-600 mb-4">
+                No {activeTab} events at the moment
+              </h3>
+              <p className="text-gray-500 max-w-md mx-auto mb-6">
+                We're preparing exciting new challenges for you. Check back soon or explore our learning resources while you wait.
+              </p>
+              <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                Notify Me About New Events
+              </button>
             </div>
-          ))}
+          )}
         </div>
-
-        {/* Empty State */}
-        {filteredEvents.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-              <Calendar className="text-gray-400" size={36} />
-            </div>
-            <h3 className="text-2xl font-semibold text-gray-600 mb-4">
-              No {activeTab} events at the moment
-            </h3>
-            <p className="text-gray-500 max-w-md mx-auto mb-6">
-              We're preparing exciting new challenges for you. Check back soon or explore our learning resources while you wait.
-            </p>
-            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-              Notify Me About New Events
-            </button>
-          </div>
-        )}
 
         {/* Event Details Modal */}
         {selectedEvent && (
           <EventDetailsModal 
+            isOpen={isDetailsModalOpen}
+            onClose={() => setIsDetailsModalOpen(false)}
             event={selectedEvent}
-            onClose={() => setSelectedEvent(null)}
             onJoin={handleJoinEvent}
+            user={user}
           />
         )}
 
@@ -561,20 +851,12 @@ const EventsPage = () => {
       </div>
 
       {/* Animated Background Elements */}
-      <style jsx>{`
+      <style>{`
         @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
         }
         .animate-blob {
           animation: blob 7s infinite;
