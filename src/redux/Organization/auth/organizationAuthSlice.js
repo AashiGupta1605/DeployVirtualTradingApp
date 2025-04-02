@@ -371,6 +371,46 @@ export const registerOrganization = createAsyncThunk(
   }
 );
 
+// 1️⃣ Forgot Password - Send Reset Link
+export const forgotPasswordOrganization = createAsyncThunk(
+  "organizations/forgotPassword",
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_API_URL}/organization/forgot-password`, { email });
+      return response.data; // { message: "Password reset link sent to your email" }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { message: "Something went wrong!" });
+    }
+  }
+);
+
+// 2️⃣ Reset Password - Update New Password
+export const resetPasswordOrganization = createAsyncThunk(
+  "organizations/resetPassword",
+  async ({ token, newPassword, confirmPassword }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_API_URL}/organization/reset-password/${token}`, {
+        newPassword,
+        confirmPassword,
+      });
+      return response.data.message; // Success message
+    } catch (error) {
+      let errorMessage = "Failed to reset password. Please try again.";
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.status === 400) {
+        errorMessage = "Invalid or expired reset link.";
+      } else if (error.response?.status === 404) {
+        errorMessage = "Organization not found.";
+      }
+
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
 // Organization Auth Slice
 const organizationAuthSlice = createSlice({
   name: 'organizationAuth',
@@ -497,8 +537,39 @@ const organizationAuthSlice = createSlice({
       .addCase(registerOrganization.rejected, (state, action) => {
         state.loading = false;
         state.authError = action.payload.message;
+      })
+       // Forgot Password (Organization)
+       .addCase(forgotPasswordOrganization.pending, (state) => {
+        state.status = "loading";
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotPasswordOrganization.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.loading = false;
+      })
+      .addCase(forgotPasswordOrganization.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
+        state.error = action.payload || "Failed to send reset link";
+      })
+
+      // Reset Password (Organization)
+      .addCase(resetPasswordOrganization.pending, (state) => {
+        state.status = "loading";
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPasswordOrganization.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.loading = false;
+      })
+      .addCase(resetPasswordOrganization.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
+        state.error = action.payload || "Failed to reset password";
       });
-  }
+  },
 });
 
 export const { resetAuthState, logoutOrganization, addOrganization, removeOrganization } = organizationAuthSlice.actions;
