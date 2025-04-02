@@ -1,5 +1,5 @@
 // tradingSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk,createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
@@ -305,13 +305,27 @@ const tradingSlice = createSlice({
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
 export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
 export const selectStatistics = (state) => state.user.tradingModal.statistics;
-export const selectLoadingState = (state) => ({
-  loading: state.user.tradingModal.loading,
-  orderStatus: state.user.tradingModal.orderStatus
-});
+export const selectLoadingState = (state) => {
+  try {
+    const loading = state.user.tradingModal.loading;
+    const orderStatus = state.user.tradingModal.orderStatus;
+
+    return {
+      loading: typeof loading === 'object' 
+        ? (loading.general || loading.trading || false)
+        : (loading || false),
+      orderStatus: orderStatus || null
+    };
+  } catch (error) {
+    console.error('Error in selectLoadingState:', error);
+    return { loading: false, orderStatus: null };
+  }
+};
 export const selectError = (state) => state.user.tradingModal.error;
-export const selectHoldingBySymbol = (state, symbol) => 
-  (state.user.tradingModal.holdings || []).find(h => h.companySymbol === symbol);
+export const selectHoldingBySymbol = createSelector(
+  [(state) => state.user.tradingModal.holdings || [], (state, symbol) => symbol],
+  (holdings, symbol) => holdings.find(h => h.companySymbol === symbol)
+);
 export const selectTotalHoldingsValue = (state) => 
   (state.user.tradingModal.holdings || []).reduce((total, holding) => 
     total + (holding.quantity * holding.averageBuyPrice), 0);

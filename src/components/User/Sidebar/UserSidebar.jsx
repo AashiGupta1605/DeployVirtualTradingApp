@@ -212,12 +212,9 @@
 //   );
 // };
 
-
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import NotificationDropdown from "../Dropdowns/NotificationDropdown";
-import DashboardDropdown from "../Dropdowns/DashboardDropdown";
-import { fetchUserData, updateUserProfile, deleteUserProfile } from "../../../redux/User/userprofileSlice";
+import { fetchUserData } from "../../../redux/User/userprofileSlice";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -228,11 +225,9 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Fetch user data when sidebar is expanded
   React.useEffect(() => {
     dispatch(fetchUserData());
   }, [dispatch]);
-  
 
   const userName = userData ? userData.name : "User";
 
@@ -286,16 +281,33 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
 
         {/* Sidebar Menu */}
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+          {/* Dashboard Link */}
+          <Link
+            to="/user/dashboard"
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
+              location.pathname === "/user/dashboard" ? "bg-lightBlue-600 text-white" : "text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+              location.pathname === "/user/dashboard" ? "bg-white/20" : "bg-lightBlue-100"
+            }`}>
+              <i className={`fas fa-home ${location.pathname === "/user/dashboard" ? "text-white" : "text-gray-500"}`}></i>
+            </div>
+            {sidebarExpanded && <span className="font-medium">Dashboard</span>}
+          </Link>
+
           {/* Tables Dropdown */}
           <div className="space-y-4">
             <button
               onClick={() => toggleMenu("tables")}
               className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
-                activeMenu === "tables" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600"
+                activeMenu === "tables" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${activeMenu === "tables" ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${
+                  activeMenu === "tables" ? "bg-white/20" : "bg-lightBlue-100"
+                }`}>
                   <i className="fas fa-table text-gray-500"></i>
                 </div>
                 {sidebarExpanded && <span className="font-medium capitalize">Tables</span>}
@@ -313,9 +325,12 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                   label="Nifty 50 Table" 
                   isActive={location.pathname === "/user/niftytable"} 
                 />
-                
-<MenuLink to="/user/etftable" icon="fas fa-table" label="ETF Table" isActive={location.pathname === "/user/etftable"} />
-
+                <MenuLink 
+                  to="/user/etftable" 
+                  icon="fas fa-table" 
+                  label="ETF Table" 
+                  isActive={location.pathname === "/user/etftable"} 
+                />
                 <MenuLink 
                   to="/user/nifty500table" 
                   icon="fas fa-chart-bar" 
@@ -331,11 +346,13 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
             <button
               onClick={() => toggleMenu("portfolio")}
               className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
-                activeMenu === "portfolio" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600"
+                activeMenu === "portfolio" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${activeMenu === "portfolio" ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${
+                  activeMenu === "portfolio" ? "bg-white/20" : "bg-lightBlue-100"
+                }`}>
                   <i className="fas fa-briefcase text-gray-500"></i>
                 </div>
                 {sidebarExpanded && <span className="font-medium capitalize">My Portfolio</span>}
@@ -347,58 +364,72 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
 
             {sidebarExpanded && activeMenu === "portfolio" && (
               <div className="pl-4 space-y-2">
- <MenuLink to="/user/tradingnifty" icon="fas fa-exchange-alt" label="Trading" isActive={location.pathname === "/user/tradingnifty"} />
-                {/* <MenuLink 
-                  to="/user/holdings" 
-                  icon="fas fa-chart-area" 
-                  label="Holdings" 
-                  isActive={location.pathname === "/user/holdings"} 
-                /> */}
+                <MenuLink 
+                  to="/user/tradingnifty" 
+                  icon="fas fa-exchange-alt" 
+                  label="Trading" 
+                  isActive={location.pathname === "/user/tradingnifty"} 
+                />
               </div>
             )}
           </div>
 
-          {/* Feedback Dropdown */}
-         <div className="space-y-4">
-            <Link
-              to="/user/feedback"
-              onClick={() => toggleMenu("feedback")}
-              className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
-                activeMenu === "feedback" ? "bg-lightBlue-600 text-white" : "text-gray-600"
+          {/* Events Dropdown */}
+          <div className="space-y-4">
+            <button
+              onClick={() => toggleMenu("events")}
+              className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+                activeMenu === "events" ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"
               }`}
             >
-              <div
-                className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-                  activeMenu === "feedback" ? "bg-lightBlue-500 text-white" : "hover:bg-gray-200"
-                }`}
-              >
-                <i className={`fas fa-comment ${activeMenu === "feedback" ? "text-white" : "text-gray-500"}`}></i>
+              <div className="flex items-center space-x-2">
+                <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${
+                  activeMenu === "events" ? "bg-white/20" : "bg-lightBlue-100"
+                }`}>
+                  <i className="fas fa-calendar-alt text-gray-500"></i>
+                </div>
+                {sidebarExpanded && <span className="font-medium capitalize">Events</span>}
+              </div>
+              {sidebarExpanded && (
+                <i className={`fas fa-chevron-${activeMenu === "events" ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
+              )}
+            </button>
+
+            {sidebarExpanded && activeMenu === "events" && (
+              <div className="pl-4 space-y-2">
+                <MenuLink 
+                  to="/user/eventspage" 
+                  icon="fas fa-search" 
+                  label="Explore Events" 
+                  isActive={location.pathname === "/user/eventspage"} 
+                />
+                <MenuLink 
+                  to="/user/my-events" 
+                  icon="fas fa-ticket-alt" 
+                  label="My Events" 
+                  isActive={location.pathname === "/user/my-events"} 
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Feedback Link */}
+          <div className="space-y-4">
+            <Link
+              to="/user/feedback"
+              className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
+                location.pathname === "/user/feedback" ? "bg-lightBlue-600 text-white" : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+                location.pathname === "/user/feedback" ? "bg-white/20" : "bg-lightBlue-100"
+              }`}>
+                <i className={`fas fa-comment ${location.pathname === "/user/feedback" ? "text-white" : "text-gray-500"}`}></i>
               </div>
               {sidebarExpanded && <span className="font-medium">Feedback</span>}
             </Link>
           </div>
-
-          {/* Events Dropdown */}
-<div className="space-y-4">
-  <Link
-    to="/user/eventspage"
-    onClick={() => toggleMenu("events")}
-    className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
-      activeMenu === "events" ? "bg-lightBlue-600 text-white" : "text-gray-600"
-    }`}
-  >
-    <div
-      className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-        activeMenu === "events" ? "bg-lightBlue-500 text-white" : "hover:bg-gray-200"
-      }`}
-    >
-      <i className={`fas fa-calendar-alt ${activeMenu === "events" ? "text-white" : "text-gray-500"}`}></i>
-    </div>
-    {sidebarExpanded && <span className="font-medium">Events</span>}
-  </Link>
-</div>
         </div>
-
 
         {/* Logout and User Info */}
         <div className="p-4">
