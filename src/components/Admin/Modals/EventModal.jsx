@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
 import {
   Trophy, Medal, Gift, Award, Star, Zap,
-  Users, BarChart2, Coins, Plus, Trash2, X
+  Users, BarChart2, Coins, Plus, Trash2, X, Percent
 } from 'lucide-react';
 
 const EventModal = ({ event, onClose, onSubmit }) => {
@@ -29,68 +29,102 @@ const EventModal = ({ event, onClose, onSubmit }) => {
     { value: 'bg-gradient-to-br from-amber-50 to-amber-100', label: 'Amber Gradient' },
   ];
 
-  // Business-focused prize distribution calculation
-  const calculatePrizeBreakdown = (values) => {
+  // Default reward tiers
+  const defaultRewardTiers = [
+    {
+      tier: '10%+ Gain',
+      description: '100% of entry fee returned',
+      cashback: 0.5,
+      bonus: 0
+    },
+    {
+      tier: '15%+ Gain',
+      description: 'Full cashback + additional 50% of entry fee',
+      cashback: 1,
+      bonus: 0
+    },
+    {
+      tier: '20%+ Gain',
+      description: 'Full cashback + additional 100% of entry fee',
+      cashback: 1,
+      bonus: 1
+    },
+    {
+      tier: '25%+ Gain',
+      description: 'Full cashback + 110% of entry fee',
+      cashback: 1,
+      bonus: 1.1
+    },
+    {
+      tier: '30%+ Gain',
+      description: 'Full cashback + 120% of entry fee',
+      cashback: 1,
+      bonus: 1.2
+    }
+  ];
+
+  // Enhanced prize distribution calculation
+  const calculateDistribution = (values) => {
     const totalPrize = parseFloat(values.prize.replace(/[^0-9.]/g, '')) || 0;
     const participants = parseInt(values.participants) || 0;
 
     if (totalPrize <= 0 || participants <= 0) {
-      return [{ position: 'Enter prize and participants', reward: 'to see breakdown' }];
+      return {
+        prizeBreakdown: [{ position: 'Enter prize and participants', reward: 'to see breakdown' }],
+        rewardTiers: defaultRewardTiers
+      };
     }
 
     const breakdown = [];
-    const numberOfWinners = Math.max(1, Math.floor(participants * 0.2)); // Top 20%
+    const topPerformersCount = Math.max(1, Math.floor(participants * 0.3));
+    const winnerPool = totalPrize * 0.7; // 70% for winners
+    const participationPool = totalPrize * 0.2; // 20% for participation rewards
+    const organizerCut = totalPrize * 0.1; // 10% for platform
 
-    // 1. Organizer Fee (20%)
-    // const organizerFee = totalPrize * 0.20;
-    // breakdown.push({
-    //   position: 'Organizer Fee',
-    //   reward: `$${organizerFee.toFixed(2)} (20%)`
-    // });
+    // Organizer cut
+    breakdown.push({
+      position: 'Platform Fee',
+      reward: `$${organizerCut.toFixed(2)} (10% of prize pool)`
+    });
 
-    // 2. Cashback Pool (15%)
-    // const cashbackPool = totalPrize * 0.15;
-    // breakdown.push({
-    //   position: 'Cashback Pool',
-    //   reward: `$${cashbackPool.toFixed(2)} (15%)`
-    // });
-
-    // 3. Winner Prizes (65%)
-    const winnerPool = totalPrize * 0.65;
-    
-    // Calculate prize distribution for top 20%
-    if (numberOfWinners >= 1) {
+    // Top performers rewards
+    if (topPerformersCount >= 1) {
       breakdown.push({
         position: '1st Place',
-        reward: `$${(winnerPool * 0.35).toFixed(2)} (35% of winner pool)`
+        reward: `$${(winnerPool * 0.4).toFixed(2)} (40% of winner pool)`
       });
     }
-    
-    if (numberOfWinners >= 2) {
+    if (topPerformersCount >= 2) {
       breakdown.push({
         position: '2nd Place',
-        reward: `$${(winnerPool * 0.25).toFixed(2)} (25% of winner pool)`
+        reward: `$${(winnerPool * 0.3).toFixed(2)} (30% of winner pool)`
       });
     }
-    
-    if (numberOfWinners >= 3) {
+    if (topPerformersCount >= 3) {
       breakdown.push({
         position: '3rd Place',
-        reward: `$${(winnerPool * 0.15).toFixed(2)} (15% of winner pool)`
+        reward: `$${(winnerPool * 0.2).toFixed(2)} (20% of winner pool)`
       });
     }
-
-    // Remaining 25% distributed among other winners (4th to 20%)
-    if (numberOfWinners > 3) {
-      const remainingWinners = numberOfWinners - 3;
-      const remainingPrize = winnerPool * 0.25;
+    if (topPerformersCount > 3) {
+      const remainingWinners = topPerformersCount - 3;
+      const remainingPrize = winnerPool * 0.1;
       breakdown.push({
-        position: `4th-${numberOfWinners}th Places`,
-        reward: `$${(remainingPrize / remainingWinners).toFixed(2)} each (Total $${remainingPrize.toFixed(2)})`
+        position: `4th-${topPerformersCount}th Places`,
+        reward: `$${(remainingPrize / remainingWinners).toFixed(2)} each`
       });
     }
 
-    return breakdown;
+    // Participation rewards
+    breakdown.push({
+      position: 'Participation Rewards',
+      reward: `$${participationPool.toFixed(2)} distributed based on performance`
+    });
+
+    return {
+      prizeBreakdown: breakdown,
+      rewardTiers: defaultRewardTiers
+    };
   };
 
   const formik = useFormik({
@@ -98,7 +132,8 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       ...event,
       startDate: event.startDate ? new Date(event.startDate).toISOString().split('T')[0] : '',
       endDate: event.endDate ? new Date(event.endDate).toISOString().split('T')[0] : '',
-      prizeBreakdown: event.prizeBreakdown || calculatePrizeBreakdown(event),
+      prizeBreakdown: event.prizeBreakdown || [],
+      rewardTiers: event.rewardTiers || defaultRewardTiers,
       rewards: event.rewards || [''],
       participants: event.participants || 0,
       cashbackPercentage: event.cashbackPercentage || 0,
@@ -117,7 +152,8 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       endDate: '',
       participants: 0,
       prize: '',
-      prizeBreakdown: [{ position: 'Enter prize and participants', reward: 'to see breakdown' }],
+      prizeBreakdown: [],
+      rewardTiers: defaultRewardTiers,
       cashbackPercentage: 0,
       difficulty: 'Beginner',
       entryFee: 0,
@@ -155,20 +191,23 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       return errors;
     },
     onSubmit: (values) => {
+      const calculated = calculateDistribution(values);
       const finalValues = {
         ...values,
-        prizeBreakdown: calculatePrizeBreakdown(values),
+        prizeBreakdown: calculated.prizeBreakdown,
+        rewardTiers: calculated.rewardTiers,
         rewards: values.rewards.filter(reward => reward.trim() !== '')
       };
       onSubmit(finalValues);
     },
   });
 
-  // Update prize breakdown when relevant fields change
+  // Update distributions when relevant fields change
   useEffect(() => {
     if (formik.values.prize && formik.values.participants !== undefined) {
-      const calculatedBreakdown = calculatePrizeBreakdown(formik.values);
-      formik.setFieldValue('prizeBreakdown', calculatedBreakdown);
+      const calculated = calculateDistribution(formik.values);
+      formik.setFieldValue('prizeBreakdown', calculated.prizeBreakdown);
+      formik.setFieldValue('rewardTiers', calculated.rewardTiers);
     }
   }, [formik.values.prize, formik.values.participants]);
 
@@ -186,6 +225,26 @@ const EventModal = ({ event, onClose, onSubmit }) => {
     if (formik.values.rewards.length > 1) {
       const newRewards = formik.values.rewards.filter((_, i) => i !== index);
       formik.setFieldValue('rewards', newRewards);
+    }
+  };
+
+  const handleRewardTierChange = (index, field, value) => {
+    const newRewardTiers = [...formik.values.rewardTiers];
+    newRewardTiers[index][field] = value;
+    formik.setFieldValue('rewardTiers', newRewardTiers);
+  };
+
+  const addRewardTier = () => {
+    formik.setFieldValue('rewardTiers', [
+      ...formik.values.rewardTiers,
+      { tier: '', description: '' }
+    ]);
+  };
+
+  const removeRewardTier = (index) => {
+    if (formik.values.rewardTiers.length > 1) {
+      const newRewardTiers = formik.values.rewardTiers.filter((_, i) => i !== index);
+      formik.setFieldValue('rewardTiers', newRewardTiers);
     }
   };
 
@@ -443,24 +502,74 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                 </div>
               </div>
 
-              {/* Prize Breakdown (Auto-calculated) */}
+              {/* Prize Breakdown */}
               <div className="md:col-span-2 space-y-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Prize Breakdown (Auto-calculated)
+                  Prize Distribution (Auto-calculated)
                 </label>
-                <div className="space-y-3">
+                <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
                   {formik.values.prizeBreakdown.map((breakdown, index) => (
-                    <div key={index} className="flex gap-3 items-center bg-gray-50 p-3 rounded-lg">
-                      <div className="font-medium w-1/3">{breakdown.position}</div>
+                    <div key={index} className="flex justify-between items-center">
+                      <div className="font-medium">{breakdown.position}</div>
                       <div className="text-gray-700">{breakdown.reward}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Rewards */}
+              {/* Performance Reward Tiers */}
               <div className="md:col-span-2 space-y-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Rewards</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Performance Reward Tiers
+                </label>
+                <div className="space-y-3">
+                  {formik.values.rewardTiers.map((tier, index) => (
+                    <div key={index} className="flex gap-3 items-start">
+                      <div className="flex-1 grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs text-gray-500 mb-1">Tier Name</label>
+                          <input
+                            type="text"
+                            value={tier.tier}
+                            onChange={(e) => handleRewardTierChange(index, 'tier', e.target.value)}
+                            placeholder="e.g. 5%+ Gain"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-500 mb-1">Reward Description</label>
+                          <input
+                            type="text"
+                            value={tier.description}
+                            onChange={(e) => handleRewardTierChange(index, 'description', e.target.value)}
+                            placeholder="e.g. 50% of entry fee returned"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeRewardTier(index)}
+                        className="p-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg hover:bg-red-50 transition-colors mt-6"
+                        disabled={formik.values.rewardTiers.length <= 1}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addRewardTier}
+                    className="mt-2 flex items-center text-lightBlue-600 hover:text-lightBlue-800 text-sm font-medium"
+                  >
+                    <Plus size={16} className="mr-2" /> Add Reward Tier
+                  </button>
+                </div>
+              </div>
+
+              {/* Additional Rewards */}
+              <div className="md:col-span-2 space-y-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Additional Rewards</label>
                 <div className="space-y-3">
                   {formik.values.rewards.map((reward, index) => (
                     <div key={index} className="flex gap-3 items-center">
