@@ -80,9 +80,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrgById } from "../../../redux/Organization/auth/organizationAuthSlice";
 import OrganizationProfileModal from "../../../views/Organization/OrganizationDetails/Models/OrganizationProfileModal";
+import OrgChangePasswordModal from "../Modals/OrgChangePasswordModal";
 
 const UserDropdown = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const { orgId, currentOrg } = useSelector((state) => state.organization.auth);
@@ -103,6 +105,15 @@ const UserDropdown = () => {
     setIsModalOpen(false);
   };
 
+  const openPasswordModal = () => {
+    setIsPasswordModalOpen(true);
+    setIsMenuOpen(false); // Close the menu when modal opens
+  };
+
+  const closePasswordModal = () => {
+    setIsPasswordModalOpen(false);
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -121,12 +132,18 @@ const UserDropdown = () => {
           />
         </button>
         {isMenuOpen && (
-          <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg overflow-hidden z-20">
+          <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
             <button
               onClick={openModal}
-              className="block w-full px-6 py-2 text-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
             >
               Profile
+            </button>
+            <button
+              onClick={openPasswordModal}
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              Change Password
             </button>
           </div>
         )}
@@ -141,6 +158,10 @@ const UserDropdown = () => {
             dispatch(fetchOrgById(orgId)); // Refresh organization data using orgId
           }
         }}
+      />
+       <OrgChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={closePasswordModal}
       />
     </>
   );
