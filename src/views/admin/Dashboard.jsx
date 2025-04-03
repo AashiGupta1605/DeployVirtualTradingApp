@@ -7,7 +7,7 @@ export default function Dashboard() {
 
 return (
 <div className="mt-12 overflow-hidden">
-<StatsSection isDashboard={true} />
+<StatsSection isDashboard={true} pageType="dashboard"  />
 <div className="px-4 mx-auto w-full -mt-12">
 <div className="flex flex-wrap">
 <div className="w-full xl:w-8/12 px-4">

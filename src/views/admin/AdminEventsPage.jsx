@@ -18,6 +18,7 @@ import {
 import { toast } from 'react-hot-toast';
 import EventModal from '../../components/Admin/Modals/EventModal';
 import EventDetailsModal from '../../components/Admin/Modals/EventDetailsModal';
+import StatsSection from '../../components/Admin/Cards/StatsSection';
 
 const AdminEventsPage = () => {
   const dispatch = useDispatch();
@@ -102,6 +103,8 @@ const AdminEventsPage = () => {
 
   return (
     <div className="min-h-screen mt-12 bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <StatsSection isDashboard={false} pageType="events" />
+
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">

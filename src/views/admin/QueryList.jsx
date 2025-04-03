@@ -188,6 +188,7 @@ const QueriesPage = () => {
       <StatsSection 
         stats={calculatedStats}
         isDashboard={false}
+        pageType="queries"
       />
 
       <div className="px-8 mx-4 -mt-12">
