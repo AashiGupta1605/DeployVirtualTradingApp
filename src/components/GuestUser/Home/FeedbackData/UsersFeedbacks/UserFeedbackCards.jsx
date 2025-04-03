@@ -85,7 +85,7 @@ const UserFeedbackCards = () => {
         <button 
           onClick={handlePrev} 
           disabled={currentIndex === 0} 
-          className="absolute left-0 mr-8 top-[52%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
+          className="absolute -left-1 mr-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
           >
           <BiChevronLeft />
         </button>
@@ -217,7 +217,7 @@ const UserFeedbackCards = () => {
       <button 
         onClick={handleNext} 
         disabled={currentIndex + itemsPerPage >= feedbacks.length} 
-        className="absolute right-0 ml-8 top-[52%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
+        className="absolute -right-1 ml-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
         >
         <BiChevronRight />
       </button>

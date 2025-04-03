@@ -76,6 +76,17 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     events: [
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
     ],
+    // gallery: {
+    //   icon: "fas fa-images",
+    //   items: [
+    //     { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
+    //     { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
+    //   ]
+    // },
+    gallery: [
+        { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
+        { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
+    ],
 };
 
   return (
@@ -95,12 +106,13 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+        {/* <div className="flex-1 overflow-y-auto px-4 py-1 space-y-0"> */}
+        <div className={`${sidebarExpanded ? "px-3" : "px-6"} flex-1 overflow-y-auto py-1 space-y-0`}>
           {Object.entries(menuItems).map(([section, items]) => (
             <div key={section} className="space-y-4">
               <button
                 onClick={() => handleMenuToggle(section)}
-                className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 ${ //here i do p-2 instead of p-3
+                className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${ //here i do p-1 instead of p-3
                   activeMenu === section
                     ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
                     : "text-gray-600"
@@ -172,7 +184,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
 const MenuLink = ({ to, icon, label, isActive }) => (
   <Link
     to={to}
-    className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 border-none outline-none ${
+    className={`flex items-center space-x-3 px-3 py-1 rounded-xl transition-all duration-200 border-none outline-none ${
       isActive ? "bg-lightBlue-50 text-lightBlue-600 border-none outline-none" : "text-gray-600 hover:bg-gray-100"
     }`}
   >
@@ -203,6 +215,7 @@ const getSectionIcon = (section) => {
     queries: "envelope",
     feedback: "comments",
     events: "calendar-alt",
+    gallery: "fas fa-images",
   };
   return icons[section] || "circle";
 };

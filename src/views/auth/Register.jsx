@@ -28,7 +28,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
     .oneOf([Yup.ref("password"), null], "Passwords must match") // ✅ Match password
     .required("Confirm Password is required"), // ✅ Required field
     mobile: Yup.string()
-      .matches(/^[0-9]{10}$/, "Invalid mobile number")
+      .matches(/^[9876]\d{9}$/, "Invalid mobile number")
       .required("Mobile number is required"),
     gender: Yup.string().required("Gender is required"),
     dob: Yup.date()
@@ -60,7 +60,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
       orgtype: "",
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values , { resetForm }) => {
       const { confirmPassword, ...userData } = values; // Exclude confirmPassword before sending data
   
       try {
@@ -79,6 +79,9 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
 
 if (response.ok) {
   toast.success(`${initialValues ? "User updated" : "Registration"} successful! Redirecting to login...`);
+  // Reset the form fields after successful submission
+  resetForm();
+  
   setTimeout(() => {
     navigate("/");
     onClose();
@@ -113,7 +116,10 @@ if (response.ok) {
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => {
+              formik.resetForm(); // Reset form fields
+              onClose(); // Close the modal or form
+            }}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
           >
             <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
@@ -262,7 +268,10 @@ if (response.ok) {
             <div className="col-span-2 flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  formik.resetForm(); // Reset form fields
+                  onClose(); // Close the modal or form
+                }}
                 className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
               >
                 Cancel

@@ -25,11 +25,16 @@ import { logout } from './redux/User/authSlice';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
+
 
 const App = () => {
   const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+const isOrganization = location.pathname.includes("organization");
+
     const handleLogout = () => {
       dispatch(logoutOrganization()); // Dispatch logout action
       dispatch(logout());
@@ -148,7 +153,7 @@ const App = () => {
      
       <Route path="/*" element={<GuestUser/>}/>
 
-      <Route path="/reset-password/:token" element={<ResetPasswordModal />} />
+      <Route path="/reset-password" element={<ResetPasswordModal />} />
       
 
       

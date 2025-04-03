@@ -1,28 +1,115 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPassword } from "../../redux/User/forgetPasswordSlice";
+import { resetPasswordOrganization } from "../../redux/Organization/auth/organizationAuthSlice";
 import logoImage from "../../assets/img/PGR_logo.jpeg";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useSearchParams,  useNavigate } from "react-router-dom";
 
 import { toast } from "react-hot-toast";
 
 const ResetPasswordModal = () => {
-  const { token } = useParams();
-  console.log("Reset Token from URL:", token);
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const role = searchParams.get("role"); // Extract role from URL
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [feedback, setFeedback] = useState({ message: "", type: "" }); // New state for messages
+  const [isExpired, setIsExpired] = useState(false); // Expiration state
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, error } = useSelector((state) => state.user.forgetpassword);
+
+  // Select Redux state dynamically based on role
+  const { status, error } = useSelector((state) =>
+    role === "organization" ? state.organization.auth : state.user.forgetpassword
+  );
+
+// Expiration Timer: Disable form after 15 minutes
+useEffect(() => {
+  if (!token) return; // Ensure token exists before proceeding
+
+  const storedToken = localStorage.getItem("resetToken");
+  const storedExpiration = localStorage.getItem("resetTokenExpiration");
+
+  let expirationTime;
+
+  // If a new reset token is used, update expiration time
+  if (!storedToken || storedToken !== token) {
+    localStorage.setItem("resetToken", token);
+    expirationTime = Date.now() + 15 * 60 * 1000; // 15 minutes from now
+    localStorage.setItem("resetTokenExpiration", expirationTime);
+  } else {
+    expirationTime = parseInt(storedExpiration, 10);
+  }
+
+  // Function to check expiration
+  const checkExpiration = () => {
+    const currentTime = Date.now();
+    if (currentTime >= expirationTime) {
+      setIsExpired(true);
+      setFeedback({ message: "Reset link has expired. Please request a new one.", type: "error" });
+    } else {
+      setIsExpired(false);
+    }
+  };
+
+  checkExpiration(); // Run immediately
+  const interval = setInterval(checkExpiration, 1000); // Check every second
+
+  return () => clearInterval(interval);
+}, [token]); // Re-run when `token` changes
+
+
+//   const storedToken = localStorage.getItem("resetToken");
+//   const storedExpiration = localStorage.getItem("resetTokenExpiration");
+  
+//   // Check if token has changed (indicating a new reset request)
+//   if (!storedToken || storedToken !== token) {
+//     // Store the new token and reset expiration time
+//     localStorage.setItem("resetToken", token);
+//     const newExpirationTime = Date.now() + 15 * 60 * 1000; // 15 mins from now
+//     localStorage.setItem("resetTokenExpiration", newExpirationTime);
+//   }
+
+//   const expirationTime = parseInt(localStorage.getItem("resetTokenExpiration"), 10);
+
+//   const checkExpiration = () => {
+//     if (Date.now() >= expirationTime) {
+//       setIsExpired(true);
+//       setFeedback({ message: "Reset link has expired. Please request a new one.", type: "error" });
+//     } else {
+//       setIsExpired(false);
+//     }
+//   };
+
+//   checkExpiration(); // Initial check
+//   const interval = setInterval(checkExpiration, 1000); // Check every second
+
+//   return () => clearInterval(interval);
+// }, [token]); // Dependency on token
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage("");
-    dispatch(resetPassword({ token, newPassword, confirmPassword })).then((res) => {
+    setFeedback({ message: "", type: "" });
+
+    if (!token || !role || isExpired) {
+      setFeedback({ message: "Invalid or expired reset link!", type: "error" });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setFeedback({ message: "Passwords do not match!", type: "error" });
+      return;
+    }
+
+    const action = role === "organization" ? resetPasswordOrganization : resetPassword;
+
+    dispatch(action({ token, newPassword, confirmPassword })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
-        setMessage("Password reset successfully! Please log in.");
-        //setTimeout(() => navigate("/"), 2000);
+        setFeedback({ message: "Password reset successfully! Please log in.", type: "success" });
+      } else {
+        setFeedback({ message: "Failed to reset password. Try again.", type: "error" });
       }
     });
   };
@@ -65,6 +152,7 @@ const ResetPasswordModal = () => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
+              disabled={isExpired}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
@@ -81,6 +169,7 @@ const ResetPasswordModal = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              disabled={isExpired}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
@@ -89,14 +178,21 @@ const ResetPasswordModal = () => {
           </div>
           <button
             type="submit"
-            disabled={status === "loading"}
+            disabled={status === "loading" || isExpired}
             className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
           >
             {status === "loading" ? "Resetting..." : "Reset Password"}
           </button>
-          {/* Display error or success message below the button */}
-          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-          {message && <p className="text-sm text-green-500 mt-2">{message}</p>}
+           {/* Display messages */}
+           {feedback.message && (
+            <p
+              className={`text-sm mt-2 ${
+                feedback.type === "success" ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {feedback.message}
+            </p>
+          )}
         </form>
 
         {/* Close Button (Redirect to login instead of closing modal) */}
