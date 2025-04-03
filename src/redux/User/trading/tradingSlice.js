@@ -121,12 +121,15 @@ export const fetchHoldings = createAsyncThunk(
   }
 );
 
-// tradingSlice.js
+
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
-  async (orderDetails, { dispatch, rejectWithValue }) => {
+  async (orderDetails, { dispatch, rejectWithValue, getState }) => {
     try {
-      // Validate required fields
+      // Get active event from state
+      const state = getState();
+      const activeEvent = state.user.events?.activeEvent;
+      
       const requiredFields = [
         'userId', 
         'subscriptionPlanId', 
@@ -150,17 +153,12 @@ export const placeOrder = createAsyncThunk(
         });
       }
 
-      // Sanitize order details
-      const sanitizedOrderDetails = {
-        ...orderDetails,
-        numberOfShares: Number(orderDetails.numberOfShares),
-        price: Number(orderDetails.price),
-        total: Number(orderDetails.total)
-      };
-
       const response = await axios.post(
         `${BASE_API_URL}/user/trading/trade`,
-        sanitizedOrderDetails,
+        {
+          ...orderDetails,
+          eventId: activeEvent?._id || null // Include active event ID if exists
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -188,9 +186,13 @@ export const placeOrder = createAsyncThunk(
 
 export const fetchTransactionHistory = createAsyncThunk(
   'trading/fetchHistory',
-  async ({ userId, subscriptionPlanId }, { rejectWithValue }) => {
+  async ({ userId, eventId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/user/trading/history/${userId}`);
+      const url = eventId 
+        ? `${BASE_API_URL}/user/trading/event-transactions/${userId}/${eventId}`
+        : `${BASE_API_URL}/user/trading/history/${userId}`;
+      
+      const response = await axios.get(url);
       return {
         transactions: response.data.transactions || [],
         holdings: response.data.holdings || []
@@ -203,6 +205,8 @@ export const fetchTransactionHistory = createAsyncThunk(
     }
   }
 );
+
+// Add new selector for event-filtered transactions
 
 // Slice
 const tradingSlice = createSlice({
@@ -303,6 +307,13 @@ const tradingSlice = createSlice({
 
 // Selectors
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
+export const selectFilteredTransactions = createSelector(
+  [selectTransactions, (state, eventId) => eventId],
+  (transactions, eventId) => {
+    if (!eventId) return transactions;
+    return transactions.filter(t => t.eventId === eventId);
+  }
+);
 export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
 export const selectStatistics = (state) => state.user.tradingModal.statistics;
 export const selectLoadingState = (state) => {
