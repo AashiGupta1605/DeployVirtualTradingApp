@@ -1,4 +1,3 @@
-// CompanyDetailModal.jsx
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { X, AlertCircle } from 'lucide-react';
@@ -19,6 +18,7 @@ import {
   selectHoldings,
   selectTotalHoldingsValue,
 } from '../../../../redux/User/trading/tradingSlice';
+import { selectActiveEvent } from '../../../../redux/User/events/eventsSlice';
 import ModalHeader from './parts/ModalHeader';
 import TabNavigation from './parts/TabNavigation';
 import OverviewTab from './tabs/OverviewTab';
@@ -69,10 +69,12 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
 
   // User ID selector
   const userId = useSelector((state) => state.user.auth?.user?._id);
-  const user = useSelector((state) => state.user.auth?.user); // Fetch the entire user object
+  const user = useSelector((state) => state.user.auth?.user);
   const subscriptionPlanId = useSelector((state) =>
     state.user.subscriptionPlan?.activeSubscription?._id
   );
+  const activeEvent = useSelector(selectActiveEvent);
+
   // State for SubscriptionModal
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
@@ -155,7 +157,7 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
   // Effects
   useEffect(() => {
     if (isOpen && symbol) {
-      dispatch(fetchCompanyDetails({ symbol, type })); // Pass both symbol and type
+      dispatch(fetchCompanyDetails({ symbol, type }));
     }
     return () => {
       if (!isOpen) {
@@ -231,6 +233,7 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
         return (
           <Buy_SellTab
             symbol={symbol}
+            activeEvent={activeEvent}
             data={{
               companyName: data?.companyName,
               currentPrice: data?.lastPrice,
@@ -246,7 +249,7 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
             loading={loading || isRefreshing}
             error={error}
             onRefresh={handleRefresh}
-            onOpenSubscriptionModal={() => setIsSubscriptionModalOpen(true)} // Pass the handler
+            onOpenSubscriptionModal={() => setIsSubscriptionModalOpen(true)}
           />
         );
       default:
@@ -264,7 +267,6 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-
       <div 
         className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity z-0" 
         onClick={onClose}
@@ -330,11 +332,10 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
         </div>
       </div>
 
-      {/* Subscription Modal */}
       <SubscriptionModal
         isOpen={isSubscriptionModalOpen}
         onClose={() => setIsSubscriptionModalOpen(false)}
-        selectedUser={user} // Pass the entire user object
+        selectedUser={user}
         onSuccess={() => {
           toast.success('Subscription updated successfully');
           setIsSubscriptionModalOpen(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -6,11 +6,14 @@ import {
   fetchUserEvents,
   setFilter,
   setSortBy,
+  setActiveEvent,
+  clearActiveEvent,
   selectAllEvents,
   selectEventStatus,
   selectEventError,
   selectEventFilters,
-  selectEventStatistics
+  selectEventStatistics,
+  selectActiveEvent
 } from '../../redux/User/events/eventsSlice';
 import {
   Calendar,
@@ -42,6 +45,7 @@ const MyEventsPage = () => {
   const statistics = useSelector(selectEventStatistics);
   const user = useSelector((state) => state.user.auth.user);
   const isAuthenticated = useSelector((state) => state.user.auth.isAuthenticated);
+  const activeEvent = useSelector(selectActiveEvent);
 
   // Fetch events on component mount
   useEffect(() => {
@@ -68,6 +72,17 @@ const MyEventsPage = () => {
   const closeDetailsModal = () => {
     setSelectedEvent(null);
     setIsDetailsModalOpen(false);
+  };
+
+  // Handle setting active event
+  const handleSetActiveEvent = (event) => {
+    if (activeEvent && activeEvent._id === event._id) {
+      dispatch(clearActiveEvent());
+      toast.success('Event deactivated');
+    } else {
+      dispatch(setActiveEvent(event));
+      toast.success(`${event.title} is now active`);
+    }
   };
 
   // Format currency
@@ -550,6 +565,18 @@ const MyEventsPage = () => {
                 <BarChart2 size={16} />
               </Link>
             </div>
+
+            {/* Active Event Toggle Button */}
+            <button
+              onClick={() => handleSetActiveEvent(event)}
+              className={`w-full py-2 px-4 rounded-lg transition-colors ${
+                activeEvent?._id === event._id
+                  ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+              }`}
+            >
+              {activeEvent?._id === event._id ? 'Active' : 'Set as Active'}
+            </button>
           </div>
         </div>
       </div>

@@ -59,6 +59,7 @@ export const fetchEventSpecificTransactions = createAsyncThunk(
 const initialState = {
   events: [],
   selectedEvent: null,
+  activeEvent: null, // Add activeEvent to initial state
   eventPerformance: null,
   eventTransactions: [],
   status: 'idle',
@@ -85,6 +86,12 @@ const eventsSlice = createSlice({
         state.eventPerformance = null;
         state.eventTransactions = [];
       }
+    },
+    setActiveEvent: (state, action) => {
+      state.activeEvent = action.payload;
+    },
+    clearActiveEvent: (state) => {
+      state.activeEvent = null;
     },
     setFilter: (state, action) => {
       state.filters.status = action.payload;
@@ -118,6 +125,20 @@ const eventsSlice = createSlice({
           sum + (event.currentPnL || 0), 0
         )
       };
+    },  setActiveEvent: (state, action) => {
+      state.activeEvent = action.payload;
+      // Store in localStorage for persistence
+      if (action.payload) {
+        localStorage.setItem('activeEvent', JSON.stringify(action.payload));
+      } else {
+        localStorage.removeItem('activeEvent');
+      }
+    },
+    loadActiveEventFromStorage: (state) => {
+      const storedEvent = localStorage.getItem('activeEvent');
+      if (storedEvent) {
+        state.activeEvent = JSON.parse(storedEvent);
+      }
     }
   },
   extraReducers: (builder) => {
@@ -160,25 +181,36 @@ const eventsSlice = createSlice({
 // Export actions
 export const {
   setSelectedEvent,
+  setActiveEvent,
+  clearActiveEvent,
   setFilter,
   setSortBy,
   updateEventStats,
   calculateStatistics
 } = eventsSlice.actions;
 
-// Export selectors with proper state access
+// Export selectors
 export const selectAllEvents = (state) => state.user.events?.events || [];
 export const selectActiveEvents = createSelector(
-    [(state) => state.user.events?.events || []],
-    (events) => {
-      const now = new Date();
-      return events.filter(event => 
-        new Date(event.endDate) >= now && 
-        new Date(event.startDate) <= now
-      );
-    }
-  );
+  [(state) => state.user.events?.events || []],
+  (events) => {
+    const now = new Date();
+    return events.filter(event => 
+      new Date(event.endDate) >= now && 
+      new Date(event.startDate) <= now
+    );
+  }
+);
+
+export const selectActiveEvent = createSelector(
+  [selectAllEvents, (state) => state.user.events?.activeEvent],
+  (allEvents, activeEvent) => {
+    if (!activeEvent) return null;
+    return allEvents.find(event => event._id === activeEvent._id) || activeEvent;
+  }
+);
 export const selectSelectedEvent = (state) => state.user.events?.selectedEvent;
+// export const selectActiveEvent = (state) => state.user.events?.activeEvent; // New selector
 export const selectEventPerformance = (state) => state.user.events?.eventPerformance;
 export const selectEventTransactions = (state) => state.user.events?.eventTransactions || [];
 export const selectEventStatus = (state) => state.user.events?.status || 'idle';
