@@ -26,26 +26,40 @@ const ResetPasswordModal = () => {
 
 // Expiration Timer: Disable form after 15 minutes
 useEffect(() => {
-  const storedExpiration = localStorage.getItem("resetTokenExpiration");
-  const expirationTime = storedExpiration ? parseInt(storedExpiration, 10) : Date.now() + 15 * 60 * 1000;
+  if (!token) return; // Ensure token exists before proceeding
 
-  if (!storedExpiration) {
+  const storedToken = localStorage.getItem("resetToken");
+  const storedExpiration = localStorage.getItem("resetTokenExpiration");
+
+  let expirationTime;
+
+  // If a new reset token is used, update expiration time
+  if (!storedToken || storedToken !== token) {
+    localStorage.setItem("resetToken", token);
+    expirationTime = Date.now() + 15 * 60 * 1000; // 15 minutes from now
     localStorage.setItem("resetTokenExpiration", expirationTime);
+  } else {
+    expirationTime = parseInt(storedExpiration, 10);
   }
 
+  // Function to check expiration
   const checkExpiration = () => {
-    if (Date.now() >= expirationTime) {
+    const currentTime = Date.now();
+    if (currentTime >= expirationTime) {
       setIsExpired(true);
       setFeedback({ message: "Reset link has expired. Please request a new one.", type: "error" });
+    } else {
+      setIsExpired(false);
     }
   };
 
-  checkExpiration(); // Check on mount
+  checkExpiration(); // Run immediately
   const interval = setInterval(checkExpiration, 1000); // Check every second
 
   return () => clearInterval(interval);
-}, []);
-// useEffect(() => {
+}, [token]); // Re-run when `token` changes
+
+
 //   const storedToken = localStorage.getItem("resetToken");
 //   const storedExpiration = localStorage.getItem("resetTokenExpiration");
   

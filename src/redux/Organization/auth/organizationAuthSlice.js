@@ -371,6 +371,24 @@ export const registerOrganization = createAsyncThunk(
   }
 );
 
+//change password 
+
+export const changePasswordOrganization = createAsyncThunk(
+  "organizations/changePassword",
+  async ({ orgId, oldPassword, newPassword }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`${BASE_API_URL}/organization/change-password`, {
+        orgId,
+        oldPassword,
+        newPassword
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // 1️⃣ Forgot Password - Send Reset Link
 export const forgotPasswordOrganization = createAsyncThunk(
   "organizations/forgotPassword",
@@ -568,6 +586,19 @@ const organizationAuthSlice = createSlice({
         state.status = "failed";
         state.loading = false;
         state.error = action.payload || "Failed to reset password";
+      })
+      //change password
+      .addCase(changePasswordOrganization.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePasswordOrganization.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(changePasswordOrganization.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
