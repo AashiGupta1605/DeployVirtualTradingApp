@@ -227,7 +227,7 @@ const RegisterUserList = () => {
 
   return (
     <div className="mt-12 overflow-hidden">
-      <StatsSection stats={stats} isDashboard={false} />
+      <StatsSection stats={stats} isDashboard={false} pageType="users" />
 
       <div className="px-8 mx-4 -mt-12">
         {/* Table Filters */}
