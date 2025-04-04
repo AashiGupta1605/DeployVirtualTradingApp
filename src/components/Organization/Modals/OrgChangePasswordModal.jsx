@@ -8,18 +8,30 @@ import { changePasswordOrganization } from "../../../redux/Organization/auth/org
 const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
   const dispatch = useDispatch();
 
-  const validationSchema = Yup.object().shape({
-    oldPassword: Yup.string()
-      .min(6, "Old password must be at least 6 characters")
-      .required("Old password is required"),
-    newPassword: Yup.string()
-      .min(6, "New password must be at least 6 characters")
-      .notOneOf([Yup.ref("oldPassword")], "New password must be different from the old password")
-      .required("New password is required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("newPassword")], "New password and confirm password must match")
-      .required("Confirm password is required"),
-  });
+ const validationSchema = Yup.object().shape({
+     oldPassword: Yup.string()
+       .min(8, "Old password must be at least 8 characters")
+       .max(15, "Old password cannot be more than 15 characters")
+       .matches(
+         /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+         "Old password must contain at least one letter and one special character"
+       )
+       .required("Old password is required"),
+   
+     newPassword: Yup.string()
+       .min(8, "New password must be at least 8 characters")
+       .max(15, "New password cannot be more than 15 characters")
+       .matches(
+         /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+         "New password must contain at least one letter and one special character"
+       )
+       .notOneOf([Yup.ref("oldPassword")], "New password must be different from the old password")
+       .required("New password is required"),
+   
+     confirmPassword: Yup.string()
+       .oneOf([Yup.ref("newPassword")], "New password and confirm password must match")
+       .required("Confirm password is required"),
+   });
 
   const formik = useFormik({
     initialValues: {
