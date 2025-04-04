@@ -5,7 +5,7 @@ import { BASE_API_URL } from '../../utils/BaseUrl';
 // Admin credentials (Consider moving to environment variables)
 const ADMIN_CREDENTIALS = {
   email: "admin@example.com",
-  password: "admin123"
+  password: "admin@123"
 };
 
 // Helper function to safely parse JSON
