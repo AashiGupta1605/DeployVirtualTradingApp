@@ -356,8 +356,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-blue-500",
         showDetails: true,
         statItems: [
-          { label: "Total Users", value: totalUsers.toString() },
-          { label: "Active Users", value: activeUsers.toString() },
+          { label: "Total", value: totalUsers.toString() },
+          { label: "Active", value: activeUsers.toString() },
           // { label: "Inactive Users", value: inactiveUsers.toString() },
           // { label: "Male Users", value: maleUsers.toString() },
           // { label: "Female Users", value: femaleUsers.toString() },
@@ -371,8 +371,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-indigo-500",
         showDetails: true,
         statItems: [
-          { label: "Total Organizations", value: totalOrganizations.toString() },
-          { label: "Active Users", value: orgStats.active.toString() },
+          { label: "Total", value: totalOrganizations.toString() },
+          { label: "Active", value: orgStats.active.toString() },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
@@ -384,8 +384,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-purple-500",
         showDetails: true,
         statItems: [
-          { label: "Total Events", value: totalOrganizations.toString() },
-          { label: "Upcoming Events", value: orgStats.active.toString() },
+          { label: "Total", value: totalOrganizations.toString() },
+          { label: "Upcoming", value: orgStats.active.toString() },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
@@ -397,8 +397,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-blue-400",
         showDetails: true,
         statItems: [
-          { label: "Total Feedbacks", value: "123" },
-          { label: "Feedback Ratings", value: "4.6" },
+          { label: "Total", value: "123" },
+          { label: "Rating", value: "4.6" },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
@@ -411,8 +411,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-pink-400",
         showDetails: true,
         statItems: [
-          { label: "Total Queries", value: totalOrganizations.toString() },
-          { label: "Query Solved", value: orgStats.active.toString() },
+          { label: "Total", value: totalOrganizations.toString() },
+          { label: "Solved", value: orgStats.active.toString() },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
@@ -424,8 +424,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-green-500",
         showDetails: true,
         statItems: [
-          { label: "Total Stocks", value: totalOrganizations.toString() },
-          { label: "Stocks Data", value: orgStats.active.toString() },
+          { label: "Total", value: totalOrganizations.toString() },
+          { label: "Data", value: orgStats.active.toString() },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
@@ -437,21 +437,21 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-gray-500",
         showDetails: true,
         statItems: [
-          { label: "Total Galleries", value: totalOrganizations.toString() },
-          { label: "Photo Count", value: orgStats.active.toString() },
+          { label: "Total", value: totalOrganizations.toString() },
+          { label: "Photo", value: orgStats.active.toString() },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
       },
       {
         statIconName: "fas fa-birthday-cake",
-        statSubtitle: "UPCOMING STATS",
+        statSubtitle: "NEW STATS",
         statTitle: pageType!="dashboard" ?  averageUserAge.toString() : "",
         statIconColor: "bg-yellow-500",
         showDetails: true,
         statItems: [
-          { label: "Total Upcoming", value: totalOrganizations.toString() },
-          { label: "Total Upcoming ", value: orgStats.active.toString() },
+          { label: "Total", value: totalOrganizations.toString() },
+          { label: "Active", value: orgStats.active.toString() },
           // { label: "Pending", value: orgStats.pending.toString() },
           // { label: "Inactive", value: orgStats.inactive.toString() }
         ]
