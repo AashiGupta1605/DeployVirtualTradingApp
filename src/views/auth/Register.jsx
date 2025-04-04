@@ -22,8 +22,13 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
     name: Yup.string().required("Name is required"),
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+  .min(8, "Password must be at least 8 characters")
+  .max(15, "Password cannot be more than 20 characters")
+  .matches(
+    /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    "Password must contain at least one letter and one special character"
+  )
+  .required("Password is required"),
       confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match") // ✅ Match password
     .required("Confirm Password is required"), // ✅ Required field

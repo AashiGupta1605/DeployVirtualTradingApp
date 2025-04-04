@@ -43,6 +43,21 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+// Verify Reset Token
+export const verifyResetToken = createAsyncThunk(
+  "auth/verifyResetToken",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_API_URL}/user/auth/verify-reset-token/${token}`);
+      return response.data.message;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Reset link has expired. Please request a new one."
+      );
+    }
+  }
+);
+
 // Forget Password Slice
 const forgetPasswordSlice = createSlice({
   name: "forgetPassword",
@@ -52,6 +67,7 @@ const forgetPasswordSlice = createSlice({
     status: "idle",
     error: null,
     isAuthenticated: !!localStorage.getItem("token"),
+    tokenValid: null,
   },
   reducers: {
     logout: (state) => {
@@ -91,7 +107,22 @@ const forgetPasswordSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
-      });
+      })
+      // Verify Reset Token
+       .addCase(verifyResetToken.pending, (state) => {
+         state.status = "loading";
+         state.error = null;
+         state.tokenValid = null;
+      })
+       .addCase(verifyResetToken.fulfilled, (state, action) => {
+         state.status = "succeeded";
+         state.tokenValid = true;
+      })
+       .addCase(verifyResetToken.rejected, (state, action) => {
+         state.status = "failed";
+         state.tokenValid = false;
+         state.error = action.payload;
+     });
   },
 });
 

@@ -28,7 +28,14 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
           const isMobile = /^\d{10}$/.test(value); // Assuming mobile number is 10 digits
           return isEmail || isMobile;
         }),
-      password: Yup.string().required('Password is required'),
+      password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .max(15, "Password cannot be more than 20 characters")
+        .matches(
+          /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Password must contain at least one letter and one special character"
+        )
+        .required("Password is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
       try {

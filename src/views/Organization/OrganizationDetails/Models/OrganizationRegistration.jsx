@@ -1004,7 +1004,14 @@ const validationSchema = Yup.object({
   approvalStatus: Yup.string()
     .oneOf(['approved', 'rejected', 'pending'], 'Invalid approval status')
     .default('pending'),
-  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .max(15, "Password cannot be more than 20 characters")
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one letter and one special character"
+    )
+    .required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Confirm Password is required'),
