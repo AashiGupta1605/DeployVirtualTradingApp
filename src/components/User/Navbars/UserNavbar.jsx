@@ -1,91 +1,3 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import CardSettings from "../Cards/CardSettings";
-
-// export default function UserNavbar({ sidebarExpanded }) {
-//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-//   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-//   const navigate = useNavigate(); // Hook for navigation
-
-//   const handleLogout = () => {
-//     localStorage.removeItem("token"); // Remove token from localStorage
-//     navigate("/login"); // Redirect to login page
-//   };
-
-//   const handleProfile = () => {
-//     setIsProfileModalOpen(true); // Open profile modal instead of navigating
-//   };
-
-//   return (
-//     <nav
-//       className="absolute top-0 w-full z-10 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out"
-//     >
-//       <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
-//         {/* Brand with Icon */}
-//         <div className="flex items-center space-x-2">
-//           <i className="fas fa-briefcase text-xl text-gray-700"></i>
-//           <span className="text-gray-700 text-lg font-semibold">StockSphere</span>
-//         </div>
-
-//         {/* Search Form */}
-//         <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
-//           <div className="relative flex w-full flex-wrap items-stretch">
-//             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-//               <svg
-//                 className="w-4 h-4 text-gray-500"
-//                 fill="none"
-//                 stroke="currentColor"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth="2"
-//                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-//                 />
-//               </svg>
-//             </div>
-//             <input
-//               type="text"
-//               placeholder="Search here..."
-//               className="border border-gray-200 px-3 py-2 placeholder-gray-400 text-gray-700 relative bg-white rounded-lg text-sm shadow-sm outline-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full pl-10 transition-all duration-200"
-//             />
-//           </div>
-//         </form>
-
-//         {/* Logout Dropdown */}
-//         <div className="relative">
-//           <button
-//             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-//             className="flex items-center space-x-2 text-gray-700 font-semibold focus:outline-none"
-//           >
-//             <i className="fas fa-user-circle text-2xl"></i>
-//           </button>
-//           {isDropdownOpen && (
-//             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
-//               <button
-//                 onClick={handleProfile}
-//                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-//               >
-//                 Profile
-//               </button>
-//               <button
-//                 onClick={handleLogout}
-//                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-//               >
-//                 Logout
-//               </button>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//       {isProfileModalOpen && (
-//         <CardSettings isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
-//       )}
-//     </nav>
-//   );
-// }
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSettings from "../Cards/CardSettings";
@@ -93,19 +5,27 @@ import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchUserData } from "../../../redux/User/userprofileSlice";
 import ChangePasswordModal from "../Cards/ChangePasswordModal";
 import { useDispatch, useSelector } from "react-redux";
-import { Trophy, X } from 'lucide-react';
-import { clearActiveEvent, selectActiveEvent } from "../../../redux/User/events/eventsSlice";
+import { Trophy, X, ChevronDown } from 'lucide-react';
+import { 
+  clearActiveEvent, 
+  selectActiveEvent,
+  selectActiveEvents,
+  setActiveEvent
+} from "../../../redux/User/events/eventsSlice";
 import { toast } from 'react-hot-toast';
 
 export default function UserNavbar({ sidebarExpanded }) {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user.profile);
   const activeEvent = useSelector(selectActiveEvent);
+  const events = useSelector(selectActiveEvents);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isEventDropdownOpen, setIsEventDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const eventDropdownRef = useRef(null);
 
   // Fetch user data when sidebar is expanded
   useEffect(() => {
@@ -133,10 +53,18 @@ export default function UserNavbar({ sidebarExpanded }) {
     toast.success('Event deactivated');
   };
 
+  const handleEventSelect = (event) => {
+    dispatch(setActiveEvent(event));
+    setIsEventDropdownOpen(false);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      if (eventDropdownRef.current && !eventDropdownRef.current.contains(event.target)) {
+        setIsEventDropdownOpen(false);
       }
     };
 
@@ -165,49 +93,66 @@ export default function UserNavbar({ sidebarExpanded }) {
           <span className="text-xl">PGR - Virtual Trading App</span>
         </a>
 
-        {/* Active Event Display - Center aligned */}
-        <div className="flex-1 flex justify-center">
-          {activeEvent && (
-            <div className="flex items-center bg-blue-50 px-4 py-2 rounded-full text-sm text-blue-800 shadow-sm max-w-md mx-4">
-              <Trophy className="w-4 h-4 mr-2 flex-shrink-0" />
-              <span className="truncate">{activeEvent.title}</span>
-              <button 
-                onClick={handleClearActiveEvent}
-                className="ml-2 p-1 rounded-full hover:bg-blue-100 transition-colors"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          )}
-        </div>
-
         {/* Right side elements */}
         <div className="flex items-center space-x-4">
-          {/* Search Form - Hidden on smaller screens */}
-          <form className="hidden md:flex flex-row flex-wrap items-center">
-            <div className="relative flex w-full flex-wrap items-stretch">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-gray-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          {/* Event Dropdown */}
+          <div className="relative flex items-center space-x-2" ref={eventDropdownRef}>
+            {activeEvent && (
+              <div className="flex items-center bg-blue-50 px-3 py-1 rounded-full text-sm text-blue-800 shadow-sm">
+                <Trophy className="w-4 h-4 mr-1 flex-shrink-0" />
+                <span className="truncate max-w-xs">{activeEvent.title}</span>
+                <button 
+                  onClick={handleClearActiveEvent}
+                  className="ml-1 p-0.5 rounded-full hover:bg-blue-100 transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+                  <X className="w-3 h-3" />
+                </button>
               </div>
-              <input
-                type="text"
-                placeholder="Search here..."
-                className="border border-gray-200 px-3 py-2 placeholder-gray-400 text-gray-700 relative bg-white rounded-lg text-sm shadow-sm outline-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full pl-10 transition-all duration-200"
-              />
+            )}
+            
+            <div className="relative">
+              <button
+                onClick={() => setIsEventDropdownOpen(!isEventDropdownOpen)}
+                className="flex items-center space-x-1 bg-white px-3 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                <span>{activeEvent ? 'Change Event' : 'Select Event'}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isEventDropdownOpen ? 'transform rotate-180' : ''}`}/>
+              </button>
+              
+              {isEventDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                  {events.length > 0 ? (
+                    <>
+                      {events.map(event => (
+                        <button
+                          key={event._id}
+                          onClick={() => handleEventSelect(event)}
+                          className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm ${
+                            activeEvent?._id === event._id ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                          }`}
+                        >
+                          {event.title}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => {
+                          dispatch(clearActiveEvent());
+                          setIsEventDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 border-t border-gray-200"
+                      >
+                        No Active Event
+                      </button>
+                    </>
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-gray-500">
+                      No events available
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </form>
+          </div>
 
           {/* User Name */}
           <div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all hidden sm:block">

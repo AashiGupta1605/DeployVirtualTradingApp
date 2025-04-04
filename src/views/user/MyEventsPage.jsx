@@ -21,7 +21,6 @@ import {
   Trophy,
   X,
   CheckCircle,
-  DollarSign,
   Users,
   Info,
   Medal,
@@ -46,6 +45,16 @@ const MyEventsPage = () => {
   const user = useSelector((state) => state.user.auth.user);
   const isAuthenticated = useSelector((state) => state.user.auth.isAuthenticated);
   const activeEvent = useSelector(selectActiveEvent);
+
+  // Format currency with ₹ symbol
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
 
   // Fetch events on component mount
   useEffect(() => {
@@ -83,15 +92,6 @@ const MyEventsPage = () => {
       dispatch(setActiveEvent(event));
       toast.success(`${event.title} is now active`);
     }
-  };
-
-  // Format currency
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(amount);
   };
 
   // Calculate event progress
@@ -486,7 +486,7 @@ const MyEventsPage = () => {
   
             <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center text-sm">
-                <DollarSign className="mr-1.5 text-gray-500" size={14} />
+                <span className="mr-1.5 text-gray-500">₹</span>
                 <div>
                   <span className="text-gray-500">Entry Fee</span>
                   <p className="font-medium">₹{event.entryFee}</p>
@@ -566,17 +566,6 @@ const MyEventsPage = () => {
               </Link>
             </div>
 
-            {/* Active Event Toggle Button */}
-            <button
-              onClick={() => handleSetActiveEvent(event)}
-              className={`w-full py-2 px-4 rounded-lg transition-colors ${
-                activeEvent?._id === event._id
-                  ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
-            >
-              {activeEvent?._id === event._id ? 'Active' : 'Set as Active'}
-            </button>
           </div>
         </div>
       </div>

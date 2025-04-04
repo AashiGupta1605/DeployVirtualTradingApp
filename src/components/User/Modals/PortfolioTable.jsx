@@ -10,15 +10,13 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  selectTransactions,
-  selectHoldings,
   selectLoadingState,
   fetchTransactionHistory
 } from '../../../redux/User/trading/tradingSlice';
 import Pagination from '../../Common/TableItems/Pagination';
 import Loader from '../../Common/Loader';
 
-const PortfolioTable = ({ onStockClick }) => {
+const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
   const dispatch = useDispatch();
   
   // State management
@@ -28,15 +26,13 @@ const PortfolioTable = ({ onStockClick }) => {
 
   // Selectors
   const { loading } = useSelector(selectLoadingState);
-  const transactions = useSelector(selectTransactions);
-  const holdings = useSelector(selectHoldings);
 
-  // Fetch data on component mount
+  // Fetch data on component mount (only if no transactions passed as props)
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userId = localStorage.getItem('userId');
-        if (userId) {
+        if (userId && transactions.length === 0) {
           await dispatch(fetchTransactionHistory({ userId })).unwrap();
         }
       } catch (err) {
@@ -46,14 +42,14 @@ const PortfolioTable = ({ onStockClick }) => {
     };
 
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, transactions.length]);
 
   // Helper function to calculate stock stats
   const getStockStats = (symbol) => {
     try {
       if (!symbol) return { totalTrades: 0, buyTrades: 0, sellTrades: 0 };
 
-      const stockTransactions = (transactions || []).filter(t => 
+      const stockTransactions = transactions.filter(t => 
         t && t.companySymbol === symbol
       );
       
@@ -84,14 +80,14 @@ const PortfolioTable = ({ onStockClick }) => {
   const combinedStocks = useMemo(() => {
     try {
       const holdingsMap = new Map(
-        (holdings || []).map(holding => [
+        holdings.map(holding => [
           holding?.companySymbol, 
           holding
         ])
       );
 
       const transactionSymbols = new Set(
-        (transactions || [])
+        transactions
           .map(t => t?.companySymbol)
           .filter(Boolean)
       );
@@ -105,7 +101,7 @@ const PortfolioTable = ({ onStockClick }) => {
             companySymbol: symbol,
             quantity: 0,
             averageBuyPrice: 0,
-            lastUpdated: (transactions || [])
+            lastUpdated: transactions
               .filter(t => t?.companySymbol === symbol)
               .sort((a, b) => 
                 new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0)
@@ -170,21 +166,23 @@ const PortfolioTable = ({ onStockClick }) => {
   }
 
   // Loading state
-  if (loading) {
+  if (loading && transactions.length === 0) {
     return <Loader />;
   }
 
   // Empty state
-  if (!sortedStocks || sortedStocks.length === 0) {
+  if (sortedStocks.length === 0) {
     return (
       <div className="bg-white rounded shadow-lg overflow-hidden w-full p-8 text-center">
         <div className="text-2xl font-semibold text-gray-700 mb-4">
           📊 No Stock Details Available
         </div>
         <div className="text-lg text-gray-500 mb-6">
-          Start trading to see your portfolio history here.
+          {transactions.length === 0 
+            ? 'Start trading to see your portfolio history here.'
+            : 'No holdings found for the selected transactions.'}
         </div>
-        {onStockClick && (
+        {onStockClick && transactions.length === 0 && (
           <button
             onClick={() => onStockClick('start-trading')}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -196,7 +194,6 @@ const PortfolioTable = ({ onStockClick }) => {
     );
   }
 
-  // Main render
   return (
     <div className='flex flex-col'>
       <div className="bg-white rounded shadow-lg overflow-y-auto w-full h-72 px-4">
