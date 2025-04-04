@@ -863,12 +863,12 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                   label="View Events" 
                   isActive={location.pathname === "/user/eventspage"} 
                 />
-                {/* <MenuLink 
-                  to="/user/past-events" 
+                <MenuLink 
+                  to="/user/my-events" 
                   icon="fas fa-calendar-minus" 
-                  label="Past Events" 
-                  isActive={location.pathname === "/user/past-events"} 
-                /> */}
+                  label="My Events" 
+                  isActive={location.pathname === "/user/my-events"} 
+                />
               </div>
             )}
           </div>

@@ -206,6 +206,22 @@ export const fetchTransactionHistory = createAsyncThunk(
   }
 );
 
+// Modify the fetchEventSpecificTransactions thunk
+// Modify the fetchEventSpecificTransactions thunk
+export const fetchEventSpecificTransactions = createAsyncThunk(
+  'trading/fetchEventSpecificTransactions',
+  async ({ userId, eventId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_API_URL}/user/${eventId}/transactions/${userId}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 // Add new selector for event-filtered transactions
 
 // Slice
@@ -299,6 +315,23 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(fetchTransactionHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchEventSpecificTransactions.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchEventSpecificTransactions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.transactions = action.payload.transactions;
+        state.holdings = action.payload.holdings;
+        // Add this line to update statistics:
+        state.statistics = calculateAnalytics(
+          action.payload.transactions,
+          action.payload.holdings
+        );
+      })
+      .addCase(fetchEventSpecificTransactions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

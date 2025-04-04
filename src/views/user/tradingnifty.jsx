@@ -207,39 +207,39 @@ const ETFTable = () => {
   };
 
   // Stats Card Component
-  const StatsCard = ({ title, value, icon, description, change, changeColor }) => {
-    return (
-      <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
-        <div className="flex-auto p-6">
-          <div className="flex flex-wrap">
-            <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-              <h5 className="text-blueGray-400 uppercase font-bold text-xs">
-                {title}
-              </h5>
-              <span className="font-semibold text-xl text-blueGray-700">
-                {value}
-              </span>
-            </div>
-            <div className="relative w-auto pl-4 flex-initial">
-              <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-blue-500">
-                {icon}
-              </div>
-            </div>
-          </div>
-          <p className="text-sm text-blueGray-400 mt-4">
-            <span className={`${changeColor} mr-2`}>
-              {change}
-            </span>
-            <span className="whitespace-nowrap">{description}</span>
-          </p>
-        </div>
-      </div>
-    );
-  };
+  // const StatsCard = ({ title, value, icon, description, change, changeColor }) => {
+  //   return (
+  //     <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+  //       <div className="flex-auto p-6">
+  //         <div className="flex flex-wrap">
+  //           <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+  //             <h5 className="text-blueGray-400 uppercase font-bold text-xs">
+  //               {title}
+  //             </h5>
+  //             <span className="font-semibold text-xl text-blueGray-700">
+  //               {value}
+  //             </span>
+  //           </div>
+  //           <div className="relative w-auto pl-4 flex-initial">
+  //             <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-blue-500">
+  //               {icon}
+  //             </div>
+  //           </div>
+  //         </div>
+  //         <p className="text-sm text-blueGray-400 mt-4">
+  //           <span className={`${changeColor} mr-2`}>
+  //             {change}
+  //           </span>
+  //           <span className="whitespace-nowrap">{description}</span>
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="mt-24">
-      <div className="bg-lightBlue-600 md:pt-8 pb-16 pt-12">
+      <div>
         <div className="px-4 mx-auto w-full max-w-7xl">
 
 
@@ -249,7 +249,7 @@ const ETFTable = () => {
           {/* Event Performance Summary */}
           {selectedEvent && <EventPerformanceSummary />}
 
-          {/* Stats Cards */}
+          {/* Stats Cards
           <div className="flex flex-wrap">
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
               <StatsCard
@@ -311,7 +311,7 @@ const ETFTable = () => {
                 changeColor={currentStats.realizedPLPercentage >= 0 ? "text-emerald-500" : "text-red-500"}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

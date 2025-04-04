@@ -10,7 +10,7 @@ export const fetchUserEvents = createAsyncThunk(
     try {
       const userId = localStorage.getItem('userId');
       const response = await axios.get(
-        `${BASE_API_URL}/user/events/my-events`,
+        `${BASE_API_URL}/user/my-events`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }
@@ -44,7 +44,7 @@ export const fetchEventSpecificTransactions = createAsyncThunk(
   async ({ eventId, userId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_API_URL}/user/events/${eventId}/transactions`,
+        `${BASE_API_URL}/user/${eventId}/transactions`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }
