@@ -21,6 +21,7 @@ export const fetchDashboardData = createAsyncThunk(
         activeUsersRes,
         deactiveUsersRes,
         averageUserAgeRes,
+        totalOrganizationRes
       ] = await Promise.all([
         axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/total`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/new-week`),
@@ -29,6 +30,7 @@ export const fetchDashboardData = createAsyncThunk(
         axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/active`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/deactive`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/users/count/average-age`),
+        axios.get(`${BASE_API_URL}/organization/organizationCount/total`),
       ]);
 
       return {
@@ -39,6 +41,7 @@ export const fetchDashboardData = createAsyncThunk(
         activeUsers: activeUsersRes.data.count,
         deactiveUsers: deactiveUsersRes.data.count,
         averageUserAge: averageUserAgeRes.data.averageAge,
+        totalOrganizations:totalOrganizationRes.data.count
       };
     } catch (error) {
       toast.error(error.response?.data?.msg || "Failed to fetch dashboard data.");
@@ -50,6 +53,7 @@ export const fetchDashboardData = createAsyncThunk(
 // Initial state
 const initialState = {
   totalUsers: 0,
+  totalOrganizations:0,
   newUsersLastWeek: 0,
   maleUsers: 0,
   femaleUsers: 0,
@@ -67,6 +71,7 @@ const organizationDashboardSlice = createSlice({
   reducers: {
     resetDashboardState: (state) => {
       state.totalUsers = 0;
+      state.totalOrganizations = 0;
       state.newUsersLastWeek = 0;
       state.maleUsers = 0;
       state.femaleUsers = 0;
@@ -93,6 +98,8 @@ const organizationDashboardSlice = createSlice({
         state.activeUsers = action.payload.activeUsers;
         state.deactiveUsers = action.payload.deactiveUsers;
         state.averageUserAge = action.payload.averageUserAge;
+        state.totalOrganizations = action.payload.totalOrganizations;
+
       })
       .addCase(fetchDashboardData.rejected, (state, action) => {
         state.loading = false;

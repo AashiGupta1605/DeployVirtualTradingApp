@@ -3,13 +3,16 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
+import ForgotPasswordModal from "./ForgetPasswordModal"; 
 import { loginOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+
 const OrganizationLogin = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.organization.auth);
+   const [isForgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -25,7 +28,14 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
           const isMobile = /^\d{10}$/.test(value); // Assuming mobile number is 10 digits
           return isEmail || isMobile;
         }),
-      password: Yup.string().required('Password is required'),
+      password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .max(15, "Password cannot be more than 20 characters")
+        .matches(
+          /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Password must contain at least one letter and one special character"
+        )
+        .required("Password is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -60,6 +70,8 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
+    <>
+    {!isForgotPasswordOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
       <div style={{ width: '100%', maxWidth: '40%' }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
@@ -126,6 +138,18 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                   )}
                 </div>
               </div>
+              
+               {/* Forgot Password Link */}
+               <div className="text-left">
+              <button
+                type="button"
+                className="text-blue-600 hover:underline focus:outline-none"
+                onClick={() => setForgotPasswordOpen(true)}
+              >
+                Forgot Password?
+              </button>
+            </div>
+
               <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
                 <button
                   type="button"
@@ -151,6 +175,10 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
         </div>
       </div>
     </div>
+     ) : (
+    <ForgotPasswordModal onClose={() => setForgotPasswordOpen(false)} />
+  )}
+    </>
   );
 };
 

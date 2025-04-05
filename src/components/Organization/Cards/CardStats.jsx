@@ -13,7 +13,8 @@ export default function CardStats({
 }) {
   return (
     <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
-      <div className="flex-auto px-12 py-6">
+      {/* <div className="flex-auto px-12 py-6"> */}
+      <div className="flex-auto p-8">
         <div className="flex flex-wrap">
           <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
             <h5 className="text-blueGray-400 uppercase font-bold text-xs">
@@ -61,3 +62,67 @@ CardStats.propTypes = {
   statIconName: PropTypes.string,
   statIconColor: PropTypes.string,
 };
+
+
+
+
+// deepseek
+
+// import React from "react";
+// import PropTypes from "prop-types";
+
+// export default function CardStats({
+//   statSubtitle,
+//   statTitle,
+//   statIconName,
+//   statIconColor,
+//   statItems = []
+// }) {
+//   return (
+//     <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+//       <div className="flex-auto p-4">
+//         <div className="flex flex-wrap">
+//           <div className="relative w-auto pr-4 flex-initial">
+//             <div
+//               className={`text-white p-2 text-center inline-flex items-center justify-center w-8 h-8 shadow-lg rounded-full ${statIconColor}`}
+//             >
+//               <i className={statIconName}></i>
+//             </div>
+//           </div>
+//           <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+//             <h5 className="text-blueGray-400 uppercase font-bold text-xs">
+//               {statSubtitle}
+//             </h5>
+//             <span className="font-semibold text-xl text-blueGray-700">
+//               {statTitle}
+//             </span>
+            
+//             {/* Detailed items for dashboard view */}
+//             {statItems.length > 0 && (
+//               <div className="mt-2">
+//                 {statItems.map((item, index) => (
+//                   <div key={index} className="text-sm text-blueGray-600">
+//                     <span className="font-medium">{item.label}:</span> {item.value}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// CardStats.propTypes = {
+//   statSubtitle: PropTypes.string.isRequired,
+//   statTitle: PropTypes.string.isRequired,
+//   statIconName: PropTypes.string.isRequired,
+//   statIconColor: PropTypes.string.isRequired,
+//   statItems: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       label: PropTypes.string,
+//       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+//     })
+//   )
+// };

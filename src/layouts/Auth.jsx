@@ -67,7 +67,7 @@ export default function Auth() {
           <Routes>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
-            <Route path="reset-password/:token" element={<ResetPasswordModal />} />
+            <Route path="reset-password" element={<ResetPasswordModal />} />
             <Route path="*" element={<Navigate to="login" replace />} />
           </Routes>
           <FooterSmall absolute />

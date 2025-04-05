@@ -119,12 +119,13 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+          {/* <div className=${sidebarExpanded ? "px-4" : "flex-1 overflow-y-auto px-6 py-1 space-y-0"}> */}
+          <div className={`${sidebarExpanded ? "px-3" : "px-6"} flex-1 overflow-y-auto py-1 space-y-0`}>
   {Object.entries(menuItems).map(([section, items]) => (
     <div key={section} className="space-y-4">
       <button
         onClick={() => toggleMenu(section)}
-        className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
+        className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${
           activeMenu === section
             ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
             : "text-gray-600"
@@ -156,7 +157,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
       </button>
 
       {sidebarExpanded && activeMenu === section && (
-        <div className="pl-4 space-y-2">
+        <div className="pl-4">
           {items.map((item) => (
             <MenuLink
               key={item.to}
@@ -242,7 +243,7 @@ const MenuLink = ({ to, icon, label, isActive, onClick, onMouseEnter, onMouseLea
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={` w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+      className={` w-full flex items-center space-x-3 px-4 py-1 rounded-xl transition-all duration-200 ${
         isActive ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-100"
       }`}
     >

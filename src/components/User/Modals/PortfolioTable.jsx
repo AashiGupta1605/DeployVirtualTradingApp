@@ -1,85 +1,122 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowUp, 
   ArrowDown, 
   ShoppingCart,
-  Package
+  Package,
+  AlertTriangle
 } from 'lucide-react';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectLoadingState,
+  fetchTransactionHistory
+} from '../../../redux/User/trading/tradingSlice';
 import Pagination from '../../Common/TableItems/Pagination';
-import { selectLoadingState } from '../../../redux/User/trading/tradingSlice';
-import { useSelector } from 'react-redux';
 import Loader from '../../Common/Loader';
 
-const PortfolioTable = ({ holdings, transactions, onStockClick }) => {
-  // Pagination state
+const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
+  const dispatch = useDispatch();
+  
+  // State management
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [error, setError] = useState(null);
 
+  // Selectors
   const { loading } = useSelector(selectLoadingState);
+
+  // Fetch data on component mount (only if no transactions passed as props)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userId = localStorage.getItem('userId');
+        if (userId && transactions.length === 0) {
+          await dispatch(fetchTransactionHistory({ userId })).unwrap();
+        }
+      } catch (err) {
+        console.error('Failed to fetch transaction history:', err);
+        setError(err);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, transactions.length]);
 
   // Helper function to calculate stock stats
   const getStockStats = (symbol) => {
-    const stockTransactions = transactions.filter(t => t.companySymbol === symbol);
-    
-    // Calculate total shares bought and sold
-    const totalBuyShares = stockTransactions
-      .filter(t => t.type === 'buy')
-      .reduce((total, transaction) => total + transaction.numberOfShares, 0);
-    
-    const totalSellShares = stockTransactions
-      .filter(t => t.type === 'sell')
-      .reduce((total, transaction) => total + transaction.numberOfShares, 0);
+    try {
+      if (!symbol) return { totalTrades: 0, buyTrades: 0, sellTrades: 0 };
 
-    return {
-      totalTrades: stockTransactions.length,
-      buyTrades: totalBuyShares,
-      sellTrades: totalSellShares
-    };
+      const stockTransactions = transactions.filter(t => 
+        t && t.companySymbol === symbol
+      );
+      
+      const totalBuyShares = stockTransactions
+        .filter(t => t && t.type === 'buy')
+        .reduce((total, transaction) => 
+          total + (transaction.numberOfShares || 0), 0
+        );
+      
+      const totalSellShares = stockTransactions
+        .filter(t => t && t.type === 'sell')
+        .reduce((total, transaction) => 
+          total + (transaction.numberOfShares || 0), 0
+        );
+
+      return {
+        totalTrades: stockTransactions.length,
+        buyTrades: totalBuyShares,
+        sellTrades: totalSellShares
+      };
+    } catch (error) {
+      console.error('Error calculating stock stats:', error);
+      return { totalTrades: 0, buyTrades: 0, sellTrades: 0 };
+    }
   };
 
-  // Helper functions to extract date and time
-  const extractDate = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleDateString();
-  };
-
-  // Combine holdings with transaction history to ensure all traded stocks are shown
+  // Memoized computation of combined stocks
   const combinedStocks = useMemo(() => {
-    // Create a map of existing holdings
-    const holdingsMap = new Map(
-      holdings.map(holding => [holding.companySymbol, holding])
-    );
+    try {
+      const holdingsMap = new Map(
+        holdings.map(holding => [
+          holding?.companySymbol, 
+          holding
+        ])
+      );
 
-    // Find unique symbols from transactions
-    const transactionSymbols = new Set(
-      transactions.map(t => t.companySymbol)
-    );
+      const transactionSymbols = new Set(
+        transactions
+          .map(t => t?.companySymbol)
+          .filter(Boolean)
+      );
 
-    // Create combined list
-    const combinedList = [...holdingsMap.keys(), ...transactionSymbols]
-      .filter((symbol, index, self) => 
-        self.indexOf(symbol) === index // Ensure unique symbols
-      )
-      .map(symbol => {
-        // Prioritize holding data if exists, otherwise create a minimal object
-        const holding = holdingsMap.get(symbol) || {
-          companySymbol: symbol,
-          quantity: 0,
-          averageBuyPrice: 0,
-          lastUpdated: transactions
-            .filter(t => t.companySymbol === symbol)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?.createdAt || new Date()
-        };
+      return [...holdingsMap.keys(), ...transactionSymbols]
+        .filter((symbol, index, self) => 
+          symbol && self.indexOf(symbol) === index
+        )
+        .map(symbol => {
+          const holding = holdingsMap.get(symbol) || {
+            companySymbol: symbol,
+            quantity: 0,
+            averageBuyPrice: 0,
+            lastUpdated: transactions
+              .filter(t => t?.companySymbol === symbol)
+              .sort((a, b) => 
+                new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0)
+              )[0]?.createdAt || new Date()
+          };
 
-        return holding;
-      });
-
-    return combinedList;
+          return holding;
+        });
+    } catch (error) {
+      console.error('Error computing combined stocks:', error);
+      return [];
+    }
   }, [holdings, transactions]);
 
-  // Sort combined stocks in descending order based on lastUpdated
+  // Sort combined stocks
   const sortedStocks = [...combinedStocks].sort((a, b) => {
     return new Date(b.lastUpdated) - new Date(a.lastUpdated);
   });
@@ -88,29 +125,71 @@ const PortfolioTable = ({ holdings, transactions, onStockClick }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentStocks = sortedStocks.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Total pages calculation
   const totalPages = Math.ceil(sortedStocks.length / itemsPerPage);
 
-  if (loading) {
+  // Helper function to extract date
+  const extractDate = (isoString) => {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleDateString();
+    } catch {
+      return 'N/A';
+    }
+  };
+
+  // Error handling
+  if (error) {
+    return (
+      <div className="bg-white rounded shadow-lg overflow-hidden w-full p-8 text-center">
+        <div className="flex justify-center mb-4">
+          <AlertTriangle className="w-16 h-16 text-red-500" />
+        </div>
+        <h2 className="text-2xl font-semibold text-red-600 mb-4">
+          Failed to Load Portfolio
+        </h2>
+        <p className="text-gray-600 mb-6">
+          {error.message || 'An unexpected error occurred while fetching your portfolio.'}
+        </p>
+        <button
+          onClick={() => {
+            setError(null);
+            dispatch(fetchTransactionHistory({ 
+              userId: localStorage.getItem('userId') 
+            }));
+          }}
+          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Retry Loading
+        </button>
+      </div>
+    );
+  }
+
+  // Loading state
+  if (loading && transactions.length === 0) {
     return <Loader />;
   }
 
-  if (!sortedStocks || sortedStocks.length === 0) {
+  // Empty state
+  if (sortedStocks.length === 0) {
     return (
       <div className="bg-white rounded shadow-lg overflow-hidden w-full p-8 text-center">
         <div className="text-2xl font-semibold text-gray-700 mb-4">
           📊 No Stock Details Available
         </div>
         <div className="text-lg text-gray-500 mb-6">
-          Start trading to see your portfolio history here.
+          {transactions.length === 0 
+            ? 'Start trading to see your portfolio history here.'
+            : 'No holdings found for the selected transactions.'}
         </div>
-        <button
-          onClick={() => onStockClick('start-trading')}
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          Start Trading
-        </button>
+        {onStockClick && transactions.length === 0 && (
+          <button
+            onClick={() => onStockClick('start-trading')}
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Start Trading
+          </button>
+        )}
       </div>
     );
   }
@@ -140,7 +219,7 @@ const PortfolioTable = ({ holdings, transactions, onStockClick }) => {
                 <tr
                   key={stock.companySymbol}
                   className={`hover:bg-gray-50 cursor-pointer ${isSoldOut ? 'opacity-50' : ''}`}
-                  onClick={() => onStockClick(stock.companySymbol)}
+                  onClick={() => onStockClick && onStockClick(stock.companySymbol)}
                 >
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">

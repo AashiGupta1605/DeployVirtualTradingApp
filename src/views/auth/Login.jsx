@@ -39,8 +39,13 @@ const LoginForm = ({ onClose }) => {
           const isMobile = /^[6-9]\d{9}$/.test(value);
           return isEmail || isMobile;
         }),
-      password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
+        password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .max(15, "Password cannot be more than 15 characters")
+        .matches(
+          /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Password must contain at least one letter and one special character"
+        )
         .required("Password is required"),
     }),
     // onSubmit: async (values, { setSubmitting }) => {
@@ -84,7 +89,7 @@ const LoginForm = ({ onClose }) => {
     //   //   resetForm();
     //   // }
     // },
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting , resetForm }) => {
       try {
         const isEmail = Yup.string().email().isValidSync(values.identifier);
         const credentials = isEmail
@@ -98,6 +103,8 @@ const LoginForm = ({ onClose }) => {
           
           setTimeout(() => {
             setSubmitting(false);
+            resetForm(); 
+
             if (user?.role === "admin") {
               navigate("/admin");
               toast.success("Login successful!");
@@ -148,7 +155,10 @@ const LoginForm = ({ onClose }) => {
             <h2 className="text-2xl font-semibold text-gray-800">User Login</h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => {
+              formik.resetForm(); // Reset form fields
+              onClose(); // Close the modal or form
+            }}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
           >
             <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
@@ -156,11 +166,11 @@ const LoginForm = ({ onClose }) => {
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[80vh] relative">
-          {authError && (
+          {/* {authError && (
             <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
               {authError}
             </div>
-          )}
+          )} */}
 
           <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="space-y-4">
@@ -220,7 +230,10 @@ const LoginForm = ({ onClose }) => {
             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  formik.resetForm(); // Reset form fields
+                  onClose(); // Close the modal or form
+                }}
                 className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
               >
                 Cancel

@@ -227,6 +227,7 @@ const FeedbackList = () => {
       <StatsSection 
         stats={calculatedStats} 
         isDashboard={false} 
+        pageType="feedbacks"
       />
 
       <div className="px-8 mx-4 -mt-12">
