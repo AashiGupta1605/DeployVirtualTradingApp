@@ -28,7 +28,13 @@ const ShowGalleryImages = ({ sidebarExpanded }) => {
       console.log("Gallery Items: ", response.data);
     } 
     catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
+      if (error.response) {
+        setErr(error.response?.data?.message);
+      }
+      else{
+        setErr("Something went wrong.")
+      }
+      throw error; 
     }
   };
 
