@@ -73,6 +73,9 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     feedback: [
       { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
     ],
+    complaint: [
+      { to: "/admin/complaint", icon: "fas fa-exclamation-circle", label: "Complaint" },
+    ],    
     events: [
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
     ],
