@@ -1,36 +1,35 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
-import UserAllFeedbacksTable from "./UserAllFeedbacksTable";
-
-import { Star } from "lucide-react";
-// import { MdFeedback } from "react-icons/md";
-import { FolderOpen } from "lucide-react";
+import { motion } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { BiMessageDetail } from "react-icons/bi";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { FiExternalLink } from "react-icons/fi";
+import UserAllFeedbacksTable from "./UserAllFeedbacksTable";
 
 const UserFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
-
   const [showModal, setShowModal] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 3;
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
   const fetchUserFeedbacks = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${BASE_API_URL}/guestUser/userFeedbacks/createdDate/decreasing`
-        // `http://localhost:5000/v1/api/guestUser/userFeedbacks/createdDate/decreasing`
       );
       setFeedbacks(response.data.feedbackData);
-
-      console.log("Users Feedbacks Object: ", response.data);
-      console.log("User Feedbacks: ", feedbacks);
+      setLoading(false);
     } catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
+      setErr(error.response?.data?.message || "Failed to load feedbacks");
+      setLoading(false);
     }
   };
 
@@ -38,29 +37,20 @@ const UserFeedbackCards = () => {
     try {
       const response = await axios.get(
         `${BASE_API_URL}/guestUser/getAllUsers`
-        // `http://localhost:5000/v1/api/guestUser/getAllUsers`
       );
       setUserData(response.data.data);
-      console.log("User Data", response.data);
     } catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
+      setErr(error.response?.data?.message || "Failed to load user data");
     }
   };
 
   useEffect(() => {
-    try {
-      fetchUserData();
-      fetchUserFeedbacks();
-    } catch (error) {
-      setErr("Something went wrong: ", error);
-    }
+    fetchUserData();
+    fetchUserFeedbacks();
   }, []);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 3;
-
   useEffect(() => {
-    setCurrentIndex(0); // Reset pagination when feedbacks change
+    setCurrentIndex(0);
   }, [feedbacks]);
 
   const visibleFeedbacks = feedbacks.slice(currentIndex, currentIndex + itemsPerPage);
@@ -78,151 +68,122 @@ const UserFeedbackCards = () => {
   };
 
   return (
-    <div>
-      <section className="relative mb-8 bg-gray-100 border-2 border-gray-200 mx-6 p-6 rounded-lg">
-
-        {/* Previous Button */}
-        <button 
-          onClick={handlePrev} 
-          disabled={currentIndex === 0} 
-          className="absolute -left-1 mr-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
-          >
-          <BiChevronLeft />
-        </button>
-
-        {/* Flex container for headings and button */}
-        <div className="flex justify-between items-center mb-6">
-          {/* Left-most heading */}
-          <div className="flex gap-3 items-center">
-            <BiMessageDetail className="text-blue-500 text-[26px] mt-[5px]" />
-            <h3 className="text-xl font-bold text-gray-700">Users Feedbacks</h3>
-          </div>
-          {/* Right side container */}
-          <div className="flex items-center gap-4">
-            {/* Second heading before the button */}
-            <h6 className="text-[18] font-semibold text-gray-500">
-              Total Feedbacks: {feedbacks.length}
-            </h6>
-
-            {/* View More Button */}
-            <button
-              className="flex items-center gap-2 px-4 py-1 font-semibold text-sm text-[#1a2c47] border border-[#1a2c47] rounded-lg transition-all duration-300 hover:bg-[#1a2c47] hover:text-white"
-              onClick={openModal}
-            >
-              View More
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13 5l7 7m0 0l-7 7m7-7H4"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* {err && <p className="text-red-500">{err}</p>} */}
-
-        <div className="flex justify-center gap-6">
-
-        {/* {err && 
-        <div className="flex flex-col items-center justify-center h-40 w-80 bg-gray-100 rounded-lg shadow-md border-t border-gray-200 p-4">
-          <span className="text-red-500 text-2xl">
-            <i className="fas fa-exclamation-circle"></i>
-          </span>
-          <b className="text-lg text-gray-700 mt-2">Loading...</b>
-          <h4 className="text-gray-500 text-sm">No content available</h4>
-          <p className="text-red-500">{err}</p>
-        </div>} */}
-
-        {err && (
-          <div className="flex justify-center items-center min-h-[200px]">
-          <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
-            <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
-          </div>
-          <b className="text-lg text-gray-800 mt-4">Oops! Something went wrong.</b>
-          <p className="text-gray-600 text-sm text-center mt-2">
-            We couldn’t load the content. Please try again later.
-          </p>
-          <p className="text-red-600 font-medium mt-2">{err}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
-          >
-            Retry
-          </button>
-          </div>
-          </div>
-        )}
-
-          {feedbacks.length > 0 ? (
-            visibleFeedbacks.map((card, index) => {
-              const user = userData.find((user) => user._id === card.userId?._id);
-              console.log(
-                "Get user data by stored userID refrence in Feedback modal",
-                user
-              );
-              return (
-                <div
-                  key={index}
-                  className="w-[400px] h-[140px] bg-white shadow-lg p-6 rounded-lg border overflow-hidden"
-                >
-                  {/* Star Ratings */}
-                  <div className="flex -mt-2 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={18}
-                        className={`mx-0.5 ${
-                          i < card.rating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="max-h-13 min-h-13 overflow-y-auto">
-                  <p className="text-gray-700 italic">
-                    <span className="font-semibold">
-                      {card.feedbackCategory}:{" "}
-                    </span>
-                    {card.feedbackMessage}
-                  </p>
-                  </div>
-                  <h4 className="mt-3 font-semibold text-right text-sm text-gray-600">
-                    - {user ? user.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : "Anonymous"}
-                  </h4>
-                </div>
-              );
-            })
-          ) : (!err && 
-            <div className="pt-6 pb-6 flex flex-col items-center space-y-2">
-              <span>
-                <FolderOpen className="w-10 h-10 text-gray-400" />
+    <div className="relative">
+      <section className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mb-16">
+        <div className="px-8 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div className="flex items-center mb-4 md:mb-0">
+              <BiMessageDetail className="text-blue-600 text-3xl mr-3" />
+              <h3 className="text-2xl font-bold text-gray-800">User Feedbacks</h3>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <span className="text-lg font-medium text-gray-600">
+                Total Feedbacks: {feedbacks.length}
               </span>
-              <h4 className="text-gray-500 text-sm">No feedbacks available.</h4>
+              <button
+                onClick={openModal}
+                className="flex items-center gap-2 px-5 py-2 font-semibold text-blue-600 bg-blue-50 rounded-lg transition-all hover:bg-blue-100"
+              >
+                View All
+                <FiExternalLink className="text-lg" />
+              </button>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : err ? (
+            <div className="py-12 flex flex-col items-center justify-center bg-red-50 rounded-lg">
+              <div className="text-5xl text-red-400 mb-4">⚠️</div>
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Feedbacks</h4>
+              <p className="text-gray-600 mb-4 text-center max-w-md">
+                {err}
+              </p>
+              <button
+                onClick={fetchUserFeedbacks}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Retry
+              </button>
+            </div>
+          ) : feedbacks.length > 0 ? (
+            <div className="relative">
+              <button 
+                onClick={handlePrev} 
+                disabled={currentIndex === 0} 
+                className={`absolute -left-12 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full ${currentIndex === 0 ? 'text-gray-300' : 'text-gray-700 hover:bg-gray-100'}`}
+              >
+                <ChevronLeft className="text-3xl" />
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
+                {visibleFeedbacks.map((feedback, index) => {
+                  const user = userData.find(user => user._id === feedback.userId?._id);
+                  return (
+                    <motion.div 
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -5 }}
+                      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all h-full"
+                    >
+                      <div className="p-6 h-full flex flex-col">
+                        <div className="flex mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              size={20}
+                              className={`mx-0.5 ${
+                                i < feedback.rating
+                                  ? "text-yellow-400 fill-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        
+                        <div className="flex-grow mb-4 overflow-y-auto max-h-32">
+                          <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                            {feedback.feedbackCategory}
+                          </h4>
+                          <p className="text-gray-600 italic">
+                            "{feedback.feedbackMessage}"
+                          </p>
+                        </div>
+                        
+                        <div className="mt-auto pt-4 border-t border-gray-100">
+                          <p className="text-sm font-medium text-gray-600 text-right">
+                            — {user ? user.name : "Anonymous"}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+              
+              <button 
+                onClick={handleNext} 
+                disabled={currentIndex + itemsPerPage >= feedbacks.length} 
+                className={`absolute -right-12 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full ${currentIndex + itemsPerPage >= feedbacks.length ? 'text-gray-300' : 'text-gray-700 hover:bg-gray-100'}`}
+              >
+                <ChevronRight className="text-3xl" />
+              </button>
+            </div>
+          ) : (
+            <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-lg">
+              <div className="text-5xl text-gray-300 mb-4">💬</div>
+              <h4 className="text-lg text-gray-500">No feedbacks available yet</h4>
             </div>
           )}
         </div>
-
-      {/* Next Button */}
-      <button 
-        onClick={handleNext} 
-        disabled={currentIndex + itemsPerPage >= feedbacks.length} 
-        className="absolute -right-1 ml-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
-        >
-        <BiChevronRight />
-      </button>
-
       </section>
+      
       {showModal && <UserAllFeedbacksTable closeModal={closeModal} />}
     </div>
   );

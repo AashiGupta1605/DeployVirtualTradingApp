@@ -149,7 +149,7 @@ const LoginForm = ({ onClose }) => {
 
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-user text-white"></i>
             </div>
             <h2 className="text-2xl font-semibold text-gray-800">User Login</h2>
@@ -241,7 +241,7 @@ const LoginForm = ({ onClose }) => {
               <button
                 type="submit"
                 disabled={formik.isSubmitting || loading}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
+                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
               >
                 Login
               </button>
