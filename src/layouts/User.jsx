@@ -17,6 +17,7 @@ import EtfTable from "../views/user/etfTable";
 import NiftyTable from "../views/user/niftyTable";
 import Nifty500Table from "../views/user/nifty500table";
 import FeedbackTable from "../views/user/feedbacktable";
+import ComplaintTable from "../views/user/complainttable";
 import TradingNifty from "../views/user/tradingnifty";
 import EventsPage from "../views/user/eventsPage";
 import MyEventsPage from "../views/user/MyEventsPage";
@@ -74,6 +75,7 @@ export default function User() {
                 <Route path="etftable" element={<EtfTable />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="feedback" element={<FeedbackTable />} />
+                <Route path="complaint" element={<ComplaintTable />} />
                 <Route path="tradingnifty" element={<TradingNifty />} />
                 <Route path="eventspage" element={<EventsPage />} />
                 <Route path="my-events" element={<MyEventsPage />} />

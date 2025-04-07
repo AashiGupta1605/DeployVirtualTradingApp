@@ -75,7 +75,7 @@ export default function UserNavbar({ sidebarExpanded }) {
   }, []);
 
   return (
-    <nav className="sticky top-0 w-full z-50 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out">
+    <nav className="sticky top-0 w-full h-[73px] z-10 bg-white md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 shadow-lg transition-all duration-300 ease-in-out">
       <div className="w-full mx-auto flex items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4 gap-x-3">
         {/* Brand with Icon */}
         <a

@@ -16,6 +16,7 @@ import Nifty500Table from "../views/admin/nifty500table";
 import RegisteredUsers from "../views/Admin/UserList";
 import Queries from "../views/Admin/QueryList";
 import FeedbackList from "../views/Admin/FeedbackList";
+import ComplaintList from "../views/admin/ComplaintList";
 import GalleryImages from "../views/admin/gallery/GalleryImages";
 import GalleryCategories from "../views/admin/gallery/GalleryCategories";
 import AdminEventsPage from "../views/admin/AdminEventsPage";
@@ -45,6 +46,7 @@ export default function Admin() {
               <Route path="etftable" element={<ETFTable />} />
               <Route path="queries" element={<Queries />} />
               <Route path="feedback" element={<FeedbackList />} />
+              <Route path="complaint" element={<ComplaintList />} />
               <Route path="RegisteredUsers" element={<RegisteredUsers />} />
               <Route path="OrgRegister" element={<OrgRegister />} />
               <Route path="gallery/images" element={<GalleryImages sidebarExpanded={sidebarExpanded}/>}/>

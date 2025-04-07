@@ -24,7 +24,7 @@ import Pagination from '../../components/Common/TableItems/Pagination';
 import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
 import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
-
+import {fetchDashboardStats} from "../../redux/User/userSlice";
 // Memoized selector
 const selectOrganizationState = state => state.admin.organizationList || {};
 
@@ -127,16 +127,40 @@ const OrganizationList = () => {
       setIsDeleteModalOpen(false);
       setSelectedOrganization(null);
       toast.success('Organization deleted successfully', { id: loadingToast });
-      dispatch(fetchOrganizations());
+      // dispatch(fetchOrganizations());
+      await Promise.all([
+        dispatch(fetchOrganizations()),
+        dispatch(fetchDashboardStats())
+      ]);
     } catch (error) {
       toast.error(error.message || 'Failed to delete organization', { id: loadingToast });
     }
   };
 
+  // const handleStatusChange = async (id, status) => {
+  //   try {
+  //     await dispatch(updateOrganizationStatus({ id, status })).unwrap();
+  //     dispatch(fetchOrganizations());
+  //   } catch (error) {
+  //     toast.error('Failed to update status');
+  //   }
+  // };
+
   const handleStatusChange = async (id, status) => {
     try {
-      await dispatch(updateOrganizationStatus({ id, status })).unwrap();
-      dispatch(fetchOrganizations());
+      // Get current organization to know previous status
+      const org = organizations.find(o => o._id === id);
+      await dispatch(updateOrganizationStatus({ 
+        id, 
+        status,
+        prevStatus: org.status 
+      })).unwrap();
+      
+      // Refresh both organizations and stats
+      await Promise.all([
+        dispatch(fetchOrganizations()),
+        dispatch(fetchDashboardStats())
+      ]);
     } catch (error) {
       toast.error('Failed to update status');
     }

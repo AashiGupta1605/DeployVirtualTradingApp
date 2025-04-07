@@ -1,4 +1,3 @@
-// src/redux/User/events/eventsSlice.js
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
@@ -8,7 +7,6 @@ export const fetchUserEvents = createAsyncThunk(
   'events/fetchUserEvents',
   async (_, { rejectWithValue }) => {
     try {
-      const userId = localStorage.getItem('userId');
       const response = await axios.get(
         `${BASE_API_URL}/user/my-events`,
         {
@@ -59,7 +57,7 @@ export const fetchEventSpecificTransactions = createAsyncThunk(
 const initialState = {
   events: [],
   selectedEvent: null,
-  activeEvent: null, // Add activeEvent to initial state
+  activeEvent: null,
   eventPerformance: null,
   eventTransactions: [],
   status: 'idle',
@@ -89,9 +87,15 @@ const eventsSlice = createSlice({
     },
     setActiveEvent: (state, action) => {
       state.activeEvent = action.payload;
+      if (action.payload) {
+        localStorage.setItem('activeEvent', JSON.stringify(action.payload));
+      } else {
+        localStorage.removeItem('activeEvent');
+      }
     },
     clearActiveEvent: (state) => {
       state.activeEvent = null;
+      localStorage.removeItem('activeEvent');
     },
     setFilter: (state, action) => {
       state.filters.status = action.payload;
@@ -125,14 +129,6 @@ const eventsSlice = createSlice({
           sum + (event.currentPnL || 0), 0
         )
       };
-    },  setActiveEvent: (state, action) => {
-      state.activeEvent = action.payload;
-      // Store in localStorage for persistence
-      if (action.payload) {
-        localStorage.setItem('activeEvent', JSON.stringify(action.payload));
-      } else {
-        localStorage.removeItem('activeEvent');
-      }
     },
     loadActiveEventFromStorage: (state) => {
       const storedEvent = localStorage.getItem('activeEvent');
@@ -143,21 +139,18 @@ const eventsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch User Events
       .addCase(fetchUserEvents.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchUserEvents.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.events = action.payload.events || []; // Ensure we always have an array
+        state.events = action.payload.events || [];
         state.error = null;
       })
       .addCase(fetchUserEvents.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
-      
-      // Fetch Event Performance
       .addCase(fetchEventPerformance.pending, (state) => {
         state.status = 'loading';
       })
@@ -170,8 +163,6 @@ const eventsSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      
-      // Fetch Event Specific Transactions
       .addCase(fetchEventSpecificTransactions.fulfilled, (state, action) => {
         state.eventTransactions = action.payload.transactions || [];
       });
@@ -186,7 +177,8 @@ export const {
   setFilter,
   setSortBy,
   updateEventStats,
-  calculateStatistics
+  calculateStatistics,
+  loadActiveEventFromStorage
 } = eventsSlice.actions;
 
 // Export selectors
@@ -201,16 +193,8 @@ export const selectActiveEvents = createSelector(
     );
   }
 );
-
-export const selectActiveEvent = createSelector(
-  [selectAllEvents, (state) => state.user.events?.activeEvent],
-  (allEvents, activeEvent) => {
-    if (!activeEvent) return null;
-    return allEvents.find(event => event._id === activeEvent._id) || activeEvent;
-  }
-);
+export const selectActiveEvent = (state) => state.user.events?.activeEvent;
 export const selectSelectedEvent = (state) => state.user.events?.selectedEvent;
-// export const selectActiveEvent = (state) => state.user.events?.activeEvent; // New selector
 export const selectEventPerformance = (state) => state.user.events?.eventPerformance;
 export const selectEventTransactions = (state) => state.user.events?.eventTransactions || [];
 export const selectEventStatus = (state) => state.user.events?.status || 'idle';

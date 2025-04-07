@@ -182,14 +182,14 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
             ? 'Start trading to see your portfolio history here.'
             : 'No holdings found for the selected transactions.'}
         </div>
-        {onStockClick && transactions.length === 0 && (
+        {/* {onStockClick && transactions.length === 0 && (
           <button
             onClick={() => onStockClick('start-trading')}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
             Start Trading
           </button>
-        )}
+        )} */}
       </div>
     );
   }

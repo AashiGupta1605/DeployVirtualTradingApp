@@ -136,13 +136,12 @@ export default function FeedbackTable() {
         </div>
       </div>
 
-      <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          
-          <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
-          <MessageSquare className="mr-2 text-gray-600" size={24} />
-            My Feedbacks</h2>
-        </div>
+      <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">   
+          <h2 className="text-xl font-bold text-gray-800 flex items-center">
+          <MessageSquare className="mr-2 text-blue-600" size={24} />
+            My Feedbacks
+            </h2>
+       
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
