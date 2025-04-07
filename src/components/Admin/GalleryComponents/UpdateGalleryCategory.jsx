@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes, { object } from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -14,7 +15,7 @@ const initialValues = {
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-  name: Yup.string().required("Category name is required"),
+  name: Yup.string().trim().required("Category name is required").max(25, "Category must not be of more than 25 characters"),
 });
 
   const updateCategoryName = async (values, {resetForm}) => {
@@ -31,18 +32,45 @@ const validationSchema = Yup.object({
         closeModal()
       }
       else if (response?.status === 409) {
-        toast.warning(response?.data?.message);
+        toast(response?.data?.message, {
+                icon: '⚠️',
+              })
         resetForm()
       }
       else if (response?.status === 500) {
-        toast.error(response?.data?.message);
+        toast(response?.data?.message, {
+          icon: '🛑',
+        })        
         resetForm()
       }
     } 
     catch (error) {
       console.error("Error submitting data:", error);
-      toast.error('An internal server error occurred!')
-      resetForm()
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 409) {
+          // toast.warning(data?.message);
+          toast(data?.message, {
+            icon: '⚠️',
+          });
+          resetForm()
+        } 
+        else if (status === 500) {
+          // toast.error(data?.message);
+          toast(data?.message, {
+            icon: '🛑',
+          })
+          resetForm()
+        } 
+        else {
+          toast.error(data?.message || "Unknown error, please try again.");
+          resetForm()
+        }
+      } 
+      else {
+        toast.error("An internal server error occurred!");
+        resetForm()
+      }  
       throw error; 
     }
   };
@@ -107,7 +135,7 @@ const validationSchema = Yup.object({
                 <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
                   <button
                     type="button"
-                    disabled={isSubmitting || !isValid}
+                    disabled={isSubmitting }
                     onClick={closeModal}
                     className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
                   >
@@ -148,5 +176,12 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
     />
   </div>
 );
+
+UpdateGalleryCategory.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  refreshCategories: PropTypes.func.isRequired,
+  updateId: PropTypes.instanceOf(Object).isRequired,
+  updateName: PropTypes.string.isRequired,
+}
 
 export default UpdateGalleryCategory;

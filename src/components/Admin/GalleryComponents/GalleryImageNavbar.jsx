@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import PropTypes from 'prop-types';
 import { Images, PlusCircle } from "lucide-react";
 // import { Menu } from "lucide-react";
 import AddGalleryImage from './AddGalleryImage';
@@ -15,8 +16,8 @@ const GalleryImageNavbar = ({ sidebarExpanded }) => {
   return (
     <>
     <nav className={`-mt-10 z-10 flex items-center justify-between p-4 bg-white shadow-lg rounded-lg
-                      ${sidebarExpanded ? 'ml-[22px] -mr-2' : 'ml-[14px] -mr-2'}
-                  `} style={{ width: sidebarExpanded ? "95%" : "97%"}}> 
+                      ${sidebarExpanded ? 'ml-[22px] -mr-2' : 'ml-[22px] -mr-2'}
+                  `} style={{ width: sidebarExpanded ? "95%" : "96%"}}> 
                   {/* backgroundColor:"#eceef0" */}
       {/* Left Side (1 Column) */}
       <div className="w-1/5 flex items-center space-x-2">
@@ -74,6 +75,10 @@ const GalleryImageNavbar = ({ sidebarExpanded }) => {
     {isOpenItemForm && <AddGalleryImage closeModal={closeAddItemModal}/>}
     </>
   )
+}
+
+GalleryImageNavbar.propTypes = {
+  sidebarExpanded: PropTypes.bool.isRequired,
 }
 
 export default GalleryImageNavbar

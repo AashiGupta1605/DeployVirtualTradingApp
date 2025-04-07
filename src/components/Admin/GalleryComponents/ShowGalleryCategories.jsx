@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 
-import { Filter, Edit, Trash2} from "lucide-react";
-import { FaTimes, FaImages } from "react-icons/fa";
+import { Filter, Edit, Trash2, Info, ChevronLeft, ChevronRight} from "lucide-react";
+import { FaTimes } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { FolderOpen, PlusCircle } from "lucide-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { toast } from 'react-hot-toast';
@@ -13,7 +16,9 @@ import ConfirmationModal from "../Modals/ConformationModal";
 
 import AddGalleryCategory from './AddGalleryCategory';
 import UpdateGalleryCategory from "./UpdateGalleryCategory";
+import CategoryImagesTable from "./CategoryImagesTable";
 
+//Update and Delete Cards should Open by this, but...
 // const Tooltip = ({ children, text }) => (
 //   <div className="relative group">
 //     {children}
@@ -29,6 +34,11 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
   const openAddCategoryModal = () => setIsOpenCategoryForm(true);
   const closeAddCategoryModal = () => setIsOpenCategoryForm(false);
 
+  const [isOpenImageTable, setIsOpenImageTable] = useState(false);
+  const [imgTableCategoryName, setImgTableCategoryName] = useState("")
+  const openImageTable = (name) => {setImgTableCategoryName(name); setIsOpenImageTable(true);}
+  const closeImageTable = () => setIsOpenImageTable(false);
+
   const [showFilters, setShowFilters] = useState(false);
   const [filterCount, setFilterCount] = useState(0);
   const [appliedFilters, setAppliedFilters] = useState({});
@@ -40,7 +50,12 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("createdDate");
   const [order, setOrder] = useState("decreasing");
-  
+
+  // useEffect(() => {
+  //   if (currentPage > totalPages) {
+  //     setCurrentPage(totalPages || 1); // Reset to page 1 when total pages decrease
+  //   }
+  // }, [totalPages]);
 
   useEffect(() => {
   if (err) {
@@ -114,11 +129,20 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
       const response = await axios.get(
         `${BASE_API_URL}/admin/galleryCategory/getGalleryCategories/${searchQuery}/${sortBy}/${order}`
       );
-      setGalleryCategories(response.data.categoryData);
       console.log("Gallery Categories: ", response.data);
+
+      // if(response?.status === 201||response?.status === 200)
+        setGalleryCategories(response.data.categoryData);
+      
     } 
     catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
+      if (error.response) {
+        setErr(error.response?.data?.message);
+      }
+      else{
+        setErr("Something went wrong. Please try again.")
+      }
+      throw error; 
     }
   };
 
@@ -200,13 +224,41 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
         toast.success(response?.data?.message);
         refreshCategories();
       } 
-      else {
-        toast.warning(response?.data?.message);
+      else if (response?.status === 409) {
+        toast(response?.data?.message, {
+          icon: '⚠️',
+        })
+      }
+      else if (response?.status === 500) {
+        toast(response?.data?.message, {
+          icon: '🛑',
+        })
       }
     } 
     catch (error) {
       console.error("Error deleting category:", error);
-      toast.error("Unsuccessful deleting. Please try again.");
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 409) {
+          // toast.warning(data?.message);
+          toast(data?.message, {
+            icon: '⚠️',
+          });
+        } 
+        else if (status === 500) {
+          // toast.error(data?.message);
+          toast(data?.message, {
+            icon: '🛑',
+          })
+        } 
+        else {
+          toast.error(data?.message || "Unknown error, please try again.");
+        }
+      } 
+      else {
+        toast.error("An internal server error occurred!");
+      }  
+      throw error; 
     }
     setIsModalOpen(false);
     setDeleteId(null); 
@@ -224,22 +276,33 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
     openUpdateCategoryModal()
   }
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+
+  // Calculate total pages
+  const totalPages = Math.ceil(galleryCategories.length / rowsPerPage);
+
+  // Get current page data
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = galleryCategories.slice(indexOfFirstRow, indexOfLastRow);
+
   return (
     <>
     {/* ${sidebarExpanded ? 'mt-138' : 'mt-98'}  */}
     <div className={`
-      relative z-30 flex items-center justify-center bg-transparent pb-4 pointer-events-none
+      relative z-20 flex items-center justify-center bg-transparent pb-0 pointer-events-none
     `}>
       <div className={`
-        ${sidebarExpanded ? 'left-2 w-[92%]' : 'left-0 w-[93%]'}
-        -mt-12 relative bg-white pl-1 pr-1 pt-0 rounded-xl shadow-lg h-[72vh] flex flex-col shadow-lg pointer-events-auto
+        ${sidebarExpanded ? 'left-1 w-[94%]' : 'left-0 w-[95%]'}
+        -mt-12 relative bg-white pl-1 pr-1 pt-0 rounded-lg h-[72vh] flex flex-col shadow-lg pointer-events-auto
       `}>
         <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-100 p-4 mt-1">
           {/* Top Header */}
           <div className="flex justify-between items-center">
             {/* Left Side (Icon + Heading) */}
             <div className="flex items-center gap-3">
-              <FaImages className="text-gray-600 text-[25px]" />
+              <FontAwesomeIcon icon={faFolderOpen} className="text-gray-500 text-[21px]"/>
               <h2 className="text-xl font-bold text-gray-800">
                 Gallery Categories
               </h2>
@@ -454,7 +517,7 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
 
               <tbody className={`bg-white ${galleryCategories.length > 0 ? 'divide-y' : ''} divide-gray-200`}>
                 {galleryCategories.length > 0 ? (
-                  galleryCategories.map((data, index) => {
+                  currentRows.map((data, index) => {
                     return (
                       <tr
                         key={index}
@@ -483,11 +546,11 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                           ).toLocaleDateString()}
                         </td>
 
-                        <td className="px-5 py-4 whitespace-nowrap min-w-[100px] text-sm text-gray-500">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <td className="pl-10 px-5 py-4 whitespace-nowrap min-w-[100px] text-sm text-gray-500">
+                        {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
                           {data.updatedDate
-                            ? <span className="ml-1">{new Date(data.updatedDate).toLocaleDateString()}</span>
-                            : <span className="ml-6">N/A</span>
+                            ? <span className="ml-2">{new Date(data.updatedDate).toLocaleDateString()}</span>
+                            : <span className="ml-6 text-gray-400">N/A</span>
                           }
                         </td>
 
@@ -495,9 +558,18 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                      {/* <Tooltip text="Edit organization"> */}
                             <button
                               onClick={() => handleUpdateCategory(data._id, data.name)}
-                              className="mr-5 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
+                              className="-ml-2 mr-2 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
                             >
                               <Edit size={18} />
+                            </button>
+                      {/* </Tooltip> */}
+
+                      {/* <Tooltip text="Edit organization"> */}
+                            <button
+                              onClick={() => openImageTable(data.name)}
+                              className="mr-3 text-blue-600 mx-2 hover:text-blue-900 transition-colors focus:outline-none"
+                            >
+                              <Info size={18} />
                             </button>
                       {/* </Tooltip> */}
                           
@@ -538,9 +610,100 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
       </div>
     </div>
 
+    {/* <div>
+      <button
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+      > Prev </button>
+      <span> Page {currentPage} of {totalPages} </span>
+      <button
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+      > Next </button>
+    </div> */}
+
+    <div className="flex justify-between items-center mt-1 -mb-1 px-4 py-3">
+      <div className="flex items-center space-x-4">
+        <label className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-gray-700 pl-7">Rows per page:</span>
+          <select
+            value={rowsPerPage}
+            onChange={(e) => setRowsPerPage(Number(e.target.value))}
+            className="form-select px-5 py-1 rounded-md border-gray-300 shadow-sm 
+                    focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
+                    focus:ring-opacity-50 text-sm "
+          >
+            {[ 10, 50, 100, 200].map((num) => (
+              <option key={num} value={num} className="text-gray-700">
+                {num}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className="hidden sm:block text-sm text-gray-700">
+          <span className="font-semibold">{indexOfFirstRow + 1}</span> -{" "}
+          <span className="font-semibold">
+            {Math.min(indexOfLastRow, galleryCategories.length)}
+          </span>{" "}
+          of <span className="font-semibold">{galleryCategories.length}</span>
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-1 mr-2">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  hover:bg-gray-200 transition-colors duration-150"
+        >
+          <ChevronLeft size={16} />
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => i + 1)
+          .filter((page) => {
+            if (totalPages <= 5) return true;
+            if (page === 1 || page === totalPages) return true;
+            return Math.abs(page - currentPage) <= 1;
+          })
+          .map((page, i, arr) => (
+            <React.Fragment key={page}>
+              {i > 0 && arr[i - 1] !== page - 1 && (
+                <span className="px-2 text-gray-500">...</span>
+              )}
+              
+              <button
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded-md transition-colors duration-150
+                  ${
+                    currentPage === page
+                      ? "bg-lightBlue-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+              >
+                {page}
+              </button>
+            </React.Fragment>
+          ))}
+
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  hover:bg-gray-200 transition-colors duration-150"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+    </div>
+
     {isOpenCategoryForm && <AddGalleryCategory closeModal={closeAddCategoryModal} refreshCategories={refreshCategories}/>}
 
     {isOpenCategoryUpdate && <UpdateGalleryCategory closeModal={closeUpdateCategoryModal} refreshCategories={refreshCategories} updateId={updateId} updateName={updateName}/>}
+
+    {isOpenImageTable && <CategoryImagesTable closeModal={closeImageTable} tableCategoryName={imgTableCategoryName}/>}
 
     {/* Confirmation Modal */}
     <ConfirmationModal
@@ -554,5 +717,9 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
     </>
   );
 };
+
+ShowGalleryCategories.propTypes = {
+  sidebarExpanded: PropTypes.bool.isRequired,
+}
 
 export default ShowGalleryCategories;
