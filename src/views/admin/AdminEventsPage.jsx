@@ -19,6 +19,7 @@ import { toast } from 'react-hot-toast';
 import EventModal from '../../components/Admin/Modals/EventModal';
 import EventDetailsModal from '../../components/Admin/Modals/EventDetailsModal';
 import StatsSection from '../../components/Admin/Cards/StatsSection';
+import { fetchDashboardStats } from '../../redux/User/userSlice';
 
 const AdminEventsPage = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,7 @@ const AdminEventsPage = () => {
   const handleDeleteEvent = (eventId) => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       dispatch(deleteEvent(eventId));
+      dispatch(fetchDashboardStats()).unwrap();
     }
   };
 
