@@ -8,6 +8,7 @@ import organizationListReducer from './OrganizationListPage/OrganizationListSlic
 import organizationRegistrationReducer from './OrganizationListPage/OrganizationRegisterSlice';
 import userRegistrationReducer from './RegisteredUsersPage/UserRegisterSlice';
 import feedbackTableReducer from '../Admin/FeedbackListPage/FeedbackTableSlice';
+import complaintTableReducer from '../Admin/ComplaintListPage/complaintTableSlice';
 import eventTableReducer from '../Admin/EventManage/eventSlice';
 import adminDashboardReducer from "../Admin/StatsCount/adminDashboardSlice";
 
@@ -35,6 +36,7 @@ const adminReducer = combineReducers({
   organizationRegistration: createLogoutReducer(organizationRegistrationReducer),
   userRegistration: createLogoutReducer(userRegistrationReducer),
   feedbackTable: feedbackTableReducer,
+  complaintTable: complaintTableReducer,
   eventTable: eventTableReducer,
   adminDashboardStats:adminDashboardReducer
 });
