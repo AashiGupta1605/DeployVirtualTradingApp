@@ -1,10 +1,8 @@
-// tradingSlice.js
-import { createSlice, createAsyncThunk,createSelector } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
 
-// Helper Functions
 const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) => {
   if (!transactions.length) {
     return {
@@ -23,32 +21,26 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
     const buyTransactions = transactions.filter(t => t.type === 'buy');
     const sellTransactions = transactions.filter(t => t.type === 'sell');
 
-    // Calculate total shares bought and sold
     const buyTrades = buyTransactions.reduce((total, transaction) => 
       total + transaction.numberOfShares, 0);
     
     const sellTrades = sellTransactions.reduce((total, transaction) => 
       total + transaction.numberOfShares, 0);
 
-    // Calculate total investment from current holdings
     const totalInvestment = holdings.reduce((sum, holding) => 
       sum + (holding.quantity * holding.averageBuyPrice), 0);
 
-    // Calculate total holdings value
     const totalHoldingsValue = holdings.reduce((sum, holding) => 
       sum + (holding.quantity * (currentPrice || holding.averageBuyPrice)), 0);
 
-    // Calculate realized P&L from completed trades
     const realizedPL = sellTransactions.reduce((sum, trade) => {
       const buyPrice = buyTransactions.find(bt => bt.companySymbol === trade.companySymbol)?.price || 0;
       return sum + ((trade.price - buyPrice) * trade.numberOfShares);
     }, 0);
 
-    // Calculate current holdings value
     const currentHoldingsValue = holdings.reduce((sum, holding) => 
       sum + (holding.quantity * currentPrice), 0);
 
-    // Calculate success rate
     const successfulTrades = sellTransactions.filter(trade => {
       const buyPrice = buyTransactions.find(bt => bt.companySymbol === trade.companySymbol)?.price || 0;
       return trade.price > buyPrice;
@@ -65,8 +57,8 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
       realizedPLPercentage: totalInvestment > 0 
         ? (realizedPL / totalInvestment) * 100 
         : 0,
-      buyTrades,     // Changed from buyTransactions.length
-      sellTrades,    // Changed from sellTransactions.length
+      buyTrades,
+      sellTrades,
       successRate,
       totalHoldingsValue
     };
@@ -84,7 +76,7 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
     };
   }
 };
-// Initial State
+
 const initialState = {
   transactions: [],
   holdings: [],
@@ -106,27 +98,22 @@ const initialState = {
   }
 };
 
-// Async Thunks
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
   async ({ userId, subscriptionPlanId }, { rejectWithValue }) => {
     try {
-      console.log('Fetching holdings for User ID:', userId, 'Subscription Plan ID:', subscriptionPlanId);
       const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`);
       return response.data || [];
     } catch (error) {
-      console.error('Fetch Holdings Error:', error);
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
     }
   }
 );
 
-
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
   async (orderDetails, { dispatch, rejectWithValue, getState }) => {
     try {
-      // Get active event from state
       const state = getState();
       const activeEvent = state.user.events?.activeEvent;
       
@@ -157,7 +144,7 @@ export const placeOrder = createAsyncThunk(
         `${BASE_API_URL}/user/trading/trade`,
         {
           ...orderDetails,
-          eventId: activeEvent?._id || null // Include active event ID if exists
+          eventId: activeEvent?._id || null
         },
         {
           headers: {
@@ -166,7 +153,6 @@ export const placeOrder = createAsyncThunk(
         }
       );
 
-      // Update subscription
       dispatch(updateSubscription({
         id: orderDetails.subscriptionPlanId,
         updateData: { vertualAmount: response.data.balance }
@@ -174,7 +160,6 @@ export const placeOrder = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.error('Place Order Error:', error.response?.data || error.message);
       return rejectWithValue({
         message: error.response?.data?.message || 'Failed to place order',
         error: error.message,
@@ -188,9 +173,12 @@ export const fetchTransactionHistory = createAsyncThunk(
   'trading/fetchHistory',
   async ({ userId, eventId }, { rejectWithValue }) => {
     try {
-      const url = eventId 
-        ? `${BASE_API_URL}/user/trading/event-transactions/${userId}/${eventId}`
-        : `${BASE_API_URL}/user/trading/history/${userId}`;
+      let url = `${BASE_API_URL}/user/trading/history/${userId}`;
+      if (eventId === 'none') {
+        url = `${BASE_API_URL}/user/trading/history/${userId}?eventFilter=none`;
+      } else if (eventId) {
+        url = `${BASE_API_URL}/user/trading/history/${userId}?eventId=${eventId}`;
+      }
       
       const response = await axios.get(url);
       return {
@@ -206,8 +194,9 @@ export const fetchTransactionHistory = createAsyncThunk(
   }
 );
 
-// Modify the fetchEventSpecificTransactions thunk
-// Modify the fetchEventSpecificTransactions thunk
+// Update the selector to properly filter transactions
+
+
 export const fetchEventSpecificTransactions = createAsyncThunk(
   'trading/fetchEventSpecificTransactions',
   async ({ userId, eventId }, { rejectWithValue }) => {
@@ -222,9 +211,6 @@ export const fetchEventSpecificTransactions = createAsyncThunk(
   }
 );
 
-// Add new selector for event-filtered transactions
-
-// Slice
 const tradingSlice = createSlice({
   name: 'trading',
   initialState,
@@ -252,7 +238,6 @@ const tradingSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Holdings
       .addCase(fetchHoldings.pending, (state) => {
         state.loading = true;
       })
@@ -268,8 +253,6 @@ const tradingSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
-      // Place Order
       .addCase(placeOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -299,8 +282,6 @@ const tradingSlice = createSlice({
         state.error = action.payload;
         state.orderStatus = 'failed';
       })
-
-      // Fetch Transaction History
       .addCase(fetchTransactionHistory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -325,7 +306,6 @@ const tradingSlice = createSlice({
         state.loading = false;
         state.transactions = action.payload.transactions;
         state.holdings = action.payload.holdings;
-        // Add this line to update statistics:
         state.statistics = calculateAnalytics(
           action.payload.transactions,
           action.payload.holdings
@@ -340,30 +320,37 @@ const tradingSlice = createSlice({
 
 // Selectors
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
+
 export const selectFilteredTransactions = createSelector(
   [selectTransactions, (state, eventId) => eventId],
   (transactions, eventId) => {
-    if (!eventId) return transactions;
-    return transactions.filter(t => t.eventId === eventId);
+    if (eventId === 'none') {
+      // Only show transactions with no eventId or null eventId
+      return transactions.filter(t => 
+        t.eventId === null || t.eventId === undefined
+      );
+    }
+    if (eventId) {
+      // Show only transactions for this specific event
+      return transactions.filter(t => t.eventId === eventId);
+    }
+    // If no eventId parameter, show all transactions
+    return transactions;
   }
 );
+
 export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
 export const selectStatistics = (state) => state.user.tradingModal.statistics;
 export const selectLoadingState = (state) => {
-  try {
-    const loading = state.user.tradingModal.loading;
-    const orderStatus = state.user.tradingModal.orderStatus;
+  const loading = state.user.tradingModal.loading;
+  const orderStatus = state.user.tradingModal.orderStatus;
 
-    return {
-      loading: typeof loading === 'object' 
-        ? (loading.general || loading.trading || false)
-        : (loading || false),
-      orderStatus: orderStatus || null
-    };
-  } catch (error) {
-    console.error('Error in selectLoadingState:', error);
-    return { loading: false, orderStatus: null };
-  }
+  return {
+    loading: typeof loading === 'object' 
+      ? (loading.general || loading.trading || false)
+      : (loading || false),
+    orderStatus: orderStatus || null
+  };
 };
 export const selectError = (state) => state.user.tradingModal.error;
 export const selectHoldingBySymbol = createSelector(
@@ -374,7 +361,6 @@ export const selectTotalHoldingsValue = (state) =>
   (state.user.tradingModal.holdings || []).reduce((total, holding) => 
     total + (holding.quantity * holding.averageBuyPrice), 0);
 
-// Actions
 export const { 
   clearOrderStatus, 
   updateStatistics,

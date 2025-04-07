@@ -206,36 +206,6 @@ const ETFTable = () => {
     );
   };
 
-  // Stats Card Component
-  // const StatsCard = ({ title, value, icon, description, change, changeColor }) => {
-  //   return (
-  //     <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
-  //       <div className="flex-auto p-6">
-  //         <div className="flex flex-wrap">
-  //           <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-  //             <h5 className="text-blueGray-400 uppercase font-bold text-xs">
-  //               {title}
-  //             </h5>
-  //             <span className="font-semibold text-xl text-blueGray-700">
-  //               {value}
-  //             </span>
-  //           </div>
-  //           <div className="relative w-auto pl-4 flex-initial">
-  //             <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-blue-500">
-  //               {icon}
-  //             </div>
-  //           </div>
-  //         </div>
-  //         <p className="text-sm text-blueGray-400 mt-4">
-  //           <span className={`${changeColor} mr-2`}>
-  //             {change}
-  //           </span>
-  //           <span className="whitespace-nowrap">{description}</span>
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className="mt-24">
@@ -249,69 +219,7 @@ const ETFTable = () => {
           {/* Event Performance Summary */}
           {selectedEvent && <EventPerformanceSummary />}
 
-          {/* Stats Cards
-          <div className="flex flex-wrap">
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="VIRTUAL AMOUNT"
-                value={selectedEvent 
-                  ? `₹${selectedEvent.virtualAmount?.toFixed(2)}`
-                  : activeSubscription?.vertualAmount
-                  ? `₹${activeSubscription.vertualAmount.toFixed(2)}`
-                  : "₹0.00"}
-                icon={<DollarSign className="w-5 h-5" />}
-                description={selectedEvent
-                  ? `Available for ${selectedEvent.title}`
-                  : "Available Virtual Balance"}
-                change={currentStats.balanceChange !== undefined
-                  ? `${currentStats.balanceChange >= 0 ? '+' : ''}${currentStats.balanceChange}%`
-                  : null}
-                changeColor={currentStats.balanceChange >= 0 ? "text-emerald-500" : "text-red-500"}
-              />
-            </div>
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="TOTAL INVESTMENT"
-                value={`₹${currentStats.totalInvestment?.toFixed(2) || '0.00'}`}
-                icon={<TrendingUp className="w-5 h-5" />}
-                description={selectedEvent
-                  ? `Invested in ${selectedEvent.title}`
-                  : "Total Amount Invested"}
-                change={currentStats.investmentChange !== undefined
-                  ? `${currentStats.investmentChange >= 0 ? '+' : ''}${currentStats.investmentChange}%`
-                  : null}
-                changeColor={currentStats.investmentChange >= 0 ? "text-emerald-500" : "text-red-500"}
-              />
-            </div>
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="TRADING PERFORMANCE"
-                value={`${currentStats.successRate?.toFixed(2) || '0.00'}%`}
-                icon={<BarChart2 className="w-5 h-5" />}
-                description={selectedEvent
-                  ? `Win Rate in ${selectedEvent.title}`
-                  : "Overall Success Rate"}
-                change={currentStats.totalTrades
-                  ? `${currentStats.winningTrades}/${currentStats.totalTrades} trades`
-                  : null}
-                changeColor="text-gray-700"
-              />
-            </div>
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="PROFIT & LOSS"
-                value={`₹${currentStats.realizedPL?.toFixed(2) || '0.00'}`}
-                icon={<Award className="w-5 h-5" />}
-                description={selectedEvent
-                  ? `P&L in ${selectedEvent.title}`
-                  : "Overall P&L"}
-                change={currentStats.realizedPLPercentage !== undefined
-                  ? `${currentStats.realizedPLPercentage >= 0 ? '+' : ''}${currentStats.realizedPLPercentage?.toFixed(2)}%`
-                  : null}
-                changeColor={currentStats.realizedPLPercentage >= 0 ? "text-emerald-500" : "text-red-500"}
-              />
-            </div>
-          </div> */}
+
         </div>
       </div>
 
