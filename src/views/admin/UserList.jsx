@@ -22,6 +22,7 @@ import {
   setSearchQuery,
   updateFilteredUsers  // Add this instead
 } from "../../redux/Admin/RegisteredUsersPage/RegisteredUserListSlice";
+import { fetchDashboardStats } from "../../redux/User/userSlice";
 
 const RegisterUserList = () => {
   const dispatch = useDispatch();
@@ -144,7 +145,11 @@ const RegisterUserList = () => {
 
   const handleRegistrationSuccess = async () => {
     try {
-      await dispatch(fetchUsers()).unwrap();
+      // await dispatch(fetchUsers()).unwrap();
+      await Promise.all([
+        dispatch(fetchUsers()).unwrap(),
+        dispatch(fetchDashboardStats()).unwrap()
+      ]);
       setState(prev => ({ ...prev, isRegisterModalOpen: false }));
       // toast.success('User operation completed successfully');
     } catch (error) {
@@ -180,13 +185,18 @@ const RegisterUserList = () => {
     try {
       const loadingToast = toast.loading('Deleting user...');
       await dispatch(deleteUser(state.selectedUser._id)).unwrap();
-      
+  
       setState(prev => ({
         ...prev,
         isDeleteModalOpen: false,
         selectedUser: null
       }));
-  
+
+      await Promise.all([
+        dispatch(fetchUsers()).unwrap(),
+        dispatch(fetchDashboardStats()).unwrap()
+      ]);
+      
       toast.success('User deleted successfully', { id: loadingToast });
       
       // Refresh data

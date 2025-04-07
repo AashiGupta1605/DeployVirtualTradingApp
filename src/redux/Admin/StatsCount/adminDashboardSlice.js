@@ -5,40 +5,7 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 import toast from "react-hot-toast";
 
 // Initial state with all possible stats initialized
-const initialState = {
-  // User statistics (all users)
-  totalUsers: 0,
-  maleUsers: 0,
-  femaleUsers: 0,
-  activeUsers: 0,
-  deactiveUsers: 0,
-  averageUserAge: 0,
-  
-  // Organization-registered user statistics
-  orgTotalUsers: 0,
-  orgMaleUsers: 0,
-  orgFemaleUsers: 0,
-  orgActiveUsers: 0,
-  orgDeactiveUsers: 0,
-  orgAverageUserAge: 0,
-  
-  // Organization statistics
-  totalOrganizations: 0,
-  
-  // Loading states
-  loading: {
-    userStats: false,
-    orgUserStats: false,
-    orgStats: false,
-  },
-  
-  // Error states
-  error: {
-    userStats: null,
-    orgUserStats: null,
-    orgStats: null,
-  }
-};
+
 
 // Async Thunks
 export const fetchUserStats = createAsyncThunk(
@@ -118,6 +85,41 @@ export const fetchOrgUserStats = createAsyncThunk(
     }
   }
 );
+
+const initialState = {
+  // User statistics (all users)
+  totalUsers: 0,
+  maleUsers: 0,
+  femaleUsers: 0,
+  activeUsers: 0,
+  deactiveUsers: 0,
+  averageUserAge: 0,
+  
+  // Organization-registered user statistics
+  orgTotalUsers: 0,
+  orgMaleUsers: 0,
+  orgFemaleUsers: 0,
+  orgActiveUsers: 0,
+  orgDeactiveUsers: 0,
+  orgAverageUserAge: 0,
+  
+  // Organization statistics
+  totalOrganizations: 0,
+  
+  // Loading states
+  loading: {
+    userStats: false,
+    orgUserStats: false,
+    orgStats: false,
+  },
+  
+  // Error states
+  error: {
+    userStats: null,
+    orgUserStats: null,
+    orgStats: null,
+  }
+};
 
 // export const fetchOrgStats = createAsyncThunk(
 //   "adminDashboard/fetchOrgStats",

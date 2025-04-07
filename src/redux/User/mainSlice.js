@@ -7,13 +7,15 @@ import tradingReducer from './trading/tradingSlice';
 import forgetpasswordReducer from './forgetPasswordSlice';
 import eventsReducer from './events/eventsSlice';
 
-import userSlice from './userSlice';
+// import userSlice from './userSlice';
+import dashboardReducer from "./userSlice";
 import subscriptionPlanReducer from './userSubscriptionPlan/userSubscriptionPlansSlice';
 
 const userReducer = combineReducers({
   auth: authReducer,
   profile: userProfileReducer,
-  users: userSlice,
+  // users: userSlice,
+  dashboard: dashboardReducer,
   subscriptionPlan: subscriptionPlanReducer,
   feedback: feedbackReducer,
   feedbackModal: feedbackModalReducer,

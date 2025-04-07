@@ -51,8 +51,12 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
 
   // Menu items (conditional rendering based on orgId)
   const menuItems = {
+    dashboard: [
+      // { to: "/organization/dashboard", icon: "fas fa-chart-line", label: "Organization Dashboard" },
+      { to: "/organization/dashboard", icon: "fas fa-tachometer-alt", label: "Dashboard" },
+      // { to: "/organization/org-feedabacks", icon: "fa fa-check", label: "Organization Feedbacks" },
+    ],
     organization: [
-      { to: "/organization/dashboard", icon: "fas fa-chart-line", label: "Organization Dashboard" },
       { to: "/organization/org-feedabacks", icon: "fa fa-check", label: "Organization Feedbacks" },
     ],
     user: [
@@ -64,6 +68,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
   // Helper function to get section icons
   const getSectionIcon = (section) => {
     const icons = {
+      dashboard: "tachometer-alt",
       user: "user",
       organization: "building",
     };

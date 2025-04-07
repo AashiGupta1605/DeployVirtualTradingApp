@@ -10,6 +10,7 @@ import {
   selectIsDeleting,
   selectIsUpdating
 } from '../../../../redux/Admin/FeedbackListPage/FeedbackTableSlice';
+import { fetchDashboardStats } from '../../../../redux/User/userSlice';
 
 const CATEGORY_COLORS = {
   "Website UI/UX": "bg-blue-100 text-blue-800",
@@ -159,6 +160,7 @@ const FeedbackTable = ({ feedbacks }) => {
       try {
         const loadingToast = toast.loading('Deleting feedback...');
         await dispatch(deleteFeedback(state.deleteId)).unwrap();
+        dispatch(fetchDashboardStats()).unwrap();
         toast.success('Feedback deleted successfully', { id: loadingToast });
         setState(prev => ({ ...prev, showDeleteModal: false, deleteId: null }));
       } catch (error) {
