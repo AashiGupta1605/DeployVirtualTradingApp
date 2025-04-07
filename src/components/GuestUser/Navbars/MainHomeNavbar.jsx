@@ -363,7 +363,8 @@ console.log( currentOrg?.name);
               >
                 Services
               </li>
-              <li
+
+              {/* <li
                 className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/nifty50")}
               >
@@ -371,12 +372,38 @@ console.log( currentOrg?.name);
               </li>
               <li className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40" onClick={() => handleNavigation("/etf")}>
                 ETF Data
-              </li>
+              </li> */}
+              
+              <div className="relative group">
+                <button className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 hover:rounded-md">
+                  Stock Data
+                </button>
+                <ul className="absolute hidden group-hover:block bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-10 min-w-[150px]">
+                  <li
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleNavigation("/nifty50")}
+                  >
+                    Nifty50 Data
+                  </li>
+                  <li
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleNavigation("/etf")}
+                  >
+                    ETF Data
+                  </li>
+                </ul>
+              </div>
               <li
                 className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
                 onClick={() => handleNavigation("/pricing")}
               >
                 Pricing
+              </li>
+              <li
+                className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"
+                onClick={() => handleNavigation("/gallery")}
+              >
+                Gallery
               </li>
               <li
                 className="nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-102 transition duration-40"

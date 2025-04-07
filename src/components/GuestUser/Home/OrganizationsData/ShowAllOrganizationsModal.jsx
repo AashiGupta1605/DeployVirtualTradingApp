@@ -111,10 +111,10 @@ const Dummy = ({ closeModal }) => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Website
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="ml-10 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Address
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-center">
                     Associated Date
                   </th>
                 </tr>
@@ -193,14 +193,14 @@ const Dummy = ({ closeModal }) => {
                             "No website found"
                           )}
                         </td>
-                        <td className="px-6 py-4 min-w-[340px] max-w-[360px] break-words text-sm">
+                        <td className="ml-10 px-6 py-4 min-w-[340px] max-w-[360px] break-words text-sm">
                           {org.address 
                             ? org.address.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
                             : 'No address found'
                           } 
                         </td>
 
-                        <td className="px-6 py-4 break-words text-sm">
+                        <td className="px-6 py-4 text-center text-sm">
                           {new Date(org.createDate).toISOString().split("T")[0]}
                         </td>
                       </tr>

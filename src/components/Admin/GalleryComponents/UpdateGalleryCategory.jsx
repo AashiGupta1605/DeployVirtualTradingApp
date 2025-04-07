@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes, { object } from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -175,5 +176,12 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
     />
   </div>
 );
+
+UpdateGalleryCategory.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  refreshCategories: PropTypes.func.isRequired,
+  updateId: PropTypes.instanceOf(Object).isRequired,
+  updateName: PropTypes.string.isRequired,
+}
 
 export default UpdateGalleryCategory;

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -305,28 +306,6 @@ const AddGalleryImage = ({ closeModal }) => {
   );
 };
 
-// const FormField = ({ name, label, required = false, type = "text", placeholder, className = "" }) => (
-//   <div>
-//     <label className="block text-sm font-medium text-gray-700 mb-2">
-//       {label} {required && <span className="text-red-500">*</span>}
-//     </label>
-//     <Field
-//       type={type}
-//       name={name}
-//       className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 
-//                         focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-//                         focus:outline-none transition-all duration-200`}
-//       placeholder={placeholder}
-//     />
-//     <ErrorMessage
-//       name={name}
-//       component="div"
-//       className="text-red-500 text-sm mt-1"
-//     />
-//   </div>
-// );
-
 const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [] }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -360,6 +339,10 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
   </div>
 );
+
+AddGalleryImage.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+}
 
 export default AddGalleryImage;
 

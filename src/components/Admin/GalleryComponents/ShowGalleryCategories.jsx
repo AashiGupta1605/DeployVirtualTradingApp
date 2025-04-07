@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 
-import { Filter, Edit, Trash2, ChevronLeft, ChevronRight} from "lucide-react";
-import { FaTimes, FaImages } from "react-icons/fa";
+import { Filter, Edit, Trash2, Info, ChevronLeft, ChevronRight} from "lucide-react";
+import { FaTimes } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { FolderOpen, PlusCircle } from "lucide-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { toast } from 'react-hot-toast';
@@ -13,6 +16,7 @@ import ConfirmationModal from "../Modals/ConformationModal";
 
 import AddGalleryCategory from './AddGalleryCategory';
 import UpdateGalleryCategory from "./UpdateGalleryCategory";
+import CategoryImagesTable from "./CategoryImagesTable";
 
 //Update and Delete Cards should Open by this, but...
 // const Tooltip = ({ children, text }) => (
@@ -29,6 +33,11 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
   const [isOpenCategoryForm, setIsOpenCategoryForm] = useState(false);
   const openAddCategoryModal = () => setIsOpenCategoryForm(true);
   const closeAddCategoryModal = () => setIsOpenCategoryForm(false);
+
+  const [isOpenImageTable, setIsOpenImageTable] = useState(false);
+  const [imgTableCategoryName, setImgTableCategoryName] = useState("")
+  const openImageTable = (name) => {setImgTableCategoryName(name); setIsOpenImageTable(true);}
+  const closeImageTable = () => setIsOpenImageTable(false);
 
   const [showFilters, setShowFilters] = useState(false);
   const [filterCount, setFilterCount] = useState(0);
@@ -293,7 +302,7 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
           <div className="flex justify-between items-center">
             {/* Left Side (Icon + Heading) */}
             <div className="flex items-center gap-3">
-              <FaImages className="text-gray-600 text-[25px]" />
+              <FontAwesomeIcon icon={faFolderOpen} className="text-gray-500 text-[21px]"/>
               <h2 className="text-xl font-bold text-gray-800">
                 Gallery Categories
               </h2>
@@ -541,7 +550,7 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                         {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
                           {data.updatedDate
                             ? <span className="ml-2">{new Date(data.updatedDate).toLocaleDateString()}</span>
-                            : <span className="ml-6">N/A</span>
+                            : <span className="ml-6 text-gray-400">N/A</span>
                           }
                         </td>
 
@@ -549,9 +558,18 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                      {/* <Tooltip text="Edit organization"> */}
                             <button
                               onClick={() => handleUpdateCategory(data._id, data.name)}
-                              className="mr-5 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
+                              className="-ml-2 mr-2 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
                             >
                               <Edit size={18} />
+                            </button>
+                      {/* </Tooltip> */}
+
+                      {/* <Tooltip text="Edit organization"> */}
+                            <button
+                              onClick={() => openImageTable(data.name)}
+                              className="mr-3 text-blue-600 mx-2 hover:text-blue-900 transition-colors focus:outline-none"
+                            >
+                              <Info size={18} />
                             </button>
                       {/* </Tooltip> */}
                           
@@ -685,6 +703,8 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
 
     {isOpenCategoryUpdate && <UpdateGalleryCategory closeModal={closeUpdateCategoryModal} refreshCategories={refreshCategories} updateId={updateId} updateName={updateName}/>}
 
+    {isOpenImageTable && <CategoryImagesTable closeModal={closeImageTable} tableCategoryName={imgTableCategoryName}/>}
+
     {/* Confirmation Modal */}
     <ConfirmationModal
       isOpen={isModalOpen}
@@ -697,5 +717,9 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
     </>
   );
 };
+
+ShowGalleryCategories.propTypes = {
+  sidebarExpanded: PropTypes.bool.isRequired,
+}
 
 export default ShowGalleryCategories;
