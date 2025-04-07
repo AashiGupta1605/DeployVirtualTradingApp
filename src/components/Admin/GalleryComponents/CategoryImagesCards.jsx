@@ -10,8 +10,70 @@ import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import CategoryImagesTable from "./CategoryImagesTable";
 
-const Card = ({ image, title, description, postDate }) => {
+const Card = ({ refreshCategories, id, image, title, description, postDate }) => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const handleDeleteCategory = (id) => {
+      setDeleteId(id);  
+      setIsModalOpen(true); 
+    };
+    const confirmDelete = async () => {
+      if (!deleteId) return;
+      try {
+        const response = await axios.patch(
+          `${BASE_API_URL}/admin/gallery/deleteGalleryItem/${deleteId}`
+        );
+    
+        console.log("Delete Gallery Category Response: ", response);
+    
+        if (response?.status === 201) {
+          toast.success(response?.data?.message);
+          refreshCategories();
+        } 
+        else if (response?.status === 409) {
+          toast(response?.data?.message, {
+            icon: '⚠️',
+          })
+        }
+        else if (response?.status === 500) {
+          toast(response?.data?.message, {
+            icon: '🛑',
+          })
+        }
+      } 
+      catch (error) {
+        console.error("Error deleting category:", error);
+        if (error.response) {
+          const { status, data } = error.response;
+          if (status === 409) {
+            // toast.warning(data?.message);
+            toast(data?.message, {
+              icon: '⚠️',
+            });
+          } 
+          else if (status === 500) {
+            // toast.error(data?.message);
+            toast(data?.message, {
+              icon: '🛑',
+            })
+          } 
+          else {
+            toast.error(data?.message || "Unknown error, please try again.");
+          }
+        } 
+        else {
+          toast.error("An internal server error occurred!");
+        }  
+        throw error; 
+      }
+      setIsModalOpen(false);
+      setDeleteId(null); 
+    };
+
     return (
+      <>
       <div className="w-[365px] min-h-[447px] rounded-2xl overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.5)] bg-white p-4 flex flex-col justify-between relative">
         {/* Image container with fallback */}
         {image ? (
@@ -46,11 +108,19 @@ const Card = ({ image, title, description, postDate }) => {
           <button className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-lg focus:outline-none">
             <Edit size={18} />
           </button>
-          <button className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg focus:outline-none">
+          <button className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg focus:outline-none" onClick={() => handleDeleteCategory(id)}>
             <Trash2 size={18} />
           </button>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Deletion"
+        message={`Are you sure you want to delete`}
+      />
+      </>
     );
 };
 
@@ -82,6 +152,10 @@ const CategoryImagesCards = ({ categoryName }) => {
       }
       throw error;
     }
+  };
+
+  const refreshCategories = () => {
+    fetchGalleryItems(); // Re-fetch categories to get the updated list
   };
 
   useEffect(() => {
@@ -206,6 +280,8 @@ const CategoryImagesCards = ({ categoryName }) => {
                 {visibleFeedbacks.map((card) => (
                   <Card
                     key={card._id}
+                    refreshCategories={refreshCategories}
+                    id={card._id}
                     image={card.photo}
                     title={card.title}
                     description={card.desc}
@@ -252,6 +328,8 @@ const CategoryImagesCards = ({ categoryName }) => {
 };
 
 Card.propTypes = {
+    refreshCategories: PropTypes.func.isRequired,
+    id: PropTypes.instanceOf(Object).isRequired,
     image: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,

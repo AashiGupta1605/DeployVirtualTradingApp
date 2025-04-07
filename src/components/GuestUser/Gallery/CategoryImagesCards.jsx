@@ -32,7 +32,7 @@ const Card = ({ image, title, description, postDate }) => {
           : <div className="h-24 overflow-y-auto text-gray-400 mt-2 text-base pr-1"> No description.... </div>}
   
           {postDate && (
-            <p className="max-w-34 ml-40 -mb-4 rounded-2xl pt-1 pb-1 pl-3 text-xs bg-gray-100 text-gray-600 mt-4">
+            <p className="max-w-34 ml-45 -mb-4 rounded-2xl pt-1 pb-1 pl-3 text-xs bg-gray-100 text-gray-600 mt-4">
               Posted on: {new Date(postDate).toLocaleDateString()}
             </p>
           )}
