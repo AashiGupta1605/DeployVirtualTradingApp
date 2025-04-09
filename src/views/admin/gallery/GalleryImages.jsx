@@ -6,7 +6,7 @@ const GalleryImages = ({ sidebarExpanded }) => {
   return (
     <>
     <div className="mt-12 overflow-hidden">
-    <StatsSection isDashboard={false} />
+    <StatsSection isDashboard={false} pageType='galleryImages' />
     <div>
     <ShowGalleryImages sidebarExpanded={sidebarExpanded}/>
     </div>

@@ -31,7 +31,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   .required("Password is required"),
       confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match") // ✅ Match password
-    .required("Confirm Password is required"), // ✅ Required field
+    .required("Confirm Password is required"), // ✅ Required, field
     mobile: Yup.string()
       .matches(/^[9876]\d{9}$/, "Invalid mobile number")
       .required("Mobile number is required"),
