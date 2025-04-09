@@ -58,6 +58,7 @@ export default function OrganizationSidebar({ sidebarExpanded, setSidebarExpande
     ],
     organization: [
       { to: "/organization/org-feedabacks", icon: "fa fa-check", label: "Organization Feedbacks" },
+      { to: "/organization/org-complaints", icon: "fas fa-exclamation-circle", label: "Organization Complaints" },
     ],
     user: [
       { to: "/organization/userlist", icon: "fas fa-users", label: "User List" },

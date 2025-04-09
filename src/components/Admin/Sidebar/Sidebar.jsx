@@ -217,6 +217,7 @@ const getSectionIcon = (section) => {
     organizations: "building",
     queries: "envelope",
     feedback: "comments",
+    complaint: "exclamation-circle",
     events: "calendar-alt",
     gallery: "fas fa-images",
   };

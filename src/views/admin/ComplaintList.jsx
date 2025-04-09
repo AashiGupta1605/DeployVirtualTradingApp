@@ -6,99 +6,176 @@ import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
 import {
   fetchComplaints,
-  setComplaintFilters,
-  clearComplaintFilters,
+  setFilters,
+  clearFilters,
+  updateLocalFilters,
+  selectFilteredComplaints,
+  selectComplaintLoading,
+  selectComplaintError,
+  selectComplaintStats,
+  selectComplaintFilters
 } from "../../redux/Admin/ComplaintListPage/complaintTableSlice";
 
 const ComplaintList = () => {
   const dispatch = useDispatch();
 
-  const filteredComplaints = useSelector(state => state.admin.complaintTable.filteredComplaints);
-  const loading = useSelector(state => state.admin.complaintTable.loading);
-  const error = useSelector(state => state.admin.complaintTable.error);
+  const filteredComplaints = useSelector(selectFilteredComplaints);
+  const loading = useSelector(selectComplaintLoading);
+  const error = useSelector(selectComplaintError);
+  const stats = useSelector(selectComplaintStats);
+  const currentFilters = useSelector(selectComplaintFilters);
 
   const [state, setState] = useState({
     currentPage: 1,
     itemsPerPage: 10,
-    searchQuery: '',
-    filters: {
+    isFilterOpen: false,
+    searchQuery: "",
+    activeFilters: {
+      status: false,
+      category: false,
+      dateRange: false,
+      search: false
+    },
+    tempFilters: {
       status: 'all',
-      type: 'all',
-      search: ''
+      category: 'all',
+      startDate: null,
+      endDate: null
     }
   });
 
   useEffect(() => {
-    dispatch(fetchComplaints());
+    dispatch(fetchComplaints())
+      .unwrap()
+      .then(() => console.log('Complaints fetched successfully'))
+      .catch(error => console.error('Error fetching complaints:', error));
   }, [dispatch]);
 
   const handleFilterChange = useCallback((e) => {
     const { name, value } = e.target;
-    const updatedFilters = {
-      ...state.filters,
-      [name]: value
-    };
 
     setState(prev => ({
       ...prev,
-      filters: updatedFilters,
-      currentPage: 1
+      tempFilters: {
+        ...prev.tempFilters,
+        [name]: value
+      },
+      activeFilters: {
+        ...prev.activeFilters,
+        [name]: value !== 'all'
+      }
     }));
 
-    dispatch(setComplaintFilters(updatedFilters));
-  }, [dispatch, state.filters]);
+    dispatch(updateLocalFilters({ [name]: value }));
+  }, [dispatch]);
+
+  const handleStartDateChange = useCallback((date) => {
+    setState(prev => ({
+      ...prev,
+      tempFilters: {
+        ...prev.tempFilters,
+        startDate: date
+      },
+      activeFilters: {
+        ...prev.activeFilters,
+        dateRange: !!(date || prev.tempFilters.endDate)
+      }
+    }));
+
+    dispatch(updateLocalFilters({ startDate: date }));
+  }, [dispatch]);
+
+  const handleEndDateChange = useCallback((date) => {
+    setState(prev => ({
+      ...prev,
+      tempFilters: {
+        ...prev.tempFilters,
+        endDate: date
+      },
+      activeFilters: {
+        ...prev.activeFilters,
+        dateRange: !!(prev.tempFilters.startDate || date)
+      }
+    }));
+
+    dispatch(updateLocalFilters({ endDate: date }));
+  }, [dispatch]);
 
   const handleSearchChange = useCallback((value) => {
-    const updatedFilters = {
-      ...state.filters,
-      search: value
-    };
-
     setState(prev => ({
       ...prev,
       searchQuery: value,
-      filters: updatedFilters,
-      currentPage: 1
+      activeFilters: {
+        ...prev.activeFilters,
+        search: !!value
+      }
     }));
 
-    dispatch(setComplaintFilters(updatedFilters));
-  }, [dispatch, state.filters]);
+    dispatch(updateLocalFilters({ search: value }));
+  }, [dispatch]);
 
-  const handleClearFilters = () => {
+  const handleApplyFilters = useCallback(() => {
+    const filters = {
+      ...state.tempFilters,
+      search: state.searchQuery
+    };
+
+    dispatch(setFilters(filters));
     setState(prev => ({
       ...prev,
-      searchQuery: '',
-      filters: {
+      isFilterOpen: false,
+      currentPage: 1
+    }));
+  }, [dispatch, state.tempFilters, state.searchQuery]);
+
+  const handleClearFilters = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      searchQuery: "",
+      tempFilters: {
         status: 'all',
-        type: 'all',
-        search: ''
+        category: 'all',
+        startDate: null,
+        endDate: null
+      },
+      activeFilters: {
+        status: false,
+        category: false,
+        dateRange: false,
+        search: false
       },
       currentPage: 1
     }));
+    dispatch(clearFilters());
+  }, [dispatch]);
 
-    dispatch(clearComplaintFilters());
-  };
-
-  const handlePageChange = (newPage) => {
+  const handlePageChange = useCallback((newPage) => {
     setState(prev => ({
       ...prev,
       currentPage: newPage
     }));
-  };
+  }, []);
 
-  const handleItemsPerPageChange = (newValue) => {
+  const handleItemsPerPageChange = useCallback((newValue) => {
     setState(prev => ({
       ...prev,
       itemsPerPage: newValue,
       currentPage: 1
     }));
-  };
+  }, []);
 
   const totalItems = filteredComplaints.length;
   const totalPages = Math.ceil(totalItems / state.itemsPerPage);
   const indexOfLastItem = state.currentPage * state.itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - state.itemsPerPage;
   const currentItems = filteredComplaints.slice(indexOfFirstItem, indexOfLastItem);
+
+  const calculatedStats = {
+    total: filteredComplaints.length,
+    solved: filteredComplaints.filter(c => c.status === 'solved').length,
+    pending: filteredComplaints.filter(c => c.status === 'pending').length,
+    ...stats
+  };
 
   if (loading) {
     return (
@@ -121,11 +198,7 @@ const ComplaintList = () => {
   return (
     <div className="mt-12 overflow-hidden">
       <StatsSection 
-        stats={{
-          total: filteredComplaints.length,
-          pending: filteredComplaints.filter(c => c.status === 'pending').length,
-          solved: filteredComplaints.filter(c => c.status === 'solved').length,
-        }} 
+        stats={calculatedStats} 
         isDashboard={false} 
         pageType="complaints"
       />
@@ -133,14 +206,18 @@ const ComplaintList = () => {
       <div className="px-8 mx-4 -mt-12">
         <TableFilters
           filterType="complaint"
-          isFilterOpen={true}
-          setIsFilterOpen={() => {}}
-          tempFilters={state.filters}
+          isFilterOpen={state.isFilterOpen}
+          setIsFilterOpen={(value) => setState(prev => ({ ...prev, isFilterOpen: value }))}
+          tempFilters={state.tempFilters}
           handleFilterChange={handleFilterChange}
-          applyFilters={() => {}}
+          handleStartDateChange={handleStartDateChange}
+          handleEndDateChange={handleEndDateChange}
+          applyFilters={handleApplyFilters}
           clearFilters={handleClearFilters}
           searchQuery={state.searchQuery}
           setSearchQuery={handleSearchChange}
+          activeFilters={state.activeFilters}
+          setActiveFilters={(filters) => setState(prev => ({ ...prev, activeFilters: filters }))}
           pageTitle="Manage Complaints"
           showAddButton={false}
         />
