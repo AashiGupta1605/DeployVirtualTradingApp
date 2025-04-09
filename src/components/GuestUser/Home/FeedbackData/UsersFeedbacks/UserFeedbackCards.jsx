@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
 import { motion } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star } from "lucide-react";
 import { BiMessageDetail } from "react-icons/bi";
 import { FiExternalLink } from "react-icons/fi";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { FaRegSadTear, FaSpinner } from "react-icons/fa";
 import UserAllFeedbacksTable from "./UserAllFeedbacksTable";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 const UserFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -13,8 +18,6 @@ const UserFeedbackCards = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 3;
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -49,90 +52,126 @@ const UserFeedbackCards = () => {
     fetchUserFeedbacks();
   }, []);
 
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [feedbacks]);
+  const CustomPrevArrow = ({ onClick }) => (
+    <button 
+      onClick={onClick} 
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-r-full shadow-lg hover:bg-gray-100 transition-all duration-300"
+      aria-label="Previous"
+      style={{ boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}
+    >
+      <BiChevronLeft className="text-2xl text-gray-700 hover:text-blue-600" />
+    </button>
+  );
 
-  const visibleFeedbacks = feedbacks.slice(currentIndex, currentIndex + itemsPerPage);
+  const CustomNextArrow = ({ onClick }) => (
+    <button 
+      onClick={onClick} 
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-l-full shadow-lg hover:bg-gray-100 transition-all duration-300"
+      aria-label="Next"
+      style={{ boxShadow: '-2px 0 5px rgba(0,0,0,0.1)' }}
+    >
+      <BiChevronRight className="text-2xl text-gray-700 hover:text-blue-600" />
+    </button>
+  );
 
-  const handleNext = () => {
-    if (currentIndex + itemsPerPage < feedbacks.length) {
-      setCurrentIndex(currentIndex + itemsPerPage);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - itemsPerPage);
-    }
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
+    dotsClass: "slick-dots slick-dots-custom",
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: false
+        }
+      }
+    ]
   };
 
   return (
-    <div className="relative">
-      <section className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mb-16">
-        <div className="px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <div className="flex items-center mb-4 md:mb-0">
-              <BiMessageDetail className="text-blue-600 text-3xl mr-3" />
-              <h3 className="text-2xl font-bold text-gray-800">User Feedbacks</h3>
+    <section className="my-16 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+      <div className="px-6 py-5">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div className='flex items-center'>
+            <div className="bg-blue-100 p-3 rounded-lg mr-4">
+              <BiMessageDetail className="text-lightBlue-600 text-2xl" />
             </div>
-            
-            <div className="flex items-center gap-4">
-              <span className="text-lg font-medium text-gray-600">
-                Total Feedbacks: {feedbacks.length}
-              </span>
-              <button
-                onClick={openModal}
-                className="flex items-center gap-2 px-5 py-2 font-semibold text-blue-600 bg-blue-50 rounded-lg transition-all hover:bg-blue-100"
-              >
-                View All
-                <FiExternalLink className="text-lg" />
-              </button>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">User Feedbacks</h3>
+              <p className="text-sm text-gray-500">What our users say about us</p>
             </div>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="flex items-center gap-3">
+            <div className="bg-gray-100 px-4 py-2 rounded-lg">
+              <span className="text-sm font-medium text-gray-700">
+                Total: <span className="font-bold text-lightBlue-600">{feedbacks.length}</span>
+              </span>
             </div>
-          ) : err ? (
-            <div className="py-12 flex flex-col items-center justify-center bg-red-50 rounded-lg">
-              <div className="text-5xl text-red-400 mb-4">⚠️</div>
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Feedbacks</h4>
-              <p className="text-gray-600 mb-4 text-center max-w-md">
-                {err}
-              </p>
-              <button
-                onClick={fetchUserFeedbacks}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              >
-                Retry
-              </button>
-            </div>
-          ) : feedbacks.length > 0 ? (
-            <div className="relative">
-              <button 
-                onClick={handlePrev} 
-                disabled={currentIndex === 0} 
-                className={`absolute -left-12 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full ${currentIndex === 0 ? 'text-gray-300' : 'text-gray-700 hover:bg-gray-100'}`}
-              >
-                <ChevronLeft className="text-3xl" />
-              </button>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
-                {visibleFeedbacks.map((feedback, index) => {
-                  const user = userData.find(user => user._id === feedback.userId?._id);
-                  return (
-                    <motion.div 
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      whileHover={{ y: -5 }}
-                      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all h-full"
-                    >
-                      <div className="p-6 h-full flex flex-col">
+            <button 
+              onClick={openModal}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-lightBlue-600 rounded-lg transition-all hover:bg-blue-700 shadow-md"
+            >
+              View All
+              <FiExternalLink className="text-sm" />
+            </button>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex flex-col items-center justify-center h-64 gap-4">
+            <FaSpinner className="animate-spin text-3xl text-lightBlue-600" />
+            <p className="text-gray-600">Loading feedbacks...</p>
+          </div>
+        ) : err ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-12 px-4 bg-red-50 rounded-lg border border-red-100"
+          >
+            <FaRegSadTear className="text-4xl text-red-400 mb-4" />
+            <h4 className="text-lg font-semibold text-gray-800 mb-2">Oops! Something went wrong</h4>
+            <p className="text-gray-600 mb-4 text-center max-w-md text-sm">
+              We couldn't load the feedbacks. Please try again later.
+            </p>
+            <button
+              onClick={fetchUserFeedbacks}
+              className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+            >
+              Retry
+            </button>
+          </motion.div>
+        ) : feedbacks.length > 0 ? (
+          <div className="relative px-8">
+            <Slider {...settings} className="pb-8 pt-2">
+              {feedbacks.map((feedback, index) => {
+                const user = userData.find(user => user._id === feedback.userId?._id);
+                return (
+                  <motion.div 
+                    key={index}
+                    whileHover={{ y: -5 }}
+                    className="px-2 outline-none"
+                  >
+                    <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-all h-full flex flex-col">
+                      <div className="p-6">
                         <div className="flex mb-4">
                           {[...Array(5)].map((_, i) => (
                             <Star
@@ -147,11 +186,11 @@ const UserFeedbackCards = () => {
                           ))}
                         </div>
                         
-                        <div className="flex-grow mb-4 overflow-y-auto max-h-32">
+                        <div className="mb-4">
                           <h4 className="text-lg font-semibold text-gray-800 mb-2">
                             {feedback.feedbackCategory}
                           </h4>
-                          <p className="text-gray-600 italic">
+                          <p className="text-gray-600 italic line-clamp-3">
                             "{feedback.feedbackMessage}"
                           </p>
                         </div>
@@ -162,30 +201,61 @@ const UserFeedbackCards = () => {
                           </p>
                         </div>
                       </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-              
-              <button 
-                onClick={handleNext} 
-                disabled={currentIndex + itemsPerPage >= feedbacks.length} 
-                className={`absolute -right-12 top-1/2 transform -translate-y-1/2 z-10 p-2 rounded-full ${currentIndex + itemsPerPage >= feedbacks.length ? 'text-gray-300' : 'text-gray-700 hover:bg-gray-100'}`}
-              >
-                <ChevronRight className="text-3xl" />
-              </button>
-            </div>
-          ) : (
-            <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-lg">
-              <div className="text-5xl text-gray-300 mb-4">💬</div>
-              <h4 className="text-lg text-gray-500">No feedbacks available yet</h4>
-            </div>
-          )}
-        </div>
-      </section>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </Slider>
+          </div>
+        ) : (
+          <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+            <div className="text-4xl text-gray-300 mb-3">💬</div>
+            <h4 className="text-md text-gray-500 font-medium">No feedbacks available</h4>
+            <p className="text-sm text-gray-400 mt-1">Check back later for updates</p>
+          </div>
+        )}
+      </div>
       
       {showModal && <UserAllFeedbacksTable closeModal={closeModal} />}
-    </div>
+
+      <style jsx global>{`
+        .slick-dots-custom {
+          bottom: -25px;
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+        }
+        
+        .slick-dots-custom li {
+          margin: 0 4px;
+        }
+        
+        .slick-dots-custom li button {
+          width: 8px;
+          height: 8px;
+          padding: 0;
+          border-radius: 50%;
+          background: #d1d5db;
+          border: none;
+          text-indent: -9999px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+        
+        .slick-dots-custom li.slick-active button {
+          background: #3b82f6;
+          width: 20px;
+          border-radius: 10px;
+        }
+        
+        .slick-dots-custom li button:before {
+          display: none;
+        }
+      `}</style>
+    </section>
   );
 };
 
