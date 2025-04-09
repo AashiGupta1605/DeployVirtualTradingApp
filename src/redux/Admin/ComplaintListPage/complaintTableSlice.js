@@ -51,14 +51,21 @@ export const updateComplaintStatus = createAsyncThunk(
 
 const filterComplaints = (complaints, filters) => {
   return complaints.filter(complaint => {
+    if (filters.category && filters.category !== 'all' && 
+      complaint.category !== filters.category) {
+    return false;
+  }
     if (filters.status && filters.status !== 'all') {
       if (complaint.status.toLowerCase() !== filters.status.toLowerCase()) {
         return false;
       }
     }
 
-    if (filters.type && filters.type !== 'all') {
-      if (complaint.type?.toLowerCase() !== filters.type.toLowerCase()) {
+    if (filters.startDate && filters.endDate) {
+      const complaintkDate = new Date(complaint.createdDate);
+      const startDate = new Date(filters.startDate);
+      const endDate = new Date(filters.endDate);
+      if (complaintkDate < startDate || complaintkDate > endDate) {
         return false;
       }
     }
@@ -82,12 +89,56 @@ const filterComplaints = (complaints, filters) => {
   });
 };
 
+// Calculate stats from complaints
+const calculateComplaintStats = (complaints) => {
+  const total = complaints.length;
+
+  const solved = complaints.filter(c => c.status === 'solved').length;
+  const pending = complaints.filter(c => c.status === 'pending').length;
+  const rejected = complaints.filter(c => c.status === 'rejected').length;
+
+  const satisfied = complaints.filter(c => c.userSatisfaction === 'satisfied').length;
+  const notSatisfied = complaints.filter(c => c.userSatisfaction === 'not_satisfied').length;
+  const noResponse = total - (satisfied + notSatisfied);
+
+  const categoryDistribution = complaints.reduce((acc, c) => {
+    acc[c.complaintCategory] = (acc[c.complaintCategory] || 0) + 1;
+    return acc;
+  }, {});
+
+  return {
+    total,
+    solved,
+    pending,
+    rejected,
+    satisfied,
+    notSatisfied,
+    noResponse,
+    categoryDistribution
+  };
+};
+
+
+
 const initialState = {
   complaints: [],
   filteredComplaints: [],
+  stats: {
+    total: 0,
+    solved: 0,
+    pending: 0,
+    rejected: 0,
+    satisfied: 0,
+    notSatisfied: 0,
+    noResponse: 0,
+    categoryDistribution: {}
+  },
   filters: {
+    category: 'all',
     status: 'all',
-    type: 'all',
+    userSatisfaction: 'all',
+    startDate: null,
+    endDate: null,
     search: ''
   },
   loading: false,
@@ -101,13 +152,20 @@ const complaintTableSlice = createSlice({
   name: 'admin/complaintTable',
   initialState,
   reducers: {
-    setComplaintFilters: (state, action) => {
+    setFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
       state.filteredComplaints = filterComplaints(state.complaints, state.filters);
+      state.stats = calculateComplaintStats(state.filteredComplaints);
     },
-    clearComplaintFilters: (state) => {
+    clearFilters: (state) => {
       state.filters = initialState.filters;
       state.filteredComplaints = state.complaints;
+      state.stats = calculateComplaintStats(state.complaints);
+    },
+    updateLocalFilters: (state, action) => {
+      state.filters = { ...state.filters, ...action.payload };
+      state.filteredComplaints = filterComplaints(state.complaints, state.filters);
+      state.stats = calculateComplaintStats(state.filteredComplaints);
     }
   },
   extraReducers: (builder) => {
@@ -120,6 +178,7 @@ const complaintTableSlice = createSlice({
         state.loading = false;
         state.complaints = action.payload.data;
         state.filteredComplaints = filterComplaints(action.payload.data, state.filters);
+        state.stats = calculateComplaintStats(state.filteredComplaints);
         state.lastUpdated = Date.now();
       })
       .addCase(fetchComplaints.rejected, (state, action) => {
@@ -135,6 +194,7 @@ const complaintTableSlice = createSlice({
           complaint => complaint._id !== action.payload
         );
         state.filteredComplaints = filterComplaints(state.complaints, state.filters);
+        state.stats = calculateComplaintStats(state.filteredComplaints);
       })
       .addCase(deleteComplaint.rejected, (state) => {
         state.isDeleting = false;
@@ -150,6 +210,7 @@ const complaintTableSlice = createSlice({
         if (index !== -1) {
           state.complaints[index] = action.payload.updatedComplaint;
           state.filteredComplaints = filterComplaints(state.complaints, state.filters);
+          state.stats = calculateComplaintStats(state.filteredComplaints);
         }
       })
       .addCase(updateComplaintStatus.rejected, (state) => {
@@ -159,16 +220,19 @@ const complaintTableSlice = createSlice({
 });
 
 export const {
-  setComplaintFilters,
-  clearComplaintFilters
+  setFilters,
+  clearFilters,
+  updateLocalFilters
 } = complaintTableSlice.actions;
 
-export const selectComplaints = state => state.admin.complaintTable.filteredComplaints;
-export const selectAllComplaints = state => state.admin.complaintTable.complaints;
+export const selectComplaints = state => state.admin.complaintTable.complaints;
+export const selectFilteredComplaints = state => state.admin.complaintTable.filteredComplaints;
+export const selectComplaintStats = state => state.admin.complaintTable.stats;
 export const selectComplaintLoading = state => state.admin.complaintTable.loading;
 export const selectComplaintError = state => state.admin.complaintTable.error;
 export const selectComplaintDeleting = state => state.admin.complaintTable.isDeleting;
 export const selectComplaintUpdating = state => state.admin.complaintTable.isUpdating;
 export const selectComplaintFilters = state => state.admin.complaintTable.filters;
+export const selectComplaintLastUpdated = state => state.admin.complaintTable.lastUpdated;
 
 export default complaintTableSlice.reducer;

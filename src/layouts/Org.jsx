@@ -16,6 +16,7 @@ import OrganizationDashboard from "../views/Organization/OrganizationDetails/Org
 import Register from "../views/auth/Register";
 import OrganizationUsersFeedback from "../views/Organization/OrganizationUserDetails/OrganizationUsersFeedback"
 import OrganizationFeedback from "../views/Organization/OrganizationDetails/OrganizationFeedback";
+import OrganizationComplaint from "../views/Organization/OrganizationDetails/OrganizationComplaint"
 import ProtectedRoute from "../components/Organization/ProtectedRoutes/ProtectedRoute";
 import ResetPasswordModal from "../views/auth/ResetPasswordModal"; 
 // const orgName = localStorage.getItem("orgName");
@@ -65,6 +66,7 @@ export default function Org() {
             <Route path="userlist" element={<OrganizationUsers />} />
             <Route path="users/feedbacks" element={<OrganizationUsersFeedback />} />
             <Route path="org-feedabacks" element={<OrganizationFeedback />} />
+            <Route path="org-complaints" element={<OrganizationComplaint />} />
             </Route>
             <Route path="*" element={<Navigate to="dashboard" replace />} />
             <Route path="register" element={<Register />} />

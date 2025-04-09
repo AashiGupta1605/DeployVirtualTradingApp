@@ -176,7 +176,7 @@ export default function ComplaintTable() {
                           {new Date(item.createdDate).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${item.status === 'solved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                             {item.status || "Pending"}
                           </span>
                         </td>
