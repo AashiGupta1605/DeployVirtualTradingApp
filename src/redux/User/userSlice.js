@@ -207,7 +207,10 @@ export const fetchDashboardStats = createAsyncThunk(
         'organizations',
         'events',
         'feedback',
-        'queries'
+        'queries',
+        'complaints',
+        'stocks',
+        'gallery'
       ];
 
       const requests = endpoints.map(endpoint => 
@@ -221,9 +224,13 @@ export const fetchDashboardStats = createAsyncThunk(
         organizations: responses[1].data.stats,
         events: responses[2].data.stats,
         feedback: responses[3].data.stats,
-        queries: responses[4].data.stats
+        queries: responses[4].data.stats,
+        complaints:responses[5].data.stats,
+        stocks:responses[6].data.stats,
+        gallery:responses[7].data.stats
       };
-
+      console.log(stats);
+      
       return stats;
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to fetch dashboard stats');
@@ -281,9 +288,31 @@ const initialState = {
     },
     queries: {
       total: 0,
-      pendingQueries:0,
-      completedQueries:0,
-      averageResolutionDaysQueries:0
+      recentQueries:0,
+      queriesByType:0,
+      queriesWithResponse:0,
+      popularTimes:0,
+      deviceBreakdown:0,
+    },
+    complaints: {
+      total: 0,
+      recentComplaint:0,
+      pendingComplaint:0,
+      resolvedComplaint:0,
+    },
+    stocks: {
+      all: 0,
+      nifty50: 0,
+      nifty500: 0,
+      etf: 0
+    },
+    gallery:{
+      total:0,          // Total gallery items (including deleted)
+      active:0,         // Currently active items
+      deleted:0,        // Soft-deleted items
+      byCategory:0,
+      totalCategories:0,
+      totalPhotos:0  
     }
   },
   status: 'idle',

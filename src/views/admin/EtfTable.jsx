@@ -8,7 +8,7 @@ import StatsSection from "../../components/Admin/Cards/StatsSection";
 export default function ETfTable() {
 return (
 <div className="mt-12 overflow-hidden">
-<StatsSection isDashboard={false} />
+<StatsSection isDashboard={false} pageType="stocks" />
 
 
   {/* Etf Table Section */}
