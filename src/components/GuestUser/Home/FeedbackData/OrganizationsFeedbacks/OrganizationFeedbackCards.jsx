@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../utils/BaseUrl";
-import OrganizationAllFeedbacksTable from "./OrganizationAllFeedbacksTable";
-
+import { motion, AnimatePresence } from "framer-motion";
 import { Star } from "lucide-react";
-import { FolderOpen } from "lucide-react";
-// import { MdFeedback } from "react-icons/md";
 import { BiMessageDetail } from "react-icons/bi";
+import { FiExternalLink } from "react-icons/fi";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { FaRegSadTear, FaSpinner, FaCheckCircle } from "react-icons/fa";
+import OrganizationAllFeedbacksTable from "./OrganizationAllFeedbacksTable";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 const OrganizationFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [orgData, setOrgData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
-
   const [showModal, setShowModal] = useState(false);
 
   const openModal = () => setShowModal(true);
@@ -21,16 +24,15 @@ const OrganizationFeedbackCards = () => {
 
   const fetchOrganizationFeedbacks = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${BASE_API_URL}/guestUser/organizationFeedbacks/createdDate/decreasing`
-        // `http://localhost:5000/v1/api/guestUser/organizationFeedbacks/createdDate/decreasing`
       );
       setFeedbacks(response.data.feedbackData);
-
-      console.log("Users Feedbacks Object: ", response.data);
-      console.log("User Feedbacks: ", feedbacks);
+      setLoading(false);
     } catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
+      setErr(error.response?.data?.message || "Failed to load feedbacks");
+      setLoading(false);
     }
   };
 
@@ -38,198 +40,270 @@ const OrganizationFeedbackCards = () => {
     try {
       const response = await axios.get(
         `${BASE_API_URL}/guestUser/getAllOrganizations`
-        // `http://localhost:5000/v1/api/guestUser/getAllOrganizations`
       );
       setOrgData(response.data.data);
-      console.log("Organization Data", response.data);
     } catch (error) {
-      setErr(error.response?.data?.message || "Something went wrong.");
+      setErr(error.response?.data?.message || "Failed to load organization data");
     }
   };
 
   useEffect(() => {
-    try {
-      fetchOrgData();
-      fetchOrganizationFeedbacks();
-      setErr("");
-    } catch (error) {
-      setErr("Something went wrong: ", error);
-    }
+    fetchOrgData();
+    fetchOrganizationFeedbacks();
   }, []);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 3;
+  const CustomPrevArrow = ({ onClick }) => (
+    <button 
+      onClick={onClick} 
+      className="absolute -left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-50 transition-all duration-300"
+      aria-label="Previous"
+      style={{ boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}
+    >
+      <BiChevronLeft className="text-2xl text-gray-700 hover:text-lightBlue-600" />
+    </button>
+  );
 
-  useEffect(() => {
-    setCurrentIndex(0); // Reset pagination when feedbacks change
-  }, [feedbacks]);
+  const CustomNextArrow = ({ onClick }) => (
+    <button 
+      onClick={onClick} 
+      className="absolute -right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-50 transition-all duration-300"
+      aria-label="Next"
+      style={{ boxShadow: '-2px 0 5px rgba(0,0,0,0.1)' }}
+    >
+      <BiChevronRight className="text-2xl text-gray-700 hover:text-lightBlue-600" />
+    </button>
+  );
 
-  const visibleFeedbacks = feedbacks.slice(currentIndex, currentIndex + itemsPerPage);
-
-  const handleNext = () => {
-    if (currentIndex + itemsPerPage < feedbacks.length) {
-      setCurrentIndex(currentIndex + itemsPerPage);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - itemsPerPage);
-    }
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
+    dotsClass: "slick-dots slick-dots-custom",
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: true
+        }
+      }
+    ]
   };
 
   return (
-    <div>
-      <section className="mb-8 bg-gray-100 border-2 border-gray-200 mx-6 p-6 rounded-lg relative">
-
-        {/* Previous Button */}
-        <button 
-          onClick={handlePrev} 
-          disabled={currentIndex === 0} 
-          className="absolute -left-1 mr-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
-          >
-          <BiChevronLeft />
-        </button>
-
-        {/* Flex container for headings and button */}
-        <div className="flex justify-between items-center mb-6">
-          {/* Left-most heading */}
-          <div className="flex gap-3 items-center">
-            {/* <MdFeedback className="text-blue-500 text-[34px]" /> */}
-            <BiMessageDetail className="text-blue-500 text-[26px] mt-[5px]" />
-            <h3 className="text-xl font-bold text-gray-700">
-              Organizations Feedbacks
-            </h3>
+    <section className="my-16 bg-white -mt-2 rounded-xl shadow-md overflow-hidden border border-gray-200">
+      <div className="px-6 py-5 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div className='flex items-center'>
+            <div className="bg-blue-100 p-3 rounded-lg mr-4">
+              <BiMessageDetail className="text-lightBlue-600 text-2xl" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">Organization Feedbacks</h3>
+              <p className="text-sm text-gray-500">What organizations say about us</p>
+            </div>
           </div>
-          {/* Right side container */}
-          <div className="flex items-center gap-4">
-            {/* Second heading before the button */}
-            <h6 className="text-[18] font-semibold text-gray-500">
-              Total Feedbacks: {feedbacks.length}
-            </h6>
 
-            {/* View More Button */}
-            <button
-              className="flex items-center gap-2 px-4 py-1 font-semibold text-sm text-[#1a2c47] border border-[#1a2c47] rounded-lg transition-all duration-300 hover:bg-[#1a2c47] hover:text-white"
+          <div className="flex items-center gap-3">
+            <div className="bg-gray-100 px-4 py-2 rounded-lg">
+              <span className="text-sm font-medium text-gray-700">
+                Total: <span className="font-bold text-lightBlue-600">{feedbacks.length}</span>
+              </span>
+            </div>
+            <button 
               onClick={openModal}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-lightBlue-600 rounded-lg transition-all hover:bg-blue-700 shadow-md"
             >
-              View More
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13 5l7 7m0 0l-7 7m7-7H4"
-                />
-              </svg>
+              View All
+              <FiExternalLink className="text-sm" />
             </button>
           </div>
         </div>
 
-        {/* {err && <p className="text-red-500">{err}</p>} */}
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center h-64 gap-4"
+            >
+              <FaSpinner className="animate-spin text-3xl text-lightBlue-600" />
+              <p className="text-gray-600">Loading feedbacks...</p>
+            </motion.div>
+          ) : err ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="flex flex-col items-center justify-center py-12 px-4 bg-red-50 rounded-lg border border-red-100"
+            >
+              <FaRegSadTear className="text-4xl text-red-400 mb-4" />
+              <h4 className="text-lg font-semibold text-gray-800 mb-2">Oops! Something went wrong</h4>
+              <p className="text-gray-600 mb-4 text-center max-w-md text-sm">
+                {err}
+              </p>
+              <button
+                onClick={fetchOrganizationFeedbacks}
+                className="px-5 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+              >
+                Retry
+              </button>
+            </motion.div>
+          ) : feedbacks.length > 0 ? (
+            <div className="relative px-8">
+              <Slider {...settings} className="pb-8 pt-2">
+                {feedbacks.map((feedback, index) => {
+                  const org = orgData.find(org => org._id === feedback.organizationId?._id);
+                  return (
+                    <motion.div 
+                      key={index}
+                      whileHover={{ y: -5 }}
+                      className="px-2 outline-none"
+                    >
+                      <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all h-full flex flex-col">
+                        {/* Organization Header */}
+                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <span className="text-lightBlue-600 font-semibold text-lg">
+                                  {org ? org.name.charAt(0).toUpperCase() : "O"}
+                                </span>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-gray-800 line-clamp-1">
+                                  {org ? org.name.split(' ').map(word => 
+                                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                                  ).join(' ') : "Organization"}
+                                </h4>
+                                <p className="text-sm text-gray-500">{feedback.feedbackCategory}</p>
+                              </div>
+                            </div>
+                            <div className="flex">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  size={16}
+                                  className={`${
+                                    i < feedback.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-200"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
 
-        <div className="flex justify-center gap-6">
+                        {/* Feedback Content */}
+                        <div className="p-6 flex-grow bg-gradient-to-b from-white to-gray-50">
+                          <div className="relative">
+                            <div className="absolute -top-6 -left-2 text-gray-200 text-4xl font-serif">"</div>
+                            <p className="text-gray-600 text-sm leading-relaxed pl-4 italic line-clamp-4">
+                              {feedback.feedbackMessage}
+                            </p>
+                            <div className="absolute -bottom-4 right-0 text-gray-200 text-4xl font-serif">"</div>
+                          </div>
+                        </div>
 
-        {err && (
-          <div className="flex justify-center items-center min-h-[200px]">
-          <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
-            <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
-          </div>
-          <b className="text-lg text-gray-800 mt-4">Oops! Something went wrong.</b>
-          <p className="text-gray-600 text-sm text-center mt-2">
-            We couldn’t load the content. Please try again later.
-          </p>
-          <p className="text-red-600 font-medium mt-2">{err}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
-          >
-            Retry
-          </button>
-          </div>
-          </div>
-        )}
-
-          {feedbacks.length > 0 ? (
-            visibleFeedbacks.map((card, index) => {
-              const orgName = orgData?.find(
-                (org) => org._id === card.organizationId?._id
-              );
-              console.log(
-                "Get org data by stored otgID refrence in Feedback modal",
-                orgName
-              );
-              return (
-                <div
-                  key={index}
-                  className="w-[400px] h-[140px] bg-white shadow-lg p-6 rounded-lg border overflow-hidden"
-                >
-                  {/* Star Ratings */}
-                  <div className="flex -mt-2 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={18}
-                        className={`mx-0.5 ${
-                          i < card.rating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="max-h-13 min-h-13 overflow-y-auto">
-                  <p className="text-gray-700 italic">
-                    <span className="font-semibold">
-                      {card.feedbackCategory}:{" "}
-                    </span>
-                    {card.feedbackMessage}
-                  </p>
-                  </div>
-                  <h4 className="mt-3 font-semibold text-right text-sm text-gray-600">
-                    - {orgName ? orgName.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ') : "Organization"}
-                  </h4>
-                </div>
-              );
-            })
-          ) : (!err && 
-            <div className="pt-6 pb-6 flex flex-col items-center space-y-2">
-              <span>
-                <FolderOpen className="w-10 h-10 text-gray-400" />
-              </span>
-              <h4 className="text-gray-500 text-sm">No feedbacks available.</h4>
+                        {/* Footer */}
+                        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">
+                              {new Date(feedback.createdAt).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-500">Verified</span>
+                              <FaCheckCircle className="w-4 h-4 text-green-500" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </Slider>
             </div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200"
+            >
+              <div className="text-4xl text-gray-300 mb-3">🏢</div>
+              <h4 className="text-md text-gray-500 font-medium">No organization feedbacks available</h4>
+              <p className="text-sm text-gray-400 mt-1">Check back later for updates</p>
+            </motion.div>
           )}
-        </div>
-
-        {/* <div className="flex justify-between mt-4">
-          <button onClick={handlePrev} disabled={currentIndex === 0} className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50">
-            Previous
-          </button>
-          <button onClick={handleNext} disabled={currentIndex + itemsPerPage >= feedbacks.length} className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50">
-            Next
-          </button>
-        </div> */}
-
-      {/* Next Button */}
-      <button 
-        onClick={handleNext} 
-        disabled={currentIndex + itemsPerPage >= feedbacks.length} 
-        className="absolute -right-1 ml-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
-        >
-        <BiChevronRight />
-      </button>
-
-      </section>
+        </AnimatePresence>
+      </div>
+      
       {showModal && <OrganizationAllFeedbacksTable closeModal={closeModal} />}
-    </div>
+
+      <style jsx global>{`
+        .slick-dots-custom {
+          bottom: -25px;
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+        }
+        
+        .slick-dots-custom li {
+          margin: 0 4px;
+        }
+        
+        .slick-dots-custom li button {
+          width: 8px;
+          height: 8px;
+          padding: 0;
+          border-radius: 50%;
+          background: #d1d5db;
+          border: none;
+          text-indent: -9999px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+        
+        .slick-dots-custom li.slick-active button {
+          background: #3b82f6;
+          width: 20px;
+          border-radius: 10px;
+        }
+        
+        .slick-dots-custom li button:before {
+          display: none;
+        }
+
+        .slick-slide > div {
+          margin: 0 10px;
+        }
+      `}</style>
+    </section>
   );
 };
 

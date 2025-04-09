@@ -1,284 +1,408 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import {
   fetchEvents,
   createEvent,
   updateEvent,
   deleteEvent,
   selectEvents,
+  selectFilteredEvents,
   selectEventsStatus,
-  selectEventsError
+  selectEventsError,
+  selectFilters,
+  selectActiveFilters,
+  selectSearchQuery,
+  selectPagination,
+  selectModals,
+  setFilters,
+  setActiveFilters,
+  setSearchQuery,
+  setPagination,
+  setModal,
+  clearFilters,
+  filterEvents
 } from '../../redux/Admin/EventManage/eventSlice';
 import {
   Calendar, Clock, Trophy, Gift, Users, Star, 
   ArrowRight, Medal, Zap, Award, ChevronDown, 
   BarChart2, DollarSign, Plus, Edit, 
-  Trash2, Shield, BadgeCheck, Coins, Info, Percent
+  Trash2, Shield, BadgeCheck, Coins, Info, Percent,
+  Check, X, ChevronRight
 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
 import EventModal from '../../components/Admin/Modals/EventModal';
 import EventDetailsModal from '../../components/Admin/Modals/EventDetailsModal';
 import StatsSection from '../../components/Admin/Cards/StatsSection';
+import Pagination from '../../components/Common/TableItems/Pagination';
+import TableFilters from '../../components/Common/TableItems/TableFilters';
+import ConfirmationModal from "../../components/Admin/Modals/ConformationModal";
 import { fetchDashboardStats } from '../../redux/User/userSlice';
 
 const AdminEventsPage = () => {
   const dispatch = useDispatch();
-  const events = useSelector(selectEvents);
-  const status = useSelector(selectEventsStatus);
-  const error = useSelector(selectEventsError);
-
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  // Selectors
+  const events = useSelector(selectEvents);
+  const filteredEvents = useSelector(selectFilteredEvents);
+  const isLoading = useSelector(selectEventsStatus) === 'loading';
+  const error = useSelector(selectEventsError);
+  const filters = useSelector(selectFilters);
+  const activeFilters = useSelector(selectActiveFilters);
+  const searchQuery = useSelector(selectSearchQuery);
+  const pagination = useSelector(selectPagination);
+  const modals = useSelector(selectModals);
+
+  // Initial data fetch
   useEffect(() => {
-    dispatch(fetchEvents());
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchEvents()).unwrap();
+      } catch (error) {
+        toast.error(error.message || 'Failed to fetch events');
+      }
+    };
+    fetchData();
   }, [dispatch]);
 
+  // Filter effect
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
+    dispatch(filterEvents());
+  }, [dispatch, filters, searchQuery]);
 
-  const handleCreateEvent = (eventData) => {
-    dispatch(createEvent(eventData));
-    setIsCreateModalOpen(false);
+  // Handler functions
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(setFilters({ [name]: value }));
   };
 
-  const handleUpdateEvent = (eventData) => {
-    if (currentEvent) {
-      dispatch(updateEvent({ 
-        eventId: currentEvent._id, 
+  const handleStartDateChange = (date) => {
+    dispatch(setFilters({ startDate: date }));
+  };
+
+  const handleEndDateChange = (date) => {
+    dispatch(setFilters({ endDate: date }));
+  };
+
+  const handleApplyFilters = () => {
+    dispatch(setActiveFilters({
+      status: filters.status !== 'all',
+      dateRange: !!(filters.startDate && filters.endDate),
+      search: !!searchQuery
+    }));
+    dispatch(setPagination({ currentPage: 1 }));
+    dispatch(setModal({ isFilterOpen: false }));
+    dispatch(filterEvents());
+  };
+
+  const handleClearFilters = () => {
+    dispatch(clearFilters());
+    dispatch(setSearchQuery(''));
+    dispatch(setActiveFilters({
+      status: false,
+      dateRange: false,
+      search: false
+    }));
+    dispatch(setPagination({ currentPage: 1 }));
+  };
+
+  const handleDeleteClick = (event) => {
+    if (!event?._id) {
+      toast.error('Invalid event selected');
+      return;
+    }
+    setSelectedEvent(event);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedEvent?._id) return;
+
+    const loadingToast = toast.loading('Deleting event...');
+    try {
+      await dispatch(deleteEvent(selectedEvent._id)).unwrap();
+      setIsDeleteModalOpen(false);
+      setSelectedEvent(null);
+      toast.success('Event deleted successfully', { id: loadingToast });
+      await Promise.all([
+        dispatch(fetchEvents()),
+        dispatch(fetchDashboardStats())
+      ]);
+    } catch (error) {
+      toast.error(error.message || 'Failed to delete event', { id: loadingToast });
+    }
+  };
+
+  const handleCreateEvent = async (eventData) => {
+    try {
+      await dispatch(createEvent(eventData)).unwrap();
+      dispatch(setModal({ isFormOpen: false }));
+      toast.success('Event created successfully');
+      await Promise.all([
+        dispatch(fetchEvents()),
+        dispatch(fetchDashboardStats())
+      ]);
+    } catch (error) {
+      toast.error(error.message || 'Failed to create event');
+    }
+  };
+
+  const handleUpdateEvent = async (eventData) => {
+    if (!selectedEvent?._id) return;
+
+    const loadingToast = toast.loading('Updating event...');
+    try {
+      await dispatch(updateEvent({ 
+        eventId: selectedEvent._id, 
         eventData 
-      }));
-      setIsCreateModalOpen(false);
-      setCurrentEvent(null);
-    }
-  };
-
-  const handleDeleteEvent = (eventId) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
-      dispatch(deleteEvent(eventId));
-      dispatch(fetchDashboardStats()).unwrap();
+      })).unwrap();
+      dispatch(setModal({ isFormOpen: false }));
+      setSelectedEvent(null);
+      toast.success('Event updated successfully', { id: loadingToast });
+      await Promise.all([
+        dispatch(fetchEvents()),
+        dispatch(fetchDashboardStats())
+      ]);
+    } catch (error) {
+      toast.error(error.message || 'Failed to update event', { id: loadingToast });
     }
   };
 
   const openCreateModal = () => {
-    setCurrentEvent(null);
-    setIsCreateModalOpen(true);
+    setSelectedEvent(null);
+    dispatch(setModal({ isFormOpen: true }));
   };
 
   const openEditModal = (event) => {
-    setCurrentEvent(event);
-    setIsCreateModalOpen(true);
+    setSelectedEvent(event);
+    dispatch(setModal({ isFormOpen: true }));
   };
 
   const openDetailsModal = (event) => {
     setSelectedEvent(event);
-    setIsDetailsModalOpen(true);
+    dispatch(setModal({ isDetailsOpen: true }));
   };
 
-  const getIconComponent = (iconName, size = 24, className = "") => {
-    const icons = {
-      Trophy: <Trophy className={`text-blue-600 ${className}`} size={size} />,
-      Medal: <Medal className={`text-yellow-500 ${className}`} size={size} />,
-      Gift: <Gift className={`text-purple-500 ${className}`} size={size} />,
-      Award: <Award className={`text-green-500 ${className}`} size={size} />,
-      Star: <Star className={`text-orange-500 ${className}`} size={size} />,
-      Zap: <Zap className={`text-red-500 ${className}`} size={size} />,
-      Users: <Users className={`text-green-500 ${className}`} size={size} />,
-      BarChart2: <BarChart2 className={`text-red-500 ${className}`} size={size} />,
-      Coins: <Coins className={`text-amber-500 ${className}`} size={size} />,
+  const getStatusColor = (status) => {
+    const statusColors = {
+      ongoing: "bg-blue-100 text-blue-800",
+      upcoming: "bg-yellow-100 text-yellow-800",
+      completed: "bg-green-100 text-green-800"
     };
-    return icons[iconName] || <Trophy className={`text-blue-600 ${className}`} size={size} />;
+    return statusColors[status] || "bg-gray-100 text-gray-800";
   };
 
-  if (status === 'loading') {
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString();
+  };
+
+  // Calculate current items for pagination
+  const currentItems = filteredEvents?.slice(
+    (pagination.currentPage - 1) * pagination.itemsPerPage,
+    pagination.currentPage * pagination.itemsPerPage
+  ) || [];
+
+  // Loading state
+  if (isLoading && !filteredEvents?.length) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-red-600 text-xl bg-red-100 p-4 rounded-lg">
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen mt-12 bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mt-12 overflow-hidden">
       <StatsSection isDashboard={false} pageType="events" />
 
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900">
-            Event Management
-          </h1>
-          <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
-            Create and manage trading competitions with performance-based rewards!
-          </p>
+      <div className="px-8 mx-4 -mt-12">
+        <TableFilters
+          filterType="events"
+          isFilterOpen={modals?.isFilterOpen || false}
+          setIsFilterOpen={(value) => dispatch(setModal({ isFilterOpen: value }))}
+          tempFilters={filters}
+          handleFilterChange={handleFilterChange}
+          handleStartDateChange={handleStartDateChange}
+          handleEndDateChange={handleEndDateChange}
+          applyFilters={handleApplyFilters}
+          clearFilters={handleClearFilters}
+          searchQuery={searchQuery}
+          setSearchQuery={(value) => dispatch(setSearchQuery(value))}
+          activeFilters={activeFilters}
+          setActiveFilters={(filters) => dispatch(setActiveFilters(filters))}
+          pageTitle="Manage Events"
+          showAddButton={true}
+          addButtonText="Add Event"
+          onAddNew={openCreateModal}
+        />
+
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden ">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prize Pool</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entry Fee</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participants</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {currentItems.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                      No events found
+                    </td>
+                  </tr>
+                ) : (
+                  currentItems.map((event) => (
+                    <tr key={event._id} className="hover:bg-gray-50 transition-colors duration-150">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-white shadow-xs flex items-center justify-center mr-3">
+                            {(() => {
+                              switch(event.icon) {
+                                case 'Trophy': return <Trophy className="text-blue-600" size={20} />;
+                                case 'Medal': return <Medal className="text-yellow-500" size={20} />;
+                                case 'Gift': return <Gift className="text-purple-500" size={20} />;
+                                case 'Award': return <Award className="text-green-500" size={20} />;
+                                case 'Star': return <Star className="text-orange-500" size={20} />;
+                                case 'Zap': return <Zap className="text-red-500" size={20} />;
+                                case 'Users': return <Users className="text-green-500" size={20} />;
+                                case 'BarChart2': return <BarChart2 className="text-red-500" size={20} />;
+                                case 'Coins': return <Coins className="text-amber-500" size={20} />;
+                                default: return <Trophy className="text-blue-600" size={20} />;
+                              }
+                            })()}
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{event.title}</div>
+                            <div className="text-xs text-gray-500 line-clamp-1">{event.description}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{formatDate(event.startDate)}</div>
+                        <div className="text-xs text-gray-500">to {formatDate(event.endDate)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{event.prize}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">${event.entryFee || 'Free'}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{event.participants || 0}</div>
+                        <div className="text-xs text-gray-500">{event.progress}% complete</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(event.type)}`}>
+                          {event.type || 'N/A'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center space-x-4">
+                          <button
+                            onClick={() => openDetailsModal(event)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            <Info size={18} />
+                          </button>
+                          <button
+                            onClick={() => openEditModal(event)}
+                            className="text-yellow-600 mx-2 hover:text-yellow-900"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(event)}
+                            className="text-red-600 mx-2 hover:text-red-900"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* Action Bar */}
-        <div className="flex justify-between items-center mb-8">
-          <button 
-            onClick={openCreateModal}
-            className="flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="mr-2" /> Create New Event
-          </button>
-        </div>
+        {filteredEvents?.length > 0 && (
+          <div className="mt-4">
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={Math.ceil(filteredEvents.length / pagination.itemsPerPage)}
+              itemsPerPage={pagination.itemsPerPage}
+              setItemsPerPage={(value) => dispatch(setPagination({ itemsPerPage: value }))}
+              setCurrentPage={(value) => dispatch(setPagination({ currentPage: value }))}
+              filteredItems={filteredEvents}
+              indexOfFirstItem={(pagination.currentPage - 1) * pagination.itemsPerPage}
+              indexOfLastItem={Math.min(pagination.currentPage * pagination.itemsPerPage, filteredEvents.length)}
+            />
+          </div>
+        )}
 
-        {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events && events.length > 0 ? (
-            events.map(event => (
-              <div 
-                key={event._id} 
-                className={`rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md ${event.backgroundColor || 'bg-gradient-to-br from-blue-50 to-blue-100'} border border-gray-200`}
-              >
-                <div className="p-5">
-                  {/* Event Header */}
-                  <div className="flex items-center mb-4">
-                    <div className="p-2 bg-white rounded-lg shadow-xs mr-4">
-                      {getIconComponent(event.icon, 24)}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">
-                        {event.title}
-                      </h3>
-                      <div className="flex items-center mt-1">
-                        <Shield className="text-gray-400 mr-1" size={14} />
-                        <span className="text-xs text-gray-500">Entry: ${event.entryFee || 'Free'}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-700 mb-4 line-clamp-2">{event.description}</p>
-                  
-                  {/* Basic Info */}
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <div className="flex items-center">
-                      <Calendar className="mr-2 text-gray-500" size={18} />
-                      <div>
-                        <p className="text-xs text-gray-500">Date</p>
-                        <p className="text-sm font-medium">
-                          {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <DollarSign className="mr-2 text-gray-500" size={18} />
-                      <div>
-                        <p className="text-xs text-gray-500">Prize Pool</p>
-                        <p className="text-sm font-medium">{event.prize}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Reward Requirements Preview */}
-                  <div className="mb-4">
-                    <div className="flex items-center text-sm text-gray-700">
-                      <Percent className="mr-1 text-gray-500" size={16} />
-                      <span className="font-medium">Reward Tiers:</span>
-                      <span className="ml-1">
-                        {event.rewardTiers?.slice(0, 3).map(tier => tier.tier).join(', ')}
-                        {event.rewardTiers?.length > 3 && '...'}
-                      </span>
-                    </div>
-                    <div className="mt-1 text-xs text-gray-500">
-                      {event.participants || 0} participants
-                    </div>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
-                      <span>Progress</span>
-                      <span>{event.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-blue-600 h-2 rounded-full" 
-                        style={{ width: `${event.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex justify-between items-center">
-                    <button 
-                      onClick={() => openDetailsModal(event)}
-                      className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-                    >
-                      <Info className="mr-1" size={16} />
-                      View Details
-                    </button>
-                    <div className="flex space-x-2">
-                      <button 
-                        onClick={() => openEditModal(event)}
-                        className="text-gray-500 hover:text-blue-500 transition-colors"
-                        aria-label="Edit event"
-                      >
-                        <Edit size={18} />
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteEvent(event._id)}
-                        className="text-gray-500 hover:text-red-500 transition-colors"
-                        aria-label="Delete event"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
-              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-                <Calendar className="text-gray-400" size={36} />
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-600 mb-4">
-                No events created yet
-              </h3>
-              <p className="text-gray-500 max-w-md mx-auto mb-6">
-                Get started by creating your first trading competition.
-              </p>
-              <button 
-                onClick={openCreateModal}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Create Your First Event
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Create/Edit Event Modal */}
-        {isCreateModalOpen && (
+        {/* Event Modal */}
+        {modals?.isFormOpen && (
           <EventModal 
-            event={currentEvent}
-            onClose={() => setIsCreateModalOpen(false)}
-            onSubmit={currentEvent ? handleUpdateEvent : handleCreateEvent}
+            event={selectedEvent}
+            onClose={() => {
+              dispatch(setModal({ isFormOpen: false }));
+              setSelectedEvent(null);
+            }}
+            onSubmit={selectedEvent ? handleUpdateEvent : handleCreateEvent}
           />
         )}
 
         {/* Event Details Modal */}
-        {isDetailsModalOpen && selectedEvent && (
+        {modals?.isDetailsOpen && selectedEvent && (
           <EventDetailsModal 
-            isOpen={isDetailsModalOpen}
-            onClose={() => setIsDetailsModalOpen(false)}
+            isOpen={modals.isDetailsOpen}
+            onClose={() => {
+              dispatch(setModal({ isDetailsOpen: false }));
+              setSelectedEvent(null);
+            }}
             event={selectedEvent}
             onEdit={() => {
-              setIsDetailsModalOpen(false);
-              openEditModal(selectedEvent);
+              dispatch(setModal({ isDetailsOpen: false, isFormOpen: true }));
             }}
             onDelete={() => {
-              setIsDetailsModalOpen(false);
-              handleDeleteEvent(selectedEvent._id);
+              dispatch(setModal({ isDetailsOpen: false }));
+              handleDeleteClick(selectedEvent);
             }}
           />
         )}
+
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setSelectedEvent(null);
+          }}
+          onConfirm={handleDeleteConfirm}
+          title="Confirm Deletion"
+          message={`Are you sure you want to delete the event "${selectedEvent?.title}"? This action cannot be undone.`}
+        />
       </div>
     </div>
   );
