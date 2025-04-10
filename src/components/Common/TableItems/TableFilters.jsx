@@ -7,8 +7,11 @@ import {
   ChevronDown,
   ChevronUp,
   PlusCircle,
+  Clock3 ,
+  CheckCircle,
   Star,
   ThumbsUp,
+  AlertCircle,
   Clock,
   ThumbsDown,
   UserCheck,
@@ -294,6 +297,34 @@ const FILTER_CONFIGS = {
     dateRange: {
       width: 'w-[320px]'
     }
+  },
+  complaint: {
+    category: {
+      label: 'Category',
+      width: 'w-[220px]',
+      options: [
+        { value: 'All', label: <CustomOption icon={<MessageSquare size={16} />}>All Categories</CustomOption> },
+        { value: 'Account Issues', label: <CustomOption icon={<MessageSquare size={16} />}>Account Issues</CustomOption> },
+        { value: 'Payment Problems', label: <CustomOption icon={<MessageSquare size={16} />}>Payment Problems</CustomOption> },
+        { value: 'Technical Errors', label: <CustomOption icon={<MessageSquare size={16} />}>Technical Errors</CustomOption> },
+        { value: 'Service Quality', label: <CustomOption icon={<MessageSquare size={16} />}>Service Quality</CustomOption> },
+        { value: 'Other', label: <CustomOption icon={<MessageSquare size={16} />}>Other</CustomOption> }
+      ]
+    },
+    status: {
+      label: 'Status',
+      width: 'w-[180px]',
+      options: [
+        { value: 'All', label: <CustomOption icon={<Clock3 size={16} />}>All</CustomOption> },
+        { value: 'pending', label: <CustomOption icon={<Clock3 size={16} />}>Pending</CustomOption> },
+        { value: 'solved', label: <CustomOption icon={<CheckCircle size={16} />}>Solved</CustomOption> },
+        { value: 'satisfied', label: <CustomOption icon={<UserCheck size={16} />}>Satisfied</CustomOption> },
+        { value: 'not satisfied', label: <CustomOption icon={<X size={16} />}>Not Satisfied</CustomOption> }
+      ]
+    },
+    dateRange: {
+      width: 'w-[320px]'
+    }
   }
 };
 
@@ -318,6 +349,12 @@ const LAYOUT_CONFIGS = {
     filtersClass: 'flex items-end gap-4 flex-grow'
   },
   feedback: {
+    type: 'inline',
+    spacing: 'gap-4',
+    containerClass: 'flex items-end',
+    filtersClass: 'flex items-end gap-4 flex-grow'
+  },
+  complaint: {
     type: 'inline',
     spacing: 'gap-4',
     containerClass: 'flex items-end',
@@ -516,6 +553,75 @@ FeedbackFilterLayout.propTypes = {
   setIsFilterOpen: PropTypes.func.isRequired
 };
 
+const ComplaintFilterLayout = ({
+  filterConfig,
+  tempFilters,
+  handleFilterChange,
+  handleStartDateChange,
+  handleEndDateChange,
+  applyFilters,
+  clearFilters,
+  setIsFilterOpen
+}) => {
+  return (
+    <div className="flex items-end w-full">
+      <div className="flex items-end gap-4 flex-grow">
+        {/* Category Filter */}
+        <FilterSelect
+          name="category"
+          value={tempFilters.category}
+          onChange={handleFilterChange}
+          options={filterConfig.category.options}
+          label={filterConfig.category.label}
+          width={filterConfig.category.width}
+          icon={filterConfig.category.icon}
+        />
+
+        {/* Status Filter */}
+        <FilterSelect
+          name="status"
+          value={tempFilters.status}
+          onChange={handleFilterChange}
+          options={filterConfig.status.options}
+          label={filterConfig.status.label}
+          width={filterConfig.status.width}
+          icon={filterConfig.status.icon}
+        />
+
+        {/* Date Range Filter */}
+        <DateRangeFilter
+          startDate={tempFilters.startDate}
+          endDate={tempFilters.endDate}
+          onStartDateChange={handleStartDateChange}
+          onEndDateChange={handleEndDateChange}
+          width={filterConfig.dateRange.width}
+        />
+      </div>
+
+      <div className="ml-6">
+        <ActionButtons
+          onClear={clearFilters}
+          onApply={() => {
+            applyFilters();
+            setIsFilterOpen(false);
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+ComplaintFilterLayout.propTypes = {
+  filterConfig: PropTypes.object.isRequired,
+  tempFilters: PropTypes.object.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
+  handleStartDateChange: PropTypes.func.isRequired,
+  handleEndDateChange: PropTypes.func.isRequired,
+  applyFilters: PropTypes.func.isRequired,
+  clearFilters: PropTypes.func.isRequired,
+  setIsFilterOpen: PropTypes.func.isRequired
+};
+
 // Active Filters Display Component
 const ActiveFiltersDisplay = ({
   activeFilters,
@@ -561,6 +667,14 @@ const ActiveFiltersDisplay = ({
         );
       }
     }
+    
+  // Special rendering for complaint filters (can be extended later)
+  if (filterType === 'complaint') {
+    if (key === 'status' || key === 'category') {
+      const option = config?.options.find(opt => opt.value === value);
+      return option?.label || value;
+    }
+  }
 
     // For users and organizations specific filters
     if (key === 'status' || key === 'gender' || key === 'type') {
@@ -715,20 +829,24 @@ const TableFilters = ({
     // Normalize gender filter input
   const normalizedGender = tempFilters.gender ? tempFilters.gender.toLowerCase().trim() : "all";
 
-    // Add type-specific filters
-    if (filterType === 'users') {
-      filters.status = tempFilters.status !== 'all';
-      filters.gender = tempFilters.gender && tempFilters.gender !== 'all';
-    } else if (filterType === 'organizations') {
-      filters.status = tempFilters.status !== 'all';
-    } else if (filterType === 'queries') {
-      filters.type = tempFilters.type !== 'all';
-      filters.status = tempFilters.status !== 'all';
-    } else if (filterType === 'feedback') {
-      filters.category = tempFilters.category !== 'all';
-      filters.status = tempFilters.status !== 'all';
-      filters.rating = tempFilters.rating !== 'all';
-    }
+  // Add type-specific filters
+if (filterType === 'users') {
+  filters.status = tempFilters.status !== 'all';
+  filters.gender = tempFilters.gender && tempFilters.gender !== 'all';
+} else if (filterType === 'organizations') {
+  filters.status = tempFilters.status !== 'all';
+} else if (filterType === 'queries') {
+  filters.type = tempFilters.type !== 'all';
+  filters.status = tempFilters.status !== 'all';
+} else if (filterType === 'feedback') {
+  filters.category = tempFilters.category !== 'all';
+  filters.status = tempFilters.status !== 'all';
+  filters.rating = tempFilters.rating !== 'all';
+} else if (filterType === 'complaint') {
+  filters.category = tempFilters.category !== 'all';
+  filters.status = tempFilters.status !== 'all';
+}
+    
 
     return filters;
   }, [tempFilters, searchQuery, filterType]);
@@ -749,6 +867,8 @@ const TableFilters = ({
         return <Building2 className="mr-2 text-gray-600" size={24} />;
       case 'feedback':
         return <MessageSquare className="mr-2 text-gray-600" size={24} />;
+        case 'complaint':
+      return <AlertCircle className="mr-2 text-gray-600" size={24} />;
       default:
         return <Filter className="mr-2 text-gray-600" size={24} />;
     }
@@ -770,6 +890,19 @@ const TableFilters = ({
             setIsFilterOpen={setIsFilterOpen}
           />
         );
+        case 'complaint':
+          return (
+            <ComplaintFilterLayout
+              filterConfig={filterConfig}
+              tempFilters={tempFilters}
+              handleFilterChange={handleFilterChange}
+              handleStartDateChange={handleStartDateChange}
+              handleEndDateChange={handleEndDateChange}
+              applyFilters={applyFilters}
+              clearFilters={clearFilters}
+              setIsFilterOpen={setIsFilterOpen}
+            />
+          );
       case 'queries':
       case 'users':
       case 'organizations':
@@ -887,7 +1020,7 @@ TableFilters.propTypes = {
   showAddButton: PropTypes.bool,
   onAddNew: PropTypes.func,
   addButtonText: PropTypes.string,
-  filterType: PropTypes.oneOf(['queries', 'users', 'organizations', 'feedback', 'default'])
+  filterType: PropTypes.oneOf(['queries', 'users', 'organizations', 'feedback','complaint', 'default'])
 };
 
 // Default props

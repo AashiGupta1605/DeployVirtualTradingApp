@@ -2242,7 +2242,9 @@ const PLAN_CONFIGS = {
     textColor: 'text-yellow-800',
     bgLight: 'bg-yellow-50',
     vertualAmount: 1000000, // Virtual trading amount
-    planPrice: 500, // Plan price
+    // planPrice: 500, // Plan price
+    planPrice: 1, // Plan price
+
     tradingPreference: 'Market Hours',
   },
   Silver: {
@@ -2250,7 +2252,8 @@ const PLAN_CONFIGS = {
     textColor: 'text-gray-800',
     bgLight: 'bg-gray-50',
     vertualAmount: 500000,
-    planPrice: 300,
+    // planPrice: 300,
+    planPrice: 2,
     tradingPreference: 'Off-Market Hours',
   },
   Platinum: {
@@ -2258,7 +2261,8 @@ const PLAN_CONFIGS = {
     textColor: 'text-purple-800',
     bgLight: 'bg-purple-50',
     vertualAmount: 2000000,
-    planPrice: 1000,
+    // planPrice: 1000,
+    planPrice: 3,
     tradingPreference: 'Market Hours',
   },
   Diamond: {
@@ -2266,7 +2270,8 @@ const PLAN_CONFIGS = {
     textColor: 'text-lightBlue-800',
     bgLight: 'bg-lightBlue-50',
     vertualAmount: 5000000,
-    planPrice: 2000,
+    // planPrice: 2000,
+    planPrice: 4,
     tradingPreference: 'Market Hours',
   },
 };

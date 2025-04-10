@@ -38,7 +38,7 @@ import {
 // Shared icon component function
 const getIconComponent = (iconName, size = 24, className = "") => {
   const icons = {
-    Trophy: <Trophy className={`text-blue-600 ${className}`} size={size} />,
+    Trophy: <Trophy className={`text-lightBlue-600 ${className}`} size={size} />,
     Medal: <Medal className={`text-yellow-500 ${className}`} size={size} />,
     Gift: <Gift className={`text-purple-500 ${className}`} size={size} />,
     Award: <Award className={`text-green-500 ${className}`} size={size} />,
@@ -47,9 +47,9 @@ const getIconComponent = (iconName, size = 24, className = "") => {
     Users: <Users className={`text-green-500 ${className}`} size={size} />,
     BarChart2: <BarChart2 className={`text-red-500 ${className}`} size={size} />,
     Coins: <Coins className={`text-amber-500 ${className}`} size={size} />,
-    Info: <Info className={`text-blue-600 ${className}`} size={size} />,
+    Info: <Info className={`text-lightBlue-600 ${className}`} size={size} />,
   };
-  return icons[iconName] || <Trophy className={`text-blue-600 ${className}`} size={size} />;
+  return icons[iconName] || <Trophy className={`text-lightBlue-600 ${className}`} size={size} />;
 };
 
 // Event Details Modal Component
@@ -90,7 +90,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
               {/* Description */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-                  <Info className="mr-2 text-blue-600" size={18} />
+                  <Info className="mr-2 text-lightBlue-600" size={18} />
                   Description
                 </h3>
                 <p className="text-gray-700">{event.description}</p>
@@ -99,7 +99,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
               {/* Date & Time */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Calendar className="mr-2 text-blue-600" size={18} />
+                  <Calendar className="mr-2 text-lightBlue-600" size={18} />
                   Event Schedule
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
@@ -127,7 +127,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
               {/* Requirements */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-                  <Shield className="mr-2 text-blue-600" size={18} />
+                  <Shield className="mr-2 text-lightBlue-600" size={18} />
                   Participation Requirements
                 </h3>
                 <p className="text-gray-700">{event.requirements || 'No requirements specified'}</p>
@@ -137,7 +137,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
               {event.highlight && (
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-                    <Zap className="mr-2 text-blue-600" size={18} />
+                    <Zap className="mr-2 text-lightBlue-600" size={18} />
                     Event Highlight
                   </h3>
                   <p className="text-gray-700">{event.highlight}</p>
@@ -150,7 +150,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
               {/* Prize Information */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Medal className="mr-2 text-blue-600" size={18} />
+                  <Medal className="mr-2 text-lightBlue-600" size={18} />
                   Prize Information
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
@@ -158,7 +158,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
                     <DollarSign className="mr-2 text-gray-500" size={18} />
                     <div>
                       <p className="text-xs text-gray-500">Total Prize</p>
-                      <p className="font-medium text-blue-600">{event.prize}</p>
+                      <p className="font-medium text-lightBlue-600">{event.prize}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
@@ -190,7 +190,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
               {/* Participation */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                  <Users className="mr-2 text-blue-600" size={18} />
+                  <Users className="mr-2 text-lightBlue-600" size={18} />
                   Participation Stats
                 </h3>
                 <div className="flex justify-between mb-2">
@@ -199,7 +199,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
                   <div 
-                    className="bg-blue-600 h-2.5 rounded-full" 
+                    className="bg-lightBlue-600 h-2.5 rounded-full" 
                     style={{ width: `${event.progress}%` }}
                   ></div>
                 </div>
@@ -214,13 +214,13 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
           <div className="px-6 pb-6">
             <div className="bg-gray-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <Zap className="mr-2 text-blue-600" size={18} />
+                <Zap className="mr-2 text-lightBlue-600" size={18} />
                 Event Rewards
               </h3>
               <ul className="space-y-2">
                 {event.rewards?.filter(r => r.trim() !== '').map((reward, index) => (
                   <li key={index} className="flex items-start">
-                    <div className="mt-1.5 mr-2 w-2 h-2 rounded-full bg-blue-600"></div>
+                    <div className="mt-1.5 mr-2 w-2 h-2 rounded-full bg-lightBlue-600"></div>
                     <span className="text-gray-700">{reward}</span>
                   </li>
                 ))}
@@ -232,7 +232,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
           <div className="px-6 pb-6">
             <div className="bg-gray-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                <Percent className="mr-2 text-blue-600" size={18} />
+                <Percent className="mr-2 text-lightBlue-600" size={18} />
                 Performance Reward Tiers
               </h3>
               <ul className="space-y-4">
@@ -266,7 +266,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
         <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-center">
           <button
             onClick={() => user ? onJoin(event) : toast.error('Please login to join events')}
-            className="px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center"
+            className="px-8 py-3 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 transition-colors flex items-center"
           >
             <ArrowRight className="mr-2" size={16} /> 
             {event.entryFee > 0 ? `Join for $${event.entryFee}` : 'Join Event Now'}
@@ -499,7 +499,7 @@ const EventsPage = () => {
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lightBlue-600"></div>
       </div>
     );
   }
@@ -513,7 +513,7 @@ const EventsPage = () => {
           <p className="mb-6">You need to be logged in to view events</p>
           <button 
             onClick={() => navigate('/login')} 
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg"
+            className="px-6 py-3 bg-lightBlue-600 text-white rounded-lg"
           >
             Go to Login
           </button>
@@ -580,7 +580,7 @@ const EventsPage = () => {
   {/* Upcoming Events Stat */}
   <div className="flex items-center space-x-3">
     <div className="p-2 bg-blue-50 rounded-lg">
-      <Calendar className="text-blue-600" size={18} />
+      <Calendar className="text-lightBlue-600" size={18} />
     </div>
     <div>
       <p className="text-xs text-gray-500">Upcoming Events</p>
@@ -621,7 +621,7 @@ const EventsPage = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-2 rounded-full transition-colors duration-200 flex items-center ${
                   activeTab === tab 
-                    ? 'bg-blue-600 text-white shadow-sm' 
+                    ? 'bg-lightBlue-600 text-white shadow-sm' 
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -704,7 +704,7 @@ const EventsPage = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-blue-600 h-2 rounded-full" 
+                        className="bg-lightBlue-600 h-2 rounded-full" 
                         style={{ width: `${event.progress}%` }}
                       ></div>
                     </div>
@@ -714,14 +714,14 @@ const EventsPage = () => {
                   <div className="flex justify-between items-center">
                     <button 
                       onClick={() => openDetailsModal(event)}
-                      className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="flex items-center text-lightBlue-600 hover:text-blue-800 text-sm font-medium"
                     >
                       <Info className="mr-1" size={16} />
                       View Details
                     </button>
                     <button 
                       onClick={() => user ? handleJoinEvent(event) : toast.error('Please login to join events')}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+                      className="px-4 py-2 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
                     >
                       Quick Join
                     </button>
@@ -740,7 +740,7 @@ const EventsPage = () => {
               <p className="text-gray-500 max-w-md mx-auto mb-6">
                 We're preparing exciting new challenges for you. Check back soon or explore our learning resources while you wait.
               </p>
-              <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              <button className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                 Notify Me About New Events
               </button>
             </div>
@@ -782,7 +782,7 @@ const EventsPage = () => {
               <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
                 <div className="flex items-center mb-4">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-blue-600 font-bold">SM</span>
+                    <span className="text-lightBlue-600 font-bold">SM</span>
                   </div>
                   <div>
                     <h4 className="font-medium">Sarah M.</h4>
@@ -821,7 +821,7 @@ const EventsPage = () => {
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <h3 className="font-medium flex items-center">
-                <Info className="text-blue-500 mr-3" size={20} />
+                <Info className="text-lightBlue-600 mr-3" size={20} />
                 How do I participate in an event?
               </h3>
               <p className="mt-2 text-gray-600 pl-8">
@@ -830,7 +830,7 @@ const EventsPage = () => {
             </div>
             <div className="p-6 border-b border-gray-200">
               <h3 className="font-medium flex items-center">
-                <Info className="text-blue-500 mr-3" size={20} />
+                <Info className="text-lightBlue-600 mr-3" size={20} />
                 Are there any requirements to join?
               </h3>
               <p className="mt-2 text-gray-600 pl-8">
@@ -839,7 +839,7 @@ const EventsPage = () => {
             </div>
             <div className="p-6">
               <h3 className="font-medium flex items-center">
-                <Info className="text-blue-500 mr-3" size={20} />
+                <Info className="text-lightBlue-600 mr-3" size={20} />
                 How are winners determined?
               </h3>
               <p className="mt-2 text-gray-600 pl-8">

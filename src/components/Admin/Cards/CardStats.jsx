@@ -215,10 +215,16 @@ export default function CardStats({
   statIconName = "far fa-chart-bar",
   statIconColor = "bg-red-500",
   statItems = [],
-  showDetails = false  
+  showDetails = false ,
+  onClick,
+  clickable = false
 }) {
   return (
-    <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+    // <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+    <div 
+    className={`relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg ${clickable ? 'cursor-pointer hover:shadow-xl transition-shadow duration-200' : ''}`}
+    onClick={onClick}
+  >
       <div className="flex-auto p-4">
         <div className="flex flex-wrap">
           <div className="relative w-auto pr-4 flex-initial">

@@ -54,7 +54,6 @@ export const createEvent = createAsyncThunk(
         prize: eventData.prize,
         difficulty: eventData.difficulty,
         entryFee: Number(eventData.entryFee) || 0,
-        // Add other required fields with default values or validations
         participants: 0,
         cashbackPercentage: 0,
         rewards: [],
@@ -65,7 +64,6 @@ export const createEvent = createAsyncThunk(
         icon: 'Trophy',
         backgroundColor: 'bg-gradient-to-br from-blue-50 to-blue-100',
         highlight: '',
-        // Add rewardTiers with default values if not provided
         rewardTiers: eventData.rewardTiers || [
           {
             tier: '5%+ Gain',
@@ -82,7 +80,6 @@ export const createEvent = createAsyncThunk(
         ]
       };
 
-      // Preserve any additional fields that might be in eventData
       const additionalFields = Object.keys(eventData).reduce((acc, key) => {
         if (!(key in preparedData)) {
           acc[key] = eventData[key];
@@ -101,7 +98,6 @@ export const createEvent = createAsyncThunk(
       dispatch(fetchEvents());
       return response.data.event;
     } catch (error) {
-      // Log the full error for debugging
       console.error('Event creation error:', error.response?.data || error.message);
       
       toast.error(
@@ -152,9 +148,30 @@ export const deleteEvent = createAsyncThunk(
 // Initial State
 const initialState = {
   events: [],
+  filteredEvents: [],
   status: 'idle',
   error: null,
-  isLoading: false
+  isLoading: false,
+  filters: {
+    status: 'all',
+    startDate: null,
+    endDate: null
+  },
+  activeFilters: {
+    status: false,
+    dateRange: false,
+    search: false
+  },
+  searchQuery: '',
+  pagination: {
+    currentPage: 1,
+    itemsPerPage: 10
+  },
+  modals: {
+    isFormOpen: false,
+    isDetailsOpen: false,
+    isFilterOpen: false
+  }
 };
 
 // Slice
@@ -164,6 +181,52 @@ const adminEventTableSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    setFilters: (state, action) => {
+      state.filters = { ...state.filters, ...action.payload };
+    },
+    setActiveFilters: (state, action) => {
+      state.activeFilters = { ...state.activeFilters, ...action.payload };
+    },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
+    setPagination: (state, action) => {
+      state.pagination = { ...state.pagination, ...action.payload };
+    },
+    setModal: (state, action) => {
+      state.modals = { ...state.modals, ...action.payload };
+    },
+    clearFilters: (state) => {
+      state.filters = initialState.filters;
+      state.activeFilters = initialState.activeFilters;
+      state.searchQuery = '';
+    },
+    filterEvents: (state) => {
+      const { status, startDate, endDate } = state.filters;
+      const searchQuery = state.searchQuery.toLowerCase();
+      
+      state.filteredEvents = state.events.filter(event => {
+        // Status filter
+        const statusMatch = status === 'all' || event.type === status;
+        
+        // Date range filter
+        let dateMatch = true;
+        if (startDate && endDate) {
+          const eventStartDate = new Date(event.startDate);
+          const filterStartDate = new Date(startDate);
+          const filterEndDate = new Date(endDate);
+          dateMatch = eventStartDate >= filterStartDate && eventStartDate <= filterEndDate;
+        }
+        
+        // Search filter
+        const searchMatch = 
+          event.title.toLowerCase().includes(searchQuery) ||
+          event.description.toLowerCase().includes(searchQuery) ||
+          event.prize.toLowerCase().includes(searchQuery);
+        
+        return statusMatch && dateMatch && searchMatch;
+      });
     }
   },
   extraReducers: (builder) => {
@@ -176,6 +239,7 @@ const adminEventTableSlice = createSlice({
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.events = action.payload.events;
+        state.filteredEvents = action.payload.events;
         state.isLoading = false;
         state.error = null;
       })
@@ -224,12 +288,27 @@ const adminEventTableSlice = createSlice({
 });
 
 // Export actions
-export const { clearError } = adminEventTableSlice.actions;
+export const { 
+  clearError,
+  setFilters,
+  setActiveFilters,
+  setSearchQuery,
+  setPagination,
+  setModal,
+  clearFilters,
+  filterEvents
+} = adminEventTableSlice.actions;
 
 // Selectors
 export const selectEvents = (state) => state.admin.eventTable.events;
+export const selectFilteredEvents = (state) => state.admin.eventTable.filteredEvents;
 export const selectEventsStatus = (state) => state.admin.eventTable.status;
 export const selectEventsError = (state) => state.admin.eventTable.error;
 export const selectEventsLoading = (state) => state.admin.eventTable.isLoading;
+export const selectFilters = (state) => state.admin.eventTable.filters;
+export const selectActiveFilters = (state) => state.admin.eventTable.activeFilters;
+export const selectSearchQuery = (state) => state.admin.eventTable.searchQuery;
+export const selectPagination = (state) => state.admin.eventTable.pagination;
+export const selectModals = (state) => state.admin.eventTable.modals;
 
 export default adminEventTableSlice.reducer;
