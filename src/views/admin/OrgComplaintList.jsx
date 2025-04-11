@@ -1,28 +1,29 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ComplaintTable from "../../components/Admin/Tables/ComplaintTable/ComplaintTable";
+import OrgComplaintTable from "../../components/Admin/Tables/ComplaintTable/OrgComplaintTable";
 import Pagination from '../../components/Common/TableItems/Pagination';
 import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
+
 import {
-  fetchComplaints,
+  fetchComplaintsOfOrg,
   setFilters,
   clearFilters,
   updateLocalFilters,
-  selectFilteredComplaints,
+  selectFilteredOrgComplaints,
   selectComplaintLoading,
   selectComplaintError,
-  selectComplaintStats,
+  selectOrgComplaintStats,
   selectComplaintFilters
 } from "../../redux/Admin/ComplaintListPage/complaintTableSlice";
 
-const ComplaintList = () => {
+const OrgComplaintList = () => {
   const dispatch = useDispatch();
 
-  const filteredComplaints = useSelector(selectFilteredComplaints);
+  const filteredComplaints = useSelector(selectFilteredOrgComplaints);
   const loading = useSelector(selectComplaintLoading);
   const error = useSelector(selectComplaintError);
-  const stats = useSelector(selectComplaintStats);
+  const stats = useSelector(selectOrgComplaintStats);
   const currentFilters = useSelector(selectComplaintFilters);
 
   const [state, setState] = useState({
@@ -45,10 +46,10 @@ const ComplaintList = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchComplaints())
+    dispatch(fetchComplaintsOfOrg())
       .unwrap()
-      .then(() => console.log('Complaints fetched successfully'))
-      .catch(error => console.error('Error fetching complaints:', error));
+      .then(() => console.log('Org complaints fetched successfully'))
+      .catch(error => console.error('Error fetching org complaints:', error));
   }, [dispatch]);
 
   const handleFilterChange = useCallback((e) => {
@@ -198,8 +199,8 @@ const ComplaintList = () => {
   return (
     <div className="mt-12 overflow-hidden">
       <StatsSection 
-        stats={calculatedStats} 
-        isDashboard={false} 
+        stats={calculatedStats}
+        isDashboard={false}
         pageType="complaints"
       />
 
@@ -218,7 +219,7 @@ const ComplaintList = () => {
           setSearchQuery={handleSearchChange}
           activeFilters={state.activeFilters}
           setActiveFilters={(filters) => setState(prev => ({ ...prev, activeFilters: filters }))}
-          pageTitle="Manage User Complaints"
+          pageTitle="Manage Organization Complaints"
           showAddButton={false}
         />
 
@@ -228,9 +229,7 @@ const ComplaintList = () => {
           </div>
         ) : (
           <>
-            <ComplaintTable 
-              complaints={currentItems}
-            />
+            <OrgComplaintTable complaints={currentItems} />
 
             <div className="mt-4">
               <Pagination 
@@ -251,4 +250,4 @@ const ComplaintList = () => {
   );
 };
 
-export default ComplaintList;
+export default OrgComplaintList;
