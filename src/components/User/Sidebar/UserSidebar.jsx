@@ -994,11 +994,11 @@ const MenuLink = ({ to, icon, label, isActive }) => {
     <Link
       to={to}
       className={`flex items-center space-x-3 px-4 py-1 rounded-xl transition-all duration-200 ${
-        isActive ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-100"
+        isActive ? "bg-blue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"
       }`}
     >
       <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isActive ? "bg-blue-100" : "bg-gray-100"}`}>
-        <i className={`${icon} ${isActive ? "text-blue-600" : "text-gray-500"}`}></i>
+        <i className={`${icon} ${isActive ? "text-lightBlue-600" : "text-gray-500"}`}></i>
       </div>
       <span className="text-sm font-medium">{label}</span>
     </Link>
