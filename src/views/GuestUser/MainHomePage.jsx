@@ -345,16 +345,17 @@ const MainHomePage = () => {
             animate={partnersInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
-            <motion.div 
-              variants={fadeInUp}
-            >
-              <h2 className="text-3xl mt-24 md:text-4xl font-bold text-gray-900 mb-4">
-                Our Platform <span className="text-lightBlue-600">Statistics</span>
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Trusted by thousands of traders worldwide
-              </p>
-            </motion.div>
+<motion.div 
+  variants={fadeInUp}
+  className="text-center"
+>
+  <h2 className="text-3xl mt-24 md:text-4xl font-bold text-gray-900 mb-4">
+    Our Platform <span className="text-lightBlue-600">Statistics</span>
+  </h2>
+  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    Trusted by thousands of traders worldwide
+  </p>
+</motion.div>
             
             <InfoCards />
           </motion.div>
@@ -372,17 +373,17 @@ const MainHomePage = () => {
             animate={testimonialsInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
-            <motion.div 
-              variants={fadeInUp}
-              className="text-center mb-12 px-4"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Our Trusted <span className="text-lightBlue-600">Partners</span>
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl -mb-8 mx-auto">
-                Collaborating with industry leaders to provide the best trading experience
-              </p>
-            </motion.div>
+<motion.div 
+  variants={fadeInUp}
+  className="text-center mb-12 px-4"
+>
+  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    Our Happy <span className="text-lightBlue-600">Clients</span>
+  </h2>
+  <p className="text-lg text-gray-600 max-w-2xl -mb-8 mx-auto">
+    Trusted by businesses worldwide for our exceptional services
+  </p>
+</motion.div>
 
             <OrganizationsSlider />
           </motion.div>

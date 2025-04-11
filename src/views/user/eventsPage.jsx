@@ -32,7 +32,8 @@ import {
   BarChart2,
   Plus,
   Edit,
-  Trash2
+  Trash2,
+  IndianRupee 
 } from 'lucide-react';
 
 // Shared icon component function
@@ -155,7 +156,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center">
-                    <DollarSign className="mr-2 text-gray-500" size={18} />
+                  <IndianRupee className="mr-2 text-gray-500" size={18} />
                     <div>
                       <p className="text-xs text-gray-500">Total Prize</p>
                       <p className="font-medium text-lightBlue-600">{event.prize}</p>
@@ -171,10 +172,10 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <DollarSign className="mr-2 text-gray-500" size={18} />
+                    <IndianRupee className="mr-2 text-gray-500" size={18} />
                     <div>
                       <p className="text-xs text-gray-500">Entry Fee</p>
-                      <p className="font-medium">${event.entryFee}</p>
+                      <p className="font-medium">₹{event.entryFee}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
@@ -654,7 +655,7 @@ const EventsPage = () => {
                       </h3>
                       <div className="flex items-center mt-1">
                         <Shield className="text-gray-400 mr-1" size={14} />
-                        <span className="text-xs text-gray-500">Entry: ${event.entryFee || 'Free'}</span>
+                        <span className="text-xs text-gray-500">Entry: ₹{event.entryFee || 'Free'}</span>
                       </div>
                     </div>
                   </div>
@@ -673,7 +674,7 @@ const EventsPage = () => {
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <DollarSign className="mr-2 text-gray-500" size={18} />
+                      <IndianRupee  className="mr-2 text-gray-500" size={18} />
                       <div>
                         <p className="text-xs text-gray-500">Prize Pool</p>
                         <p className="text-sm font-medium">{event.prize}</p>

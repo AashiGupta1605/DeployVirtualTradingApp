@@ -318,8 +318,8 @@ const FILTER_CONFIGS = {
         { value: 'All', label: <CustomOption icon={<Clock3 size={16} />}>All</CustomOption> },
         { value: 'pending', label: <CustomOption icon={<Clock3 size={16} />}>Pending</CustomOption> },
         { value: 'solved', label: <CustomOption icon={<CheckCircle size={16} />}>Solved</CustomOption> },
-        { value: 'satisfied', label: <CustomOption icon={<UserCheck size={16} />}>Satisfied</CustomOption> },
-        { value: 'not satisfied', label: <CustomOption icon={<X size={16} />}>Not Satisfied</CustomOption> }
+        // { value: 'satisfied', label: <CustomOption icon={<UserCheck size={16} />}>Satisfied</CustomOption> },
+        // { value: 'not satisfied', label: <CustomOption icon={<X size={16} />}>Not Satisfied</CustomOption> }
       ]
     },
     dateRange: {

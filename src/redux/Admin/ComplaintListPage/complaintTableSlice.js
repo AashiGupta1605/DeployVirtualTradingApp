@@ -18,6 +18,24 @@ export const fetchComplaints = createAsyncThunk(
   }
 );
 
+
+export const fetchComplaintsOfOrg = createAsyncThunk(
+  'admin/complaintTable/fetchComplaintsOfOrg',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_API_URL}/user/complaint/admin/organization-complaints`);
+      return response.data;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to fetch organization complaints';
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
+
+
 export const deleteComplaint = createAsyncThunk(
   'admin/complaintTable/deleteComplaint',
   async (id, { rejectWithValue }) => {
@@ -77,7 +95,9 @@ const filterComplaints = (complaints, filters) => {
         complaint.userId?.email,
         complaint.message,
         complaint.status,
-        complaint.type
+        complaint.type,
+        complaint.organizationId?.name,    
+        complaint.organizationId?.email, 
       ].filter(Boolean);
 
       return searchFields.some(field =>
@@ -123,7 +143,19 @@ const calculateComplaintStats = (complaints) => {
 const initialState = {
   complaints: [],
   filteredComplaints: [],
+  orgComplaints: [],
+  filteredOrgComplaints: [],
   stats: {
+    total: 0,
+    solved: 0,
+    pending: 0,
+    rejected: 0,
+    satisfied: 0,
+    notSatisfied: 0,
+    noResponse: 0,
+    categoryDistribution: {}
+  },
+  orgStats: {
     total: 0,
     solved: 0,
     pending: 0,
@@ -156,16 +188,22 @@ const complaintTableSlice = createSlice({
       state.filters = { ...state.filters, ...action.payload };
       state.filteredComplaints = filterComplaints(state.complaints, state.filters);
       state.stats = calculateComplaintStats(state.filteredComplaints);
+      state.filteredOrgComplaints = filterComplaints(state.orgComplaints, state.filters);
+      state.orgStats = calculateComplaintStats(state.filteredOrgComplaints);
     },
     clearFilters: (state) => {
       state.filters = initialState.filters;
       state.filteredComplaints = state.complaints;
       state.stats = calculateComplaintStats(state.complaints);
+      state.filteredOrgComplaints = state.orgComplaints;
+      state.orgStats = calculateComplaintStats(state.orgComplaints);
     },
     updateLocalFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
       state.filteredComplaints = filterComplaints(state.complaints, state.filters);
       state.stats = calculateComplaintStats(state.filteredComplaints);
+      state.filteredOrgComplaints = filterComplaints(state.orgComplaints, state.filters);
+      state.orgStats = calculateComplaintStats(state.filteredOrgComplaints);
     }
   },
   extraReducers: (builder) => {
@@ -182,6 +220,21 @@ const complaintTableSlice = createSlice({
         state.lastUpdated = Date.now();
       })
       .addCase(fetchComplaints.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchComplaintsOfOrg.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchComplaintsOfOrg.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orgComplaints = action.payload.data;
+        state.filteredOrgComplaints = filterComplaints(action.payload.data, state.filters);
+        state.orgStats = calculateComplaintStats(state.filteredOrgComplaints);
+        state.lastUpdated = Date.now();
+      })
+      .addCase(fetchComplaintsOfOrg.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -228,6 +281,9 @@ export const {
 export const selectComplaints = state => state.admin.complaintTable.complaints;
 export const selectFilteredComplaints = state => state.admin.complaintTable.filteredComplaints;
 export const selectComplaintStats = state => state.admin.complaintTable.stats;
+export const selectOrgComplaints = state => state.admin.complaintTable.orgComplaints;
+export const selectFilteredOrgComplaints = state => state.admin.complaintTable.filteredOrgComplaints;
+export const selectOrgComplaintStats = state => state.admin.complaintTable.orgStats;
 export const selectComplaintLoading = state => state.admin.complaintTable.loading;
 export const selectComplaintError = state => state.admin.complaintTable.error;
 export const selectComplaintDeleting = state => state.admin.complaintTable.isDeleting;

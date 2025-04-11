@@ -10,25 +10,49 @@ import {
   selectAuthError,
 } from "../../redux/User/authSlice";
 import ForgotPasswordModal from "./ForgetPasswordModal"; 
+import RegisterModal from "./Register";
 
 const LoginModal = ({ isOpen, onClose }) => {
+  const [isForgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+
   if (!isOpen) return null;
-  return <LoginForm onClose={onClose} />;
+
+  return (
+    <>
+      {isRegisterModalOpen ? (
+        <RegisterModal 
+          isOpen={isRegisterModalOpen} 
+          onClose={() => {
+            setRegisterModalOpen(false);
+            onClose();
+          }} 
+        />
+      ) : isForgotPasswordOpen ? (
+        <ForgotPasswordModal 
+          onClose={() => setForgotPasswordOpen(false)} 
+        />
+      ) : (
+        <LoginForm 
+          onClose={onClose} 
+          onOpenRegister={() => setRegisterModalOpen(true)}
+          onOpenForgotPassword={() => setForgotPasswordOpen(true)}
+        />
+      )}
+    </>
+  );
 };
 
-const LoginForm = ({ onClose }) => {
+const LoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authStatus = useSelector(selectAuthStatus);
   const authError = useSelector(selectAuthError);
   const loading = authStatus === "loading";
 
-    // State for forgot password modal
-    const [isForgotPasswordOpen, setForgotPasswordOpen] = useState(false);
-
   const formik = useFormik({
     initialValues: {
-      identifier: "", // Can be email or mobile
+      identifier: "",
       password: "",
     },
     validationSchema: Yup.object({
@@ -39,7 +63,7 @@ const LoginForm = ({ onClose }) => {
           const isMobile = /^[6-9]\d{9}$/.test(value);
           return isEmail || isMobile;
         }),
-        password: Yup.string()
+      password: Yup.string()
         .min(8, "Password must be at least 8 characters")
         .max(15, "Password cannot be more than 15 characters")
         .matches(
@@ -48,48 +72,7 @@ const LoginForm = ({ onClose }) => {
         )
         .required("Password is required"),
     }),
-    // onSubmit: async (values, { setSubmitting }) => {
-    //   // setSubmitting(true);
-    //   try {
-    //     const isEmail = Yup.string().email().isValidSync(values.identifier);
-    //     const credentials = isEmail
-    //       ? { email: values.identifier, password: values.password }
-    //       : { mobile: values.identifier, password: values.password };
-
-    //     const resultAction = await dispatch(loginUser(credentials));
-
-    //     if (loginUser.fulfilled.match(resultAction)) {
-    //       const user = resultAction.payload?.user;
-
-    //       if (user?.isDeleted) {
-    //         toast.error("Your account has been deactivated.");
-    //         setSubmitting(false);
-    //         return;
-    //       }
-
-    //       setTimeout(() => {
-    //         setSubmitting(false);
-    //         if (user?.role === "admin") {
-    //           navigate("/admin");
-    //           toast.success("Login successful!");
-    //         } else {
-    //           navigate("/user");
-    //           toast.success("Login successful!");
-    //         }
-    //         onClose();
-    //       }, 2000);
-    //     } else {
-    //       setSubmitting(false);
-    //       toast.error(resultAction.payload?.message || "Login failed. Please try again.");
-    //     }
-    //   } catch (error) {
-    //     console.error("Error during login:", error);
-    //     toast.error("An unexpected error occurred. Please try again.");
-    //   }//finally {
-    //   //   resetForm();
-    //   // }
-    // },
-    onSubmit: async (values, { setSubmitting , resetForm }) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         const isEmail = Yup.string().email().isValidSync(values.identifier);
         const credentials = isEmail
@@ -103,7 +86,7 @@ const LoginForm = ({ onClose }) => {
           
           setTimeout(() => {
             setSubmitting(false);
-            resetForm(); 
+            resetForm();
 
             if (user?.role === "admin") {
               navigate("/admin");
@@ -123,12 +106,9 @@ const LoginForm = ({ onClose }) => {
         toast.error("An unexpected error occurred. Please try again.");
       }
     },
-    
   });
 
   return (
-    <>
-      {!isForgotPasswordOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
       <div
@@ -140,7 +120,7 @@ const LoginForm = ({ onClose }) => {
             <div className="absolute inset-0 bg-gray-900 opacity-50 rounded-2xl z-40"></div>
             <div className="z-50 flex flex-col items-center gap-4">
               <div
-                className="inline-block h-16 w-16 animate-spin rounded-full border-8 border-solid border-blue-600 border-t-transparent"
+                className="inline-block h-16 w-16 animate-spin rounded-full border-8 border-solid border-lightBlue-600 border-t-transparent"
                 role="status"
               ></div>
             </div>
@@ -156,8 +136,8 @@ const LoginForm = ({ onClose }) => {
           </div>
           <button
             onClick={() => {
-              formik.resetForm(); // Reset form fields
-              onClose(); // Close the modal or form
+              formik.resetForm();
+              onClose();
             }}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
           >
@@ -166,12 +146,6 @@ const LoginForm = ({ onClose }) => {
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[80vh] relative">
-          {/* {authError && (
-            <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
-              {authError}
-            </div>
-          )} */}
-
           <form onSubmit={formik.handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div>
@@ -181,10 +155,10 @@ const LoginForm = ({ onClose }) => {
                 <input
                   type="text"
                   name="identifier"
-                  className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 
+                    bg-white text-gray-900 
+                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                    focus:outline-none transition-all duration-200"
                   placeholder="Enter email or mobile number"
                   {...formik.getFieldProps("identifier")}
                 />
@@ -201,10 +175,10 @@ const LoginForm = ({ onClose }) => {
                 <input
                   type="password"
                   name="password"
-                  className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 
+                    bg-white text-gray-900 
+                    focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                    focus:outline-none transition-all duration-200"
                   placeholder="Enter your password"
                   {...formik.getFieldProps("password")}
                 />
@@ -216,47 +190,49 @@ const LoginForm = ({ onClose }) => {
               </div>
             </div>
 
-              {/* Forgot Password Link */}
-              <div className="text-left">
+            <div className="flex justify-between items-center">
               <button
                 type="button"
-                className="text-blue-600 hover:underline focus:outline-none"
-                onClick={() => setForgotPasswordOpen(true)}
+                className="text-lightBlue-600 hover:underline focus:outline-none text-sm"
+                onClick={onOpenForgotPassword}
               >
                 Forgot Password?
               </button>
+              <div className="text-sm text-gray-600">
+                Don't have an account yet?{" "}
+                <button
+                  type="button"
+                  className="text-lightBlue-600 hover:underline focus:outline-none font-medium"
+                  onClick={onOpenRegister}
+                >
+                  Register now
+                </button>
+              </div>
             </div>
 
             <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
                 onClick={() => {
-                  formik.resetForm(); // Reset form fields
-                  onClose(); // Close the modal or form
+                  formik.resetForm();
+                  onClose();
                 }}
-                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                className="px-6 py-2.5 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={formik.isSubmitting || loading}
-                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
+                className="px-6 py-2.5 rounded-xl bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
               >
-                Login
+                {formik.isSubmitting ? "Logging in..." : "Login"}
               </button>
             </div>
           </form>
         </div>
       </div>
-      </div>
-       ) : (
-       
-       
-        <ForgotPasswordModal onClose={() => setForgotPasswordOpen(false)} />
-      )}
-    </>
-    
+    </div>
   );
 };
 
