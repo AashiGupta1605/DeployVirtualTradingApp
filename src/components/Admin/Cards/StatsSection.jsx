@@ -691,6 +691,7 @@ import { StockStatsGraph } from '../Modals/graphs/StockStatsGraph';
 import { ComplaintStatsGraph } from '../Modals/graphs/ComplaintStatsGraph';
 import { QueryStatsGraph } from '../Modals/graphs/QueryStatsGraph';
 import { GalleryStatsGraph } from '../Modals/graphs/GalleryStatsGraph';
+import { StatsGraph } from '../Modals/graphs/StatsGraph';
 const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
   const dispatch = useDispatch();
   const stats = useSelector(selectDashboardStats);
@@ -711,14 +712,108 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
     // Set the appropriate graph component based on statType
     switch(statType) {
       case 'users':
-        setModalContent(<UserStatsGraph stats={stats?.users} />);
+        // setModalContent(<UserStatsGraph stats={stats?.users} />);
+        setModalContent(<StatsGraph
+          stats={stats?.users}
+          title="User"
+          chartLabels={[
+            'Total Users', 
+            'Active Users', 
+            'Deactive Users', 
+            'Male Users', 
+            'Female Users', 
+            'Other Genders', 
+            'Avg Age'
+          ]}
+          chartDataKeys={[
+            'total', 
+            'active', 
+            'deactive', 
+            'male', 
+            'female', 
+            'other', 
+            'averageAge'
+          ]}
+          statsDetails={[
+            { label: 'Total Users', key: 'total' },
+            { label: 'Active Users', key: 'active' },
+            { label: 'Deactive Users', key: 'deactive' },
+            { label: 'Male Users', key: 'male' },
+            { label: 'Female Users', key: 'female' },
+            { label: 'Other Genders', key: 'other' },
+            { label: 'Average Age', key: 'averageAge', unit: 'years' }
+          ]}
+        />);
         break;
       case 'organizations':
-        setModalContent(<OrganizationStatsGraph stats={stats?.organizations} />);
+        // setModalContent(<OrganizationStatsGraph stats={stats?.organizations} />);
+        setModalContent(<StatsGraph
+          stats={stats?.organizations}
+          title="Organization"
+          chartLabels={[
+            'Total Orgs', 
+            'Active Orgs', 
+            'Pending Orgs',
+            'Total Users',
+            'Male Users',
+            'Female Users',
+            'Avg Age'
+          ]}
+          chartDataKeys={[
+            'totalOrganizations',
+            'activeOrgs',
+            'pendingOrgs',
+            'totalUsers',
+            'maleUsers',
+            'femaleUsers',
+            'averageAge'
+          ]}
+          statsDetails={[
+            { label: 'Total Organizations', key: 'totalOrganizations' },
+            { label: 'Active Organizations', key: 'activeOrgs' },
+            { label: 'Pending Organizations', key: 'pendingOrgs' },
+            { label: 'Total Users', key: 'totalUsers' },
+            { label: 'Male Users', key: 'maleUsers' },
+            { label: 'Female Users', key: 'femaleUsers' },
+            { label: 'Average Age', key: 'averageAge', unit: 'years' }
+          ]}
+        />);
         break;
 
         case 'feedbacks':
           setModalContent(<FeedbackStatsGraph stats={stats?.feedback} />);
+          // setModalContent(<StatsGraph
+          //   stats={stats?.feedback}
+          //   title="Feedback"
+          //   chartLabels={[
+          //     'Total Feedback',
+          //     'Average Rating',
+          //     'Recommendation Rate',
+          //     'Positive (4-5 stars)',
+          //     'Negative (1-2 stars)'
+          //   ]}
+          //   chartDataKeys={[
+          //     'total',
+          //     'averageRating',
+          //     'recommendationRate',
+          //     'totalPositive',
+          //     'totalNegative'
+          //   ]}
+          //   statsDetails={[
+          //     { label: 'Total Feedback', key: 'total' },
+          //     { label: 'Average Rating', key: 'averageRating' },
+          //     { label: 'Recommendation Rate', key: 'recommendationRate', unit: '%' },
+          //     { label: 'Positive Feedback', key: 'totalPositive' },
+          //     { label: 'Negative Feedback', key: 'totalNegative' },
+          //     { label: 'Most Popular Category', 
+          //       key: 'mostPopularCategory._id', 
+          //       defaultValue: 'N/A',
+          //       format: (val, stats) => `${stats.mostPopularCategory?._id || 'N/A'} (${stats.mostPopularCategory?.total || 0})`
+          //     }
+          //   ]}
+          //   chartTypes={['bar', 'pie', 'doughnut']}
+          // />);
+
           break;
 
           case 'events':

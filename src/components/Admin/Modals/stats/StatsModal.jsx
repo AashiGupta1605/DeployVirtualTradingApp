@@ -39,7 +39,7 @@ const StatsModal = ({ isOpen, onClose, children, title }) => {
       <div className="fixed inset-0 bg-gray-900 opacity-50 z-50"></div>
       
       {/* Modal container - matches ConfirmationModal style but with graph content */}
-      <div className="relative w-full max-w-2xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
+      <div style={{ width: '100%', maxWidth: '90%' }} className="relative w-full h-full max-h-[86vh]  mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
         <div className="p-6 z-50">
           {/* Header section */}
           <div className="flex justify-between items-center pb-4 border-b border-gray-200">
