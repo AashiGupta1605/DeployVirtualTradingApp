@@ -436,6 +436,15 @@ const MainHomeNavbar = () => {
               Events
             </button>
 
+            <button
+              onClick={() => {
+                alert("helo")
+              }}
+              className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700"
+            >
+              Book A Demo
+            </button>
+
             {/* Mobile Authentication Buttons */}
             {isAuthenticated ? (
               <div className="px-4 py-2">

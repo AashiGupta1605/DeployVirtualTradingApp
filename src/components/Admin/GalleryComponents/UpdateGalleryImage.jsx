@@ -7,7 +7,7 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 import { toast } from 'react-hot-toast';
 import './Gallery.css'
 
-const UpdateGalleryImage = ({closeModal}) => {
+const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, updateImageData}) => {
 
   const [categories, setCategories] = useState([]);
   const [err, setErr] = useState("");
@@ -45,10 +45,10 @@ const UpdateGalleryImage = ({closeModal}) => {
   }, []);
 
   const initialValues = {
-    categoryName: "",
-    title: null,
-    desc: null,
-    photo: "", 
+    categoryName: updateImageData?.categoryName || "",
+    title: updateImageData?.title || null,
+    desc: updateImageData?.desc || null,
+    photo: updateImageData?.photo || "", 
   };
 
   const validationSchema = Yup.object({
@@ -78,12 +78,12 @@ const UpdateGalleryImage = ({closeModal}) => {
 
   });  
 
-  const handlePageRefresh = () => {
-    const delay = 2000; // Time delay in milliseconds (3 seconds)
-    setTimeout(() => {
-      window.location.reload();
-    }, delay);
-  };
+  // const handlePageRefresh = () => {
+  //   const delay = 2000; // Time delay in milliseconds (3 seconds)
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, delay);
+  // };
   
   const handleImageUpload = async (event, setFieldValue) => {
     const file = event.target.files[0];
@@ -115,7 +115,7 @@ const UpdateGalleryImage = ({closeModal}) => {
     }
   };  
 
-  const addGalleryImage = async (values, { resetForm }) => {
+  const updateGalleryImage = async (values, { resetForm }) => {
 
     if (!values.photo) {
       toast("Please upload an image!", {
@@ -132,7 +132,7 @@ const UpdateGalleryImage = ({closeModal}) => {
       };
       
       const response = await axios.post(
-        `${BASE_API_URL}/admin/gallery/addGalleryItem`, payload,
+        `${BASE_API_URL}/admin/gallery/updateGalleryItem/${updateImageId}`, payload,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -144,20 +144,20 @@ const UpdateGalleryImage = ({closeModal}) => {
       if(response?.status === 201){
         console.log("Form submitted successfully", response.data);
         toast.success(response?.data?.message);
-        resetForm()
-        handlePageRefresh()
+        refreshCategoryImages()
+        closeModal()
       }
       else if (response?.status === 409) {
         toast(response?.data?.message, {
           icon: '⚠️',
         });
-        return
+        resetForm()
       }
       else if (response.status === 500) {
         toast(response?.data?.message, {
           icon: '🛑',
         });
-        return
+        resetForm()
       }
     } 
     catch (error) {
@@ -169,19 +169,23 @@ const UpdateGalleryImage = ({closeModal}) => {
           toast(data?.message, {
             icon: '⚠️',
           });
+          resetForm()
         } 
         else if (status === 500) {
           // toast.error(data?.message);
           toast(data?.message, {
             icon: '🛑',
           })
+          resetForm()
         } 
         else {
           toast.error(data?.message || "Unknown error, please try again.");
+          resetForm()
         }
       } 
       else {
         toast.error("An internal server error occurred!");
+        resetForm()
       }  
       throw error; 
     }
@@ -207,7 +211,7 @@ const UpdateGalleryImage = ({closeModal}) => {
               <i className="fas fa-camera-retro text-white fa-lg" />
             </div>
             <h2 className="text-2xl font-semibold text-gray-800">
-              Register New Image
+              Update Image
             </h2>
           </div>
           <button
@@ -223,7 +227,7 @@ const UpdateGalleryImage = ({closeModal}) => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={addGalleryImage}
+            onSubmit={(values, actions) =>updateGalleryImage(values, actions, closeModal)}
           >
             {({ isSubmitting, isValid, setFieldValue}) => (
               <Form className="space-y-6">
@@ -305,16 +309,7 @@ const UpdateGalleryImage = ({closeModal}) => {
   );
 };
 
-const FormField = ({ 
-  name, 
-  label, 
-  required = false, 
-  type = "text", 
-  placeholder, 
-  className = "", 
-  options = [], 
-  onChange  // Add this prop
-}) => (
+const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [], onChange }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-2">
       {label} {required && <span className="text-red-500">*</span>}
@@ -362,5 +357,12 @@ const FormField = ({
     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
   </div>
 );
+
+UpdateGalleryImage.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  refreshCategoryImages: PropTypes.func.isRequired,
+  updateImageId: PropTypes.instanceOf(Object).isRequired,
+  updateImageData: PropTypes.object.isRequired,
+}
 
 export default UpdateGalleryImage

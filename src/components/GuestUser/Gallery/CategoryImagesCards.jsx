@@ -8,7 +8,7 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 
 const Card = ({ image, title, description, postDate }) => {
     return (
-      <div className="w-[380px] min-h-[440px] rounded-2xl overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.5)] bg-white p-4 flex flex-col justify-between relative">
+      <div className="w-[370px] mr-3 min-h-[150px] rounded-2xl overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.5)] bg-white p-3 flex flex-col justify-between relative">
         {/* Image container with fallback */}
         {image ? (
           <img
@@ -21,21 +21,27 @@ const Card = ({ image, title, description, postDate }) => {
             No Image
           </div>
         )}
+
+        {postDate && (
+            <p className="max-w-34 rounded-2xl pt-1 pb-1 pl-3 text-xs bg-gray-100 text-gray-600 mt-2">
+              Posted on: {new Date(postDate).toLocaleDateString()}
+            </p>
+        )}
   
         <div className="p-4 flex flex-col justify-between flex-grow">
           {title ? 
           <h2 className="text-base font-semibold text-gray-800">{title.charAt(0).toUpperCase() + title.slice(1)}</h2> 
           : <div className="text-base font-semibold text-gray-400"> No Title </div>}
   
-          {description ?
+          {/* {description ?
           <div className="h-24 overflow-y-auto text-gray-600 mt-2 text-sm pr-1"> {description.charAt(0).toUpperCase() + title.slice(1)} </div>
-          : <div className="h-24 overflow-y-auto text-gray-400 mt-2 text-base pr-1"> No description.... </div>}
+          : <div className="h-24 overflow-y-auto text-gray-400 mt-2 text-base pr-1"> No description.... </div>} */}
   
-          {postDate && (
+          {/* {postDate && (
             <p className="max-w-34 ml-45 -mb-4 rounded-2xl pt-1 pb-1 pl-3 text-xs bg-gray-100 text-gray-600 mt-4">
               Posted on: {new Date(postDate).toLocaleDateString()}
             </p>
-          )}
+          )} */}
         </div>
       </div>
     );
@@ -107,7 +113,7 @@ const CategoryImagesCards = ({ categoryName }) => {
   return (
     <>
       <div>
-        <section className="mt-4 mb-8 bg-white border border-gray-200 mx-6 p-6 rounded-lg relative">
+        <section className="mt-4 mb-8 bg-white border border-gray-200 mx-6 p-4 rounded-lg relative">
           {/* Previous Button */}
           <button
             onClick={handlePrev}
@@ -118,7 +124,7 @@ const CategoryImagesCards = ({ categoryName }) => {
           </button>
 
           {/* Flex container for headings and button */}
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-5">
             {/* Left-most heading */}
             <div className="flex gap-3 items-center">
               <i className="fas fa-images text-blue-500 text-[20px] mt-[5px]"></i>
@@ -127,9 +133,9 @@ const CategoryImagesCards = ({ categoryName }) => {
                 {categoryName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ")}
               </h3>
             </div>
-            <div className="bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-full shadow-sm">
+            {/* <div className="bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-full shadow-sm">
               Total Images: {galleryItems.length}
-            </div>
+            </div> */}
           </div>
 
           {/* {err && <p className="text-red-500">{err}</p>} */}
