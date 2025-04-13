@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
+import OTPModal from "./OtpModal";
 import "../../components/User/Contact/ContactPage.css";
 import { BASE_API_URL } from "../../utils/BaseUrl";
 
 const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");  // Feedback message state
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   useEffect(() => {
     // Reset form data when initialValues change (if editing an existing user)
     if (initialValues) {
@@ -23,7 +26,7 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
   .min(8, "Password must be at least 8 characters")
-  .max(15, "Password cannot be more than 20 characters")
+  .max(15, "Password cannot be more than 15 characters")
   .matches(
     /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     "Password must contain at least one letter and one special character"
@@ -73,6 +76,9 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
           ? `${BASE_API_URL}/user/users/${initialValues._id}`
           : `${BASE_API_URL}/user/auth/register`;
         const method = initialValues ? "put" : "post";
+        
+        console.log("Registering user with data:", userData);
+
   
         const response = await fetch(url, {
           method,
@@ -82,22 +88,50 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   
         const data = await response.json();
 
-if (response.ok) {
-  toast.success(`${initialValues ? "User updated" : "Registration"} successful! Redirecting to login...`);
-  // Reset the form fields after successful submission
-  resetForm();
-  
-  setTimeout(() => {
-    navigate("/");
-    onClose();
-  }, 2000);
-} else {
-  toast.error(data.message || `${initialValues ? "Update" : "Registration"} failed.`);
-}
+        if (!response.ok) {
+          console.error("Registration failed:", data.message || data);
+          toast.error(data.message || "Something went wrong");
+          return;
+        }
 
-} catch (error) {
-  toast.error("Something went wrong. Please try again.");
-}
+        if (response.ok) {
+          toast.success(`${initialValues ? "User updated" : "Registration"} successful!`);
+        
+          if (!initialValues) {
+            // Trigger OTP API call
+            try {
+              const otpResponse = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: userData.email }),
+              });
+        
+              const otpResult = await otpResponse.json();
+        
+              if (otpResponse.ok) {
+                toast.success("OTP sent to your email");
+                setUserEmail(userData.email);
+                setShowOtpModal(true);
+              } else {
+                toast.error(otpResult.message || "Failed to send OTP");
+              }
+            } catch (otpError) {
+              toast.error("Failed to send OTP. Please try again.");
+            }
+          } else {
+            resetForm();
+            setTimeout(() => {
+              navigate("/");
+              onClose();
+            }, 2000);
+          }
+        }
+         else {
+          toast.error(data.message || `${initialValues ? "Update" : "Registration"} failed.`);
+        }
+      } catch (error) {
+        toast.error("Something went wrong. Please try again.");
+      }
     },
   });
   
@@ -290,9 +324,25 @@ if (response.ok) {
             </div>
             {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}
           </form>
+
+          {showOtpModal && (
+     <OTPModal
+     isOpen={showOtpModal}
+      onClose={() => setShowOtpModal(false)}
+      email={userEmail}
+      onVerified={() => {
+        formik.resetForm();
+        setShowOtpModal(false);
+        onClose();
+      }}
+  />
+)}
+
         </div>
       </div>
+      
     </div>
+    
   );
 };
 
