@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { 
   ChevronDown,
   TrendingUp,
@@ -29,6 +30,7 @@ import PortfolioTable from './PortfolioTable';
 
 const UserPortfolioPage = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const activeEvent = useSelector(selectActiveEvent);
   const activeEvents = useSelector(selectActiveEvents);
   const userId = useSelector(state => state.user.auth?.user?._id);
@@ -48,6 +50,23 @@ const UserPortfolioPage = () => {
   const activeSubscription = userSubscriptions.find(sub => 
     sub.status === 'Active' && !sub.isDeleted
   );
+
+  useEffect(() => {
+    if (location.state?.eventId) {
+      const event = activeEvents.find(e => e._id === location.state.eventId);
+      if (event) {
+        dispatch(setActiveEvent(event));
+      } else {
+        // If event not found, fetch events first
+        dispatch(fetchUserEvents()).then(() => {
+          const foundEvent = activeEvents.find(e => e._id === location.state.eventId);
+          if (foundEvent) {
+            dispatch(setActiveEvent(foundEvent));
+          }
+        });
+      }
+    }
+  }, [location.state, activeEvents, dispatch]);
 
   useEffect(() => {
     if (userId) {
