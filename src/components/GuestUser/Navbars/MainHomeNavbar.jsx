@@ -8,6 +8,8 @@ import OrganizationRegistration from "../../../views/Organization/OrganizationDe
 import OrganizationLogin from "../../../views/Organization/OrganizationDetails/Models/OrganizationLogin";
 import { LogIn, ChevronDown, Menu, X } from "lucide-react";
 
+import BookDemoBGModal from "../BookDemo/BookDemoBGModal";
+
 const MainHomeNavbar = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [registerDropdownOpen, setRegisterDropdownOpen] = useState(false);
@@ -16,6 +18,10 @@ const MainHomeNavbar = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isUserLoginModalOpen, setUserLoginModalOpen] = useState(false);
   const [isUserRegisterModalOpen, setUserRegisterModalOpen] = useState(false);
+
+  const [isBookDemoBGModal, setIsBookDemoBGModal] = useState(false)
+  const openBookDemoBGModal = () => setIsBookDemoBGModal(true);
+  const closeBookDemoBGModal = () => setIsBookDemoBGModal(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -214,6 +220,14 @@ const MainHomeNavbar = () => {
                 >
                   Events
                 </button>
+
+                <button
+                  onClick={openBookDemoBGModal}
+                  className="ml-6 -mr-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-500 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                >
+                  Book A Demo
+                </button>
+
               </div>
 
               {/* Conditional Rendering Based on Authentication */}
@@ -508,6 +522,7 @@ const MainHomeNavbar = () => {
           onClose={() => setUserRegisterModalOpen(false)}
         />
       </nav>
+      {isBookDemoBGModal && <BookDemoBGModal closeModal={closeBookDemoBGModal}/>}
     </>
   );
 };

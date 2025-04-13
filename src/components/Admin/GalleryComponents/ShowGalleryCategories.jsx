@@ -523,7 +523,8 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                         key={index}
                         className="hover:bg-gray-50 transition-colors"
                       >
-                        <td className="px-5 py-4 whitespace-nowrap min-w-[100px] text-sm font-medium text-gray-900">
+                        <td className="cursor-pointer px-5 py-4 whitespace-nowrap min-w-[100px] text-sm font-medium text-gray-900"
+                        onClick={() => openImageTable(data.name)}>
                           {
                             data.name.split(" ")
                               .map(
@@ -558,19 +559,19 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                      {/* <Tooltip text="Edit organization"> */}
                             <button
                               onClick={() => handleUpdateCategory(data._id, data.name)}
-                              className="-ml-2 mr-2 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
+                              className="mr-4 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
                             >
                               <Edit size={18} />
                             </button>
                       {/* </Tooltip> */}
 
                       {/* <Tooltip text="Edit organization"> */}
-                            <button
+                            {/* <button
                               onClick={() => openImageTable(data.name)}
                               className="mr-3 text-blue-600 mx-2 hover:text-blue-900 transition-colors focus:outline-none"
                             >
                               <Info size={18} />
-                            </button>
+                            </button> */}
                       {/* </Tooltip> */}
                           
                       {/* <Tooltip text="Delete organization"> */}

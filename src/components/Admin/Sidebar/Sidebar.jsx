@@ -91,6 +91,10 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
         { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
         { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
     ],
+    BookedDemos: [
+      {to: "/admin/demo/userDemo", icon: "fas fa-chalkboard-teacher", label:"User Bookings"},
+      {to: "/admin/demo/organizationDemo", icon: "fas fa-handshake", label:"Organization Bookings"}
+    ],
 };
 
   return (
@@ -221,6 +225,7 @@ const getSectionIcon = (section) => {
     complaint: "exclamation-circle",
     events: "calendar-alt",
     gallery: "fas fa-images",
+    BookedDemos: "fas fa-calendar-check",
   };
   return icons[section] || "circle";
 };
