@@ -22,8 +22,8 @@ import {
 } from 'lucide-react';
 import { fetchEvents, selectEvents, selectEventsStatus } from '../../redux/Admin/EventManage/eventSlice';
 import { useNavigate } from 'react-router-dom';
-import LoginModal from '../../views/auth/Login';
-import RegisterModal from '../../views/auth/Register';
+import LoginModal from '../../views/auth/UnifiedLoginModal';
+import RegisterModal from '../../views/auth/UnifiedRegistrationModal';
 
 const EventDetailsModal = ({ event, onClose, onJoin }) => {
   if (!event) return null;
