@@ -62,10 +62,10 @@ export const StockStatsGraph = ({ stats }) => {
     datasets: [{
       label: 'Stocks',
       data: [
-        stats?.all || 0,
-        stats?.nifty50 || 0,
-        stats?.nifty500 || 0,
-        stats?.etf || 0
+        stats?.all - 3 || 0,
+        stats?.nifty50 - 1 || 0,
+        stats?.nifty500 - 1 || 0,
+        stats?.etf - 1 || 0
       ],
       backgroundColor: [
         'rgba(54, 162, 235, 0.7)',
@@ -155,19 +155,19 @@ export const StockStatsGraph = ({ stats }) => {
           <div className="space-y-4">
             <div className="flex justify-between">
               <span>Total Stocks:</span>
-              <span className="font-medium">{stats?.all || 0}</span>
+              <span className="font-medium">{stats?.all - 3 || 0}</span>
             </div>
             <div className="flex justify-between">
               <span>Nifty50:</span>
-              <span className="font-medium">{stats?.nifty50 || 0}</span>
+              <span className="font-medium">{stats?.nifty50 - 1 || 0}</span>
             </div>
             <div className="flex justify-between">
               <span>Nifty500:</span>
-              <span className="font-medium">{stats?.nifty500 || 0}</span>
+              <span className="font-medium">{stats?.nifty500 - 1 || 0}</span>
             </div>
             <div className="flex justify-between">
               <span>ETF:</span>
-              <span className="font-medium">{stats?.etf || 0}</span>
+              <span className="font-medium">{stats?.etf - 1 || 0}</span>
             </div>
           </div>
         </div>

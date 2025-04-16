@@ -29,7 +29,7 @@ import {
   setGender,
   clearFilters,
 } from "../../../redux/Organization/users/organizationUsersSlice";
-import { fetchDashboardData } from "../../../redux/Organization/dashboard/organizationDashboardSlice";
+// import { fetchDashboardData } from "../../../redux/Organization/dashboard/organizationDashboardSlice";
 import Pagination from "../../../components/Organization/TableFunctions/Pagination";
 import FilterComponent from "../../../components/Organization/TableFunctions/FilterComponent";
 import OrgUserTable from "../../../components/Organization/Tables/UserTable/OrgUserTable";
@@ -39,7 +39,12 @@ import Loader from "../../../components/Common/Loader";
 import { Filter, X, UserPlus, SearchIcon } from "lucide-react";
 import { getAppliedFiltersCount, getAppliedFiltersText } from "../../../utils/filterFunctions";
 import Dashboard from "../../../components/Organization/Dashboards/Dashboard";
+import StatsSection from "../../../components/Organization/Cards/StatsSection";
+import { useOrganizationDashboard } from "../../../hooks/useOrganizationDashbaord";
 const OrganizationUsers = () => {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  useOrganizationDashboard(refreshTrigger); 
+  // useOrganizationDashboard();
   const dispatch = useDispatch();
   const {
     users: studentList,
@@ -81,7 +86,8 @@ const OrganizationUsers = () => {
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteOrganizationUser(id)).unwrap();
-      dispatch(fetchDashboardData(orgName));
+      // dispatch(fetchDashboardData(orgName));
+       setRefreshTrigger(prev => prev + 1);
     } catch (error) {
       console.error("Failed to delete user:", error);
     } finally {
@@ -177,7 +183,11 @@ const OrganizationUsers = () => {
   return (
     <div className="relative">
       {/* <OrganizationDashboard type="user-list" /> */}
-      <Dashboard type="user-list" showAllCards={false} showCardsTable={false}/>
+      {/* <Dashboard type="users" showAllCards={false} showCardsTable={false}/> */}
+      <div className="mt-18">
+      <StatsSection isDashboard={false} pageType="users" />
+      </div>
+   
 
       <div className="mx-auto w-[95%] z-30">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
@@ -315,7 +325,7 @@ const OrganizationUsers = () => {
           )}
 
           {/* Organization User Registration Modal */}
-          <OrganizationUserRegistration
+          {/* <OrganizationUserRegistration
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
             initialValues={selectedStudent}
@@ -329,7 +339,25 @@ const OrganizationUsers = () => {
               gender,
             }))}
             refreshDashboard={() => dispatch(fetchDashboardData(orgName))}
-          />
+          /> */}
+
+<OrganizationUserRegistration
+    isOpen={isModalOpen}
+    onClose={() => setModalOpen(false)}
+    initialValues={selectedStudent}
+    refreshStudents={() => {
+      dispatch(fetchOrganizationUsers({
+        orgName,
+        page: currentPage,
+        limit: itemsPerPage,
+        search: searchTerm,
+        startDate,
+        endDate,
+        gender,
+      }));
+      setRefreshTrigger(prev => prev + 1); // Trigger refresh
+    }}
+  />
 
           {/* Confirmation Modal for Delete */}
           <ConfirmationModal

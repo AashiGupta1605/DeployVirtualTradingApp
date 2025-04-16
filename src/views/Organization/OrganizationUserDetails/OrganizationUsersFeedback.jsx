@@ -37,8 +37,13 @@ import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Dashboard from "../../../components/Organization/Dashboards/Dashboard";
+import StatsSection from "../../../components/Organization/Cards/StatsSection";
+import { useOrganizationDashboard } from "../../../hooks/useOrganizationDashbaord";
 
 const OrganizationUsersFeedbacks = () => {
+  // useOrganizationDashboard();
+  const [refreshDependency, setRefreshDependency] = useState(0); // New state for refresh dependency
+  useOrganizationDashboard(refreshDependency); //
   const dispatch = useDispatch();
   const {
     feedbacks,
@@ -80,6 +85,7 @@ const OrganizationUsersFeedbacks = () => {
     try {
       await dispatch(deleteOrganizationUsersFeedback(id)).unwrap();
       toast.success("Feedback deleted successfully");
+      setRefreshDependency((prev) => prev + 1); // T
     } catch (error) {
       console.error("Failed to delete feedback:", error);
     } finally {
@@ -115,6 +121,7 @@ const OrganizationUsersFeedbacks = () => {
       }
     } else {
       // Implement the create feedback logic here
+      setRefreshDependency((prev) => prev + 1); // by me 
     }
   };
 
@@ -162,7 +169,10 @@ const OrganizationUsersFeedbacks = () => {
 
   return (
     <div className="relative">
-      <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} />
+      {/* <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} /> */}
+      <div className="mt-18">
+      <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
+      </div>
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
           <div className="bg-gray-50 mt-0 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">

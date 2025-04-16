@@ -218,7 +218,7 @@ const UserFeedbackCards = () => {
       
       {showModal && <UserAllFeedbacksTable closeModal={closeModal} />}
 
-      <style jsx global>{`
+      <style >{`
         .slick-dots-custom {
           bottom: -25px;
           display: flex !important;

@@ -37,8 +37,14 @@ import Loader from "../../../components/Common/Loader";
 import { Filter } from "lucide-react";
 import toast from "react-hot-toast";
 import Dashboard from '../../../components/Organization/Dashboards/Dashboard';
+import StatsSection from "../../../components/Organization/Cards/StatsSection";
+import { useOrganizationDashboard } from "../../../hooks/useOrganizationDashbaord";
 
 const OrganizationFeedback = () => {
+  // useOrganizationDashboard();
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    useOrganizationDashboard(refreshTrigger); 
+
   const dispatch = useDispatch();
   const { feedbacks, loading, currentPage, totalPages, itemsPerPage, searchTerm, startDate, endDate } =
     useSelector((state) => state.organization.feedbacks);
@@ -70,7 +76,9 @@ const OrganizationFeedback = () => {
       .unwrap()
       .then(() => {
         toast.success("Feedback submitted successfully!");
+       setRefreshTrigger(prev => prev + 1);
       })
+      
       .catch((err) => toast.error(err || "Failed to submit feedback"));
   };
 
@@ -89,6 +97,7 @@ const OrganizationFeedback = () => {
     try {
       await dispatch(deleteOrganizationFeedback(feedbackToDelete)).unwrap();
       toast.success("Feedback deleted successfully");
+      setRefreshTrigger(prev => prev + 1);
       setDeleteConfirmationModalOpen(false);
       dispatch(
         fetchOrganizationFeedback({
@@ -100,6 +109,7 @@ const OrganizationFeedback = () => {
           endDate,
         })
       );
+      
     } catch (error) {
       console.error("Failed to delete feedback:", error);
       toast.error("Failed to delete feedback");
@@ -118,7 +128,11 @@ const OrganizationFeedback = () => {
 
   return (
     <div className="relative">
-      <Dashboard type="organization-feedback" showAllCards={false} showCardsTable={false} />
+      {/* <Dashboard type="organization-feedback" showAllCards={false} showCardsTable={false} /> */}
+      <div className="mt-18">
+      <StatsSection isDashboard={false} pageType="feedbacks" />
+      </div>
+
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-28">
           {/* Header with Search and Filters */}

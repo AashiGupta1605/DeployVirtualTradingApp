@@ -10,6 +10,7 @@ import {
   DollarSign,
   BookUser,
 } from 'lucide-react';
+
 import { 
   fetchTransactionHistory,
   selectHoldings,
@@ -23,43 +24,78 @@ import {
 import { 
   selectActiveEvent,
   selectActiveEvents,
-  setActiveEvent
+  setActiveEvent,
+  fetchUserEvents
 } from '../../../redux/User/events/eventsSlice';
 import StockDetailsModal from './StockDetailsModal';
 import PortfolioTable from './PortfolioTable';
+import StatsSection from "../Cards/StatsSection";
 
 const UserPortfolioPage = () => {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const activeEvent = useSelector(selectActiveEvent);
-  const activeEvents = useSelector(selectActiveEvents);
-  const userId = useSelector(state => state.user.auth?.user?._id);
-  const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
-  
-  const [selectedStock, setSelectedStock] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  // Get filtered transactions based on active event
-  const transactions = useSelector(state => 
-    selectFilteredTransactions(state, activeEvent?._id || 'none')
-  );
-  
-  const holdings = useSelector(selectHoldings);
-  const statistics = useSelector(selectStatistics);
 
-  const activeSubscription = userSubscriptions.find(sub => 
-    sub.status === 'Active' && !sub.isDeleted
-  );
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const activeEvent = useSelector(selectActiveEvent);
+    const activeEvents = useSelector(selectActiveEvents);
+    const userId = useSelector(state => state.user.auth?.user?._id);
+    const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
+    
+    const [selectedStock, setSelectedStock] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+  
+    // Get filtered transactions based on active event
+    const transactions = useSelector(state => 
+      selectFilteredTransactions(state, activeEvent?._id || 'none')
+    );
+    
+    const holdings = useSelector(selectHoldings);
+    const statistics = useSelector(selectStatistics);
+  
+    const activeSubscription = userSubscriptions.find(sub => 
+      sub.status === 'Active' && !sub.isDeleted
+    );
+
+
+
+  useEffect(() => {
+    const initializeEvent = async () => {
+      if (location.state?.eventId) {
+        try {
+          // First check if we already have the events loaded
+          let event = activeEvents.find(e => e._id === location.state.eventId);
+          
+          if (!event) {
+            // If event not found, fetch events
+            await dispatch(fetchUserEvents());
+            const updatedEvents = useSelector(selectActiveEvents);
+            event = updatedEvents.find(e => e._id === location.state.eventId);
+          }
+          
+          if (event) {
+            dispatch(setActiveEvent(event));
+          }
+        } catch (error) {
+          console.error('Error initializing event:', error);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeEvent();
+  }, [location.state, dispatch]);
 
   useEffect(() => {
     if (location.state?.eventId) {
+      // First check if the event is already in activeEvents
       const event = activeEvents.find(e => e._id === location.state.eventId);
       if (event) {
         dispatch(setActiveEvent(event));
       } else {
         // If event not found, fetch events first
         dispatch(fetchUserEvents()).then(() => {
-          const foundEvent = activeEvents.find(e => e._id === location.state.eventId);
+          const foundEvent = useSelector(selectActiveEvents).find(e => e._id === location.state.eventId);
           if (foundEvent) {
             dispatch(setActiveEvent(foundEvent));
           }
@@ -69,26 +105,22 @@ const UserPortfolioPage = () => {
   }, [location.state, activeEvents, dispatch]);
 
   useEffect(() => {
-    if (userId) {
+    if (userId && !isLoading) {
       dispatch(getUserSubscriptions(userId));
       
       if (activeEvent?._id) {
         dispatch(fetchEventSpecificTransactions({ 
           userId, 
           eventId: activeEvent._id 
-        })).then((result) => {
-          console.log('Event transactions:', result.payload?.transactions);
-        });
+        }));
       } else {
         dispatch(fetchTransactionHistory({ 
           userId, 
           eventId: 'none'
-        })).then((result) => {
-          console.log('Basic transactions:', result.payload?.transactions);
-        });
+        }));
       }
     }
-  }, [dispatch, userId, activeEvent]);
+  }, [dispatch, userId, activeEvent, isLoading]);
 
   const handleStockClick = (symbol) => {
     const stockTransactions = transactions
@@ -107,6 +139,7 @@ const UserPortfolioPage = () => {
 
   const EventDropdown = ({ activeEvent, onSelectEvent }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const activeEvents = useSelector(selectActiveEvents);
   
     return (
       <div className="relative">
@@ -184,10 +217,10 @@ const UserPortfolioPage = () => {
   };
 
   return (
-    <div className="mt-24">
-      <div className="bg-lightBlue-600 md:pt-8 pb-16 pt-12">
-        <div className="px-4 w-full mx-1">
-          <div className="flex flex-wrap">
+    <div>
+      {/* <div className="bg-lightBlue-600 md:pt-8 pb-16 pt-12"> */}
+        {/* <div className="px-4 w-full mx-1"> */}
+          {/* <div className="flex flex-wrap">
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
               <StatsCard
                 title="VIRTUAL BALANCE"
@@ -228,9 +261,13 @@ const UserPortfolioPage = () => {
                 changeColor={statistics.realizedPLPercentage >= 0 ? "text-emerald-500" : "text-red-500"}
               />
             </div>
+          </div> */}
+          <div className="-mt-24">
+        <StatsSection isDashboard={false} pageType="trading" />
           </div>
-        </div>
-      </div>
+
+        {/* </div> */}
+      {/* </div> */}
 
       {/* Portfolio Content */}
       <div className="px-4 md:px-8 mx-4 -mt-12">

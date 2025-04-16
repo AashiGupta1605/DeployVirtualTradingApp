@@ -9,7 +9,7 @@ import {
   FiChevronDown,
   FiChevronUp
 } from "react-icons/fi";
-import LoginModal from "../../views/auth/Login";
+import LoginModal from "../../views/auth/UnifiedLoginModal";
 import subscriptionData from "../../data/subscriptionPlans.json";
 
 const PricingPage = () => {

@@ -1,195 +1,214 @@
 
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchDashboardData, resetDashboardState } from '../../../redux/Organization/dashboard/organizationDashboardSlice';
-import CardPageVisits from '../../Organization/Cards/CardPageVisits';
-import CardSocialTraffic from '../../Organization/Cards/CardSocialTraffic';
-import CardStats from '../../Organization/Cards/CardStats';
+
+
+
+
+
+
+
+
+// new one latest deepseek--
+
+// import React, { useEffect } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { fetchOrganizationDashboardData, resetDashboardState } from '../../../redux/Organization/dashboard/organizationDashboardSlice';
+// import { fetchNiftyData } from "../../../redux/Common/nifty50Slice";
+// import { fetchNifty500Data } from "../../../redux/Common/nifty500Slice";
+// import { fetchStockData } from "../../../redux/Common/etfSlice";
+// import StatsSection from '../../Organization/Cards/StatsSection';
+// import CardSocialTraffic from '../../Organization/Cards/CardSocialTraffic';
+// import StocksGainerLosser from '../../../components/Common/StocksGainerLosser';
+// import Loader from '../../Common/Loader';
+
+// export default function OrganizationDashboard({ type, showAllCards, showCardsTable }) {
+//   const dispatch = useDispatch();
+//   const orgName = localStorage.getItem('orgName');
+  
+//   const {
+//     loading,
+//     error
+//   } = useSelector((state) => state.organization.dashboard);
+
+//   // Fetch all data
+//   useEffect(() => {
+//     const fetchAllData = async () => {
+//       try {
+//         // Fetch organization data
+//         if (orgName) {
+//           await dispatch(fetchOrganizationDashboardData(orgName));
+//         }
+
+//         // Fetch market data in parallel
+//         await Promise.all([
+//           dispatch(fetchNiftyData({ page: 1, limit: 20, search: "" })),
+//           dispatch(fetchNifty500Data({ page: 1, limit: 20, search: "" })),
+//           dispatch(fetchStockData())
+//         ]);
+//       } catch (err) {
+//         console.error("Dashboard data fetch error:", err);
+//       }
+//     };
+
+//     fetchAllData();
+
+//     return () => {
+//       dispatch(resetDashboardState());
+//     };
+//   }, [dispatch, orgName]);
+
+//   // Loading state
+//   if (loading) {
+//     return ( <div className='my-40 mx-auto'>
+// <Loader />
+//     </div> );
+//   }
+
+//   // Error state
+//   if (error) {
+//     return (
+//       <div className="text-center py-8 text-red-500">
+//         {error}
+//         <button 
+//           onClick={() => window.location.reload()} 
+//           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+//         >
+//           Retry
+//         </button>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className='mt-18'>  
+//       {/* Dashboard header */}
+//       <div>
+//         <StatsSection isDashboard={true} pageType="dashboard" />
+//       </div>
+
+//       {/* Market Data Section */}
+//       {showCardsTable && (
+//         <div className="px-4 mx-auto w-full -mt-12">
+//           {/* Top Gainers Section */}
+//           <div className="mb-8">
+//             <div className="flex flex-wrap justify-between mt-12">
+//               <StocksGainerLosser showHeader={false} />
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { 
+  fetchOrganizationDashboardData,
+  resetDashboardState 
+} from '../../../redux/Organization/dashboard/organizationDashboardSlice';
+import { fetchStockData } from "../../../redux/Common/etfSlice";
+import StatsSection from '../../Organization/Cards/StatsSection';
+import StocksGainerLosser from '../../../components/Common/StocksGainerLosser';
 import Loader from '../../Common/Loader';
 
-export default function Dashboard({ type, showAllCards, showCardsTable }) {
+export default function OrganizationDashboard({ type, showAllCards, showCardsTable }) {
   const dispatch = useDispatch();
-  const orgName = localStorage.getItem('orgName'); // Get organization name from localStorage
+  const orgName = localStorage.getItem('orgName');
+  
+  // Custom loading state
+  const [loadingState, setLoadingState] = useState({
+    statsLoading: true,
+    stocksLoading: true,
+    error: null
+  });
 
-  // Access the dashboard state from Redux
-  const {
-    totalUsers,
-    newUsersLastWeek,
-    maleUsers,
-    femaleUsers,
-    activeUsers,
-    deactiveUsers,
-    averageUserAge,
-    loading,
-    error,
-  } = useSelector((state) => state.organization.dashboard);
-
-  // Fetch dashboard data on component mount
+  // Fetch all data in parallel
   useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        setLoadingState({
+          statsLoading: true,
+          stocksLoading: true,
+          error: null
+        });
+
+        await Promise.all([
+          dispatch(fetchOrganizationDashboardData(orgName))
+            .then(() => {
+              setLoadingState(prev => ({ ...prev, statsLoading: false }));
+            }),
+          dispatch(fetchStockData())
+            .then(() => {
+              setLoadingState(prev => ({ ...prev, stocksLoading: false }));
+            })
+        ]);
+      } catch (err) {
+        console.error("Dashboard data fetch error:", err);
+        setLoadingState({
+          statsLoading: false,
+          stocksLoading: false,
+          error: err.message || "Failed to fetch dashboard data"
+        });
+      }
+    };
+
     if (orgName) {
-      dispatch(fetchDashboardData(orgName));
+      fetchAllData();
     }
-  }, [dispatch, orgName]);
 
-  // Reset dashboard state when the component unmounts
-  useEffect(() => {
     return () => {
       dispatch(resetDashboardState());
     };
-  }, [dispatch]);
+  }, [dispatch, orgName]);
 
-  // Show loader while data is being fetched
-  // if (loading) {
-  //   return <Loader />;
-  // }
-
-  // Show error message if there's an error
-  if (error) {
-    return <div className="text-red-500 text-center mt-8">Error: {error}</div>;
+  // Error state
+  if (loadingState.error) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        {loadingState.error}
+        <button 
+          onClick={() => window.location.reload()} 
+          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
-    <> 
-      <div className={type !== 'user-list' ? 'mt-20' : 'pt-20'}>  
-        {/* Dashboard header */}
-        <div className={type !== 'user-list' ? 'bg-lightBlue-600 md:pt-32 pb-19 pt-12' : 'bg-lightBlue-600 md:pt-32 pb-16 pt-12'}>
-          <div className="px-4 mx-auto w-full">
-            <div> 
-              {/* Card stats */}
-              <div className="flex flex-wrap">
-                {/* Total Users Card */}
-                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                  <CardStats
-                    statSubtitle="TOTAL USERS"
-                    statTitle={totalUsers.toString()}
-                    statArrow="up"
-                    statPercent="5.48"
-                    statPercentColor="text-emerald-500"
-                    statDescripiron="Since last month"
-                    statIconName="far fa-chart-bar"
-                    statIconColor="bg-red-500"
-                  />
+    <div className='mt-18'>
+      {/* Stats Section with its own loader */}
+      <div>
+        {loadingState.statsLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader message="Loading dashboard statistics..." />
+          </div>
+        ) : (
+          <StatsSection isDashboard={true} pageType="dashboard" />
+        )}
+      </div>
+
+      {/* Stocks Section with its own loader */}
+      {showCardsTable && (
+        <div className="px-4 mx-auto w-full -mt-12">
+          <div className="mb-8">
+            <div className="flex flex-wrap justify-between mt-12">
+              {loadingState.stocksLoading ? (
+                <div className="flex justify-center items-center h-64 w-full">
+                  <Loader message="Loading stock data..." />
                 </div>
-
-                {/* New Users Card */}
-                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                  <CardStats
-                    statSubtitle="NEW USERS"
-                    statTitle={newUsersLastWeek.toString()}
-                    statArrow="up"
-                    statPercent="3.48"
-                    statPercentColor="text-emerald-500"
-                    statDescripiron="Since last week"
-                    statIconName="fas fa-user-plus"
-                    statIconColor="bg-orange-500"
-                  />
-                </div>
-
-                {/* Male Users Card */}
-                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                  <CardStats
-                    statSubtitle="MALE USERS"
-                    statTitle={maleUsers.toString()}
-                    statArrow="up"
-                    statPercent="2.10"
-                    statPercentColor="text-emerald-500"
-                    statDescripiron="Since last month"
-                    statIconName="fas fa-male"
-                    statIconColor="bg-blue-500"
-                  />
-                </div>
-
-                {/* Female Users Card */}
-                <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                  <CardStats
-                    statSubtitle="FEMALE USERS"
-                    statTitle={femaleUsers.toString()}
-                    statArrow="up"
-                    statPercent="3.20"
-                    statPercentColor="text-emerald-500"
-                    statDescripiron="Since last month"
-                    statIconName="fas fa-female"
-                    statIconColor="bg-pink-500"
-                  />
-                </div>
-
-                {showAllCards && (
-                  <>
-                    {/* Active Users Card */}
-                    <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                      <CardStats
-                        statSubtitle="ACTIVE USERS"
-                        statTitle={activeUsers.toString()}
-                        statArrow="up"
-                        statPercent="4.10"
-                        statPercentColor="text-emerald-500"
-                        statDescripiron="Since last week"
-                        statIconName="fas fa-user-check"
-                        statIconColor="bg-green-500"
-                      />
-                    </div>
-
-                    {/* Deactive Users Card */}
-                    <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                      <CardStats
-                        statSubtitle="DEACTIVE USERS"
-                        statTitle={deactiveUsers.toString()}
-                        statArrow="down"
-                        statPercent="1.10"
-                        statPercentColor="text-red-500"
-                        statDescripiron="Since last week"
-                        statIconName="fas fa-user-slash"
-                        statIconColor="bg-gray-500"
-                      />
-                    </div>
-
-                    {/* Average User Age Card */}
-                    <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                      <CardStats
-                        statSubtitle="AVERAGE AGE"
-                        statTitle={averageUserAge.toString()}
-                        statArrow="up"
-                        statPercent=""
-                        statPercentColor="text-emerald-500"
-                        statDescripiron="Average age of users"
-                        statIconName="fas fa-birthday-cake"
-                        statIconColor="bg-purple-500"
-                      />
-                    </div>
-
-                      {/* Average User Age Card */}
-                      <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-                      <CardStats
-                        statSubtitle="AVERAGE AGE"
-                        statTitle={averageUserAge.toString()}
-                        statArrow="up"
-                        statPercent=""
-                        statPercentColor="text-emerald-500"
-                        statDescripiron="Average age of users"
-                        statIconName="fas fa-birthday-cake"
-                        statIconColor="bg-purple-500"
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
+              ) : (
+                <StocksGainerLosser showHeader={false} />
+              )}
             </div>
           </div>
         </div>
-
-        {/* Additional cards for non-student-list views */}
-        {showCardsTable && (
-          <div className="flex flex-wrap -mt-14 px-4">
-
-            <div className="w-full xl:w-8/12 px-4 pt-2">
-              <CardPageVisits />
-            </div>
-            <div className="w-full xl:w-4/12 px-4 pt-2">
-              <CardSocialTraffic />
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+      )}
+    </div>
   );
 }
