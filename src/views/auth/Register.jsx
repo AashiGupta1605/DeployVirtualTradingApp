@@ -12,6 +12,9 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+
+
   useEffect(() => {
     if (initialValues) {
       formik.setValues(initialValues);
@@ -63,14 +66,19 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      const { confirmPassword, ...userData } = values;
+
+      const { confirmPassword, ...userData } = values; // Exclude confirmPassword
+    
 
       try {
         const url = initialValues
           ? `${BASE_API_URL}/user/users/${initialValues._id}`
           : `${BASE_API_URL}/user/auth/register`;
-        const method = initialValues ? "put" : "post";
-        
+
+    
+        const method = initialValues ? "PUT" : "POST";
+    
+
         const response = await fetch(url, {
           method,
           headers: { "Content-Type": "application/json" },
@@ -78,47 +86,78 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         });
 
         const data = await response.json();
-
+    
+        // 💥 Handle error response for existing but unverified user
         if (!response.ok) {
-          toast.error(data.message || "Something went wrong");
-          return;
-        }
 
-        if (response.ok) {
-          toast.success(`${initialValues ? "User updated" : "Registration"} successful!`);
-        
-          if (!initialValues) {
+          if (data?.status === "not_verified") {
+            toast.success("You are already registered but not verified. Sending OTP...");
+
+    
+            setUserEmail(userData.email);
+            setAlreadyRegistered(true); // used to show "Click here to generate OTP"
+            setShowOtpModal(true); // open OTP modal
+    
+            // 🔁 Optional: trigger resend OTP API again
+
             try {
-              const otpResponse = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
+              const otpRes = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: userData.email }),
               });
-        
-              const otpResult = await otpResponse.json();
-        
-              if (otpResponse.ok) {
-                toast.success("OTP sent to your email");
-                setUserEmail(userData.email);
-                setShowOtpModal(true);
+              const otpData = await otpRes.json();
+              if (otpRes.ok) {
+                toast.success("OTP resent to your email");
               } else {
-                toast.error(otpResult.message || "Failed to send OTP");
+                toast.error(otpData.message || "Failed to resend OTP");
               }
-            } catch (otpError) {
-              toast.error("Failed to send OTP. Please try again.");
+            } catch (otpErr) {
+              toast.error("Failed to resend OTP");
             }
-          } else {
-            resetForm();
-            setTimeout(() => {
-              navigate("/");
-              onClose();
-            }, 2000);
+    
+            return;
           }
+    
+          toast.error(data.message || "Something went wrong");
+          return;
         }
+
+    
+        // ✅ Successful registration or update
+        toast.success(`${initialValues ? "User updated" : "Registration successful!"}`);
+    
+        if (!initialValues) {
+          // 🔔 Send OTP for new user
+          const otpResponse = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: userData.email }),
+          });
+    
+          const otpResult = await otpResponse.json();
+    
+          if (otpResponse.ok) {
+            toast.success("OTP sent to your email");
+            setUserEmail(userData.email);
+            setShowOtpModal(true);
+          } else {
+            toast.error(otpResult.message || "Failed to send OTP");
+          }
+        } else {
+          resetForm();
+          setTimeout(() => {
+            navigate("/");
+            onClose();
+          }, 2000);
+        }
+
       } catch (error) {
+        console.error("Submit error:", error);
         toast.error("Something went wrong. Please try again.");
       }
     },
+    
   });
 
   return (
@@ -267,12 +306,42 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
              bg-white text-gray-900 
              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
              focus:outline-none transition-all duration-200"
+
+                placeholder="Enter organization type"
+              />
+              
+            </div>
+
+            <div className="col-span-2 flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => {
+                  formik.resetForm(); // Reset form fields
+                  onClose(); // Close the modal or form
+                }}
+                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+              >
+                {initialValues ? "Update User" : "Register User"}
+              </button>
+            </div>
+            {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}
+          </form>
+
+          
+
             placeholder="Enter organization type"
           />
           {formik.touched.orgtype && formik.errors.orgtype && (
             <p className="text-red-500 text-sm">{formik.errors.orgtype}</p>
           )}
         </div>
+
 
         <div className="col-span-2 flex justify-between items-center pt-4 border-t border-gray-100">
           <div className="text-sm text-gray-600">
@@ -309,18 +378,21 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div>
       </form>
 
-      {showOtpModal && (
-        <OTPModal
-          isOpen={showOtpModal}
-          onClose={() => setShowOtpModal(false)}
-          email={userEmail}
-          onVerified={() => {
-            formik.resetForm();
-            setShowOtpModal(false);
-            onClose();
-          }}
-        />
-      )}
+     {showOtpModal && (
+     <OTPModal
+     isOpen={showOtpModal}
+      onClose={() => setShowOtpModal(false)}
+      email={userEmail}
+      onVerified={() => {
+        formik.resetForm();
+       // toast.success("OTP Verified Successfully!");
+        setTimeout(() => {
+          setShowOtpModal(false); // Close OTP modal
+          onClose();              // Close Register modal
+        }, 2000);
+      }}
+  />
+)}
     </div>
   );
 };
