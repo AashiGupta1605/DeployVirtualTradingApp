@@ -6,7 +6,8 @@ import {
   FaRegCheckCircle,
   FaLock,
   FaRegClock,
-  FaRegFileAlt
+  FaRegFileAlt,
+  FaTimes
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -111,33 +112,44 @@ const StartScreenPopupModal = () => {
         className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden"
         style={{ maxHeight: "90vh" }}
       >
-        {/* Header */}
-        <div className="pt-4 pb-4 px-6 bg-white">
-          <div className="flex flex-col items-center">
-            <div className="mb-4 flex flex-col items-center">
+
+
+        {/* Header - Logo on left */}
+        <div className="pt-6 pb-4 px-6 bg-white border-b border-gray-100">
+          <div className="flex items-center gap-4">
+            {/* Logo on the left */}
+            <div className="flex-shrink-0">
               <img
                 src="https://media.licdn.com/dms/image/v2/C510BAQE1pPlwgZETKw/company-logo_200_200/company-logo_200_200/0/1630605647519/praedico_global_research_pvt_ltd_logo?e=2147483647&v=beta&t=8hAhEoZ7nj9gKxuh6iA-q10402A-rxdAP4GeUOAnFdQ"
                 alt="PGR Logo"
-                className="h-24 w-24 rounded-full bg-white p-2 shadow-md border-2 border-lightBlue-100"
+                className="h-20 w-20 rounded-full bg-white p-1 shadow-sm border border-gray-200"
               />
-              <h1 className="mt-3 text-2xl font-bold text-gray-800">
+            </div>
+            
+            {/* Text content on the right */}
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-gray-800">
                 Praedico Global Research
               </h1>
-              <h2 className="text-lg text-lightBlue-600 font-semibold mt-1">
+              <h2 className="text-lg text-lightBlue-600 font-semibold">
                 Virtual Trading Platform
               </h2>
-            </div>
-            <div className="w-full bg-lightBlue-600 text-white p-3 rounded-lg text-center">
-              <p className="font-medium text-sm">
-                Terms of Use Agreement - Please review carefully before proceeding
+              <p className="text-sm text-gray-500 mt-1">
+                Terms of Use Agreement
               </p>
             </div>
           </div>
+
+          {/* Warning banner below */}
+          <div className="w-full bg-lightBlue-600 text-white p-3 rounded-lg text-center mt-4 shadow-sm">
+            <p className="font-medium text-sm">
+              Please review these terms carefully before proceeding
+            </p>
+          </div>
         </div>
 
-        {/* Content Area - Increased space here */}
+        {/* Content Area */}
         <div className="p-6 overflow-y-auto flex-1" style={{ paddingBottom: '1.5rem' }}>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {guidelines.map((item, index) => (
               <motion.div 
@@ -167,8 +179,11 @@ const StartScreenPopupModal = () => {
             ))}
           </div>
 
-          <div className="p-5 bg-gray-50 rounded-lg border border-gray-200">
-            <h3 className="text-base font-semibold text-gray-800 mb-3">Additional Terms & Conditions</h3>
+          <div className="p-5 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+            <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
+              <FaRegFileAlt className="text-lightBlue-600" />
+              Additional Terms & Conditions
+            </h3>
             <div className="space-y-3 text-sm text-gray-600">
               <p>
                 By using this PGR platform, you acknowledge that all trading is simulated and that no actual securities transactions are being executed. You understand that the results shown are hypothetical and that hypothetical performance results have certain inherent limitations.
@@ -183,45 +198,44 @@ const StartScreenPopupModal = () => {
           </div>
         </div>
 
-        {/* Footer - Reduced space here */}
-<div className="p-3 border-t border-gray-200 bg-gray-50">
-  <div className="flex flex-col items-center space-y-2">
-    <div className="flex items-center w-full max-w-lg">
-      <input
-        type="checkbox"
-        id="acceptTerms"
-        checked={acceptedTerms}
-        onChange={() => setAcceptedTerms(!acceptedTerms)}
-        className="h-3.5 w-3.5 text-lightBlue-600 rounded focus:ring-blue-500"
-      />
-      <label htmlFor="acceptTerms" className="ml-1.5 text-[0.7rem] text-gray-700 leading-tight">
-   I have read, understood, and agree to all the terms and conditions above
-      </label>
-    </div>
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
+          <div className="flex flex-col items-center space-y-3">
+            <div className="flex items-center w-full max-w-lg">
+              <input
+                type="checkbox"
+                id="acceptTerms"
+                checked={acceptedTerms}
+                onChange={() => setAcceptedTerms(!acceptedTerms)}
+                className="h-4 w-4 text-lightBlue-600 rounded focus:ring-blue-500 border-gray-300"
+              />
+              <label htmlFor="acceptTerms" className="ml-2 text-sm text-gray-700">
+                I have read, understood, and agree to all the terms and conditions above
+              </label>
+            </div>
 
-    <div className="flex gap-2 w-full max-w-md">
+            <div className="flex gap-3 w-full max-w-md">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleAccept}
+                disabled={!acceptedTerms}
+                className={`px-4 py-2 rounded-lg transition-colors duration-300 font-medium shadow-sm hover:shadow-md flex items-center gap-2 justify-center flex-1 text-sm ${
+                  acceptedTerms 
+                    ? 'bg-lightBlue-600 text-white hover:from-lightBlue-700 hover:to-blue-700' 
+                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <FaRegCheckCircle />
+                Accept & Continue
+              </motion.button>
+            </div>
 
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        onClick={handleAccept}
-        disabled={!acceptedTerms}
-        className={`px-3 py-1.5 rounded-md transition-colors duration-300 font-medium shadow-xs hover:shadow-sm flex items-center gap-1 justify-center flex-1 text-xs ${
-          acceptedTerms 
-            ? 'bg-lightBlue-600 text-white hover:bg-lightBlue-700' 
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-      >
-        <FaRegCheckCircle className="text-xs" />
-        Accept & Continue
-      </motion.button>
-    </div>
-
-    <p className="text-[0.6rem] text-gray-500 text-center">
-      © {new Date().getFullYear()} Praedico Global Research Pvt Ltd.
-    </p>
-  </div>
-</div>
+            <p className="text-xs text-gray-500 text-center">
+              © {new Date().getFullYear()} Praedico Global Research Pvt Ltd. All rights reserved.
+            </p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

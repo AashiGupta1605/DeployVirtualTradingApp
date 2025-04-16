@@ -1,4 +1,3 @@
-// UnifiedLoginModal.js
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import UserLoginForm from "../auth/Login";
@@ -15,24 +14,20 @@ const ToggleSwitch = ({ isOn, onToggle, disabled = false }) => (
       disabled={disabled}
     />
     <div
-      className={`relative w-[330px] h-10 ml-4 rounded-full bg-white border-2 border-sky-600 transition-opacity ${
+      className={`relative w-[180px] md:w-[220px] h-9 rounded-full bg-white border-2 border-lightBlue-600 transition-opacity ${
         disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
       }`}
     >
       <div
-        className={`absolute h-9 w-[162px] rounded-full bg-lightBlue-600 transition-transform duration-300 ease-in-out ${
-          isOn ? "translate-x-[165px]" : "translate-x-0"
+        className={`absolute h-8 w-[86px] md:w-[106px] rounded-full bg-lightBlue-600 transition-transform duration-300 ease-in-out ${
+          isOn ? "translate-x-[90px] md:translate-x-[110px]" : "translate-x-0"
         }`}
       />
-      <div className="absolute inset-0 flex justify-between items-center px-6 text-sm font-semibold z-10">
-        <span className={`transition-colors duration-300 text-lg ${
-          isOn ? "text-lightBlue-600" : "text-white"
-        }`}>
+      <div className="absolute inset-0 flex justify-between items-center px-3 md:px-4 text-sm font-medium z-10">
+        <span className={`transition-colors duration-300 text-sm ${isOn ? "text-lightBlue-600" : "text-white"}`}>
           User
         </span>
-        <span className={`transition-colors duration-300 text-lg ${
-          isOn ? "text-white" : "text-lightBlue-600"
-        }`}>
+        <span className={`transition-colors duration-300 text-sm ${isOn ? "text-white" : "text-lightBlue-600"}`}>
           Organization
         </span>
       </div>
@@ -54,30 +49,30 @@ const UnifiedLoginModal = ({ isOpen, onClose, onOpenRegister }) => {
           onClose={() => setIsForgotPasswordOpen(false)}
         />
       ) : (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-          <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-          <div className="relative w-full max-w-2xl mx-auto my-6 bg-white rounded-2xl shadow-2xl border border-gray-100">
-            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <i className="fas fa-user text-white" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-800">Login</h2>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+          <div className="relative w-full max-w-md bg-white rounded-xl shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-lightBlue-600 rounded-lg flex items-center justify-center">
+                  <i className="fas fa-user text-white text-sm" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">Login</h2>
+              </div>
+              <div className="flex items-center">
                 <ToggleSwitch 
                   isOn={!isUser} 
                   onToggle={() => setIsUser(!isUser)} 
                 />
+                <button
+                  onClick={onClose}
+                  className="ml-2 p-1 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  <FaTimes className="text-gray-500 hover:text-gray-700" />
+                </button>
               </div>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-md transition-colors focus:outline-none"
-              >
-                <FaTimes className="text-gray-400 hover:text-gray-600 text-lg" />
-              </button>
             </div>
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               {isUser ? (
                 <UserLoginForm 
                   onClose={onClose}
