@@ -12,6 +12,8 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
   const [message, setMessage] = useState("");  // Feedback message state
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+
   useEffect(() => {
     // Reset form data when initialValues change (if editing an existing user)
     if (initialValues) {
@@ -68,71 +70,91 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
       orgtype: "",
     },
     validationSchema,
-    onSubmit: async (values , { resetForm }) => {
-      const { confirmPassword, ...userData } = values; // Exclude confirmPassword before sending data
-  
+    onSubmit: async (values, { resetForm }) => {
+      const { confirmPassword, ...userData } = values; // Exclude confirmPassword
+    
       try {
         const url = initialValues
           ? `${BASE_API_URL}/user/users/${initialValues._id}`
           : `${BASE_API_URL}/user/auth/register`;
-        const method = initialValues ? "put" : "post";
-        
-        console.log("Registering user with data:", userData);
-
-  
+    
+        const method = initialValues ? "PUT" : "POST";
+    
         const response = await fetch(url, {
           method,
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData), // Send data without confirmPassword
+          body: JSON.stringify(userData),
         });
-  
+    
         const data = await response.json();
-
+    
+        // 💥 Handle error response for existing but unverified user
         if (!response.ok) {
-          console.error("Registration failed:", data.message || data);
-          toast.error(data.message || "Something went wrong");
-          return;
-        }
+          if (data?.status === "not_verified") {
+            toast.success("You are already registered but not verified. Sending OTP...");
 
-        if (response.ok) {
-          toast.success(`${initialValues ? "User updated" : "Registration"} successful!`);
-        
-          if (!initialValues) {
-            // Trigger OTP API call
+    
+            setUserEmail(userData.email);
+            setAlreadyRegistered(true); // used to show "Click here to generate OTP"
+            setShowOtpModal(true); // open OTP modal
+    
+            // 🔁 Optional: trigger resend OTP API again
             try {
-              const otpResponse = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
+              const otpRes = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: userData.email }),
               });
-        
-              const otpResult = await otpResponse.json();
-        
-              if (otpResponse.ok) {
-                toast.success("OTP sent to your email");
-                setUserEmail(userData.email);
-                setShowOtpModal(true);
+              const otpData = await otpRes.json();
+              if (otpRes.ok) {
+                toast.success("OTP resent to your email");
               } else {
-                toast.error(otpResult.message || "Failed to send OTP");
+                toast.error(otpData.message || "Failed to resend OTP");
               }
-            } catch (otpError) {
-              toast.error("Failed to send OTP. Please try again.");
+            } catch (otpErr) {
+              toast.error("Failed to resend OTP");
             }
-          } else {
-            resetForm();
-            setTimeout(() => {
-              navigate("/");
-              onClose();
-            }, 2000);
+    
+            return;
           }
+    
+          toast.error(data.message || "Something went wrong");
+          return;
         }
-         else {
-          toast.error(data.message || `${initialValues ? "Update" : "Registration"} failed.`);
+    
+        // ✅ Successful registration or update
+        toast.success(`${initialValues ? "User updated" : "Registration successful!"}`);
+    
+        if (!initialValues) {
+          // 🔔 Send OTP for new user
+          const otpResponse = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: userData.email }),
+          });
+    
+          const otpResult = await otpResponse.json();
+    
+          if (otpResponse.ok) {
+            toast.success("OTP sent to your email");
+            setUserEmail(userData.email);
+            setShowOtpModal(true);
+          } else {
+            toast.error(otpResult.message || "Failed to send OTP");
+          }
+        } else {
+          resetForm();
+          setTimeout(() => {
+            navigate("/");
+            onClose();
+          }, 2000);
         }
       } catch (error) {
+        console.error("Submit error:", error);
         toast.error("Something went wrong. Please try again.");
       }
     },
+    
   });
   
 
@@ -332,8 +354,11 @@ const RegisterModal = ({ isOpen, onClose, initialValues }) => {
       email={userEmail}
       onVerified={() => {
         formik.resetForm();
-        setShowOtpModal(false);
-        onClose();
+       // toast.success("OTP Verified Successfully!");
+        setTimeout(() => {
+          setShowOtpModal(false); // Close OTP modal
+          onClose();              // Close Register modal
+        }, 2000);
       }}
   />
 )}
