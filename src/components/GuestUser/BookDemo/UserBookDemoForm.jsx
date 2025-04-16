@@ -11,12 +11,14 @@ const initialValues = {
   email: "",
   mobile: "",
   gender: "",
-  dob: null,
+  // dob: null,
+  dob:'',
   aboutHelp: "",
-  partOfOrganization: false,
-  organizationName: "",
-//   preferredDate: null,
-  preferredDay: "",
+  // partOfOrganization: false,
+  // organizationName: "",
+  // preferredDate: null,         //causes problem in reset
+  preferredDate: '',              //it is correct, even after it is a date field
+  // preferredDay: "",
   preferredTimeSlot: "",
 };
 
@@ -30,6 +32,12 @@ const today = new Date();
     today.getMonth(),
     today.getDate()
   );
+
+  const maxPreferredDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+6)
+    .toISOString()
+    .split('T')[0];
+
+  const minPreferredDate = today.toISOString().split('T')[0]
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -74,24 +82,27 @@ const validationSchema = Yup.object().shape({
     .max(minDOB, "You must be at least 18 years old"),
 
   aboutHelp: Yup.string()
-    .max(100, "Max 100 characters")
+    .max(160, "Max 160 characters")
     .required("Required, write your query"),
 
-  partOfOrganization: Yup.boolean(),
+  // partOfOrganization: Yup.boolean(),
 
-  organizationName: Yup.string().when("partOfOrganization", {
-    is: true,
-    then: (schema) => schema.required("Required, fill organization name"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  // organizationName: Yup.string().when("partOfOrganization", {
+  //   is: true,
+  //   then: (schema) => schema.required("Required, fill organization name"),
+  //   otherwise: (schema) => schema.notRequired(),
+  // }),
 
 //   preferredDate: Yup.date().nullable(),
 
-  preferredDay: Yup.string()
-    .oneOf(["Today", "Monday", "Tuesdy", "Wednesday", "Thursday", "Friday"], "Invalid day")
-    .required("Required, select any day."),
+  // preferredDay: Yup.string()
+  //   .oneOf(["Today", "Monday", "Tuesdy", "Wednesday", "Thursday", "Friday"], "Invalid day")
+  //   .required("Required, select any day."),
 
-//   preferredTimeSlot: Yup.string().required("Required, select any time slot."),
+  preferredDate: Yup.date()
+    .required("Select any date to get a Demo is Required.")
+    .min(minPreferredDate, "Date must be today or later.")
+    .max(maxPreferredDate, "You must select a date within the next 7 days."),
 
 preferredTimeSlot: Yup.string()
   .oneOf(["Any Time", "10:00 - 12:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 21:00"], "Select from available Time Slots"),
@@ -170,14 +181,6 @@ const UserBookDemoForm = ({ closeModal }) => {
                     placeholder="Enter your name"
                   />
 
-                  {/* Mobile */}
-                  <FormField
-                    required
-                    label="Mobile"
-                    name="mobile"
-                    placeholder="Enter 10-digit mobile"
-                  />
-
                   {/* DOB */}
                   <FormField
                     required
@@ -187,12 +190,20 @@ const UserBookDemoForm = ({ closeModal }) => {
                     inputProps={{ max: maxDOB }}
                   />
 
-                    {/* About Help */}
-                    <FormField
+                  {/* Gender */}
+                  <FormField required label="Gender" name="gender" as="select">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </FormField>
+
+                  {/* About Help */}
+                  <FormField
                     required
                     label="How can we help you?"
                     name="aboutHelp"
-                    placeholder="Describe your Query briefly, within 100 words"
+                    placeholder="Describe your Query briefly, within 160 words"
                     as="textarea"
                   />
 
@@ -201,29 +212,29 @@ const UserBookDemoForm = ({ closeModal }) => {
               <div className="px-4 py-2 rounded-xl flex-1 bg-white">
                 <div className="space-y-6">
 
-                {/* Email */}
-                <FormField
+                  {/* Email */}
+                  <FormField
                     required
                     type="email"
                     label="Email"
                     name="email"
-                    placeholder="Enter your email: user@gmail.com"
-                />
+                    placeholder="user@gmail.com"
+                  />
                 
-                {/* Gender */}
-                <FormField required label="Gender" name="gender" as="select">
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </FormField>
+                  {/* Mobile */}
+                  <FormField
+                    required
+                    label="Mobile"
+                    name="mobile"
+                    placeholder="e.g., 9876543210"
+                  />
 
                   {/* Part of Organization */}
-                  <div className="flex items-center">
+                  {/* <div className="flex items-center">
                     <Field
                       type="checkbox"
                       name="partOfOrganization"
-                      className="mr-3 w-5 h-5 rounded-full focus:outline-none focus:ring-0"
+                      className="mr-3 w-5 h-5 rounded-lg focus:outline-none focus:ring-0"
                     />
                     <label
                       htmlFor="partOfOrganization"
@@ -231,20 +242,20 @@ const UserBookDemoForm = ({ closeModal }) => {
                     >
                       Are you part of an organization?
                     </label>
-                  </div>
+                  </div> */}
 
                   {/* Organization Name (Conditional) */}
-                  {values.partOfOrganization && (
+                  {/* {values.partOfOrganization && (
                     <FormField
                       required
                       label="Organization Name"
                       name="organizationName"
                       placeholder="Enter organization name"
                     />
-                  )}
+                  )} */}
 
                   {/* Preferred Day */}
-                  <FormField
+                  {/* <FormField
                     required
                     label="Preferred Day"
                     name="preferredDay"
@@ -258,7 +269,16 @@ const UserBookDemoForm = ({ closeModal }) => {
                     <option value="Wednesday">Wednesday</option>
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
-                  </FormField>
+                  </FormField> */}
+
+                  {/* Preferred Date */}
+                  <FormField
+                    required
+                    type="date"
+                    label="Preferred Date"
+                    name="preferredDate"
+                    inputProps={{min: minPreferredDate, max: maxPreferredDate}}
+                  />
 
                   {/* Preferred Time Slot */}
                   <FormField
@@ -324,7 +344,7 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
         name={name}
         {...inputProps}
         as={as}
-        rows={as === "textarea" ? 7 : undefined}
+        rows={as === "textarea" ? 4 : undefined}
         className={`w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200 ${
           as === "textarea" ? "resize-none" : ""
         }`}

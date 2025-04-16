@@ -33,10 +33,10 @@ const ToggleSwitch = ({ isOn, onToggle, disabled }) => (
       {/* Labels */}
       <div className="absolute inset-0 flex justify-between items-center px-6 text-sm font-semibold z-10">
         <span className={`transition-colors duration-300 text-lg ${isOn ? "text-lightBlue-600" : "text-white"}`}>
-          User
+          Organization
         </span>
         <span className={`transition-colors duration-300 text-lg ${isOn ? "text-white" : "text-lightBlue-600"}`}>
-          Organization
+          User &nbsp;&nbsp;&nbsp;
         </span>
       </div>
     </div>
@@ -100,7 +100,7 @@ const OrganizationForm = () => (
 
         {/* Body Section */}
         <div>
-          {isUser ? <UserForm /> : <OrganizationForm />}
+          {!isUser ? <UserForm /> : <OrganizationForm />}
         </div>
       </div>
     </div>

@@ -5,81 +5,282 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
-import { ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
+import { Filter, ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
+import { IoIosArrowUp } from "react-icons/io";
+import { FaTimes } from "react-icons/fa";
 import { toast } from 'react-hot-toast';
+
+const TimeSlot_Colors = {
+  "10:00 - 12:00": "bg-blue-100 text-blue-800",
+  "12:00 - 14:00": "bg-cyan-100 text-cyan-800",
+  "14:00 - 16:00": "bg-purple-100 text-purple-800",
+  "16:00 - 18:00": "bg-yellow-100 text-yellow-800",
+  "18:00 - 20:00": "bg-orange-100 text-orange-800",
+  "Any Time": "bg-green-100 text-green-800 pr-4 pl-4",
+}
+const Gender_Colors = {
+  "Male":"bg-blue-100 text-blue-800 pr-4 pl-3",
+  "Female":"bg-red-100 text-red-800",
+  "Other":"bg-purple-100 text-purple-800 pr-4 pl-2",
+}
+const Status_Colors = {
+  true:"bg-green-100 text-green-800",
+  false:"bg-yellow-100 text-yellow-800 pr-4 pl-4",
+}
+const TitleCell = ({ query }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const shouldTruncate = query.length > 60;
+  const displayText = isExpanded
+    ? query
+    : query.slice(0, 60) + (shouldTruncate ? "..." : "");
+
+  return (
+    <div className="flex flex-col">
+      {/* <span><i className="fas fa-info-circle text-gray-400"/>&nbsp;{displayText}</span> */}
+      <span>{displayText}</span>
+      {shouldTruncate && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-blue-500 text-xs hover:underline mt-1 self-start focus:outline-none"
+        >
+          {isExpanded ? "Show less" : "Show more"}
+        </button>
+      )}
+    </div>
+  );
+};
+
+// const ToggleButton = ({ id, isResolved, refreshData }) => {
+
+//     const handleClick = async () => {
+//         if (isResolved) {
+//             toast.success('This request is already resolved.');
+//             return;
+//         }
+  
+//       try {
+//         const res = await axios.put(`${BASE_API_URL}/admin/demo/updateDemobyUser/${id}`);
+//         console.log("User Booked Demo Status: ", res.data);
+//         if (res?.status===201) {
+//             toast.success(res?.data?.message);
+//             refreshData()
+//         }
+//         else if (res?.status === 409 || res?.status === 400) {
+//             toast(res?.data?.message, {
+//                 icon: '⚠️',
+//             })
+//         }
+//         else if (res?.status === 500) {
+//             toast(res?.data?.message, {
+//                 icon: '🛑',
+//             })
+//         }
+//       } 
+//       catch (error) {
+//         console.error("Error resolving demo request:", error);
+//         if (error.response) {
+//             const { status, data } = error.response;
+//             if (status === 409 || status===400) {
+//                 toast(data?.message, {
+//                     icon: '⚠️',
+//                 });
+//             } 
+//             else if (status === 500) {
+//                 toast(data?.message, {
+//                     icon: '🛑',
+//                 })
+//             } 
+//             else {
+//                 toast.error(data?.message || "Unknown error, please try again.");
+//             }
+//         } 
+//         else {
+//             toast.error("An internal server error occurred!");
+//             refreshData()
+//         }  
+//         throw error; 
+//       }
+//     };
+  
+//     return (
+//       <button
+//         onClick={handleClick}
+//         disabled={isResolved}
+//         className={`px-3 py-1 rounded text-white text-sm font-medium transition duration-300 ${
+//           isResolved ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+//         }`}
+//       >
+//         {isResolved ? 'Resolved' : 'Mark as Resolved'}
+//       </button>
+//     );
+// };
 
 const ToggleButton = ({ id, isResolved, refreshData }) => {
 
-    useEffect(() => {
-        refreshData(); // initial fetch
-    }, []);
-
-    const handleClick = async () => {
-        if (isResolved) {
-            toast.success('This request is already resolved.');
-            return;
-        }
-  
-      try {
-        const res = await axios.put(`${BASE_API_URL}/admin/demo/updateDemobyUser/${id}`);
-        console.log("User Booked Demo Status: ", res.data);
-        if (res?.status===201) {
-            toast.success(res?.data?.message);
-            refreshData()
-        }
-        else if (res?.status === 409 || res?.status === 400) {
-            toast(res?.data?.message, {
-                icon: '⚠️',
-            })
-        }
-        else if (res?.status === 500) {
-            toast(res?.data?.message, {
-                icon: '🛑',
-            })
-        }
-      } 
-      catch (error) {
-        console.error("Error resolving demo request:", error);
-        if (error.response) {
-            const { status, data } = error.response;
-            if (status === 409 || status===400) {
-                toast(data?.message, {
-                    icon: '⚠️',
-                });
-            } 
-            else if (status === 500) {
-                toast(data?.message, {
-                    icon: '🛑',
-                })
-            } 
-            else {
-                toast.error(data?.message || "Unknown error, please try again.");
-            }
-        } 
-        else {
-            toast.error("An internal server error occurred!");
-        }  
-        throw error; 
+  const handleClick = async () => {
+      if (isResolved) {
+          toast('This request is already resolved.', {
+            icon:'⚠️',
+          });
+          return;
       }
-    };
-  
-    return (
-      <button
-        onClick={handleClick}
-        disabled={isResolved}
-        className={`px-3 py-1 rounded text-white text-sm font-medium transition duration-300 ${
-          isResolved ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-        }`}
-      >
-        {isResolved ? 'Resolved' : 'Mark as Resolved'}
-      </button>
-    );
+
+    try {
+      const res = await axios.put(`${BASE_API_URL}/admin/demo/updateDemobyUser/${id}`);
+      console.log("User Booked Demo Status: ", res.data);
+      if (res?.status===201) {
+          toast.success(res?.data?.message);
+          refreshData()
+      }
+      else if (res?.status === 409 || res?.status === 400) {
+          toast(res?.data?.message, {
+              icon: '⚠️',
+          })
+      }
+      else if (res?.status === 500) {
+          toast(res?.data?.message, {
+              icon: '🛑',
+          })
+      }
+    } 
+    catch (error) {
+      console.error("Error resolving demo request:", error);
+      if (error.response) {
+          const { status, data } = error.response;
+          if (status === 409 || status===400) {
+              toast(data?.message, {
+                  icon: '⚠️',
+              });
+          } 
+          else if (status === 500) {
+              toast(data?.message, {
+                  icon: '🛑',
+              })
+          } 
+          else {
+              toast.error(data?.message || "Unknown error, please try again.");
+          }
+      } 
+      else {
+          toast.error("An internal server error occurred!");
+          refreshData()
+      }  
+      throw error; 
+    }
+  };
+
+  return (
+    <label className="relative inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="sr-only"
+      checked={isResolved}
+      onChange={handleClick}
+      // disabled={isResolved}
+    />
+
+    {/* Track */}
+    <div
+      className={`
+        relative w-13 h-6 rounded-full bg-white border-2 transition-opacity
+        ${isResolved ? "bg-emerald-500 border-emerald-700 cursor-not-allowed" : "bg-red-500 border-red-700"}
+      `} //opacity-70
+    >
+      {/* Sliding Toggle */}
+      <div
+        className={`
+          absolute h-4 w-5 rounded-full bg-white transition-transform duration-300 ease-in-out
+          ${isResolved ? "translate-x-6" : "translate-x-0"}
+        `}  style={{ top: '2px', left: '2px' }}
+      />
+    </div>
+  </label>
+  );
 };
 
 const ShowBookDemobyUser = ({ sidebarExpanded }) => {
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [filterCount, setFilterCount] = useState(0);
+  const [appliedFilters, setAppliedFilters] = useState({});
+
   const [data, setData] = useState([]);
   const [err, setErr] = useState("");
+
   const [search, setSearch] = useState("");
+  const [field, setField] = useState("name")
+
+  const [timeSlot, setTimeSlot]=useState("all")
+  const [status, setStatus]=useState("all")
+  const [gender, setGender]=useState("all")
+
+  useEffect(() => {
+    let count = 0;
+    let filters = {};
+  
+    if (timeSlot !== "all") {
+      count++;
+      filters["TimeSlot"] = timeSlot;
+    }
+    if (status !== "all") {
+      count++;
+      if(status==="true")
+        filters["Status"] = "Completed";
+      if(status==="false")
+        filters["Status"] = "Pending";
+    }
+    if (gender !== "all") {
+      count++;
+      filters["Gender"] = gender;
+    }
+    if (search.trim() !== "") {
+      count++;
+      filters["Search"] = search;
+    }
+    setFilterCount(count);
+    setAppliedFilters(filters);
+
+  }, [search, timeSlot, status, gender]);
+  
+  const removeFilter = (key) => {
+    setAppliedFilters((prev) => {
+      const updatedFilters = { ...prev }; // Copy the previous state
+      delete updatedFilters[key]; // Remove the specific filter
+      return updatedFilters; // Update the state
+    });
+  
+    setFilterCount((prev) => Math.max(prev - 1, 0)); // Decrease filter count safely
+  
+      // Reset the corresponding state variable
+    switch (key) {
+      case "TimeSlot":
+        setTimeSlot("all");
+        break;
+      case "Status":
+        setStatus("all");
+          break;
+      case "Gender":
+        setGender("all");
+        break;
+      case "Search":
+        setSearch("")
+        setField("name")
+        break;
+      default:
+        break;
+    }
+  };
+  
+  const clearAllFilters = () => {
+    setAppliedFilters({});  // Reset all filters
+    setTimeSlot("all")
+    setStatus("all")
+    setGender("all")
+    setSearch("")
+    setField("name")
+    setFilterCount(0);  // Reset filter count
+  };
 
   const fetchBookDemobyUsersData = async () => {
     try {
@@ -87,6 +288,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
 
       const response = await axios.get(
         `${BASE_API_URL}/admin/demo/getDemobyUser`
+        // `${BASE_API_URL}/admin/demo/getDemobyUser/${timeSlot}/${status}/${gender}/${field}/${searchQuery}`
       );
 
       console.log("Book Demo Data: ", response.data);
@@ -108,12 +310,13 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
       try {
         fetchBookDemobyUsersData();
         setErr("");
-      } catch (error) {
+      } 
+      catch (error) {
         setErr(error.response?.data?.message || "Something went wrong.");
       }
     };
     fetchData();
-  }, []);
+  }, [timeSlot, status, gender, search]);
 
   const refreshData = () => {
     fetchBookDemobyUsersData();
@@ -151,18 +354,65 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                 <h2 className="text-xl font-bold text-gray-800">
                   Manage User's Demo Booking
                 </h2>
+                <p className="-ml-2 max-w-38 rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
+                  Total Bookings: {data.length}
+                </p>
               </div>
 
-              <div className="flex items-center gap-4">
-                <h6 className="text-base font-semibold text-gray-400">
-                  Total Bookings: {data.length}
-                </h6>
+              <div className="flex items-center gap-3 -mr-2">
+
+              {/* Filter Icon */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`relative flex items-center gap-8 px-2 py-2 h-[40px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+                            ${showFilters? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
+                          `}
+              >
+                {/* Filter Icon */}
+                <div className="relative">
+                  <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
+
+                  {/* Filter Count - Positioned Bottom Right */}
+                  {filterCount > 0 && (
+                    <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                      {filterCount}
+                    </span>
+                  )}
+                </div>
+                {/* Arrow Icon */}
+                <IoIosArrowUp
+                  className={`pl-[2px] -pr-[2px] text-gray-500 text-lg transition-transform duration-200 ${
+                    showFilters ? "rotate-0" : "rotate-180"
+                  }`}
+                />
+              </button>
 
                 {/* Selector Box for field selection */}
+                <div className="flex flex-col relative">
+                  <div className="relative group">
+                    <select
+                    name="SelectField"
+                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-35 pr-8"
+                    value={field}
+                    onChange={(e) => setField(e.target.value || "")}
+                    >
+                      <option disabled>Select</option>
+                      <option value="name">Name</option>
+                      <option value="email">Email</option>
+                      <option value="mobile">Mobile</option>
+                      <option value="demoRequestDate">Demo Booked On</option>
+                      <option value="demoResolveDate">Demo Completed On</option>
+                      <option value="preferredDate">Preferred Date</option>
+                      {/* <option value="preferredTimeSlot">Prefer Time-Slot</option>
+                      <option value="isResolved">Status</option>
+                      <option value="gender">Gender</option> */}
+                    </select>
+                  </div>
+                </div>
 
                 {/* Search bar */}
                 <div className="relative">
-                  <div className="relative w-[270px]">
+                  <div className="relative w-[240px]">
                     {/* Search Icon */}
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
@@ -175,7 +425,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                       placeholder="Search..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value || "")}
-                      className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[36px] focus:outline-none focus:shadow-md focus:border-black"
+                      className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black"
                     />
                   </div>
                 </div>
@@ -189,60 +439,165 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                 </button>
               </div>
             </div>
-          </div>
+
+          {/* Filters Section (Visible only when showFilters is true) */}
+          {!err && showFilters && (
+            <div className="flex justify-end items-center mt-5">
+              <div className="flex gap-4 mr-auto">
+
+                {/* Filter By Time Slot */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Time Slot
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="TimeSlot"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      value={timeSlot}
+                      onChange={(e) =>
+                        setTimeSlot(e.target.value || "all")
+                      }
+                    >
+                      <option disabled>Time Slot</option>
+                      <option value="all">All</option>
+                      <option value="Any Time">Any Time</option>
+                      <option value="10:00 - 12:00">10:00 - 12:00</option>
+                      <option value="12:00 - 14:00">12:00 - 14:00</option>
+                      <option value="14:00 - 16:00">14:00 - 16:00</option>
+                      <option value="16:00 - 18:00">16:00 - 18:00</option>
+                      <option value="18:00 - 20:00">18:00 - 20:00</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Status Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Status
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="Status"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value || "all")}
+                    >
+                      <option disabled>Status</option>
+                      <option value="all">All</option>
+                      <option value="true">Completed</option>
+                      <option value="false">Pending</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Gender Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Gender
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="Gender"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value || "all")}
+                    >
+                      <option disabled>Gender</option>
+                      <option value="all">All</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {filterCount > 0 && (
+            <div className="mt-2 -mb-1 -ml-1 -mr-1 p-2 bg-gray-100 rounded-lg shadow-md flex justify-between items-center">
+              <div className="flex flex-wrap gap-2 flex items-center">
+                {Object.entries(appliedFilters).map(([key, value]) => (
+                  <span
+                    key={key}
+                    className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold"
+                  >
+                    {key}: {value}
+                    <button
+                      onClick={() => removeFilter(key)}
+                      className="ml-6 mr-1 mt-1 focus:outline-none bg-transparent"
+                    >
+                      <FaTimes className="text-blue-300 hover:text-blue-800 text-sm" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={clearAllFilters}
+                className="flex items-center gap-2 px-4 py-[6px] bg-gray-200 text-gray-700 text-sm font-semibold rounded-full transition-all duration-200 hover:bg-gray-500 hover:text-white shadow-sm"
+              >
+              Clear All &nbsp;&nbsp;&nbsp;<FaTimes className="text-gray-500 hover:text-gray-700 text-base" />
+              </button>
+            </div>
+          )}
+        </div>
 
           {/* List of Bookings */}
-          <div className="flex h-[59vh]">
+          <div  className={`flex 
+          ${
+            showFilters
+            ? filterCount > 0 ? "h-[39vh]" : "h-[47vh]"
+            : filterCount > 0 ? "h-[50vh]" : "h-[59vh]"
+          }`}>
             <div
               className={`inset-0 ${
                 data.length > 0 ? "overflow-y-auto" : ""
               } w-full max-h-[500px] rounded-lg`}
             >
               <table
-                className={`inset-0 min-w-full table-fixed ${
+                className={`-ml-5 -mr-14 inset-0 min-w-full table-fixed ${
                   data.length > 0 ? "divide-y" : ""
                 } divide-gray-200 border-collapse bg-white`}
               >
                 <thead className="bg-gray-50 sticky top-0 z-10">
                   <tr>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Email
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Mobile
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="min-w-[280px] max-w-[280px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Query
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Gender
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="min-w-[190px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Date of Birth
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Organization Name
+                    <th className="min-w-[200px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Preferred Date
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Preferred Day
-                    </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="min-w-[240px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Preferred Time-Slot
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Demo Booking Date
+                    <th className="min-w-[220px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Demo Booked On
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Resolved Date
+                    <th className="min-w-[240px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Demo Completed On
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      &nbsp;&nbsp;Status
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Action
+                    <th className="min-w-[220px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Demo Completed
                     </th>
                   </tr>
                 </thead>
@@ -250,7 +605,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                 {err && (
                   <tbody className="bg-white divide-y divide-gray-200">
                     <tr>
-                      <td colSpan="13">
+                      <td colSpan="7">
                         <div className="mt-9 ml-15 flex justify-center items-center min-h-[180px]">
                           <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg p-6">
                             <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
@@ -291,7 +646,12 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                             key={index}
                             className="hover:bg-gray-50 transition-colors"
                           >
-                            <td className="cursor-pointer px-13 py-4 whitespace-nowrap min-w-[100px] text-sm font-medium text-gray-900">
+                            <td className="px-12 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                              {/* <span className={`px-1 py-1 text-xs font-semibold rounded-full ${data.isResolved ? "border border-green-300 bg-green-100 text-green-800" : "border border-yellow-300 bg-yellow-100 text-yellow-800"}`}>
+                                {data.isResolved ? "✔" : "✖"}
+                              </span> */}
+                              {data.isResolved ? <i className="fas fa-check-circle text-lg" style={{ color: 'green' }}/> : <i className="fas fa-times-circle text-lg" style={{ color: 'red' }}/>}
+                              &nbsp;&nbsp;&nbsp;
                               {data.name
                                 .split(" ")
                                 .map(
@@ -302,43 +662,57 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                                 .join(" ")}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.email}
+                            <td className="px-12 py-4 whitespace-nowrap text-sm">
+                              {/* <a href={`mailto:${data.email}`} className="text-blue-500 hover:underline">
+                                <i className="fas fa-envelope mt-2"/>&nbsp;
+                                {data.email}
+                              </a> */}
+                              <a
+                              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${data.email}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:underline"
+                              >
+                                <i className="fas fa-envelope mt-2"/>&nbsp;
+                                {data.email}
+                              </a>
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.mobile}
+                            <td className="px-12 py-4 whitespace-nowrap text-sm text-gray-600">
+                              <a href={`tel:${data.mobile}`} className="hover:underline">
+                                <i className="fas fa-phone-alt -scale-x-100 text-gray-400"/>&nbsp;
+                                {data.mobile}
+                              </a>
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.aboutHelp}
+                            <td className="min-w-[280px] max-w-[280px] px-12 py-4 text-sm text-gray-500 break-words">
+                              <TitleCell query={data.aboutHelp} />
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.gender}
+                            <td className="text-center px-12 py-4 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${Gender_Colors[data.gender]}`}>{ data.gender }</span>
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
+                            <td className="text-center min-w-[190px] px-12 py-4 whitespace-nowrap text-sm text-gray-500 ">
                               {new Date(data.dob).toLocaleDateString()}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.organizationName ? data.organizationName : "No Organization"}
+                            <td className="text-center min-w-[200px] px-12 py-4 whitespace-nowrap text-sm text-gray-600 ">
+                              {new Date(data.preferredDate).toLocaleDateString()}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.preferredDay}
+                            <td className="text-center min-w-[240px] px-12 py-4 whitespace-nowrap text-sm text-gray-400 ">
+                              {data.preferredTimeSlot 
+                                ? <span className={`px-2 py-1 text-xs font-semibold rounded-full ${TimeSlot_Colors[data.preferredTimeSlot]}`}>{ data.preferredTimeSlot }</span>
+                                : "No TimeSlot Choosen"
+                              }
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.preferredTimeSlot ? data.preferredTimeSlot : "No TimeSlot Choosen"}
-                            </td>
-
-                            <td className="px-13 py-4 whitespace-nowrap min-w-[100px] text-sm text-gray-500">
+                            <td className="text-center min-w-[220px] px-12 py-4 whitespace-nowrap text-sm text-gray-600">
                               {new Date(data.demoRequestDate).toLocaleDateString()}
                             </td>
 
-                            <td className="pl-10 px-13 py-4 whitespace-nowrap min-w-[100px] text-sm text-gray-500">
+                            <td className="text-center min-w-[240px] px-12 py-4 whitespace-nowrap text-sm text-gray-500">
                               {data.demoResolveDate ? (
                                 <span className="ml-2">
                                   {new Date(
@@ -346,19 +720,20 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                                   ).toLocaleDateString()}
                                 </span>
                               ) : (
-                                <span className="ml-6 text-gray-400">N/A</span>
+                                <span className="text-gray-400">N/A</span>
                               )}
                             </td>
 
-                            <td className="px-13 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {data.isResolved ? "Resolved" : "Pending"}
+                            <td className="text-center px-12 py-4 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${Status_Colors[data.isResolved]}`}>
+                                {data.isResolved ? "Completed" : "Pending"}
+                              </span>
                             </td>
 
-                            <td className="px-13 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="min-w-[220px] text-center px-12 py-4 whitespace-nowrap">
                             <ToggleButton
                                 id={data._id}
                                 isResolved={data.isResolved}
-                                // onResolved={handleResolved}
                                 refreshData={refreshData}
                             />
                             </td>
@@ -368,7 +743,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                     : !err && (
                         <tr>
                           <td
-                            colSpan="13"
+                            colSpan="7"
                             className="p-6 text-center text-gray-500 text-base font-medium bg-gray-50 rounded-md mt-4"
                           >
                             <div className="pt-25 pb-30 flex flex-col items-center space-y-2">
@@ -382,6 +757,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
               </table>
             </div>
           </div>
+          
         </div>
       </div>
 
@@ -470,5 +846,12 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
 ShowBookDemobyUser.propTypes = {
   sidebarExpanded: PropTypes.bool.isRequired,
 };
-
+TitleCell.propTypes = {
+  query: PropTypes.string.isRequired,
+};
+ToggleButton.propTypes = {
+  id: PropTypes.instanceOf(Object).isRequired,
+  isResolved: PropTypes.bool.isRequired,
+  refreshData: PropTypes.func.isRequired,
+}
 export default ShowBookDemobyUser;
