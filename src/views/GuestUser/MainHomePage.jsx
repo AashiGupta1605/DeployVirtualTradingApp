@@ -40,7 +40,7 @@ const MainHomePage = () => {
   }, [controls, heroInView]);
 
   // WhatsApp group link (replace with your actual WhatsApp group invite link)
-  const whatsappGroupLink = "https://chat.whatsapp.com/GCNCQb6Ul4l5FRwlT5y3Tb";
+  // const whatsappGroupLink = "https://chat.whatsapp.com/GCNCQb6Ul4l5FRwlT5y3Tb";
 
   // Animation variants
   const containerVariants = {
@@ -136,7 +136,7 @@ const MainHomePage = () => {
       transition={{ duration: 0.5 }}
       className="snap-y snap-mandatory h-screen overflow-y-scroll relative"
     >
-      {/* WhatsApp Floating Button */}
+      {/* WhatsApp Floating Button
       <motion.a
         href={whatsappGroupLink}
         target="_blank"
@@ -152,7 +152,7 @@ const MainHomePage = () => {
           <FaWhatsapp className="w-8 h-8" />
           <span className="sr-only">Join our WhatsApp group</span>
         </div>
-      </motion.a>
+      </motion.a> */}
 
       {/* Hero Section */}
       <section ref={heroRef} className="snap-start -mt-32 h-screen w-full relative bg-gradient-to-b from-blue-50 to-white">

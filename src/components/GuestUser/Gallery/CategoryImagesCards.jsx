@@ -1,102 +1,152 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { FolderOpen } from "lucide-react";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-
+import { 
+  FolderOpen, 
+  ChevronLeft, 
+  ChevronRight, 
+  Image as ImageIcon,
+  Clock,
+  Expand,
+  X
+} from "lucide-react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
+import { motion } from "framer-motion";
+import Modal from 'react-modal';
 
-const Card = ({ image, title, description, postDate }) => {
-    return (
-      <div className="w-[370px] mr-3 min-h-[150px] rounded-2xl overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.5)] bg-white p-3 flex flex-col justify-between relative">
-        {/* Image container with fallback */}
-        {image ? (
+Modal.setAppElement('#root');
+
+const ImageModal = ({ isOpen, onClose, image, title }) => {
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      className="modal"
+      overlayClassName="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+      contentLabel="Image Modal"
+    >
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="relative w-full max-w-4xl"
+      >
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-all duration-200 z-50"
+          aria-label="Close modal"
+        >
+          <X size={24} />
+        </button>
+        <div className="bg-white rounded-lg overflow-hidden shadow-2xl">
           <img
-            className="w-full h-48 object-cover rounded-xl"
             src={image}
             alt={title}
+            className="w-full max-h-[80vh] object-contain"
           />
-        ) : (
-          <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded-xl text-gray-400 text-sm">
-            No Image
-          </div>
-        )}
-
-        {postDate && (
-            <p className="max-w-34 rounded-2xl pt-1 pb-1 pl-3 text-xs bg-gray-100 text-gray-600 mt-2">
-              Posted on: {new Date(postDate).toLocaleDateString()}
-            </p>
-        )}
-  
-        <div className="p-4 flex flex-col justify-between flex-grow">
-          {title ? 
-          <h2 className="text-base font-semibold text-gray-800">{title.charAt(0).toUpperCase() + title.slice(1)}</h2> 
-          : <div className="text-base font-semibold text-gray-400"> No Title </div>}
-  
-          {/* {description ?
-          <div className="h-24 overflow-y-auto text-gray-600 mt-2 text-sm pr-1"> {description.charAt(0).toUpperCase() + title.slice(1)} </div>
-          : <div className="h-24 overflow-y-auto text-gray-400 mt-2 text-base pr-1"> No description.... </div>} */}
-  
-          {/* {postDate && (
-            <p className="max-w-34 ml-45 -mb-4 rounded-2xl pt-1 pb-1 pl-3 text-xs bg-gray-100 text-gray-600 mt-4">
-              Posted on: {new Date(postDate).toLocaleDateString()}
-            </p>
-          )} */}
+          {title && (
+            <div className="p-4 bg-white border-t border-gray-100">
+              <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+            </div>
+          )}
         </div>
-      </div>
-    );
+      </motion.div>
+    </Modal>
+  );
 };
 
+const Card = ({ image, title, postDate, onClick }) => {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ 
+        y: -5,
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{ scale: 0.98 }}
+      className="relative group cursor-pointer rounded-xl overflow-hidden shadow-md bg-white transition-all duration-300 hover:shadow-lg"
+      onClick={onClick}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+        {image ? (
+          <motion.img
+            className="w-full h-full object-cover"
+            src={image}
+            alt={title}
+            loading="lazy"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            whileHover={{ scale: 1.05 }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-300">
+            <ImageIcon size={48} />
+          </div>
+        )}
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+          <motion.div 
+            className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <h3 className="font-semibold text-white text-lg line-clamp-2">
+              {title || "Untitled"}
+            </h3>
+            {postDate && (
+              <div className="flex items-center text-white/80 text-sm mt-2">
+                <Clock className="mr-1.5" size={16} />
+                <span>{new Date(postDate).toLocaleDateString()}</span>
+              </div>
+            )}
+          </motion.div>
+        </div>
+        
+        <motion.div 
+          className="absolute top-3 right-3 p-2 bg-black/50 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/60"
+          whileHover={{ scale: 1.1 }}
+        >
+          <Expand size={18} />
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
 
 const CategoryImagesCards = ({ categoryName }) => {
-
   const [galleryItems, setGalleryItems] = useState([]);
-
   const [err, setErr] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  
+  const itemsPerPage = 3;
 
   const fetchGalleryItems = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         `${BASE_API_URL}/admin/gallery/getGalleryItems/${categoryName}`
       );
-      setGalleryItems(response.data.ImageData);
-      console.log("Gallery Items: ", response.data);
-    } 
-    catch (error) {
-      if (error.response) {
-        setErr(error.response?.data?.message);
-      } 
-      else {
-        setErr("Something went wrong.");
-      }
-      throw error;
+      setGalleryItems(response.data.ImageData || []);
+      setErr("");
+    } catch (error) {
+      setErr(error.response?.data?.message || "Failed to load gallery items");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        fetchGalleryItems();
-        setErr("");
-      } 
-      catch (error) {
-        setErr(error.response?.data?.message || "Something went wrong.");
-      }
-    };
-    fetchData();
-  }, []);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 3;
-
-  useEffect(() => {
+    fetchGalleryItems();
     setCurrentIndex(0);
-  }, [galleryItems]);
+  }, [categoryName]);
 
-  const visibleFeedbacks = galleryItems.slice(
-    currentIndex,
-    currentIndex + itemsPerPage
-  );
+  const visibleItems = galleryItems.slice(currentIndex, currentIndex + itemsPerPage);
+  const totalPages = Math.ceil(galleryItems.length / itemsPerPage);
+  const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
 
   const handleNext = () => {
     if (currentIndex + itemsPerPage < galleryItems.length) {
@@ -110,113 +160,132 @@ const CategoryImagesCards = ({ categoryName }) => {
     }
   };
 
+  const openModal = (image, title) => {
+    setSelectedImage({ image, title });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedImage(null);
+  };
+
+  const capitalizeWords = (str) => {
+    return str.split(" ").map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(" ");
+  };
+
   return (
-    <>
-      <div>
-        <section className="mt-4 mb-8 bg-white border border-gray-200 mx-6 p-4 rounded-lg relative">
-          {/* Previous Button */}
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="absolute -left-1 mr-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
-          >
-            <BiChevronLeft />
-          </button>
-
-          {/* Flex container for headings and button */}
-          <div className="flex justify-between items-center mb-5">
-            {/* Left-most heading */}
-            <div className="flex gap-3 items-center">
-              <i className="fas fa-images text-blue-500 text-[20px] mt-[5px]"></i>
-              <h3 className="text-lg font-bold text-gray-700">
-                {/* {galleryItems.map((data) => (data.categoryName))} */}
-                {categoryName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ")}
-              </h3>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="bg-white -mt-10 rounded-2xl shadow-lg p-6 border border-gray-100 relative z-20"
+    >
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div className="flex items-center space-x-4">
+          <div className="p-3 bg-lightBlue-100 rounded-lg">
+            <FolderOpen className="text-lightBlue-600" size={22} />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-800">
+              {capitalizeWords(categoryName)}
+            </h3>
+            <p className="text-gray-500 text-sm">
+              {galleryItems.length} {galleryItems.length === 1 ? 'memory' : 'memories'}
+            </p>
+          </div>
+        </div>
+        
+        {galleryItems.length > 0 && (
+          <div className="flex items-center space-x-4">
+            <div className="text-sm text-gray-500 font-medium">
+              Page {currentPage} of {totalPages}
             </div>
-            {/* <div className="bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-full shadow-sm">
-              Total Images: {galleryItems.length}
-            </div> */}
+            <div className="flex space-x-2">
+              <motion.button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className={`p-2 rounded-lg ${currentIndex === 0 ? 'bg-gray-100 text-gray-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ChevronLeft size={18} />
+              </motion.button>
+              <motion.button
+                onClick={handleNext}
+                disabled={currentIndex + itemsPerPage >= galleryItems.length}
+                className={`p-2 rounded-lg ${currentIndex + itemsPerPage >= galleryItems.length ? 'bg-gray-100 text-gray-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ChevronRight size={18} />
+              </motion.button>
+            </div>
           </div>
-
-          {/* {err && <p className="text-red-500">{err}</p>} */}
-
-          <div className="flex justify-center gap-6">
-            {err && (
-              <div className="flex justify-center items-center min-h-[200px]">
-                <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg border border-gray-200 p-6">
-                  <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
-                    <i className="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
-                  </div>
-                  <b className="text-lg text-gray-800 mt-4">
-                    Oops! Something went wrong.
-                  </b>
-                  <p className="text-gray-600 text-sm text-center mt-2">
-                    We couldn’t load the content. Please try again later.
-                  </p>
-                  <p className="text-red-600 font-medium mt-2">{err}</p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-md shadow-md hover:bg-red-600 transition"
-                  >
-                    Retry
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {galleryItems.length > 0 ? (
-              <>
-                {visibleFeedbacks.map((card) => (
-                  <Card
-                    key={card._id}
-                    image={card.photo}
-                    title={card.title}
-                    description={card.desc}
-                    postDate={
-                      card.updatedDate == null
-                        ? card.createdDate
-                        : card.updatedDate
-                    }
-                  />
-                ))}
-              </>
-            ) : (
-              !err && (
-                <div className="pt-6 pb-6 flex flex-col items-center space-y-2">
-                  <span>
-                    <FolderOpen className="w-10 h-10 text-gray-400" />
-                  </span>
-                  <h4 className="text-gray-500 text-sm">
-                    No Image available.
-                  </h4>
-                </div>
-              )
-            )}
-          </div>
-
-          {/* Next Button */}
-          <button
-            onClick={handleNext}
-            disabled={currentIndex + itemsPerPage >= galleryItems.length}
-            className="absolute -right-1 ml-10 top-[53%] transform -translate-y-1/2 text-3xl text-gray-500 hover:text-gray-800 disabled:opacity-30 focus:outline-none"
-          >
-            <BiChevronRight />
-          </button>
-        </section>
+        )}
       </div>
-    </>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            className="w-12 h-12 border-4 border-lightBlue-500 border-t-transparent rounded-full"
+          />
+        </div>
+      ) : err ? (
+        <div className="bg-red-50 rounded-xl p-6 text-center">
+          <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Visual Story Unavailable</h3>
+          <p className="text-gray-500 mb-4">{err}</p>
+          <motion.button
+            onClick={fetchGalleryItems}
+            className="px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:shadow-md transition-all"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Try Again
+          </motion.button>
+        </div>
+      ) : galleryItems.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {visibleItems.map((item, index) => (
+              <Card
+                key={item._id || index}
+                image={item.photo}
+                title={item.title}
+                postDate={item.updatedDate || item.createdDate}
+                onClick={() => openModal(item.photo, item.title)}
+              />
+            ))}
+          </div>
+
+          <ImageModal
+            isOpen={modalOpen}
+            onClose={closeModal}
+            image={selectedImage?.image}
+            title={selectedImage?.title}
+          />
+        </>
+      ) : (
+        <div className="bg-gray-50 rounded-xl p-8 text-center">
+          <div className="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <FolderOpen className="w-10 h-10 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No Visual Stories Yet</h3>
+          <p className="text-gray-500">This collection is waiting to be filled with memorable moments.</p>
+        </div>
+      )}
+    </motion.div>
   );
 };
 
-Card.propTypes = {
-    image: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    postDate: PropTypes.instanceOf(Date).isRequired,
-}
-
 CategoryImagesCards.propTypes = {
-    categoryName: PropTypes.string.isRequired,
+  categoryName: PropTypes.string.isRequired,
 };
 
 export default CategoryImagesCards;

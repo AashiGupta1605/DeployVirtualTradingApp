@@ -434,7 +434,7 @@ const MyEventsPage = () => {
               Close
             </button>
 
-<Link
+            <Link
   to={{
     pathname: `/user/tradingnifty`,
     state: { eventId: event._id }
