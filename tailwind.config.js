@@ -6,6 +6,11 @@ module.exports = {
     "./public/**/*.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  variants: {
+    extend: {
+      display: ['group-hover']
+    }
+  },
   theme: {
     colors: {
       ...colors,

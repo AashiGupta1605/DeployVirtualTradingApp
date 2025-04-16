@@ -1,154 +1,230 @@
 import React, { useState } from "react";
-import { FaChartLine } from "react-icons/fa";
+import { 
+  FaChartLine, 
+  FaExclamationTriangle, 
+  FaUserShield, 
+  FaRegCheckCircle,
+  FaLock,
+  FaRegClock,
+  FaRegFileAlt
+} from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const StartScreenPopupModal = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   if (!isOpen) return null;
 
+  const guidelines = [
+    {
+      icon: <FaChartLine className="text-lightBlue-600 text-xl" />,
+      title: "Educational Purpose Only",
+      content: [
+        "This is a virtual trading simulator designed exclusively for education and training.",
+        "All transactions use simulated currency - no real money is involved.",
+        "Practice trading strategies and market analysis in a completely risk-free environment."
+      ],
+      color: "border-blue-200 bg-blue-50",
+      iconBg: "bg-blue-100"
+    },
+    {
+      icon: <FaExclamationTriangle className="text-amber-500 text-xl" />,
+      title: "Risk Disclosure",
+      content: [
+        "This is not a financial advisory service or real trading platform.",
+        "All data, analysis, and suggestions are simulated using AI algorithms.",
+        "Results shown are hypothetical and don't represent actual market performance.",
+        "We assume no responsibility for real-world financial decisions made by users."
+      ],
+      color: "border-amber-200 bg-amber-50",
+      iconBg: "bg-amber-100"
+    },
+    {
+      icon: <FaLock className="text-red-500 text-xl" />,
+      title: "No Liability",
+      content: [
+        "The app developers are not liable for any real-world trading outcomes.",
+        "Always consult licensed financial professionals before making actual investments.",
+        "You acknowledge that all trading here is purely simulated."
+      ],
+      color: "border-red-200 bg-red-50",
+      iconBg: "bg-red-100"
+    },
+    {
+      icon: <FaUserShield className="text-green-500 text-xl" />,
+      title: "Code of Conduct",
+      content: [
+        "Use this platform ethically and responsibly at all times.",
+        "System exploitation or unrealistic simulations may result in account termination.",
+        "Comply with all applicable laws and platform guidelines."
+      ],
+      color: "border-green-200 bg-green-50",
+      iconBg: "bg-green-100"
+    },
+    {
+      icon: <FaRegClock className="text-indigo-500 text-xl" />,
+      title: "Data Privacy",
+      content: [
+        "We collect anonymized usage data to enhance your experience.",
+        "No personal financial information is required or stored.",
+        "Your privacy is protected under our comprehensive Privacy Policy."
+      ],
+      color: "border-indigo-200 bg-indigo-50",
+      iconBg: "bg-indigo-100"
+    },
+    {
+      icon: <FaRegFileAlt className="text-purple-500 text-xl" />,
+      title: "Platform Usage",
+      content: [
+        "We may modify or discontinue features without prior notice.",
+        "Access may be terminated for violations of our Terms of Service.",
+        "Content is provided 'as is' without warranties of any kind."
+      ],
+      color: "border-purple-200 bg-purple-50",
+      iconBg: "bg-purple-100"
+    }
+  ];
+
+  const handleAccept = () => {
+    if (acceptedTerms) {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-100 mt-8 flex items-center justify-center overflow-y-auto">
-      {/* Background Overlay */}
-      <div className="fixed inset-0 bg-black opacity-60 transition-opacity duration-300"></div>
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto p-4">
+      {/* Backdrop */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.7 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black transition-opacity duration-300 z-40"
+      />
 
       {/* Modal Container */}
-      <div
-        style={{ width: "85%", maxHeight: "70vh" }}
-        className="relative w-full sm:mx-auto my-8 bg-white rounded-3xl shadow-2xl border border-gray-300 z-50 flex flex-col overflow-hidden animate-fade-in"
-        onClick={(e) => e.stopPropagation()}
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ type: "spring", damping: 25 }}
+        className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl border border-gray-100 z-50 flex flex-col overflow-hidden"
+        style={{ maxHeight: "90vh" }}
       >
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3 items-center">
-              <FaChartLine className="text-lightBlue-600 text-3xl" />
-              <h2 className="text-lg font-semibold text-gray-800">
-                <span className="font-bold text-xl text-lightBlue-600">Welcome:</span> Virtual Trading With PGR
+        <div className="pt-4 pb-4 px-6 bg-white">
+          <div className="flex flex-col items-center">
+            <div className="mb-4 flex flex-col items-center">
+              <img
+                src="https://media.licdn.com/dms/image/v2/C510BAQE1pPlwgZETKw/company-logo_200_200/company-logo_200_200/0/1630605647519/praedico_global_research_pvt_ltd_logo?e=2147483647&v=beta&t=8hAhEoZ7nj9gKxuh6iA-q10402A-rxdAP4GeUOAnFdQ"
+                alt="PGR Logo"
+                className="h-24 w-24 rounded-full bg-white p-2 shadow-md border-2 border-lightBlue-100"
+              />
+              <h1 className="mt-3 text-2xl font-bold text-gray-800">
+                Praedico Global Research
+              </h1>
+              <h2 className="text-lg text-lightBlue-600 font-semibold mt-1">
+                Virtual Trading Platform
               </h2>
             </div>
-
-            {/* Right Side: Close Button */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="w-10 p-2 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none"
-            >
-              <i className="fas fa-times text-gray-500 hover:text-gray-700"></i>
-            </button>
+            <div className="w-full bg-lightBlue-600 text-white p-3 rounded-lg text-center">
+              <p className="font-medium text-sm">
+                Terms of Use Agreement - Please review carefully before proceeding
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Content Area with Scrollable Image */}
-        <div className="p-4 flex-1 flex justify-center overflow-hidden rounded-xl">
-          <img
-            src="https://media.istockphoto.com/id/1487894858/photo/candlestick-chart-and-data-of-financial-market.jpg?s=612x612&w=0&k=20&c=wZ6vVmbm4BV2JOePSnNNz-0aFVOJZ0P9nhdeOMGUg5I="
-            alt="Stock Market"
-            className="w-full max-h-[300px] object-cover rounded-xl shadow-lg transition-transform duration-300 hover:scale-105"
-          />
+        {/* Content Area - Increased space here */}
+        <div className="p-6 overflow-y-auto flex-1" style={{ paddingBottom: '1.5rem' }}>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {guidelines.map((item, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.08, type: "spring" }}
+                className={`rounded-lg p-4 hover:shadow-md transition-all duration-300 border ${item.color} flex flex-col h-full`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`${item.iconBg} p-2.5 rounded-lg shadow-sm flex-shrink-0`}>
+                    {item.icon}
+                  </div>
+                  <h3 className="font-bold text-gray-800 text-base">
+                    {item.title}
+                  </h3>
+                </div>
+                <ul className="space-y-2 text-sm text-gray-600 flex-grow">
+                  {item.content.map((text, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="mr-2 mt-1 text-xs text-gray-400">•</span>
+                      <span className="leading-relaxed">{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="p-5 bg-gray-50 rounded-lg border border-gray-200">
+            <h3 className="text-base font-semibold text-gray-800 mb-3">Additional Terms & Conditions</h3>
+            <div className="space-y-3 text-sm text-gray-600">
+              <p>
+                By using this PGR platform, you acknowledge that all trading is simulated and that no actual securities transactions are being executed. You understand that the results shown are hypothetical and that hypothetical performance results have certain inherent limitations.
+              </p>
+              <p>
+                PGR may collect usage data to improve services, but will never collect or store sensitive personal financial information. You agree to use the platform only for lawful purposes and in accordance with these Terms of Use.
+              </p>
+              <p>
+                PGR reserves the right to modify or discontinue any features at any time without notice. We may terminate or suspend access to the platform immediately, without prior notice or liability, for any reason whatsoever.
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-300 text-center bg-gray-100">
-          <p className="text-gray-700 font-medium">Thank you for visiting our website!</p>
-        </div>
-      </div>
+        {/* Footer - Reduced space here */}
+<div className="p-3 border-t border-gray-200 bg-gray-50">
+  <div className="flex flex-col items-center space-y-2">
+    <div className="flex items-center w-full max-w-lg">
+      <input
+        type="checkbox"
+        id="acceptTerms"
+        checked={acceptedTerms}
+        onChange={() => setAcceptedTerms(!acceptedTerms)}
+        className="h-3.5 w-3.5 text-lightBlue-600 rounded focus:ring-blue-500"
+      />
+      <label htmlFor="acceptTerms" className="ml-1.5 text-[0.7rem] text-gray-700 leading-tight">
+   I have read, understood, and agree to all the terms and conditions above
+      </label>
+    </div>
+
+    <div className="flex gap-2 w-full max-w-md">
+
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={handleAccept}
+        disabled={!acceptedTerms}
+        className={`px-3 py-1.5 rounded-md transition-colors duration-300 font-medium shadow-xs hover:shadow-sm flex items-center gap-1 justify-center flex-1 text-xs ${
+          acceptedTerms 
+            ? 'bg-lightBlue-600 text-white hover:bg-lightBlue-700' 
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        }`}
+      >
+        <FaRegCheckCircle className="text-xs" />
+        Accept & Continue
+      </motion.button>
+    </div>
+
+    <p className="text-[0.6rem] text-gray-500 text-center">
+      © {new Date().getFullYear()} Praedico Global Research Pvt Ltd.
+    </p>
+  </div>
+</div>
+      </motion.div>
     </div>
   );
 };
 
 export default StartScreenPopupModal;
-
-
-
-
-
-
-// import React, { useState, useEffect } from "react";
-// import { FaChartLine } from "react-icons/fa";
-// // import { FaCheckCircle } from "react-icons/fa";
-
-// const StartScreenPopupModal = () => {
-
-//   const [isOpen, setIsOpen] = useState(true);
-//     // const [isOpen, setIsOpen] = useState(false);
-//   // const [isOpen, setIsOpen] = useState(() => {
-//   //   return !localStorage.getItem("hasShownModal");
-//   // });
-
-//   // useEffect(() => {
-//   //   const timer = setTimeout(() => {
-//   //     setIsOpen(false); // Auto-close modal after 10 seconds
-//   //   }, 30000);
-//   //   return () => clearTimeout(timer); // Cleanup on unmount
-//   // }, []);
-
-//   // useEffect(() => {
-//   //   // Check if the modal has been shown before using localStorage
-//   //   const hasShownModal = localStorage.getItem("hasShownModal");
-//   //   if (!hasShownModal) {
-//   //     setIsOpen(true);
-//   //     localStorage.setItem("hasShownModal", "true");
-//   //   }
-//   // }, []);
-
-//   useEffect(() => {
-//     if (isOpen) {
-//       localStorage.setItem("hasShownModal", "true");
-//     }
-//   }, [isOpen]); 
-
-//   if (!isOpen) return null;
-
-//   return (
-//     <div
-//       className="fixed inset-0 z-50 mt-8 flex items-center justify-center overflow-y-auto"
-//       onClick={() => setIsOpen(false)} // Close modal when clicking outside
-//     >
-//       {/* Background Overlay */}
-//       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-
-//       {/* Modal Container */}
-//       <div
-//         style={{ width: "85%", maxHeight: "70vh" }}
-//         className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 flex flex-col overflow-hidden"
-//         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
-//       >
-//         {/* Header */}
-//         <div className="p-3 border-b border-gray-200">
-//           <div className="flex justify-between items-center">
-//             <div className="flex gap-3 items-center">
-//               <FaChartLine className="text-blue-500 text-3xl" />
-//               <h2 className="text-base font-semibold text-gray-700">
-//                 <span className="font-bold text-lg">Welcome:</span> Virtual
-//                 Trading With PGR
-//               </h2>
-//             </div>
-
-//             {/* Right Side: Close Button */}
-//             <button
-//               onClick={() => setIsOpen(false)}
-//               className="w-10 p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-//             >
-//               <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Content Area with Scrollable Image */}
-//         <div className="p-4 flex-1 flex justify-center overflow-hidden rounded-xl">
-//           <img
-//             src="https://media.istockphoto.com/id/1487894858/photo/candlestick-chart-and-data-of-financial-market.jpg?s=612x612&w=0&k=20&c=wZ6vVmbm4BV2JOePSnNNz-0aFVOJZ0P9nhdeOMGUg5I="
-//             alt="Stock Market"
-//             className="w-full max-h-[300px] object-cover rounded-xl shadow-lg"
-//           />
-//         </div>
-
-//         {/* Footer */}
-//         <div className="p-2 border-t border-gray-400 text-center">
-//           <p className="text-gray-600">Thank you for visiting our website!</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default StartScreenPopupModal;

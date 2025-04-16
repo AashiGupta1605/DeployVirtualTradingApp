@@ -13,13 +13,18 @@ const initialValues = {
   contactPerson: "",
   aboutHelp: "",
   // preferredDate: null,
-  preferredDay: "",
+  preferredDate: '',
+  // preferredDay: "",
   preferredTimeSlot: ""
 };
 
+const today = new Date();
+  const maxPreferredDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+6).toISOString().split('T')[0];
+  const minPreferredDate = today.toISOString().split('T')[0]
+
 const validationSchema = Yup.object().shape({
   name: Yup.string()
-    .max(25, 'Name must be at most 25 characters')
+    .max(45, 'Name must be at most 45 characters')
     .required('Organization Name is required'),
 
   website: Yup.string()
@@ -54,22 +59,28 @@ const validationSchema = Yup.object().shape({
     ),
 
   contactPerson: Yup.string()
+    .max(25, 'Name must be at most 25 characters')
     .notRequired(),
 
   aboutHelp: Yup.string()
-    .max(100, 'Must be 100 characters or less')
+    .max(160, 'Must be 160 characters or less')
     .required('Write your Query. This field is required'),
 
   // preferredDate: Yup.date()
   //   .nullable()
   //   .notRequired(),
 
-  preferredDay: Yup.string()
-    .oneOf(["Today", "Monday", "Tuesdy", "Wednesday", "Thursday", "Friday"], "Invalid day")
-    .required('Select any Preferred Day is Required'),
+  // preferredDay: Yup.string()
+  //   .oneOf(["Today", "Monday", "Tuesdy", "Wednesday", "Thursday", "Friday"], "Invalid day")
+  //   .required('Select any Preferred Day is Required'),
+
+  preferredDate: Yup.date()
+    .required("Select any date to get a Demo is Required.")
+    .min(minPreferredDate, "Date must be today or later.")
+    .max(maxPreferredDate, "You must select a date within the next 7 days."),
 
   preferredTimeSlot: Yup.string()
-    .oneOf(["Any Time", "10:00 - 12:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 21:00"], "Select from available Time Slots"),
+    .oneOf(["Any Time", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00"], "Select from available Time Slots"),
 
 });
 
@@ -144,15 +155,14 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     placeholder="Enter Organization Name"
                   />
 
-                  {/* Email */}
+                  {/* Website */}
                   <FormField
                     required
-                    type="email"
-                    label="Organization Email"
-                    name="email"
-                    placeholder="Enter Organization Email: organization@.abc.com"
+                    label="Website URL"
+                    name="website"
+                    placeholder="Enter your website URL"
                   />
-
+                  
                   {/* Contact Person */}
                   <FormField
                     label="Contact Person (Optional)"
@@ -161,7 +171,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                   />
 
                   {/* Preferred Day */}
-                  <FormField
+                  {/* <FormField
                     required
                     label="Preferred Day"
                     name="preferredDay"
@@ -175,7 +185,16 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     <option value="Wednesday">Wednesday</option>
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
-                  </FormField>
+                  </FormField> */}
+
+                  {/* Preferred Date */}
+                  <FormField
+                    required
+                    type="date"
+                    label="Preferred Date"
+                    name="preferredDate"
+                    inputProps={{min: minPreferredDate, max: maxPreferredDate}}
+                  />
 
                   {/* Preferred Time Slot */}
                   <FormField
@@ -187,9 +206,10 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     <option value="">Select Preferred Time Slot</option>
                     <option value="Any Time">Any Time</option>
                     <option value="10:00 - 12:00">10:00 - 12:00</option>
+                    <option value="12:00 - 14:00">12:00 - 14:00</option>
                     <option value="14:00 - 16:00">14:00 - 16:00</option>
                     <option value="16:00 - 18:00">16:00 - 18:00</option>
-                    <option value="18:00 - 21:00">18:00 - 21:00</option>
+                    <option value="18:00 - 20:00">18:00 - 20:00</option>
                   </FormField>
 
                 </div>
@@ -198,20 +218,21 @@ const OrgBookDemoForm = ({ closeModal }) => {
               <div className="px-4 py-2 rounded-xl flex-1 bg-white">
                 <div className="space-y-6">
 
-                  {/* Website */}
+                  {/* Email */}
                   <FormField
                     required
-                    label="Website URL"
-                    name="website"
-                    placeholder="Enter your website URL"
+                    type="email"
+                    label="Organization Email"
+                    name="email"
+                    placeholder="organization@.abc.com"
                   />
 
                   {/* Mobile */}
                   <FormField
                     required
-                    label="Contact Number"
+                    label="Official Contact Number"
                     name="mobile"
-                    placeholder="Enter Organization Contact Number"
+                    placeholder="e.g., 9876543210"
                   />
 
                   {/* About Help */}
@@ -219,7 +240,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="How can we help your Organization?"
                     name="aboutHelp"
-                    placeholder="Describe your Query briefly, within 100 words"
+                    placeholder="Describe your Query briefly, within 160 words"
                     as="textarea"
                   />
 
@@ -260,7 +281,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
   );
 };
 
-const FormField = ({ name, label, required = false, type = "text", placeholder, children, as = "input" }) => 
+const FormField = ({ name, label, required = false, type = "text", placeholder, children, as = "input", inputProps = {}, }) => 
   (
     <div className="flex flex-col">
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -269,8 +290,9 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
       <Field
         type={type}
         name={name}
+        {...inputProps}
         as={as}
-        rows={as === "textarea" ? 5 : undefined}
+        rows={as === "textarea" ? 4 : undefined}
         className={`w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200 ${
           as === "textarea" ? "resize-none" : ""
         }`}
