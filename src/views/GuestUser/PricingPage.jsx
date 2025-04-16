@@ -9,154 +9,16 @@ import {
   FiChevronDown,
   FiChevronUp
 } from "react-icons/fi";
-import LoginModal from "../../views/auth/Login";
-
-const subscriptionPlans = [
-  {
-    id: "silver",
-    name: "Silver Plan",
-    tagline: "Perfect for Beginners",
-    badge: null,
-    color: "gray",
-    price: {
-      monthly: 300,
-      quarterly: 800,
-      halfYearly: 1500
-    },
-    virtualAmount: 500000,
-    tradingHours: ["Off-Market Hours"],
-    features: [
-      "Virtual trading amount of ₹5,00,000",
-      "Basic real-time market data",
-      "Basic technical analysis tools",
-      "Email support (24-48 hours response)",
-      "Access to Nifty 50 stocks only",
-      "Basic portfolio tracking",
-      "5 watchlists (max 10 stocks each)",
-      "End-of-day market reports",
-      "Basic educational resources",
-      "Mobile app access"
-    ],
-    limitations: [
-      "Limited to 20 trades per day",
-      "Basic charting tools only",
-      "No API access",
-      "No advanced analytics"
-    ]
-  },
-  {
-    id: "gold",
-    name: "Gold Plan",
-    tagline: "Most Popular Choice",
-    badge: "MOST POPULAR",
-    color: "yellow",
-    price: {
-      monthly: 500,
-      quarterly: 1400,
-      halfYearly: 2700
-    },
-    virtualAmount: 1000000,
-    tradingHours: ["Market Hours", "Off-Market Hours"],
-    features: [
-      "Virtual trading amount of ₹10,00,000",
-      "Advanced real-time market data",
-      "Intermediate technical analysis tools",
-      "Priority email support (12-24 hours response)",
-      "Access to Nifty 100 stocks",
-      "Advanced portfolio tracking",
-      "10 watchlists (max 20 stocks each)",
-      "Real-time market reports",
-      "Comprehensive educational resources",
-      "Mobile app access with advanced features",
-      "Basic API access",
-      "Price alerts for watchlist stocks"
-    ],
-    limitations: [
-      "Limited to 50 trades per day",
-      "No custom indicators",
-      "Basic backtesting capabilities"
-    ]
-  },
-  {
-    id: "platinum",
-    name: "Platinum Plan",
-    tagline: "For Serious Traders",
-    badge: "ADVANCED",
-    color: "purple",
-    price: {
-      monthly: 1000,
-      quarterly: 2800,
-      halfYearly: 5400
-    },
-    virtualAmount: 2000000,
-    tradingHours: ["Market Hours", "Off-Market Hours", "Extended Hours"],
-    features: [
-      "Virtual trading amount of ₹20,00,000",
-      "Premium real-time market data",
-      "Advanced technical analysis tools",
-      "Priority support (4-8 hours response)",
-      "Access to all NSE stocks",
-      "Professional portfolio analytics",
-      "Unlimited watchlists",
-      "Real-time market reports and alerts",
-      "Premium educational resources",
-      "Advanced mobile app features",
-      "Full API access",
-      "Custom price alerts",
-      "Advanced charting tools",
-      "Custom indicators",
-      "Advanced backtesting capabilities",
-      "Risk analysis tools"
-    ],
-    limitations: [
-      "Limited to 100 trades per day",
-      "Basic algorithmic trading features"
-    ]
-  },
-  {
-    id: "diamond",
-    name: "Diamond Plan",
-    tagline: "Professional Trading Suite",
-    badge: "PREMIUM",
-    color: "blue",
-    price: {
-      monthly: 2000,
-      quarterly: 5500,
-      halfYearly: 10000
-    },
-    virtualAmount: 5000000,
-    tradingHours: ["24/7 Trading Access"],
-    features: [
-      "Virtual trading amount of ₹50,00,000",
-      "Enterprise-level market data",
-      "Professional technical analysis suite",
-      "24/7 Priority support",
-      "Access to all NSE, BSE stocks & F&O",
-      "Professional portfolio analytics",
-      "Unlimited watchlists and custom screeners",
-      "Real-time market reports and custom alerts",
-      "Premium educational resources with 1-on-1 sessions",
-      "Premium mobile app features",
-      "Advanced API access with higher limits",
-      "Custom indicators and strategies",
-      "Advanced algorithmic trading capabilities",
-      "Risk management suite",
-      "Performance analytics",
-      "Multi-device sync",
-      "Priority feature updates",
-      "Dedicated account manager"
-    ],
-    limitations: [
-      "Unlimited trades per day",
-      "No restrictions on features"
-    ]
-  }
-];
+import LoginModal from "../../views/auth/UnifiedLoginModal";
+import subscriptionData from "../../data/subscriptionPlans.json";
 
 const PricingPage = () => {
   const [selectedDuration, setSelectedDuration] = useState("monthly");
   const [showAllFeatures, setShowAllFeatures] = useState({});
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  // Get plans from the imported JSON data
+  const subscriptionPlans = subscriptionData.plans;
 
   const getDurationLabel = (duration) => {
     switch (duration) {
@@ -176,6 +38,14 @@ const PricingPage = () => {
   };
 
   const getPlanColor = (planId) => {
+    const plan = subscriptionPlans.find(p => p.id === planId);
+    if (!plan) return {
+      border: "border-gray-200 hover:border-gray-300",
+      button: "bg-gray-600 hover:bg-gray-700",
+      badge: "bg-gray-100 text-gray-800",
+      highlight: "bg-gray-50"
+    };
+
     const colors = {
       silver: {
         border: "border-gray-200 hover:border-gray-300",

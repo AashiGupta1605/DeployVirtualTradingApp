@@ -20,6 +20,8 @@ import ComplaintList from "../views/admin/ComplaintList";
 import OrgComplaintList from "../views/admin/OrgComplaintList";
 import GalleryImages from "../views/admin/gallery/GalleryImages";
 import GalleryCategories from "../views/admin/gallery/GalleryCategories";
+import UserDemo from "../views/admin/bookDemo/UserDemo";
+import OrgDemo from "../views/admin/bookDemo/OrgDemo";
 import AdminEventsPage from "../views/admin/AdminEventsPage";
 
 export default function Admin() {
@@ -55,6 +57,8 @@ export default function Admin() {
               <Route path="gallery/categories" element={<GalleryCategories sidebarExpanded={sidebarExpanded}/>}/>
               <Route path="events" element={<AdminEventsPage />} />
               <Route path="*" element={<Navigate to="dashboard" replace />} />
+              <Route path="demo/userDemo" element={<UserDemo sidebarExpanded={sidebarExpanded}/>}/>
+              <Route path="demo/organizationDemo" element={<OrgDemo sidebarExpanded={sidebarExpanded}/>}/>
             </Routes>
           </div>
         </div>

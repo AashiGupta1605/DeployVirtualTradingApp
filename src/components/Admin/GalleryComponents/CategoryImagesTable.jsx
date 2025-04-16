@@ -11,6 +11,7 @@ import { FolderOpen } from "lucide-react";
 import { toast } from 'react-hot-toast';
 
 import ConfirmationModal from "../Modals/ConformationModal";
+import UpdateGalleryImage from "./UpdateGalleryImage";
 
 const TitleCell = ({ title }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -55,7 +56,7 @@ const CategoryImagesTable = ({ closeModal, tableCategoryName }) => {
     
         if (response?.status === 201) {
           toast.success(response?.data?.message);
-          refreshCategories();
+          refreshCategoryImages();
         } 
         else if (response?.status === 409) {
           toast(response?.data?.message, {
@@ -126,7 +127,7 @@ const CategoryImagesTable = ({ closeModal, tableCategoryName }) => {
     }
   };
 
-  const refreshCategories = () => {
+  const refreshCategoryImages = () => {
     fetchCategoryImages(); // Re-fetch categories to get the updated list
   };
 
@@ -141,6 +142,18 @@ const CategoryImagesTable = ({ closeModal, tableCategoryName }) => {
     };
     fetchData();
   }, [search]);
+
+  const [isOpenImageUpdate, setIsOpenImageUpdate] = useState(false);
+  const openUpdateImageModal = () => setIsOpenImageUpdate(true);
+  const closeUpdateImageModal = () => setIsOpenImageUpdate(false);
+  const [updateImageId, setUpdateImageId] = useState(null)
+  const [updateImageData, setUpdateImageData] = useState({})
+
+  const handleImageUpdate = (id, data) => {
+    setUpdateImageId(id)
+    setUpdateImageData(data)
+    openUpdateImageModal()
+  }
 
   return (
     <>
@@ -342,7 +355,8 @@ const CategoryImagesTable = ({ closeModal, tableCategoryName }) => {
                             </td>
 
                             <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                              <button className="mr-4 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none">
+                              <button className="mr-4 text-yellow-600 mx-2 hover:text-yellow-900 transition-colors focus:outline-none"
+                              onClick={()=>handleImageUpdate(data._id, data)}>
                                 <Edit size={18} />
                               </button>
 
@@ -413,6 +427,8 @@ const CategoryImagesTable = ({ closeModal, tableCategoryName }) => {
       title="Confirm Deletion"
       message={`Are you sure you want to delete`}
     />
+
+    {isOpenImageUpdate && <UpdateGalleryImage closeModal={closeUpdateImageModal} refreshCategoryImages={refreshCategoryImages} updateImageId={updateImageId} updateImageData={updateImageData}/>}
 
     </>
   );

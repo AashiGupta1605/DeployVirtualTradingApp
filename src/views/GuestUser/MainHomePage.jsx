@@ -13,6 +13,7 @@ import {
   FiInstagram,
   FiGithub
 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
@@ -37,6 +38,9 @@ const MainHomePage = () => {
       controls.start("visible");
     }
   }, [controls, heroInView]);
+
+  // WhatsApp group link (replace with your actual WhatsApp group invite link)
+  // const whatsappGroupLink = "https://chat.whatsapp.com/GCNCQb6Ul4l5FRwlT5y3Tb";
 
   // Animation variants
   const containerVariants = {
@@ -130,8 +134,26 @@ const MainHomePage = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="snap-y snap-mandatory h-screen overflow-y-scroll"
+      className="snap-y snap-mandatory h-screen overflow-y-scroll relative"
     >
+      {/* WhatsApp Floating Button
+      <motion.a
+        href={whatsappGroupLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed right-6 bottom-6 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      >
+        <div className="bg-green-500 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+          <FaWhatsapp className="w-8 h-8" />
+          <span className="sr-only">Join our WhatsApp group</span>
+        </div>
+      </motion.a> */}
+
       {/* Hero Section */}
       <section ref={heroRef} className="snap-start -mt-32 h-screen w-full relative bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 text-center h-full flex flex-col justify-center">

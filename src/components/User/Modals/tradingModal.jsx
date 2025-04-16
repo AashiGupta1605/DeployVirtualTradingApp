@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { 
   ChevronDown,
   TrendingUp,
@@ -9,6 +10,7 @@ import {
   DollarSign,
   BookUser,
 } from 'lucide-react';
+
 import { 
   fetchTransactionHistory,
   selectHoldings,
@@ -22,55 +24,103 @@ import {
 import { 
   selectActiveEvent,
   selectActiveEvents,
-  setActiveEvent
+  setActiveEvent,
+  fetchUserEvents
 } from '../../../redux/User/events/eventsSlice';
 import StockDetailsModal from './StockDetailsModal';
 import PortfolioTable from './PortfolioTable';
 import StatsSection from "../Cards/StatsSection";
 
 const UserPortfolioPage = () => {
-  const dispatch = useDispatch();
-  const activeEvent = useSelector(selectActiveEvent);
-  const activeEvents = useSelector(selectActiveEvents);
-  const userId = useSelector(state => state.user.auth?.user?._id);
-  const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
-  
-  const [selectedStock, setSelectedStock] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  // Get filtered transactions based on active event
-  const transactions = useSelector(state => 
-    selectFilteredTransactions(state, activeEvent?._id || 'none')
-  );
-  
-  const holdings = useSelector(selectHoldings);
-  const statistics = useSelector(selectStatistics);
 
-  const activeSubscription = userSubscriptions.find(sub => 
-    sub.status === 'Active' && !sub.isDeleted
-  );
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const activeEvent = useSelector(selectActiveEvent);
+    const activeEvents = useSelector(selectActiveEvents);
+    const userId = useSelector(state => state.user.auth?.user?._id);
+    const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
+    
+    const [selectedStock, setSelectedStock] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+  
+    // Get filtered transactions based on active event
+    const transactions = useSelector(state => 
+      selectFilteredTransactions(state, activeEvent?._id || 'none')
+    );
+    
+    const holdings = useSelector(selectHoldings);
+    const statistics = useSelector(selectStatistics);
+  
+    const activeSubscription = userSubscriptions.find(sub => 
+      sub.status === 'Active' && !sub.isDeleted
+    );
+
+
 
   useEffect(() => {
-    if (userId) {
+    const initializeEvent = async () => {
+      if (location.state?.eventId) {
+        try {
+          // First check if we already have the events loaded
+          let event = activeEvents.find(e => e._id === location.state.eventId);
+          
+          if (!event) {
+            // If event not found, fetch events
+            await dispatch(fetchUserEvents());
+            const updatedEvents = useSelector(selectActiveEvents);
+            event = updatedEvents.find(e => e._id === location.state.eventId);
+          }
+          
+          if (event) {
+            dispatch(setActiveEvent(event));
+          }
+        } catch (error) {
+          console.error('Error initializing event:', error);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeEvent();
+  }, [location.state, dispatch]);
+
+  useEffect(() => {
+    if (location.state?.eventId) {
+      // First check if the event is already in activeEvents
+      const event = activeEvents.find(e => e._id === location.state.eventId);
+      if (event) {
+        dispatch(setActiveEvent(event));
+      } else {
+        // If event not found, fetch events first
+        dispatch(fetchUserEvents()).then(() => {
+          const foundEvent = useSelector(selectActiveEvents).find(e => e._id === location.state.eventId);
+          if (foundEvent) {
+            dispatch(setActiveEvent(foundEvent));
+          }
+        });
+      }
+    }
+  }, [location.state, activeEvents, dispatch]);
+
+  useEffect(() => {
+    if (userId && !isLoading) {
       dispatch(getUserSubscriptions(userId));
       
       if (activeEvent?._id) {
         dispatch(fetchEventSpecificTransactions({ 
           userId, 
           eventId: activeEvent._id 
-        })).then((result) => {
-          console.log('Event transactions:', result.payload?.transactions);
-        });
+        }));
       } else {
         dispatch(fetchTransactionHistory({ 
           userId, 
           eventId: 'none'
-        })).then((result) => {
-          console.log('Basic transactions:', result.payload?.transactions);
-        });
+        }));
       }
     }
-  }, [dispatch, userId, activeEvent]);
+  }, [dispatch, userId, activeEvent, isLoading]);
 
   const handleStockClick = (symbol) => {
     const stockTransactions = transactions
@@ -89,6 +139,7 @@ const UserPortfolioPage = () => {
 
   const EventDropdown = ({ activeEvent, onSelectEvent }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const activeEvents = useSelector(selectActiveEvents);
   
     return (
       <div className="relative">
