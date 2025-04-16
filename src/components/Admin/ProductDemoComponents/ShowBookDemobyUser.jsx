@@ -352,11 +352,13 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                   className="text-gray-500 text-[21px]"
                 />
                 <h2 className="text-xl font-bold text-gray-800">
-                  Manage User's Demo Booking
+                  Manage User's Demo Bookings
                 </h2>
-                <p className="-ml-2 max-w-38 rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
-                  Total Bookings: {data.length}
-                </p>
+                {!sidebarExpanded ? (
+                  <p className="-ml-2 max-w-[9.5rem] rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
+                    Total Bookings: {data?.length}
+                  </p>
+                ) : null}
               </div>
 
               <div className="flex items-center gap-3 -mr-2">
@@ -364,7 +366,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
               {/* Filter Icon */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`relative flex items-center gap-8 px-2 py-2 h-[40px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+                className={`relative flex items-center gap-5 px-2 py-2 h-[38px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
                             ${showFilters? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
                           `}
               >
@@ -392,7 +394,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
                   <div className="relative group">
                     <select
                     name="SelectField"
-                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-35 pr-8"
+                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-28 pr-8"
                     value={field}
                     onChange={(e) => setField(e.target.value || "")}
                     >
@@ -412,7 +414,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
 
                 {/* Search bar */}
                 <div className="relative">
-                  <div className="relative w-[240px]">
+                  <div className="relative w-[226px]">
                     {/* Search Icon */}
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/622/622669.png"

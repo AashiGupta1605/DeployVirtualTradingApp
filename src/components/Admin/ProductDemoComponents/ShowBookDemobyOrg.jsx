@@ -5,7 +5,9 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandshake } from '@fortawesome/free-solid-svg-icons';
-import { ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
+import { Filter, ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
+import { IoIosArrowUp } from "react-icons/io";
+import { FaTimes } from "react-icons/fa";
 import { toast } from 'react-hot-toast';
 
 const TimeSlot_Colors = {
@@ -129,10 +131,78 @@ const ToggleButton = ({ id, isResolved, refreshData }) => {
 };
 
 const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [filterCount, setFilterCount] = useState(0);
+  const [appliedFilters, setAppliedFilters] = useState({});
+
   const [data, setData] = useState([]);
   const [err, setErr] = useState("");
+
   const [search, setSearch] = useState("");
-  const [field, setField] = useState("")
+  const [field, setField] = useState("name")
+
+  const [timeSlot, setTimeSlot]=useState("all")
+  const [status, setStatus]=useState("all")
+
+  useEffect(() => {
+    let count = 0;
+    let filters = {};
+  
+    if (timeSlot !== "all") {
+      count++;
+      filters["TimeSlot"] = timeSlot;
+    }
+    if (status !== "all") {
+      count++;
+      if(status==="true")
+        filters["Status"] = "Completed";
+      if(status==="false")
+        filters["Status"] = "Pending";
+    }
+    if (search.trim() !== "") {
+      count++;
+      filters["Search"] = search;
+    }
+    setFilterCount(count);
+    setAppliedFilters(filters);
+
+  }, [search, timeSlot, status]);
+
+  const removeFilter = (key) => {
+    setAppliedFilters((prev) => {
+      const updatedFilters = { ...prev }; // Copy the previous state
+      delete updatedFilters[key]; // Remove the specific filter
+      return updatedFilters; // Update the state
+    });
+  
+    setFilterCount((prev) => Math.max(prev - 1, 0)); // Decrease filter count safely
+  
+      // Reset the corresponding state variable
+    switch (key) {
+      case "TimeSlot":
+        setTimeSlot("all");
+        break;
+      case "Status":
+        setStatus("all");
+          break;
+      case "Search":
+        setSearch("")
+        setField("name")
+        break;
+      default:
+        break;
+    }
+  };
+
+  const clearAllFilters = () => {
+    setAppliedFilters({});  // Reset all filters
+    setTimeSlot("all")
+    setStatus("all")
+    setSearch("")
+    setField("name")
+    setFilterCount(0);  // Reset filter count
+  };
 
   const fetchBookDemobyOrgData = async () => {
     try {
@@ -167,7 +237,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [timeSlot, status, search]);
 
   const refreshData = () => {
     fetchBookDemobyOrgData();
@@ -203,19 +273,67 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                   className="text-gray-500 text-[21px] h-7"
                 />
                 <h2 className="text-xl font-bold text-gray-800">
-                  Manage Organization's Demo Booking
+                  Manage Org's Demo Bookings
                 </h2>
-                <p className="-ml-2 max-w-38 rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
-                  Total Bookings: {data.length}
-                </p>
+                {!sidebarExpanded ? (
+                  <p className="-ml-2 max-w-[9.5rem] rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
+                    Total Bookings: {data?.length}
+                  </p>
+                ) : null}
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 -mr-2">
+                
+              {/* Filter Icon */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`relative flex items-center gap-5 px-2 py-2 h-[38px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+                            ${showFilters? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
+                          `}
+              >
+                {/* Filter Icon */}
+                <div className="relative">
+                  <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
+
+                  {/* Filter Count - Positioned Bottom Right */}
+                  {filterCount > 0 && (
+                    <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                      {filterCount}
+                    </span>
+                  )}
+                </div>
+                {/* Arrow Icon */}
+                <IoIosArrowUp
+                  className={`pl-[2px] -pr-[2px] text-gray-500 text-lg transition-transform duration-200 ${
+                    showFilters ? "rotate-0" : "rotate-180"
+                  }`}
+                />
+              </button>
+
                 {/* Selector Box for field selection */}
+                <div className="flex flex-col relative">
+                  <div className="relative group">
+                    <select
+                    name="SelectField"
+                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-28 pr-8"
+                    value={field}
+                    onChange={(e) => setField(e.target.value || "")}
+                    >
+                      <option disabled>Select</option>
+                      <option value="name">Name</option>
+                      <option value="email">Email</option>
+                      <option value="mobile">Mobile</option>
+                      <option value="contactPerson">Contact Person</option>
+                      <option value="demoRequestDate">Demo Booked On</option>
+                      <option value="demoResolveDate">Demo Completed On</option>
+                      <option value="preferredDate">Preferred Date</option>
+                    </select>
+                  </div>
+                </div>
 
                 {/* Search bar */}
                 <div className="relative">
-                  <div className="relative w-[240px]">
+                  <div className="relative w-[220px]">
                     {/* Search Icon */}
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
@@ -242,10 +360,97 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                 </button>
               </div>
             </div>
-          </div>
+
+          {/* Filters Section (Visible only when showFilters is true) */}
+          {!err && showFilters && (
+            <div className="flex justify-end items-center mt-5">
+              <div className="flex gap-4 mr-auto">
+
+                {/* Filter By Time Slot */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Time Slot
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="TimeSlot"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      value={timeSlot}
+                      onChange={(e) =>
+                        setTimeSlot(e.target.value || "all")
+                      }
+                    >
+                      <option disabled>Time Slot</option>
+                      <option value="all">All</option>
+                      <option value="Any Time">Any Time</option>
+                      <option value="10:00 - 12:00">10:00 - 12:00</option>
+                      <option value="12:00 - 14:00">12:00 - 14:00</option>
+                      <option value="14:00 - 16:00">14:00 - 16:00</option>
+                      <option value="16:00 - 18:00">16:00 - 18:00</option>
+                      <option value="18:00 - 20:00">18:00 - 20:00</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Status Select */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Status
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="Status"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value || "all")}
+                    >
+                      <option disabled>Status</option>
+                      <option value="all">All</option>
+                      <option value="true">Completed</option>
+                      <option value="false">Pending</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {filterCount > 0 && (
+            <div className="mt-2 -mb-1 -ml-1 -mr-1 p-2 bg-gray-100 rounded-lg shadow-md flex justify-between items-center">
+              <div className="flex flex-wrap gap-2 flex items-center">
+                {Object.entries(appliedFilters).map(([key, value]) => (
+                  <span
+                    key={key}
+                    className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold"
+                  >
+                    {key}: {value}
+                    <button
+                      onClick={() => removeFilter(key)}
+                      className="ml-6 mr-1 mt-1 focus:outline-none bg-transparent"
+                    >
+                      <FaTimes className="text-blue-300 hover:text-blue-800 text-sm" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={clearAllFilters}
+                className="flex items-center gap-2 px-4 py-[6px] bg-gray-200 text-gray-700 text-sm font-semibold rounded-full transition-all duration-200 hover:bg-gray-500 hover:text-white shadow-sm"
+              >
+              Clear All &nbsp;&nbsp;&nbsp;<FaTimes className="text-gray-500 hover:text-gray-700 text-base" />
+              </button>
+            </div>
+          )}
+        </div>
 
           {/* List of Bookings */}
-          <div className="flex h-[59vh]">
+          <div  className={`flex 
+          ${
+            showFilters
+            ? filterCount > 0 ? "h-[39vh]" : "h-[47vh]"
+            : filterCount > 0 ? "h-[50vh]" : "h-[59vh]"
+          }`}>
             <div
               className={`inset-0 ${
                 data.length > 0 ? "overflow-y-auto" : ""
@@ -270,7 +475,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                     <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Mobile
                     </th>
-                    <th className="min-w-[200px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="min-w-[210px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Contact Person
                     </th>
                     <th className="min-w-[280px] max-w-[280px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -393,7 +598,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                               </a>
                             </td>
 
-                            <td className="px-12 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="min-w-[210px] px-12 py-4 whitespace-nowrap text-sm text-gray-500">
                               {data.contactPerson ? data.contactPerson : <span className="text-gray-400">No Contact Person</span>}
                             </td>
 
