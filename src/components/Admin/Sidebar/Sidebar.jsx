@@ -79,6 +79,7 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     ],    
     events: [
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
+      { to: "/admin/participants", icon: "fas fa-calendar-alt", label: "Participants" },
     ],
     // gallery: {
     //   icon: "fas fa-images",
