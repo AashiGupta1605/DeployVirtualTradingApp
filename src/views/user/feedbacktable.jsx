@@ -20,8 +20,11 @@ import { BASE_API_URL } from "../../utils/BaseUrl";
 import FeedbackModal from "../../components/User/Modals/FeedbackModal";
 import ConfirmationModal from "../../components/User/Cards/ConfirmationModal";
 import { fetchFeedback, deleteFeedback } from "../../redux/User/feedbackSlice";
+import StatsSection from "../../components/User/Cards/StatsSection";
+import { useUserStats } from "../../hooks/userUserStats";
 
 export default function FeedbackTable() {
+  useUserStats();
   const dispatch = useDispatch();
   const feedbackData = useSelector((state) => state.user.feedback.feedbackList);
   const feedbackStatus = useSelector((state) => state.user.feedback.status);
@@ -30,7 +33,6 @@ export default function FeedbackTable() {
   const [selectedFeedbackId, setSelectedFeedbackId] = React.useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [editFeedback, setEditFeedback] = React.useState(null);
-  
   const CATEGORY_COLORS = {
     "Website UI/UX": "bg-blue-100 text-blue-800",
     "Trading Features": "bg-green-100 text-green-800",
@@ -79,8 +81,8 @@ export default function FeedbackTable() {
 
   return (
     <>
-      <div className="mt-24">
-        <div className="bg-lightBlue-600 md:pt-8 pb-22 pt-12">
+      {/* <div className="mt-24"> */}
+        {/* <div className="bg-lightBlue-600 md:pt-8 pb-22 pt-12">
           <div className="px-4 mx-auto w-full">
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
@@ -133,8 +135,9 @@ export default function FeedbackTable() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div> */}
+        <StatsSection isDashboard={false} pageType="feedbacks" />
+      {/* </div> */}
 
       <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">   
           <h2 className="text-xl font-bold text-gray-800 flex items-center">

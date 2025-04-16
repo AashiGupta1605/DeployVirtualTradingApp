@@ -5,17 +5,18 @@ import CardPageVisits from "../../components/User/Cards/CardPageVisits";
 import CardSocialTraffic from "../../components/User/Cards/CardSocialTraffic";
 import CardStats from "../../components/User/Cards/CardStats";
 import { useSelector } from "react-redux";
+import StatsSection from "../../components/User/Cards/StatsSection";
 
 export default function etfTable() {
   const userData = useSelector((state) => state.user.auth.user);
 
   return (
     <>
-    <div className="mt-12 overflow-hidden">
+    {/* <div className="mt-12 overflow-hidden">
             <div className="bg-lightBlue-600 md:pt-23 pb-20 pt-10">
               <div className="px-4 mx-auto w-full">
                 <div>
-                  {/* Card stats */}
+                  
                   <div className="flex flex-wrap">
                     <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                       <CardStats
@@ -69,7 +70,9 @@ export default function etfTable() {
                 </div>
               </div>
             </div>   
-          </div>
+          </div> */}
+        <StatsSection isDashboard={false} pageType="stocks" />
+
      <div className="flex flex-wrap -mt-1.5">
         <div className="w-full mb-12 px-4 -mt-42">
           <StockTable userData={userData} />

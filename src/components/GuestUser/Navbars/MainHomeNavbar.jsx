@@ -7,6 +7,7 @@ import LoginModal from "../../../views/auth/Login";
 import OrganizationRegistration from "../../../views/Organization/OrganizationDetails/Models/OrganizationRegistration.jsx";
 import OrganizationLogin from "../../../views/Organization/OrganizationDetails/Models/OrganizationLogin";
 import { LogIn, ChevronDown, Menu, X } from "lucide-react";
+import CertificateValidationModal from "../../../components/User/Modals/CertificateValidationModal";
 
 const MainHomeNavbar = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -17,6 +18,8 @@ const MainHomeNavbar = () => {
   const [isUserLoginModalOpen, setUserLoginModalOpen] = useState(false);
   const [isUserRegisterModalOpen, setUserRegisterModalOpen] = useState(false);
 
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -24,15 +27,23 @@ const MainHomeNavbar = () => {
   const loginDropdownRef = useRef(null);
 
   // Get organization authentication state from Redux
-  const { orgName, orgId, org, currentOrg } = useSelector((state) => state.organization.auth);
+  const { orgName, orgId, org, currentOrg } = useSelector(
+    (state) => state.organization.auth
+  );
   const isAuthenticated = !!orgName;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (registerDropdownRef.current && !registerDropdownRef.current.contains(event.target)) {
+      if (
+        registerDropdownRef.current &&
+        !registerDropdownRef.current.contains(event.target)
+      ) {
         setRegisterDropdownOpen(false);
       }
-      if (loginDropdownRef.current && !loginDropdownRef.current.contains(event.target)) {
+      if (
+        loginDropdownRef.current &&
+        !loginDropdownRef.current.contains(event.target)
+      ) {
         setLoginDropdownOpen(false);
       }
     };
@@ -80,7 +91,7 @@ const MainHomeNavbar = () => {
           <div className="flex justify-between h-16">
             {/* Left Side - Logo & App Name */}
             <div className="flex items-center">
-              <div 
+              <div
                 className="flex-shrink-0 flex items-center cursor-pointer"
                 onClick={() => handleNavigation("/")}
               >
@@ -101,7 +112,7 @@ const MainHomeNavbar = () => {
                 <button
                   onClick={() => handleNavigation("/")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/") 
+                    isActive("/")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
@@ -112,7 +123,7 @@ const MainHomeNavbar = () => {
                 <button
                   onClick={() => handleNavigation("/about")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/about") 
+                    isActive("/about")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
@@ -123,7 +134,7 @@ const MainHomeNavbar = () => {
                 <button
                   onClick={() => handleNavigation("/contact")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/contact") 
+                    isActive("/contact")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
@@ -134,7 +145,7 @@ const MainHomeNavbar = () => {
                 <button
                   onClick={() => handleNavigation("/services")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/services") 
+                    isActive("/services")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
@@ -142,50 +153,49 @@ const MainHomeNavbar = () => {
                   Services
                 </button>
 
-              
-{/* Stock Data Dropdown */}
-<div className="relative group">
-  <button
-    className={`px-3 py-2 rounded-md text-sm font-medium flex items-center group-hover:bg-gray-100 ${
-      isActivePrefix("/nifty50") || isActivePrefix("/etf")
-        ? "bg-lightBlue-600 text-white"
-        : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
-    }`}
-  >
-    Stock Data
-    <ChevronDown className="ml-1 h-4 w-4" />
-  </button>
-  {/* Dropdown menu - hidden by default, shown on hover */}
-  <div className="hidden group-hover:block absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-    <div className="py-1">
-      <button
-        onClick={() => handleNavigation("/nifty50")}
-        className={`block w-full text-left px-4 py-2 text-sm ${
-          isActivePrefix("/nifty50") 
-            ? "bg-blue-50 text-lightBlue-600 font-medium"
-            : "text-gray-700 hover:bg-gray-100"
-        }`}
-      >
-        Nifty50 Data
-      </button>
-      <button
-        onClick={() => handleNavigation("/etf")}
-        className={`block w-full text-left px-4 py-2 text-sm ${
-          isActivePrefix("/etf") 
-            ? "bg-blue-50 text-lightBlue-600 font-medium"
-            : "text-gray-700 hover:bg-gray-100"
-        }`}
-      >
-        ETF Data
-      </button>
-    </div>
-  </div>
-</div>
+                {/* Stock Data Dropdown */}
+                <div className="relative group">
+                  <button
+                    className={`px-3 py-2 rounded-md text-sm font-medium flex items-center group-hover:bg-gray-100 ${
+                      isActivePrefix("/nifty50") || isActivePrefix("/etf")
+                        ? "bg-lightBlue-600 text-white"
+                        : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
+                    }`}
+                  >
+                    Stock Data
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </button>
+                  {/* Dropdown menu - hidden by default, shown on hover */}
+                  <div className="hidden group-hover:block absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                    <div className="py-1">
+                      <button
+                        onClick={() => handleNavigation("/nifty50")}
+                        className={`block w-full text-left px-4 py-2 text-sm ${
+                          isActivePrefix("/nifty50")
+                            ? "bg-blue-50 text-lightBlue-600 font-medium"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        Nifty50 Data
+                      </button>
+                      <button
+                        onClick={() => handleNavigation("/etf")}
+                        className={`block w-full text-left px-4 py-2 text-sm ${
+                          isActivePrefix("/etf")
+                            ? "bg-blue-50 text-lightBlue-600 font-medium"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        ETF Data
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
                 <button
                   onClick={() => handleNavigation("/pricing")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/pricing") 
+                    isActive("/pricing")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
@@ -196,7 +206,7 @@ const MainHomeNavbar = () => {
                 <button
                   onClick={() => handleNavigation("/gallery")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/gallery") 
+                    isActive("/gallery")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
@@ -207,12 +217,34 @@ const MainHomeNavbar = () => {
                 <button
                   onClick={() => handleNavigation("/event")}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive("/event") 
+                    isActive("/event")
                       ? "bg-lightBlue-600 text-white"
                       : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
                   }`}
                 >
                   Events
+                </button>
+
+                {/* <button
+                  onClick={() => setIsCertificateModalOpen(true)}
+                  className="px-3 py-2 rounded-md text-sm font-medium flex items-center text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600 group relative"
+                  title="Validate Certificate"
+                >
+                  <i className="fas fa-certificate"></i>
+                  <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    Validate Certificate
+                  </span>
+                </button> */}
+
+                <button
+                  onClick={() => setIsCertificateModalOpen(true)}
+                  className="px-3 py-2 rounded-md text-sm font-medium flex items-center text-blue-500 hover:bg-gray-100 hover:text-blue-700 group relative"
+                  title="Validate Certificate"
+                >
+                  <i className="fas fa-certificate"></i>
+                  <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    Validate Certificate
+                  </span>
                 </button>
               </div>
 
@@ -246,7 +278,7 @@ const MainHomeNavbar = () => {
                               setUserLoginModalOpen(true);
                             }}
                             className={`block w-full text-left px-4 py-2 text-sm ${
-                              isActivePrefix("/login") 
+                              isActivePrefix("/login")
                                 ? "bg-blue-50 text-lightBlue-600 font-medium"
                                 : "text-gray-700 hover:bg-gray-100"
                             }`}
@@ -259,7 +291,7 @@ const MainHomeNavbar = () => {
                               setIsModalLoginOpen(true);
                             }}
                             className={`block w-full text-left px-4 py-2 text-sm ${
-                              isActivePrefix("/org-login") 
+                              isActivePrefix("/org-login")
                                 ? "bg-blue-50 text-lightBlue-600 font-medium"
                                 : "text-gray-700 hover:bg-gray-100"
                             }`}
@@ -288,7 +320,7 @@ const MainHomeNavbar = () => {
                               setUserRegisterModalOpen(true);
                             }}
                             className={`block w-full text-left px-4 py-2 text-sm ${
-                              isActivePrefix("/register") 
+                              isActivePrefix("/register")
                                 ? "bg-blue-50 text-lightBlue-600 font-medium"
                                 : "text-gray-700 hover:bg-gray-100"
                             }`}
@@ -301,7 +333,7 @@ const MainHomeNavbar = () => {
                               setModalOpen(true);
                             }}
                             className={`block w-full text-left px-4 py-2 text-sm ${
-                              isActivePrefix("/org-register") 
+                              isActivePrefix("/org-register")
                                 ? "bg-blue-50 text-lightBlue-600 font-medium"
                                 : "text-gray-700 hover:bg-gray-100"
                             }`}
@@ -334,12 +366,12 @@ const MainHomeNavbar = () => {
         </div>
 
         {/* Mobile menu */}
-        <div className={`md:hidden ${navbarOpen ? 'block' : 'hidden'}`}>
+        <div className={`md:hidden ${navbarOpen ? "block" : "hidden"}`}>
           <div className="pt-2 pb-3 space-y-1 bg-white shadow-lg">
             <button
               onClick={() => handleNavigation("/")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/") 
+                isActive("/")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
@@ -350,7 +382,7 @@ const MainHomeNavbar = () => {
             <button
               onClick={() => handleNavigation("/about")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/about") 
+                isActive("/about")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
@@ -361,7 +393,7 @@ const MainHomeNavbar = () => {
             <button
               onClick={() => handleNavigation("/contact")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/contact") 
+                isActive("/contact")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
@@ -372,7 +404,7 @@ const MainHomeNavbar = () => {
             <button
               onClick={() => handleNavigation("/services")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/services") 
+                isActive("/services")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
@@ -384,7 +416,7 @@ const MainHomeNavbar = () => {
               <button
                 onClick={() => handleNavigation("/nifty50")}
                 className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                  isActivePrefix("/nifty50") 
+                  isActivePrefix("/nifty50")
                     ? "bg-blue-50 text-lightBlue-600 font-medium"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
@@ -394,7 +426,7 @@ const MainHomeNavbar = () => {
               <button
                 onClick={() => handleNavigation("/etf")}
                 className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                  isActivePrefix("/etf") 
+                  isActivePrefix("/etf")
                     ? "bg-blue-50 text-lightBlue-600 font-medium"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
@@ -406,7 +438,7 @@ const MainHomeNavbar = () => {
             <button
               onClick={() => handleNavigation("/pricing")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/pricing") 
+                isActive("/pricing")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
@@ -417,7 +449,7 @@ const MainHomeNavbar = () => {
             <button
               onClick={() => handleNavigation("/gallery")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/gallery") 
+                isActive("/gallery")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
@@ -428,12 +460,38 @@ const MainHomeNavbar = () => {
             <button
               onClick={() => handleNavigation("/event")}
               className={`block w-full text-left px-4 py-2 text-base font-medium ${
-                isActive("/event") 
+                isActive("/event")
                   ? "bg-lightBlue-600 text-white"
                   : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
               }`}
             >
               Events
+            </button>
+
+            {/* <button
+              onClick={() => {
+                setNavbarOpen(false);
+                setIsCertificateModalOpen(true);
+              }}
+              className={`block w-full text-left px-4 py-2 text-base font-medium ${
+                isActive("/certificate")
+                  ? "bg-lightBlue-600 text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-lightBlue-600"
+              }`}
+            >
+              <i className="fas fa-certificate mr-2"></i>
+              Certificate
+            </button> */}
+
+            <button
+              onClick={() => setIsCertificateModalOpen(true)}
+              className="px-3 py-2 rounded-md text-sm font-medium flex items-center text-blue-500 hover:bg-gray-100 hover:text-blue-700 group relative"
+              title="Validate Certificate"
+            >
+              <i className="fas fa-certificate"></i>
+              <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                Validate Certificate
+              </span>
             </button>
 
             {/* Mobile Authentication Buttons */}
@@ -506,6 +564,11 @@ const MainHomeNavbar = () => {
         <RegisterModal
           isOpen={isUserRegisterModalOpen}
           onClose={() => setUserRegisterModalOpen(false)}
+        />
+
+        <CertificateValidationModal
+          isOpen={isCertificateModalOpen}
+          onClose={() => setIsCertificateModalOpen(false)}
         />
       </nav>
     </>

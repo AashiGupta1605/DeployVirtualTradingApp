@@ -30,6 +30,7 @@ const store = configureStore({
           'feedbackTable/updateFeedbackStatus/rejected',
           'trading/placeOrder/rejected'
         ],
+        serializableCheck: false,
       },
     }).concat(errorMiddleware),
   devTools: process.env.NODE_ENV !== 'production',

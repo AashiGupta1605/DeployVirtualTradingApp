@@ -14,6 +14,8 @@ import CardStats from "../../components/User/Cards/CardStats";
 import ComplaintModal from "../../components/User/Modals/ComplaintModal";
 import ConfirmationModal from "../../components/User/Cards/ConfirmationModal";
 import { fetchComplaint, deleteComplaint } from "../../redux/User/complaintSlice";
+import { useUserStats } from "../../hooks/userUserStats";
+import StatsSection from "../../components/User/Cards/StatsSection";
 
 const CATEGORY_COLORS = {
   "Account Issues": "bg-blue-100 text-blue-800",
@@ -24,6 +26,7 @@ const CATEGORY_COLORS = {
 };
 
 export default function ComplaintTable() {
+  useUserStats();
   const dispatch = useDispatch();
   const complaintData = useSelector((state) => state.user.complaint.complaintList);
   const complaintStatus = useSelector((state) => state.user.complaint.status);
@@ -68,8 +71,8 @@ export default function ComplaintTable() {
 
   return (
     <>
-     <div className="mt-24">
-            <div className="bg-lightBlue-600 md:pt-8 pb-22 pt-12">
+     {/* <div className="mt-24"> */}
+            {/* <div className="bg-lightBlue-600 md:pt-8 pb-22 pt-12">
               <div className="px-4 mx-auto w-full">
                 <div className="flex flex-wrap">
                   <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
@@ -122,8 +125,10 @@ export default function ComplaintTable() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </div> */}
+        <StatsSection isDashboard={false} pageType="complaints" />
+
+          {/* </div> */}
         <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-0.5 flex justify-between items-center">
           <h2 className="text-xl font-bold text-gray-800 flex items-center">
           <AlertCircle className="mr-2 text-red-600" size={24} />
