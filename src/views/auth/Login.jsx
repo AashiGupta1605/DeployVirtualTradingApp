@@ -1,4 +1,4 @@
-// UserLoginForm.js (extracted from LoginModal.js)
+// UserLoginForm.js
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
