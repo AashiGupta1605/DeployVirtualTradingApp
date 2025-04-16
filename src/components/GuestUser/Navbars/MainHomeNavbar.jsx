@@ -82,7 +82,7 @@ const MainHomeNavbar = () => {
   return (
     <>
       <nav className="fixed top-0 z-50 w-full bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-8xl ml-4 mr-4">
           <div className="flex justify-between h-16">
             {/* Left Side - Logo & App Name */}
             <div className="flex items-center">
@@ -223,7 +223,7 @@ const MainHomeNavbar = () => {
 
                 <button
                   onClick={openBookDemoBGModal}
-                  className="ml-6 -mr-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-500 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-500 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                 >
                   Book A Demo
                 </button>
