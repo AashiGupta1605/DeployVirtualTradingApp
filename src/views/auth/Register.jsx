@@ -309,10 +309,13 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
                 placeholder="Enter organization type"
               />
+              {formik.touched.orgtype && formik.errors.orgtype && (
+            <p className="text-red-500 text-sm">{formik.errors.orgtype}</p>
+          )}
               
             </div>
 
-            <div className="col-span-2 flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
+            {/* <div className="col-span-2 flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
               <button
                 type="button"
                 onClick={() => {
@@ -329,18 +332,12 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
               >
                 {initialValues ? "Update User" : "Register User"}
               </button>
-            </div>
-            {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}
-          </form>
+            </div> */}
+            
+          
 
           
 
-            placeholder="Enter organization type"
-          />
-          {formik.touched.orgtype && formik.errors.orgtype && (
-            <p className="text-red-500 text-sm">{formik.errors.orgtype}</p>
-          )}
-        </div>
 
 
         <div className="col-span-2 flex justify-between items-center pt-4 border-t border-gray-100">
@@ -375,6 +372,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
               {initialValues ? "Update User" : "Register"}
             </button>
           </div>
+          {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}
         </div>
       </form>
 
