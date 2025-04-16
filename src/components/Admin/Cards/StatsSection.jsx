@@ -935,8 +935,9 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
                 statIconColor: "bg-green-500",
                 showDetails: true,
                 statItems: [
-                  { label: "Total", value:stats?.stocks?.all?.toString() || "0" },
-                  { label: "nifty50", value: stats?.stocks?.nifty50?.toString() || "0" },
+                  { label: "nifty50", value:stats?.stocks?.nifty50 - 1?.toString() || "0" },
+                  // { label: "nifty500", value: stats?.stocks?.nifty500 - 1?.toString() || "0" },
+                  { label: "etf", value: stats?.stocks?.etf - 1?.toString() || "0" },
                   // { label: "nifty500", value: stats?.stocks?.nifty500?.toString() || "0" },
                   // { label: "Pending", value: orgStats.pending.toString() },
                   // { label: "Inactive", value: orgStats.inactive.toString() }
@@ -980,28 +981,34 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL USERS",
               statTitle: stats?.users?.total.toString(),
               statIconColor: "bg-blue-500",
-              showDetails: false
+              showDetails: false,
+              onClick: () => handleCardClick('users', 'User Statistics')
             },
             {
               statIconName: "fas fa-male",
               statSubtitle: "AVG AGE",
               statTitle: stats?.users?.averageAge?.toString(),
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+             onClick: () => handleCardClick('users', 'User Statistics')
             },
             {
               statIconName: "fas fa-female",
               statSubtitle: "DEACTIVE USERS",
               statTitle: stats?.users?.deactive?.toString(),
               statIconColor: "bg-pink-400",
-              showDetails: false
+              showDetails: false,
+            onClick: () => handleCardClick('users', 'User Statistics')
+
             },
             {
               statIconName: "fas fa-user-check",
               statSubtitle: "ACTIVE USERS",
               statTitle: stats?.users?.active?.toString() ,
               statIconColor: "bg-green-500",
-              showDetails: false
+              showDetails: false,
+              onClick: () => handleCardClick('users', 'User Statistics')
+
             }
           ],
           organizations: [
@@ -1010,28 +1017,35 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL ORGS",
               statTitle: stats?.organizations?.totalOrganizations?.toString(),
               statIconColor: "bg-indigo-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('organizations', 'Organizations Statistics')
+
             },
             {
               statIconName: "fas fa-check-circle",
               statSubtitle: "ACTIVE ORGS",
               statTitle: stats?.organizations?.activeOrgs?.toString(),
               statIconColor: "bg-green-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('organizations', 'Organizations Statistics')
+
             },
             {
               statIconName: "fas fa-clock",
               statSubtitle: "PENDING ORGS",
               statTitle: stats?.organizations?.pendingOrgs?.toString(),
               statIconColor: "bg-yellow-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('organizations', 'Organizations Statistics')
+
             },
             {
               statIconName: "fas fa-ban",
               statSubtitle: "REJECTED ORGS",
               statTitle: stats?.organizations?.rejectedOrgs?.toString(),
               statIconColor: "bg-red-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('organizations', 'Organizations Statistics')
             }
           ],
           events: [
@@ -1040,28 +1054,35 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL EVENTS",
               statTitle: stats?.events?.total?.toString(),
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('events', 'Events Statistics')
+
             },
             {
               statIconName: "fas fa-check",
               statSubtitle: "UPCOMING",
               statTitle: stats?.events?.upcoming?.toString(), // Replace with actual data
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('events', 'Events Statistics')
+
             },
             {
               statIconName: "fas fa-running",
               statSubtitle: "ONGOING",
               statTitle: stats?.events?.ongoing?.toString(), // Replace with actual data
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('events', 'Events Statistics')
+
             },
             {
               statIconName: "fas fa-history",
               statSubtitle: "COMPLETED",
               statTitle: stats?.events?.completed?.toString(), // Replace with actual data
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('events', 'Events Statistics')
             }
           ],
           queries: [
@@ -1070,28 +1091,36 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL QUERIES",
               statTitle: stats?.queries?.total?.toString() || "0" ,
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('queries', 'Query Statistics')
+
             },
             {
               statIconName: "fas fa-clock",
               statSubtitle: "RECENT QUERIES",
               statTitle: stats?.queries?.recentQueries?.count?.toString() || 0, // Replace with actual data
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('queries', 'Query Statistics')
+
             },
             {
               statIconName: "fas fa-chart-line",
               statSubtitle: "POPULAR TIMES",
               statTitle: stats?.queries?.popularTimes?.toString() || 0,// Replace with actual data
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('queries', 'Query Statistics')
+
             },
             {
               statIconName: "fas fa-tags",
               statSubtitle: "CATEGORY",
               statTitle:  "4", // Replace with actual data
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('queries', 'Query Statistics')
+
             }
           ],
           feedbacks: [
@@ -1100,7 +1129,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL FEEDBACKS",
               statTitle:stats?.feedback?.total?.toString(),
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
             },
             {
               statIconName: "fas fa-star",
@@ -1130,7 +1160,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
                 </div>
               ),
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
             },
             {
               statIconName: "fas fa-smile-beam",
@@ -1177,7 +1208,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
                 </div>
               ),
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
             },
             {
               statIconName: "fas fa-list-ul",
@@ -1185,7 +1217,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statTitle: "6" , // Replace with actual data
               
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
             }
           ],
           complaints: [
@@ -1194,58 +1227,67 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL COMPLAINTS",
               statTitle: stats?.complaints?.total?.toString() || 0,
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
             },
             {
               statIconName: "fas fa-clock",
               statSubtitle: "PENDING COMPLAINTS",
               statTitle: stats?.complaints?.pendingComplaint?.toString() || 0, // Replace with actual data
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
             },
             {
               statIconName: "fas fa-chart-line",
               statSubtitle: "RESOLVED COMPLAINTS",
               statTitle: stats?.complaints?.resolvedComplaints?.toString() || 0,// Replace with actual data
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
             },
             {
               statIconName: "fas fa-tags",
               statSubtitle: "CATEGORY",
               statTitle:  "5", // Replace with actual data
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
             }
           ],
           stocks: [
             {
               statIconName: "fas fa-inbox",
               statSubtitle: "TOTAL STOCKS / ETF",
-              statTitle: stats?.stocks?.all?.toString() || 0,
+              statTitle: stats?.stocks?.all - 3?.toString() || 0,
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('stocks', 'Stocks Statistics')
+
             },
             {
               statIconName: "fas fa-clock",
               statSubtitle: "NIFTY 50 ",
-              statTitle: stats?.stocks?.nifty50?.toString() || 0, // Replace with actual data
+              statTitle: stats?.stocks?.nifty50 - 1?.toString() || 0, // Replace with actual data
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('stocks', 'Stocks Statistics')
             },
             {
               statIconName: "fas fa-chart-line",
               statSubtitle: "NIFTY 500",
-              statTitle: stats?.stocks?.nifty500?.toString() || 0,// Replace with actual data
+              statTitle: stats?.stocks?.nifty500 - 1?.toString() || 0,// Replace with actual data
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('stocks', 'Stocks Statistics')
             },
             {
               statIconName: "fas fa-tags",
               statSubtitle: "ETF",
-              statTitle: stats?.stocks?.etf?.toString() || 0, // Replace with actual data
+              statTitle: stats?.stocks?.etf - 1?.toString() || 0, // Replace with actual data
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('stocks', 'Stocks Statistics')
             }
           ],
           galleryImages: [
@@ -1254,28 +1296,34 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statSubtitle: "TOTAL PHOTOS",
               statTitle: stats?.gallery?.totalPhotos?.toString() || "0",
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('gallery', 'Gallery Statistics')
+
             },
             {
               statIconName: "fas fa-clock",
               statSubtitle: "ACTIVE",
               statTitle: "-", // Replace with actual data
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('gallery', 'Gallery Statistics')
+              
             },
             {
               statIconName: "fas fa-chart-line",
               statSubtitle: "DELETED",
               statTitle: "-",// Replace with actual data
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('gallery', 'Gallery Statistics')
             },
             {
               statIconName: "fas fa-tags",
               statSubtitle: "NEW",
               statTitle: "-", // Replace with actual data
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: false,
+        onClick: () => handleCardClick('gallery', 'Gallery Statistics')
             }
           ],
           galleryCategories: [

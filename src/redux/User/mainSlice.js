@@ -10,7 +10,7 @@ import eventsReducer from './events/eventsSlice';
 // import userSlice from './userSlice';
 import dashboardReducer from "./userSlice";
 import subscriptionPlanReducer from './userSubscriptionPlan/userSubscriptionPlansSlice';
-
+import userDashboardReducer from "./userDashboardSlice";
 const userReducer = combineReducers({
   auth: authReducer,
   profile: userProfileReducer,
@@ -22,6 +22,7 @@ const userReducer = combineReducers({
   tradingModal: tradingReducer,
   forgetpassword: forgetpasswordReducer,
   events: eventsReducer,
+  userDashboard:userDashboardReducer
 });
 
 export default userReducer;

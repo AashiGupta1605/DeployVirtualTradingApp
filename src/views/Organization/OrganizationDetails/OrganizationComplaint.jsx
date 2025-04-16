@@ -26,8 +26,15 @@ import ConfirmationModal from "../../../components/Organization/Modals/Confirmat
 import Loader from "../../../components/Common/Loader";
 import toast from "react-hot-toast";
 import Dashboard from '../../../components/Organization/Dashboards/Dashboard';
+import StatsSection from "../../../components/Organization/Cards/StatsSection";
+import { useOrganizationDashboard } from "../../../hooks/useOrganizationDashbaord";
+
 
 const OrganizationComplaint = () => {
+  // useOrganizationDashboard();
+      const [refreshTrigger, setRefreshTrigger] = useState(0);
+      useOrganizationDashboard(refreshTrigger); 
+  
   const dispatch = useDispatch();
   const { complaints, loading, currentPage, totalPages, itemsPerPage, searchTerm, startDate, endDate } =
     useSelector((state) => state.organization.complaints);
@@ -58,6 +65,7 @@ const OrganizationComplaint = () => {
       .unwrap()
       .then(() => {
         toast.success("Complaint submitted successfully!");
+       setRefreshTrigger(prev => prev + 1);
       })
       .catch((err) => toast.error(err || "Failed to submit complaint"));
   };
@@ -77,6 +85,7 @@ const OrganizationComplaint = () => {
     try {
       await dispatch(deleteOrganizationComplaint(complaintToDelete)).unwrap();
       toast.success("Complaint deleted successfully");
+      setRefreshTrigger(prev => prev + 1);
       setDeleteConfirmationModalOpen(false);
       dispatch(
         fetchOrganizationComplaints({
@@ -106,7 +115,11 @@ const OrganizationComplaint = () => {
 
   return (
     <div className="relative">
-      <Dashboard type="organization-complaint" showAllCards={false} showCardsTable={false} />
+      {/* <Dashboard type="organization-complaint" showAllCards={false} showCardsTable={false} /> */}
+      <div className="mt-18">
+      <StatsSection isDashboard={false} pageType="complaints" />
+      </div>
+
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-28">
           {/* Header */}

@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import CardTable from "../../components/Common/CardTable";
 import CardStats from "../../components/User/Cards/CardStats";
+import StatsSection from "../../components/User/Cards/StatsSection";
 
 const NiftyTable = () => {
   // Get user data from Redux store
@@ -10,11 +11,10 @@ const NiftyTable = () => {
 
   return (
     <>
-      <div className="mt-12 overflow-hidden">
+      {/* <div className="mt-12 overflow-hidden">
         <div className="bg-lightBlue-600 md:pt-23 pb-20 pt-10">
           <div className="px-4 mx-auto w-full">
             <div>
-              {/* Card stats */}
               <div className="flex flex-wrap">
                 <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
                   <CardStats
@@ -68,7 +68,9 @@ const NiftyTable = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+        <StatsSection isDashboard={false} pageType="stocks" />
+      
       <div className="flex flex-wrap -mt-7">
         <div className="w-full mb-12 px-4 -mt-42">
           <CardTable tableType="nifty500" userData={userData} />

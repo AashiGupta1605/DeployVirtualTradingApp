@@ -29,6 +29,7 @@ import {
 } from '../../../redux/User/events/eventsSlice';
 import StockDetailsModal from './StockDetailsModal';
 import PortfolioTable from './PortfolioTable';
+import StatsSection from "../Cards/StatsSection";
 
 const UserPortfolioPage = () => {
 
@@ -216,10 +217,10 @@ const UserPortfolioPage = () => {
   };
 
   return (
-    <div className="mt-24">
-      <div className="bg-lightBlue-600 md:pt-8 pb-16 pt-12">
-        <div className="px-4 w-full mx-1">
-          <div className="flex flex-wrap">
+    <div>
+      {/* <div className="bg-lightBlue-600 md:pt-8 pb-16 pt-12"> */}
+        {/* <div className="px-4 w-full mx-1"> */}
+          {/* <div className="flex flex-wrap">
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
               <StatsCard
                 title="VIRTUAL BALANCE"
@@ -260,9 +261,13 @@ const UserPortfolioPage = () => {
                 changeColor={statistics.realizedPLPercentage >= 0 ? "text-emerald-500" : "text-red-500"}
               />
             </div>
+          </div> */}
+          <div className="-mt-24">
+        <StatsSection isDashboard={false} pageType="trading" />
           </div>
-        </div>
-      </div>
+
+        {/* </div> */}
+      {/* </div> */}
 
       {/* Portfolio Content */}
       <div className="px-4 md:px-8 mx-4 -mt-12">
