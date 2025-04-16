@@ -4,84 +4,142 @@ import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
+import { faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
 import { toast } from 'react-hot-toast';
 
-const ToggleButton = ({ id, isResolved }) => {
+const TimeSlot_Colors = {
+  "10:00 - 12:00": "bg-blue-100 text-blue-800",
+  "12:00 - 14:00": "bg-cyan-100 text-cyan-800",
+  "14:00 - 16:00": "bg-purple-100 text-purple-800",
+  "16:00 - 18:00": "bg-yellow-100 text-yellow-800",
+  "18:00 - 20:00": "bg-orange-100 text-orange-800",
+  "Any Time": "bg-green-100 text-green-800 pr-4 pl-4",
+}
+const Status_Colors = {
+  true:"bg-green-100 text-green-800",
+  false:"bg-yellow-100 text-yellow-800 pr-4 pl-4",
+}
 
-    const handleClick = async () => {
-        if (isResolved) {
-            toast.success('This request is already resolved.');
-            return;
-        }
-  
-      try {
-        const res = await axios.put(`${BASE_API_URL}/admin/demo/updateDemobyUser/${id}`);
-        console.log("User Booked Demo Status: ", res.data);
-        if (res?.status===201) {
-            toast.success(res?.data?.message);
-        }
-        else if (res?.status === 409 || res?.status === 400) {
-            toast(res?.data?.message, {
-                icon: '⚠️',
-            })
-        }
-        else if (res?.status === 500) {
-            toast(res?.data?.message, {
-                icon: '🛑',
-            })
-        }
-      } 
-      catch (error) {
-        console.error("Error resolving demo request:", error);
-        if (error.response) {
-            const { status, data } = error.response;
-            if (status === 409 || status===400) {
-                toast(data?.message, {
-                    icon: '⚠️',
-                });
-            } 
-            else if (status === 500) {
-                toast(data?.message, {
-                    icon: '🛑',
-                })
-            } 
-            else {
-                toast.error(data?.message || "Unknown error, please try again.");
-            }
-        } 
-        else {
-            toast.error("An internal server error occurred!");
-        }  
-        throw error; 
+const TitleCell = ({ query }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const shouldTruncate = query.length > 60;
+  const displayText = isExpanded
+    ? query
+    : query.slice(0, 60) + (shouldTruncate ? "..." : "");
+
+  return (
+    <div className="flex flex-col">
+      {/* <span><i className="fas fa-info-circle text-gray-400"/>&nbsp;{displayText}</span> */}
+      <span>{displayText}</span>
+      {shouldTruncate && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-blue-500 text-xs hover:underline mt-1 self-start focus:outline-none"
+        >
+          {isExpanded ? "Show less" : "Show more"}
+        </button>
+      )}
+    </div>
+  );
+};
+
+const ToggleButton = ({ id, isResolved, refreshData }) => {
+
+  const handleClick = async () => {
+      if (isResolved) {
+          toast('This request is already resolved.', {
+            icon:'⚠️',
+          });
+          return;
       }
-    };
-  
-    return (
-      <button
-        onClick={handleClick}
-        disabled={isResolved}
-        className={`px-3 py-1 rounded text-white text-sm font-medium transition duration-300 ${
-          isResolved ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-        }`}
-      >
-        {isResolved ? 'Resolved' : 'Mark as Resolved'}
-      </button>
-    );
+
+    try {
+      const res = await axios.put(`${BASE_API_URL}/admin/demo/updateDemobyOrganization/${id}`);
+      console.log("User Booked Demo Status: ", res.data);
+      if (res?.status===201) {
+          toast.success(res?.data?.message);
+          refreshData()
+      }
+      else if (res?.status === 409 || res?.status === 400) {
+          toast(res?.data?.message, {
+              icon: '⚠️',
+          })
+      }
+      else if (res?.status === 500) {
+          toast(res?.data?.message, {
+              icon: '🛑',
+          })
+      }
+    } 
+    catch (error) {
+      console.error("Error resolving demo request:", error);
+      if (error.response) {
+          const { status, data } = error.response;
+          if (status === 409 || status===400) {
+              toast(data?.message, {
+                  icon: '⚠️',
+              });
+          } 
+          else if (status === 500) {
+              toast(data?.message, {
+                  icon: '🛑',
+              })
+          } 
+          else {
+              toast.error(data?.message || "Unknown error, please try again.");
+          }
+      } 
+      else {
+          toast.error("An internal server error occurred!");
+          refreshData()
+      }  
+      throw error; 
+    }
+  };
+
+  return (
+    <label className="relative inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="sr-only"
+      checked={isResolved}
+      onChange={handleClick}
+      // disabled={isResolved}
+    />
+
+    {/* Track */}
+    <div
+      className={`
+        relative w-13 h-6 rounded-full bg-white border-2 transition-opacity
+        ${isResolved ? "bg-emerald-500 border-emerald-700 cursor-not-allowed" : "bg-red-500 border-red-700"}
+      `} //opacity-70
+    >
+      {/* Sliding Toggle */}
+      <div
+        className={`
+          absolute h-4 w-5 rounded-full bg-white transition-transform duration-300 ease-in-out
+          ${isResolved ? "translate-x-6" : "translate-x-0"}
+        `}  style={{ top: '2px', left: '2px' }}
+      />
+    </div>
+  </label>
+  );
 };
 
 const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
   const [data, setData] = useState([]);
   const [err, setErr] = useState("");
   const [search, setSearch] = useState("");
+  const [field, setField] = useState("")
 
-  const fetchBookDemobyUsersData = async () => {
+  const fetchBookDemobyOrgData = async () => {
     try {
       const searchQuery = search.trim() === "" ? "all" : search;
 
       const response = await axios.get(
-        `${BASE_API_URL}/admin/demo/getDemobyUser`
+        `${BASE_API_URL}/admin/demo/getDemobyOrganization`
       );
 
       console.log("Book Demo Data: ", response.data);
@@ -101,14 +159,19 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        fetchBookDemobyUsersData();
+        fetchBookDemobyOrgData();
         setErr("");
-      } catch (error) {
+      } 
+      catch (error) {
         setErr(error.response?.data?.message || "Something went wrong.");
       }
     };
     fetchData();
   }, []);
+
+  const refreshData = () => {
+    fetchBookDemobyOrgData();
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -136,24 +199,23 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
               {/* Left Side (Icon + Heading) */}
               <div className="flex items-center gap-3">
                 <FontAwesomeIcon
-                  icon={faChalkboardTeacher}
-                  className="text-gray-500 text-[21px]"
+                  icon={faHandshake}
+                  className="text-gray-500 text-[21px] h-7"
                 />
                 <h2 className="text-xl font-bold text-gray-800">
                   Manage Organization's Demo Booking
                 </h2>
+                <p className="-ml-2 max-w-38 rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
+                  Total Bookings: {data.length}
+                </p>
               </div>
 
               <div className="flex items-center gap-4">
-                <h6 className="text-base font-semibold text-gray-400">
-                  Total Bookings: {data.length}
-                </h6>
-
                 {/* Selector Box for field selection */}
 
                 {/* Search bar */}
                 <div className="relative">
-                  <div className="relative w-[270px]">
+                  <div className="relative w-[240px]">
                     {/* Search Icon */}
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
@@ -190,50 +252,47 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
               } w-full max-h-[500px] rounded-lg`}
             >
               <table
-                className={`inset-0 min-w-full table-fixed ${
+                className={`-ml-5 -mr-14 inset-0 min-w-full table-fixed ${
                   data.length > 0 ? "divide-y" : ""
                 } divide-gray-200 border-collapse bg-white`}
               >
                 <thead className="bg-gray-50 sticky top-0 z-10">
                   <tr>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Email
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Website
+                    </th>
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Mobile
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="min-w-[200px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Contact Person
+                    </th>
+                    <th className="min-w-[280px] max-w-[280px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Query
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Gender
+                    <th className="min-w-[200px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Preferred Date
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date of Birth
-                    </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Organization Name
-                    </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Preferred Day
-                    </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="min-w-[240px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Preferred Time-Slot
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Demo Booking Date
+                    <th className="min-w-[220px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Demo Booked On
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Resolved Date
+                    <th className="min-w-[240px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Demo Completed On
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                    <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      &nbsp;&nbsp;Status
                     </th>
-                    <th className="px-13 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Action
+                    <th className="min-w-[220px] px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Demo Completed
                     </th>
                   </tr>
                 </thead>
@@ -241,7 +300,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                 {err && (
                   <tbody className="bg-white divide-y divide-gray-200">
                     <tr>
-                      <td colSpan="13">
+                      <td colSpan="6">
                         <div className="mt-9 ml-15 flex justify-center items-center min-h-[180px]">
                           <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg p-6">
                             <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
@@ -282,7 +341,9 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                             key={index}
                             className="hover:bg-gray-50 transition-colors"
                           >
-                            <td className="cursor-pointer px-13 py-4 whitespace-nowrap min-w-[100px] text-sm font-medium text-gray-900">
+                            <td className="px-12 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                              {data.isResolved ? <i className="fas fa-check-circle text-lg" style={{ color: 'green' }}/> : <i className="fas fa-times-circle text-lg" style={{ color: 'red' }}/>}
+                              &nbsp;&nbsp;&nbsp;
                               {data.name
                                 .split(" ")
                                 .map(
@@ -293,43 +354,69 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                                 .join(" ")}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.email}
+                            <td className="px-12 py-4 whitespace-nowrap text-sm">
+                              <a href={`mailto:${data.email}`} className="text-blue-500 hover:underline">
+                                <i className="fas fa-envelope mt-2"/>&nbsp;
+                                {data.email}
+                              </a>
+                              {/* <a
+                              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${data.email}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:underline"
+                              >
+                                <i className="fas fa-envelope mt-2"/>&nbsp;
+                                {data.email}
+                              </a> */}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.mobile}
+                            <td className="px-12 py-4 min-w-[260px] max-w-[260px] break-words truncate whitespace-nowrap overflow-hidden text-ellipsis text-sm text-gray-400">
+                              {data.website ? (
+                                <a
+                                href={data.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >
+                                  <span className="underline text-blue-600">
+                                    {data.website}
+                                  </span>
+                                </a>
+                              ) : (
+                                  "No website found"
+                                )}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.aboutHelp}
+                            <td className="px-12 py-4 whitespace-nowrap text-sm text-gray-600">
+                              <a href={`tel:${data.mobile}`} className="hover:underline">
+                                <i className="fas fa-phone-alt -scale-x-100 text-gray-400"/>&nbsp;
+                                {data.mobile}
+                              </a>
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.gender}
+                            <td className="px-12 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {data.contactPerson ? data.contactPerson : <span className="text-gray-400">No Contact Person</span>}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {new Date(data.dob).toLocaleDateString()}
+                            <td className="min-w-[280px] max-w-[280px] px-12 py-4 text-sm text-gray-500 break-words">
+                              <TitleCell query={data.aboutHelp} />
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.organizationName ? data.organizationName : "No Organization"}
+                            <td className="text-center min-w-[200px] px-12 py-4 whitespace-nowrap text-sm text-gray-600">
+                              {new Date(data.preferredDate).toLocaleDateString()}
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.preferredDay}
+                            <td className="text-center min-w-[240px] px-12 py-4 whitespace-nowrap text-sm text-gray-400 ">
+                              {data.preferredTimeSlot 
+                                ? <span className={`px-2 py-1 text-xs font-semibold rounded-full ${TimeSlot_Colors[data.preferredTimeSlot]}`}>{ data.preferredTimeSlot }</span>
+                                : "No TimeSlot Choosen"
+                              }
                             </td>
 
-                            <td className="pl-18 px-13 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[90px]">
-                              {data.preferredTimeSlot ? data.preferredTimeSlot : "No TimeSlot Choosen"}
-                            </td>
-
-                            <td className="px-13 py-4 whitespace-nowrap min-w-[100px] text-sm text-gray-500">
+                            <td className="text-center min-w-[220px] px-12 py-4 whitespace-nowrap text-sm text-gray-600">
                               {new Date(data.demoRequestDate).toLocaleDateString()}
                             </td>
 
-                            <td className="pl-10 px-13 py-4 whitespace-nowrap min-w-[100px] text-sm text-gray-500">
+                            <td className="text-center min-w-[240px] px-12 py-4 whitespace-nowrap text-sm text-gray-500">
                               {data.demoResolveDate ? (
                                 <span className="ml-2">
                                   {new Date(
@@ -337,20 +424,22 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                                   ).toLocaleDateString()}
                                 </span>
                               ) : (
-                                <span className="ml-6 text-gray-400">N/A</span>
+                                <span className="text-gray-400">N/A</span>
                               )}
                             </td>
 
-                            <td className="px-13 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {data.isResolved ? "Resolved" : "Pending"}
+                            <td className="text-center px-12 py-4 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${Status_Colors[data.isResolved]}`}>
+                                {data.isResolved ? "Completed" : "Pending"}
+                              </span>
                             </td>
 
-                            <td className="px-13 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <ToggleButton
+                            <td className="min-w-[220px] text-center px-12 py-4 whitespace-nowrap">
+                              <ToggleButton
                                 id={data._id}
                                 isResolved={data.isResolved}
-                                // onResolved={handleResolved}
-                            />
+                                refreshData={refreshData}
+                              />
                             </td>
                           </tr>
                         );
@@ -358,7 +447,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                     : !err && (
                         <tr>
                           <td
-                            colSpan="13"
+                            colSpan="6"
                             className="p-6 text-center text-gray-500 text-base font-medium bg-gray-50 rounded-md mt-4"
                           >
                             <div className="pt-25 pb-30 flex flex-col items-center space-y-2">
@@ -460,5 +549,13 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
 ShowBookDemobyOrg.propTypes = {
   sidebarExpanded: PropTypes.bool.isRequired,
 };
+TitleCell.propTypes = {
+  query: PropTypes.string.isRequired,
+};
+ToggleButton.propTypes = {
+  id: PropTypes.instanceOf(Object).isRequired,
+  isResolved: PropTypes.bool.isRequired,
+  refreshData: PropTypes.func.isRequired,
+}
 
 export default ShowBookDemobyOrg;
