@@ -204,13 +204,8 @@ const MainHomeNavbar = () => {
   return (
     <>
       <nav className="fixed top-0 z-50 w-full bg-white shadow-sm border-b border-gray-200">
-<<<<<<< HEAD
         <div className="max-w-8xl ml-4 mr-4">
-          <div className="flex justify-between h-16">
-=======
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
->>>>>>> 00212bd1bb678de27aca32d4bb13d004c5048b54
             {/* Left Side - Logo & App Name */}
             <div className="flex items-center">
               <div 
@@ -230,7 +225,8 @@ const MainHomeNavbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:space-x-2">
-              <div className="flex space-x-1">
+              {/* Nav items start */}
+              <div className="flex space-x-1 mr-6">
                 <button
                   onClick={() => handleNavigation("/")}
                   className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap ${
@@ -345,18 +341,8 @@ const MainHomeNavbar = () => {
                 >
                   Events
                 </button>
-<<<<<<< HEAD
-
-                <button
-                  onClick={openBookDemoBGModal}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-500 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                >
-                  Book A Demo
-                </button>
-
-=======
->>>>>>> 00212bd1bb678de27aca32d4bb13d004c5048b54
               </div>
+              {/* nav items end */}
 
               {/* Book Demo Button */}
               <button
