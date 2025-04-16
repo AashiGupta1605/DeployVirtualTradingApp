@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FiTrendingUp, FiPieChart, FiDollarSign, FiAlertCircle, FiBarChart2, FiBookOpen } from "react-icons/fi";
+import { motion } from 'framer-motion';
 
 const ServicesPage = () => {
   const services = [
@@ -43,19 +44,67 @@ const ServicesPage = () => {
   ];
 
   return (
+    
     <div className="min-h-screen bg-gray-50 pt-20 pb-16">
-      {/* Hero Section */}
-      <div className="bg-lightBlue-600 py-10 mt-15 text-white">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-4">Our Premium Services</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Professional stock market tools and services to help you invest smarter
-          </p>
+          <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* Enhanced Hero Section */}
+      <div className="relative overflow-hidden bg-lightBlue-600 py-12 mt-12 z-10">
+        <div className="absolute inset-0 opacity-20 z-0">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
+          >
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
+              <span className="block">Our Premium Services</span>
+
+            </h1>
+            <motion.p 
+              className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              Professional stock market tools and services to help you invest smarter
+            </motion.p>
+          </motion.div>
+        </div>
+        
+        {/* Enhanced decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-hidden">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-white opacity-10 z-10"
+              style={{
+                width: Math.random() * 120 + 30,
+                height: Math.random() * 120 + 30,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, Math.random() * 60 - 30],
+                x: [0, Math.random() * 60 - 30],
+                opacity: [0.05, 0.2, 0.05],
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
+            />
+          ))}
         </div>
       </div>
-
+    </div>
       {/* Services Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto -mt-134 px-4 py-10 ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <div 

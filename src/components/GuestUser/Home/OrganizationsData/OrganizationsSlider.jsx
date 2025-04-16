@@ -187,7 +187,7 @@ const OrganizationsSlider = () => {
             {showModal && <ShowAllClientsModal closeModal={closeModal} clients={clientsData} />}
 
             {/* Custom styles for slider */}
-            <style jsx global>{`
+            <style>{`
                 .slick-dots-custom {
                     bottom: -30px;
                     display: flex !important;
