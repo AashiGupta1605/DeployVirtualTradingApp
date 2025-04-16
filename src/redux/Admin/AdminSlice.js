@@ -11,6 +11,7 @@ import feedbackTableReducer from '../Admin/FeedbackListPage/FeedbackTableSlice';
 import complaintTableReducer from '../Admin/ComplaintListPage/complaintTableSlice';
 import eventTableReducer from '../Admin/EventManage/eventSlice';
 import adminDashboardReducer from "../Admin/StatsCount/adminDashboardSlice";
+import participantReducer from "./ParticipantsManage/participantSlice";
 
 // Create a custom reducer to handle logout across admin slices
 const createLogoutReducer = (reducer) => {
@@ -38,7 +39,8 @@ const adminReducer = combineReducers({
   feedbackTable: feedbackTableReducer,
   complaintTable: complaintTableReducer,
   eventTable: eventTableReducer,
-  adminDashboardStats:adminDashboardReducer
+  adminDashboardStats:adminDashboardReducer,
+  participants: participantReducer
 });
 
 const rootAdminReducer = (state, action) => {

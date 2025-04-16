@@ -23,7 +23,7 @@ import GalleryCategories from "../views/admin/gallery/GalleryCategories";
 import UserDemo from "../views/admin/bookDemo/UserDemo";
 import OrgDemo from "../views/admin/bookDemo/OrgDemo";
 import AdminEventsPage from "../views/admin/AdminEventsPage";
-
+import Participants from "../views/admin/Participants";
 export default function Admin() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
@@ -43,6 +43,7 @@ export default function Admin() {
           <div className="absolute inset-0 overflow-auto"> {/* Added this wrapper */}
             <Routes>
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="participants" element={<Participants />} />
               <Route path="settings" element={<Settings />} />
               <Route path="niftytable" element={<NiftyTable />} />
               <Route path="nifty500table" element={<Nifty500Table />} />
