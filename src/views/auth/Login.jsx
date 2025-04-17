@@ -1,4 +1,3 @@
-// UserLoginForm.js
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -73,21 +72,21 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-2xl z-50">
-          <div className="absolute inset-0 bg-gray-900 opacity-50 rounded-2xl z-40"></div>
+        <div className="absolute inset-0 flex items-center justify-center rounded-xl z-50">
+          <div className="absolute inset-0 bg-gray-900/50 rounded-xl z-40"></div>
           <div className="z-50 flex flex-col items-center gap-4">
             <div
-              className="inline-block h-16 w-16 animate-spin rounded-full border-8 border-solid border-lightBlue-600 border-t-transparent"
+              className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-lightBlue-600 border-t-transparent"
               role="status"
             ></div>
           </div>
         </div>
       )}
 
-      <form onSubmit={formik.handleSubmit} className="space-y-6">
-        <div className="space-y-4">
+      <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email or Mobile
@@ -95,15 +94,15 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
             <input
               type="text"
               name="identifier"
-              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-              bg-white text-gray-900 
-              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 
+              bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
               focus:outline-none transition-all duration-200"
-              placeholder="Enter email or mobile number"
+              placeholder="Enter email or mobile"
               {...formik.getFieldProps("identifier")}
             />
             {formik.touched.identifier && formik.errors.identifier && (
-              <div className="text-red-500 text-sm mt-1">
+              <div className="text-red-500 text-xs mt-1">
                 {formik.errors.identifier}
               </div>
             )}
@@ -115,31 +114,31 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
             <input
               type="password"
               name="password"
-              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-              bg-white text-gray-900 
-              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 
+              bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
               focus:outline-none transition-all duration-200"
               placeholder="Enter your password"
               {...formik.getFieldProps("password")}
             />
             {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-sm mt-1">
+              <div className="text-red-500 text-xs mt-1">
                 {formik.errors.password}
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <button
             type="button"
-            className="text-lightBlue-600 hover:underline focus:outline-none text-sm"
+            className="text-lightBlue-600 hover:underline focus:outline-none text-xs sm:text-sm"
             onClick={onOpenForgotPassword}
           >
             Forgot Password?
           </button>
-          <div className="text-sm text-gray-600">
-            Don't have an account yet?{" "}
+          <div className="text-xs sm:text-sm text-gray-600">
+            Don't have an account?{" "}
             <button
               type="button"
               className="text-lightBlue-600 hover:underline focus:outline-none font-medium"
@@ -150,21 +149,21 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
           </div>
         </div>
 
-        <div className="flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row justify-end items-center gap-3 border-t border-gray-100">
           <button
             type="button"
             onClick={() => {
               formik.resetForm();
               onClose();
             }}
-            className="px-6 py-2.5 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={formik.isSubmitting || loading}
-            className="px-6 py-2.5 rounded-xl bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
           >
             {formik.isSubmitting ? "Logging in..." : "Login"}
           </button>

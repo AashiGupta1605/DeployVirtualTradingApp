@@ -11,9 +11,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
   const [message, setMessage] = useState("");
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
-
 
   useEffect(() => {
     if (initialValues) {
@@ -66,19 +64,15 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
-
-      const { confirmPassword, ...userData } = values; // Exclude confirmPassword
+      const { confirmPassword, ...userData } = values;
     
-
       try {
         const url = initialValues
           ? `${BASE_API_URL}/user/users/${initialValues._id}`
           : `${BASE_API_URL}/user/auth/register`;
 
-    
         const method = initialValues ? "PUT" : "POST";
     
-
         const response = await fetch(url, {
           method,
           headers: { "Content-Type": "application/json" },
@@ -87,19 +81,13 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
         const data = await response.json();
     
-        // 💥 Handle error response for existing but unverified user
         if (!response.ok) {
-
           if (data?.status === "not_verified") {
             toast.success("You are already registered but not verified. Sending OTP...");
-
-    
             setUserEmail(userData.email);
-            setAlreadyRegistered(true); // used to show "Click here to generate OTP"
-            setShowOtpModal(true); // open OTP modal
+            setAlreadyRegistered(true);
+            setShowOtpModal(true);
     
-            // 🔁 Optional: trigger resend OTP API again
-
             try {
               const otpRes = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
                 method: "POST",
@@ -115,20 +103,15 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             } catch (otpErr) {
               toast.error("Failed to resend OTP");
             }
-    
             return;
           }
-    
           toast.error(data.message || "Something went wrong");
           return;
         }
 
-    
-        // ✅ Successful registration or update
         toast.success(`${initialValues ? "User updated" : "Registration successful!"}`);
     
         if (!initialValues) {
-          // 🔔 Send OTP for new user
           const otpResponse = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -151,34 +134,27 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             onClose();
           }, 2000);
         }
-
       } catch (error) {
         console.error("Submit error:", error);
         toast.error("Something went wrong. Please try again.");
       }
     },
-    
   });
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-4">
+      <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
           <input
             type="text"
             name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-            placeholder="Enter your name"
+            {...formik.getFieldProps("name")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           />
           {formik.touched.name && formik.errors.name && (
-            <p className="text-red-500 text-sm">{formik.errors.name}</p>
+            <p className="text-red-500 text-xs">{formik.errors.name}</p>
           )}
         </div>
         
@@ -187,17 +163,12 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="email"
             name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-            placeholder="Enter email address"
+            {...formik.getFieldProps("email")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           />
           {formik.touched.email && formik.errors.email && (
-            <p className="text-red-500 text-sm">{formik.errors.email}</p>
+            <p className="text-red-500 text-xs">{formik.errors.email}</p>
           )}
         </div>
         
@@ -206,17 +177,12 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="password"
             name="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-            placeholder="Enter password"
+            {...formik.getFieldProps("password")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           />
           {formik.touched.password && formik.errors.password && (
-            <p className="text-red-500 text-sm">{formik.errors.password}</p>
+            <p className="text-red-500 text-xs">{formik.errors.password}</p>
           )}
         </div>
         
@@ -225,17 +191,12 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="password"
             name="confirmPassword"
-            value={formik.values.confirmPassword}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-            placeholder="Re-enter password"
+            {...formik.getFieldProps("confirmPassword")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           />
           {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-            <p className="text-red-500 text-sm">{formik.errors.confirmPassword}</p>
+            <p className="text-red-500 text-xs">{formik.errors.confirmPassword}</p>
           )}
         </div>
         
@@ -244,17 +205,12 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="text"
             name="mobile"
-            value={formik.values.mobile}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-            placeholder="Enter mobile number"
+            {...formik.getFieldProps("mobile")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           />
           {formik.touched.mobile && formik.errors.mobile && (
-            <p className="text-red-500 text-sm">{formik.errors.mobile}</p>
+            <p className="text-red-500 text-xs">{formik.errors.mobile}</p>
           )}
         </div>
         
@@ -262,10 +218,9 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
           <select
             name="gender"
-            value={formik.values.gender}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+            {...formik.getFieldProps("gender")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           >
             <option value="">Select gender</option>
             <option value="Male">Male</option>
@@ -273,7 +228,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             <option value="Other">Other</option>
           </select>
           {formik.touched.gender && formik.errors.gender && (
-            <p className="text-red-500 text-sm">{formik.errors.gender}</p>
+            <p className="text-red-500 text-xs">{formik.errors.gender}</p>
           )}
         </div>
         
@@ -282,15 +237,12 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="date"
             name="dob"
-            value={formik.values.dob}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 
-               focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
-               focus:outline-none transition-all duration-200"
+            {...formik.getFieldProps("dob")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
           />
           {formik.touched.dob && formik.errors.dob && (
-            <p className="text-red-500 text-sm">{formik.errors.dob}</p>
+            <p className="text-red-500 text-xs">{formik.errors.dob}</p>
           )}
         </div>
         
@@ -299,53 +251,21 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="text"
             name="orgtype"
-            value={formik.values.orgtype}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
-
-                placeholder="Enter organization type"
-              />
-              {formik.touched.orgtype && formik.errors.orgtype && (
-            <p className="text-red-500 text-sm">{formik.errors.orgtype}</p>
+            {...formik.getFieldProps("orgtype")}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+          />
+          {formik.touched.orgtype && formik.errors.orgtype && (
+            <p className="text-red-500 text-xs">{formik.errors.orgtype}</p>
           )}
-              
-            </div>
+        </div>
 
-            {/* <div className="col-span-2 flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => {
-                  formik.resetForm(); // Reset form fields
-                  onClose(); // Close the modal or form
-                }}
-                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-              >
-                {initialValues ? "Update User" : "Register User"}
-              </button>
-            </div> */}
-            
-          
-
-          
-
-
-
-        <div className="col-span-2 flex justify-between items-center pt-4 border-t border-gray-100">
-          <div className="text-sm text-gray-600">
+        <div className="col-span-2 flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-100">
+          <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
             Already have an account?{" "}
             <button
               type="button"
-              className="text-lightBlue-600 hover:underline focus:outline-none font-medium"
+              className="text-lightBlue-600 hover:underline font-medium"
               onClick={() => {
                 onClose();
                 onOpenLogin();
@@ -354,43 +274,41 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
               Login here
             </button>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-3">
             <button
               type="button"
               onClick={() => {
                 formik.resetForm();
                 onClose();
               }}
-              className="px-6 py-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+              className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all text-sm"
             >
-              {initialValues ? "Update User" : "Register"}
+              {initialValues ? "Update" : "Register"}
             </button>
           </div>
-          {message && <p className="text-center text-sm mt-2 text-red-500">{message}</p>}
         </div>
       </form>
 
-     {showOtpModal && (
-     <OTPModal
-     isOpen={showOtpModal}
-      onClose={() => setShowOtpModal(false)}
-      email={userEmail}
-      onVerified={() => {
-        formik.resetForm();
-       // toast.success("OTP Verified Successfully!");
-        setTimeout(() => {
-          setShowOtpModal(false); // Close OTP modal
-          onClose();              // Close Register modal
-        }, 2000);
-      }}
-  />
-)}
+      {showOtpModal && (
+        <OTPModal
+          isOpen={showOtpModal}
+          onClose={() => setShowOtpModal(false)}
+          email={userEmail}
+          onVerified={() => {
+            formik.resetForm();
+            setTimeout(() => {
+              setShowOtpModal(false);
+              onClose();
+            }, 2000);
+          }}
+        />
+      )}
     </div>
   );
 };

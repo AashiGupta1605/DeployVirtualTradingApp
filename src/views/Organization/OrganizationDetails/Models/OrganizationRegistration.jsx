@@ -65,177 +65,137 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
   });
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={formik.handleSubmit} className=" gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Enter name"
-                required
-              />
-              {formik.touched.name && formik.errors.name && (
-                <div className="text-red-500 text-sm">{formik.errors.name}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formik.values.address}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                         bg-white text-gray-900 
-                       focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                        focus:outline-none transition-all duration-200"
-                placeholder="Enter address"
-                required
-              />
-              {formik.touched.address && formik.errors.address && (
-                <div className="text-red-500 text-sm">{formik.errors.address}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
-              <input
-                type="text"
-                name="website"
-                value={formik.values.website}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Enter website URL"
-              />
-              {formik.touched.website && formik.errors.website && (
-                <div className="text-red-500 text-sm">{formik.errors.website}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
-              <input
-                type="text"
-                name="contactPerson"
-                value={formik.values.contactPerson}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Enter contact person name"
-              />
-              {formik.touched.contactPerson && formik.errors.contactPerson && (
-                <div className="text-red-500 text-sm">{formik.errors.contactPerson}</div>
-              )}
-            </div>
+    <div className="space-y-4">
+      <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input
+              type="text"
+              name="name"
+              {...formik.getFieldProps("name")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              required
+            />
+            {formik.touched.name && formik.errors.name && (
+              <div className="text-red-500 text-xs">{formik.errors.name}</div>
+            )}
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Enter email address"
-                required
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="text-red-500 text-sm">{formik.errors.email}</div>
-              )}
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <input
+              type="text"
+              name="address"
+              {...formik.getFieldProps("address")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              required
+            />
+            {formik.touched.address && formik.errors.address && (
+              <div className="text-red-500 text-xs">{formik.errors.address}</div>
+            )}
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
-              <input
-                type="text"
-                name="mobile"
-                value={formik.values.mobile}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Enter mobile number"
-              />
-              {formik.touched.mobile && formik.errors.mobile && (
-                <div className="text-red-500 text-sm">{formik.errors.mobile}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Enter password"
-                required
-              />
-              {formik.touched.password && formik.errors.password && (
-                <div className="text-red-500 text-sm">{formik.errors.password}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-                placeholder="Confirm password"
-                required
-              />
-              {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-                <div className="text-red-500 text-sm">{formik.errors.confirmPassword}</div>
-              )}
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+            <input
+              type="text"
+              name="website"
+              {...formik.getFieldProps("website")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+            />
+            {formik.touched.website && formik.errors.website && (
+              <div className="text-red-500 text-xs">{formik.errors.website}</div>
+            )}
           </div>
         </div>
 
-        <div className="col-span-2 flex justify-between items-center pt-4 border-t border-gray-100">
-          <div className="text-sm text-gray-600">
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+            <input
+              type="text"
+              name="contactPerson"
+              {...formik.getFieldProps("contactPerson")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+            />
+            {formik.touched.contactPerson && formik.errors.contactPerson && (
+              <div className="text-red-500 text-xs">{formik.errors.contactPerson}</div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              {...formik.getFieldProps("email")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              required
+            />
+            {formik.touched.email && formik.errors.email && (
+              <div className="text-red-500 text-xs">{formik.errors.email}</div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+            <input
+              type="text"
+              name="mobile"
+              {...formik.getFieldProps("mobile")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+            />
+            {formik.touched.mobile && formik.errors.mobile && (
+              <div className="text-red-500 text-xs">{formik.errors.mobile}</div>
+            )}
+          </div>
+        </div>
+
+        <div className="md:col-span-2 space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              {...formik.getFieldProps("password")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              required
+            />
+            {formik.touched.password && formik.errors.password && (
+              <div className="text-red-500 text-xs">{formik.errors.password}</div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              {...formik.getFieldProps("confirmPassword")}
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
+                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              required
+            />
+            {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+              <div className="text-red-500 text-xs">{formik.errors.confirmPassword}</div>
+            )}
+          </div>
+        </div>
+
+        <div className="md:col-span-2 flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-100">
+          <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
             Already have an account?{" "}
             <button
               type="button"
-              className="text-lightBlue-600 hover:underline focus:outline-none font-medium"
+              className="text-lightBlue-600 hover:underline font-medium"
               onClick={() => {
                 onClose();
                 onOpenLogin();
@@ -244,7 +204,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               Login here
             </button>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-3">
             <button
               type="button"
               onClick={() => {
@@ -252,14 +212,14 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
                 dispatch(resetAuthState());
                 onClose();
               }}
-              className="px-6 py-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all text-sm"
             >
               {loading ? 'Registering...' : 'Register'}
             </button>
