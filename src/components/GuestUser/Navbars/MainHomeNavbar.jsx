@@ -446,3 +446,78 @@ const MainHomeNavbar = () => {
 };
 
 export default MainHomeNavbar;
+
+
+{/* <ul className="flex flex-col lg:flex-row list-none lg:ml-auto space-x-6">
+<li className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+${location.pathname === "/" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+onClick={() => handleNavigation("/")}
+>
+  Home
+</li>
+<li
+  className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+  ${location.pathname === "/about" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+  onClick={() => handleNavigation("/about")}
+>
+  About
+</li>
+<li
+  className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+  ${location.pathname === "/contact" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+  onClick={() => handleNavigation("/contact")}
+>
+  Contact
+</li>
+<li
+  className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+  ${location.pathname === "/services" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+  onClick={() => handleNavigation("/services")}
+>
+  Services
+</li>
+
+<div className="relative group">
+  <button className={`focus:outline-none pl-2 pr-2 -ml-2 -mr-2 nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:text-gray-700 hover:bg-gray-100 hover:rounded-md
+  ${(location.pathname === "/nifty50" || location.pathname === "/etf") ? "bg-gray-200 text-gray-800 rounded-md" : ""}`}>
+    Stock Data
+  </button>
+  <ul className="absolute hidden group-hover:block bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-10 min-w-[150px]">
+    <li
+    className={`px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer
+    ${location.pathname === "/nifty50" ? "bg-gray-200 text-gray-800" : ""}`}
+    onClick={() => handleNavigation("/nifty50")}
+    >
+      Nifty50 Data
+    </li>
+    <li
+    className={`px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer
+    ${location.pathname === "/etf" ? "bg-gray-200 text-gray-800" : ""}`}
+    onClick={() => handleNavigation("/etf")}
+    >
+      ETF Data
+    </li>
+  </ul>
+</div>
+<li
+  className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+  ${location.pathname === "/pricing" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+  onClick={() => handleNavigation("/pricing")}
+>
+  Pricing
+</li>
+<li
+  className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+  ${location.pathname === "/gallery" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+  onClick={() => handleNavigation("/gallery")}
+>
+  Gallery
+</li>
+<li
+  className={`nav-item cursor-pointer text-s pt-1 font-semibold text-gray-600 ease-in-out hover:scale-103 hover:bg-gray-100 hover:text-gray-700 hover:rounded-md transition duration-40 
+  ${location.pathname === "/event" ? "bg-gray-200 text-gray-800 rounded-md pl-2 pr-2" : ""}`}
+  onClick={() => handleNavigation("/event")}
+>
+  Events
+</li>
+</ul> */}
