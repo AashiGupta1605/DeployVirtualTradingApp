@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import UserLoginForm from "../auth/Login";
 import OrgLoginForm from "../Organization/auth/Login";
+import ForgotPasswordModal from "./ForgetPasswordModal";
 
 const ToggleSwitch = ({ isOn, onToggle, disabled = false }) => (
   <label className="relative inline-flex items-center cursor-pointer">
@@ -39,52 +40,62 @@ const ToggleSwitch = ({ isOn, onToggle, disabled = false }) => (
   </label>
 );
 
-const UnifiedLoginModal = ({ isOpen, onClose, onOpenRegister, onOpenForgotPassword }) => {
+const UnifiedLoginModal = ({ isOpen, onClose, onOpenRegister }) => {
   const [isUser, setIsUser] = useState(true);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-      <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-      <div className="relative w-full max-w-2xl mx-auto my-6 bg-white rounded-2xl shadow-2xl border border-gray-100">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <i className="fas fa-user text-white" />
+    <>
+      {isForgotPasswordOpen ? (
+        <ForgotPasswordModal
+          isUser={isUser}
+          onClose={() => setIsForgotPasswordOpen(false)}
+        />
+      ) : (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+          <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
+          <div className="relative w-full max-w-2xl mx-auto my-6 bg-white rounded-2xl shadow-2xl border border-gray-100">
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <i className="fas fa-user text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800">Login</h2>
+              </div>
+              <div className="flex items-center space-x-2">
+                <ToggleSwitch 
+                  isOn={!isUser} 
+                  onToggle={() => setIsUser(!isUser)} 
+                />
+              </div>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-md transition-colors focus:outline-none"
+              >
+                <FaTimes className="text-gray-400 hover:text-gray-600 text-lg" />
+              </button>
             </div>
-            <h2 className="text-xl font-bold text-gray-800">Login</h2>
+            <div className="p-6">
+              {isUser ? (
+                <UserLoginForm 
+                  onClose={onClose}
+                  onOpenRegister={onOpenRegister}
+                  onOpenForgotPassword={() => setIsForgotPasswordOpen(true)}
+                />
+              ) : (
+                <OrgLoginForm 
+                  onClose={onClose}
+                  onOpenRegister={onOpenRegister}
+                  onOpenForgotPassword={() => setIsForgotPasswordOpen(true)}
+                />
+              )}
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <ToggleSwitch 
-              isOn={!isUser} 
-              onToggle={() => setIsUser(!isUser)} 
-            />
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-md transition-colors focus:outline-none"
-          >
-            <FaTimes className="text-gray-400 hover:text-gray-600 text-lg" />
-          </button>
         </div>
-        <div className="p-6">
-          {isUser ? (
-            <UserLoginForm 
-              onClose={onClose}
-              onOpenRegister={onOpenRegister}
-              onOpenForgotPassword={onOpenForgotPassword}
-            />
-          ) : (
-            <OrgLoginForm 
-              onClose={onClose}
-              onOpenRegister={onOpenRegister}
-              onOpenForgotPassword={onOpenForgotPassword}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
