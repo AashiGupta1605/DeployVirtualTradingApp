@@ -746,7 +746,7 @@ const activeSubscription = userSubscriptions.find(sub =>
   const currentStats = commonStats[pageType] || commonStats.dashboard;
 
   return (
-    <div className="bg-lightBlue-600 md:pt-32 pb-16 pt-12">
+    <div className="bg-lightBlue-600 md:pt-10 pb-16 ">
       <div className="px-4 mx-auto w-full">
         <div className="flex flex-wrap">
           {currentStats.map((stat, index) => (

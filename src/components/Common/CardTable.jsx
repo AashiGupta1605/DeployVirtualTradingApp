@@ -1,13 +1,17 @@
-// components/Common/CardTable.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   X, 
-  SearchIcon,
+  Search as SearchIcon,
   ChevronDown, 
+  ChevronUp,
   ChevronRight, 
+  ChevronLeft,
   Filter, 
   RefreshCw,
+  BarChart2,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 // Import actions from both slices
@@ -138,6 +142,13 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     });
   };
 
+  const formatColumnHeader = (key) => {
+    const words = key.replace(/([A-Z])/g, ' $1');
+    return words.split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   const filteredItems = getSortedData(data)
     .filter(stock => stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
   
@@ -198,215 +209,223 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
 
   return (
     <>
-      <div className="mx-2 overflow-hidden mt-38">
-        <div className="rounded bg-gray-100 shadow-md px-6 py-4 flex justify-between items-center border-b">
-          <div className="flex items-center space-x-4">
-            <h2 className="text-xl font-bold text-gray-800 flex items-center">
-              <Filter className="mr-2 text-gray-600" size={20} />
-              {tableType === 'nifty50' ? 'Nifty 50 Data' : 'Nifty 500 Data'}
-            </h2>
-            {userData && (
-              <div className="flex items-center space-x-2 bg-white px-3 py-1 rounded-lg shadow-sm">
-                <span className="text-sm text-gray-600">
-                  Welcome, {userData.name}
-                </span>
-                {userData.role && (
-                  <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
-                    {userData.role}
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="relative w-[300px] border border-gray-50 rounded-lg 
-                  focus-within:border-gray-300 focus-within:ring-1 
-                  focus-within:ring-lightBlue-500 transition-colors">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <SearchIcon size={18} className="text-gray-400" />
-                                      </div>
-            <input
-              type="text"
-              placeholder="Search by symbol..."
-              className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-                 text-sm placeholder-gray-500"
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-            {searchTerm && (
-              <button
-                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
-                onClick={() => handleSearchChange("")}
-              >
-               <X size={16} />
-              </button>
-            )}
-          </div>
+      <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">   
+        <div className="flex items-center space-x-4">
+          <h2 className="text-xl font-bold text-gray-800 flex items-center">
+            <BarChart2 className="mr-2 text-blue-600" size={24} />
+            {tableType === 'nifty50' ? 'Nifty 50 Market Data' : 'Nifty 500 Market Data'}
+          </h2>
+          {/* {userData && (
+            // <div className="flex items-center space-x-2 bg-white px-3 py-1 rounded-lg shadow-sm border border-gray-200">
+            //   <span className="text-sm font-medium text-gray-700">
+            //     {userData.name}
+            //   </span>
+            //   {userData.role && (
+            //     <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
+            //       {userData.role}
+            //     </span>
+            //   )}
+            // </div>
+          )} */}
         </div>
-
-        <div className="bg-white shadow-md rounded-lg overflow-x-auto h-[28rem] overflow-y-auto">
-        <div className="min-w-full">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b sticky top-0">
-              <tr>
-                {[
-                  'symbol',
-                  'open',
-                  'dayHigh',
-                  'dayLow',
-                  'previousClose',
-                  'lastPrice',
-                  'change',
-                  'pChange',
-                  'totalTradedVolume',
-                  'totalTradedValue',
-                  'yearHigh',
-                  'yearLow',
-                  'perChange365d',
-                  'perChange30d'
-                ].map((column) => (
-                  <th
-                    key={column}
-                    onClick={() => handleSortChange(column)}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                  >
-                    <div className="flex items-center space-x-1">
-                      <span>{column.replace(/([A-Z])/g, ' $1').toUpperCase()}</span>
-                      {sortConfig.key === column && (
-                        <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredItems
-                .slice(indexOfFirstItem, indexOfLastItem)
-                .map((row, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4 flex items-center">
-                      <button
-                        onClick={(e) => handleSymbolClick(row.symbol, e)}
-                        className="text-blue-500 hover:text-blue-800"
-                      >
-                        {row.symbol}
-                      </button>
-                    </td>
-                    {[
-                      'open',
-                      'dayHigh',
-                      'dayLow',
-                      'previousClose',
-                      'lastPrice',
-                      'change',
-                      'pChange',
-                      'totalTradedVolume',
-                      'totalTradedValue',
-                      'yearHigh',
-                      'yearLow',
-                      'perChange365d',
-                      'perChange30d'
-                    ].map((field, idx) => (
-                      <td key={idx} className="px-6 py-4">
-                        {typeof row[field] === 'number'
-                          ? field.includes('Change')
-                            ? `${row[field].toFixed(2)}%`
-                            : field.includes('tradedValue')
-                            ? `₹${row[field].toLocaleString()}`
-                            : field.includes('Price') || field.includes('High') || field.includes('Low') || field.includes('open')
-                            ? `₹${row[field].toLocaleString()}`
-                            : row[field].toLocaleString()
-                          : row[field] || 'N/A'}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        
+        <div className="relative w-[300px]">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <SearchIcon size={18} className="text-gray-400" />
           </div>
-        </div>
-
-        <div className="flex justify-between items-center mt-4 px-4 py-3">
-          <div className="flex items-center space-x-4">
-            <span className="text-sm font-medium text-gray-700">Rows per page:</span>
-            <select
-              value={itemsPerPage}
-              onChange={(e) => {
-                const setItemsAction = getAction(setNifty50ItemsPerPage, setNifty500ItemsPerPage);
-                dispatch(setItemsAction(Number(e.target.value)));
-              }}
-              className="form-select px-6 py-2 rounded-md border-gray-300 shadow-sm 
-                     focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
-                     focus:ring-opacity-50 text-sm"
-            >
-              {[5, 10, 25, 50, 100].map((num) => (
-                <option key={num} value={num}>{num}</option>
-              ))}
-            </select>
-            <span className="text-sm font-medium text-gray-600">
-  &nbsp;&nbsp; {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredItems.length)} &nbsp;of&nbsp; {filteredItems.length}
-</span>
-
-          </div>
-
-          <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            placeholder="Search by symbol..."
+            className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+              focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+              text-sm placeholder-gray-500"
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+          {searchTerm && (
             <button
-              onClick={() => {
-                const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
-                dispatch(setPageAction(Math.max(1, currentPage - 1)));
-              }}
-              disabled={currentPage === 1}
-              className="p-2 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
+              className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+              onClick={() => handleSearchChange("")}
             >
-              <ChevronRight className="rotate-180" size={20} />
+              <X size={16} />
             </button>
-            
-            <div className="flex space-x-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(page => 
-                  page === 1 ||
-                  page === totalPages ||
-                  (page >= currentPage - 1 && page <= currentPage + 1)
-                )
-                .map((page, index, array) => (
-                  <React.Fragment key={page}>
-                    {index > 0 && array[index - 1] !== page - 1 && (
-                      <span className="px-2 py-1">...</span>
-                    )}
-                    <button
-                      onClick={() => {
-                        const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
-                        dispatch(setPageAction(page));
-                      }}
-                      className={`px-3 py-1 rounded-md ${
-                        currentPage === page
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  </React.Fragment>
-                ))}
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap mx-4 -mt-0">
+        <div className="w-full mb-12 px-4 -mt-8">
+          <div className="bg-white rounded-lg shadow-lg">
+            <div className="overflow-x-auto">
+              <div className="min-w-full">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b">
+                    <tr>
+                      {[
+                        'symbol',
+                        'open',
+                        'dayHigh',
+                        'dayLow',
+                        'previousClose',
+                        'lastPrice',
+                        'change',
+                        'pChange',
+                        'totalTradedVolume',
+                        'totalTradedValue',
+                        'yearHigh',
+                        'yearLow',
+                        'perChange365d',
+                        'perChange30d'
+                      ].map((column) => (
+                        <th
+                          key={column}
+                          onClick={() => handleSortChange(column)}
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>{formatColumnHeader(column)}</span>
+                            {sortConfig.key === column && sortConfig.direction === 'ascending' && (
+                              <ArrowUp size={16} className="text-gray-500" />
+                            )}
+                            {sortConfig.key === column && sortConfig.direction === 'descending' && (
+                              <ArrowDown size={16} className="text-gray-500" />
+                            )}
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {filteredItems
+                      .slice(indexOfFirstItem, indexOfLastItem)
+                      .map((row, index) => (
+                        <tr
+                          key={index}
+                          className="hover:bg-gray-50 transition-colors"
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <button
+                              onClick={(e) => handleSymbolClick(row.symbol, e)}
+                              className="text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                              {row.symbol}
+                            </button>
+                          </td>
+                          {[
+                            'open',
+                            'dayHigh',
+                            'dayLow',
+                            'previousClose',
+                            'lastPrice',
+                            'change',
+                            'pChange',
+                            'totalTradedVolume',
+                            'totalTradedValue',
+                            'yearHigh',
+                            'yearLow',
+                            'perChange365d',
+                            'perChange30d'
+                          ].map((field, idx) => (
+                            <td key={idx} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {typeof row[field] === 'number'
+                                ? field.includes('Change') || field.includes('pChange')
+                                  ? <span className={row[field] >= 0 ? "text-green-600" : "text-red-600"}>
+                                      {row[field].toFixed(2)}%
+                                    </span>
+                                  : field.includes('tradedValue')
+                                  ? `₹${row[field].toLocaleString()}`
+                                  : field.includes('Price') || field.includes('High') || field.includes('Low') || field.includes('open')
+                                  ? `₹${row[field].toLocaleString()}`
+                                  : row[field].toLocaleString()
+                                : row[field] || 'N/A'}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <button
-              onClick={() => {
-                const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
-                dispatch(setPageAction(Math.min(totalPages, currentPage + 1)));
-              }}
-              disabled={currentPage === totalPages}
-              className="p-2 rounded-md bg-gray-100 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
-            >
-              <ChevronRight size={20} />
-            </button>
+            <div className="flex justify-between items-center px-6 py-4 border-t border-gray-200">
+              <div className="flex items-center space-x-4">
+                <span className="text-sm font-medium text-gray-700">Rows per page:</span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    const setItemsAction = getAction(setNifty50ItemsPerPage, setNifty500ItemsPerPage);
+                    dispatch(setItemsAction(Number(e.target.value)));
+                  }}
+                  className="form-select px-3 py-1 rounded-md border-gray-300 shadow-sm 
+                         focus:border-lightBlue-500 focus:ring focus:ring-lightBlue-200 
+                         focus:ring-opacity-50 text-sm"
+                >
+                  {[5, 10, 25, 50, 100].map((num) => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+                <span className="text-sm font-medium text-gray-600">
+                  {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredItems.length)} of {filteredItems.length}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => {
+                    const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
+                    dispatch(setPageAction(Math.max(1, currentPage - 1)));
+                  }}
+                  disabled={currentPage === 1}
+                  className="p-1.5 rounded-md border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                
+                <div className="flex space-x-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(page => 
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    )
+                    .map((page, index, array) => (
+                      <React.Fragment key={page}>
+                        {index > 0 && array[index - 1] !== page - 1 && (
+                          <span className="px-2 py-1 text-gray-500">...</span>
+                        )}
+                        <button
+                          onClick={() => {
+                            const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
+                            dispatch(setPageAction(page));
+                          }}
+                          className={`px-3 py-1 rounded-md text-sm ${
+                            currentPage === page
+                              ? "bg-lightBlue-600 text-white"
+                              : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      </React.Fragment>
+                    ))}
+                </div>
+
+                <button
+                  onClick={() => {
+                    const setPageAction = getAction(setNifty50CurrentPage, setNifty500CurrentPage);
+                    dispatch(setPageAction(Math.min(totalPages, currentPage + 1)));
+                  }}
+                  disabled={currentPage === totalPages}
+                  className="p-1.5 rounded-md border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <CompanyDetailModal
         isOpen={!!selectedSymbol}
         onClose={handleCloseModal}
