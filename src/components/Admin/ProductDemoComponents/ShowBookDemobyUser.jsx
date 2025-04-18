@@ -215,6 +215,11 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
   const [status, setStatus]=useState("all")
   const [gender, setGender]=useState("all")
 
+  useEffect(()=>{
+    if(search.trim()==="")
+      setField("name")
+  },[search])
+
   useEffect(() => {
     let count = 0;
     let filters = {};
@@ -287,8 +292,8 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
       const searchQuery = search.trim() === "" ? "all" : search;
 
       const response = await axios.get(
-        `${BASE_API_URL}/admin/demo/getDemobyUser`
-        // `${BASE_API_URL}/admin/demo/getDemobyUser/${timeSlot}/${status}/${gender}/${field}/${searchQuery}`
+        // `${BASE_API_URL}/admin/demo/getDemobyUser`
+        `${BASE_API_URL}/admin/demo/getDemobyUser/${timeSlot}/${status}/${gender}/${field}/${searchQuery}`
       );
 
       console.log("Book Demo Data: ", response.data);
