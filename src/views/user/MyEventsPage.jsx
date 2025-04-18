@@ -738,7 +738,7 @@ const MyEventsPage = () => {
           />
         )}
 
-        {/* Download Button */}
+        {/* Download Button
         <div className="fixed bottom-8 right-8">
           <button
             onClick={() => window.print()}
@@ -746,7 +746,7 @@ const MyEventsPage = () => {
           >
             <Download className="text-gray-700" size={24} />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

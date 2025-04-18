@@ -70,10 +70,10 @@ const OrgLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword }) => {
             <input
               type="email"
               name="email"
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 
-              bg-white text-gray-900 text-sm
-              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
-              focus:outline-none transition-all duration-200"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               placeholder="Enter organization email"
               {...formik.getFieldProps("email")}
             />
@@ -90,10 +90,10 @@ const OrgLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword }) => {
             <input
               type="password"
               name="password"
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 
-              bg-white text-gray-900 text-sm
-              focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
-              focus:outline-none transition-all duration-200"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               placeholder="Enter your password"
               {...formik.getFieldProps("password")}
             />
@@ -105,10 +105,10 @@ const OrgLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword }) => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"
-            className="text-lightBlue-600 hover:underline focus:outline-none text-xs sm:text-sm"
+            className="text-lightBlue-600 hover:underline focus:outline-none text-xs font-medium"
             onClick={onOpenForgotPassword}
           >
             Forgot Password?
@@ -125,21 +125,21 @@ const OrgLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword }) => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-end items-center gap-3 border-t border-gray-100">
+        <div className="flex space-x-3 sm:flex-row justify-center items-center ">
           <button
             type="button"
             onClick={() => {
               formik.resetForm();
               onClose();
             }}
-            className="w-full sm:w-auto px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={formik.isSubmitting || loading}
-            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all text-sm"
           >
             {formik.isSubmitting ? "Logging in..." : "Login"}
           </button>

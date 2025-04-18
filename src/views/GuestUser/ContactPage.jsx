@@ -152,7 +152,10 @@ const ContactModal = ({ onClose }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   required
                 />
               </div>
@@ -165,7 +168,10 @@ const ContactModal = ({ onClose }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   required
                 />
               </div>

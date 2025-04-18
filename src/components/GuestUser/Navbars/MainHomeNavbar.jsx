@@ -982,6 +982,7 @@ const MobileMenu = ({
     { path: "/services", name: "Services", icon: <Layers className="h-5 w-5" /> },
     { path: "/nifty50", name: "Nifty50 Data", icon: <BarChart2 className="h-5 w-5" /> },
     { path: "/etf", name: "ETF Data", icon: <BarChart2 className="h-5 w-5" /> },
+    { path: "/nifty500", name: "Nifty500 Data", icon: <BarChart2 className="h-5 w-5" /> },
     { path: "/pricing", name: "Pricing", icon: <DollarSign className="h-5 w-5" /> },
     { path: "/gallery", name: "Gallery", icon: <Image className="h-5 w-5" /> },
     { path: "/event", name: "Events", icon: <Calendar className="h-5 w-5" /> },
@@ -1007,13 +1008,13 @@ const MobileMenu = ({
                 }}
                 className={`flex items-center w-full py-3 rounded-lg text-left text-base font-medium transition-colors ${
                   isActive(item.path) || isActivePrefix(item.path)
-                    ? "bg-blue-50 text-blue-600"
+                    ? "bg-blue-50 text-lightBlue-600"
                     : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <span className={`mr-3 ${
                   isActive(item.path) || isActivePrefix(item.path) 
-                    ? "text-blue-500" 
+                    ? "text-lightBlue-600" 
                     : "text-gray-500"
                 }`}>
                   {item.icon}
@@ -1057,7 +1058,7 @@ const MobileMenu = ({
                     handleNavigation("/organization");
                     toggleMenu();
                   }}
-                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-lightBlue-600 hover:bg-blue-700"
                 >
                   <LogIn className="mr-2 h-5 w-5" />
                   {orgName}
@@ -1070,7 +1071,7 @@ const MobileMenu = ({
                     handleOpenLogin();
                     toggleMenu();
                   }}
-                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  className="w-full flex -mt-4 items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-lightBlue-600 hover:bg-blue-700"
                 >
                   Login
                 </button>
@@ -1079,11 +1080,11 @@ const MobileMenu = ({
                     handleOpenRegister();
                     toggleMenu();
                   }}
-                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-green-600 hover:bg-green-700"
+                  className="w-full flex  items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-green-600 hover:bg-green-700"
                 >
                   Register
                 </button>
-                <a
+                {/* <a
                   href="https://chat.whatsapp.com/GCNCQb6Ul4l5FRwlT5y3Tb"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -1091,7 +1092,7 @@ const MobileMenu = ({
                 >
                   <FaWhatsapp className="mr-2 h-5 w-5" />
                   Join WhatsApp
-                </a>
+                </a> */}
               </div>
             )}
           </div>
@@ -1174,6 +1175,10 @@ const MainHomeNavbar = () => {
     setNavbarOpen(!navbarOpen);
   };
 
+  const toggleStockData = () => {
+    setStockDataOpen(!stockDataOpen);
+  };
+
   const isActive = (path) => location.pathname === path;
   const isActivePrefix = (prefix) => location.pathname.startsWith(prefix);
 
@@ -1187,7 +1192,7 @@ const MainHomeNavbar = () => {
             {/* Logo */}
             <div className="flex items-center">
               <div
-                className="flex-shrink-0 flex items-center cursor-pointer"
+                className="flex-shrink-0 mr-12 flex items-center cursor-pointer"
                 onClick={() => handleNavigation("/")}
               >
                 <img
@@ -1196,7 +1201,7 @@ const MainHomeNavbar = () => {
                   className="h-10 w-auto"
                 />
                 <span className="ml-3 text-lg font-bold text-gray-900 hidden sm:block whitespace-nowrap">
-                  PGR - VIRTUAL TRADING APP
+                  PGR - Virtual Trading App
                 </span>
               </div>
             </div>
@@ -1211,8 +1216,8 @@ const MainHomeNavbar = () => {
                     onClick={() => handleNavigation(item.path)}
                     className={`px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
                       isActive(item.path)
-                        ? "text-blue-600 bg-blue-50"
-                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+                        ? "text-lightBlue-600 bg-blue-50"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-lightBlue-600"
                     }`}
                   >
                     {item.name}
@@ -1222,13 +1227,11 @@ const MainHomeNavbar = () => {
                 {/* Stock Data Dropdown */}
                 <div className="relative">
                   <button
-                    onClick={() => setStockDataOpen(!stockDataOpen)}
-                    onMouseEnter={() => setStockDataOpen(true)}
-                    onMouseLeave={() => setStockDataOpen(false)}
+                    onClick={toggleStockData}
                     className={`px-3 py-2 rounded-md text-sm font-medium flex items-center whitespace-nowrap transition-colors ${
-                      isActivePrefix("/nifty50") || isActivePrefix("/etf")
-                        ? "text-blue-600 bg-blue-50"
-                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+                      isActivePrefix("/nifty50") || isActivePrefix("/etf") || isActivePrefix("/nifty500")
+                        ? "text-lightBlue-600 bg-blue-50"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-lightBlue-600"
                     }`}
                   >
                     Stock Data
@@ -1239,29 +1242,46 @@ const MainHomeNavbar = () => {
                   {stockDataOpen && (
                     <div 
                       className="absolute left-0 mt-2 w-48 rounded-lg shadow-lg bg-white ring-1 ring-gray-200 z-50"
-                      onMouseEnter={() => setStockDataOpen(true)}
-                      onMouseLeave={() => setStockDataOpen(false)}
                     >
                       <div className="py-1">
                         <button
-                          onClick={() => handleNavigation("/nifty50")}
+                          onClick={() => {
+                            handleNavigation("/nifty50");
+                            setStockDataOpen(false);
+                          }}
                           className={`block w-full text-left px-4 py-2 text-sm transition-colors ${
                             isActivePrefix("/nifty50")
-                              ? "bg-blue-50 text-blue-600 font-medium"
+                              ? "bg-blue-50 text-lightBlue-600 font-medium"
                               : "text-gray-700 hover:bg-gray-50"
                           }`}
                         >
                           Nifty50 Data
                         </button>
                         <button
-                          onClick={() => handleNavigation("/etf")}
+                          onClick={() => {
+                            handleNavigation("/etf");
+                            setStockDataOpen(false);
+                          }}
                           className={`block w-full text-left px-4 py-2 text-sm transition-colors ${
                             isActivePrefix("/etf")
-                              ? "bg-blue-50 text-blue-600 font-medium"
+                              ? "bg-blue-50 text-lightBlue-600 font-medium"
                               : "text-gray-700 hover:bg-gray-50"
                           }`}
                         >
                           ETF Data
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleNavigation("/nifty500");
+                            setStockDataOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-2 text-sm transition-colors ${
+                            isActivePrefix("/nifty500")
+                              ? "bg-blue-50 text-lightBlue-600 font-medium"
+                              : "text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          Nifty500 Data
                         </button>
                       </div>
                     </div>
@@ -1293,7 +1313,7 @@ const MainHomeNavbar = () => {
                 {isAuthenticated ? (
                   <button
                     onClick={() => navigate("/organization")}
-                    className="inline-flex items-center px-4 py-2 mx-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
+                    className="inline-flex items-center px-4 py-2 mx-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
                   >
                     <LogIn className="h-4 w-4" />
                     {orgName}
@@ -1302,16 +1322,16 @@ const MainHomeNavbar = () => {
                   <div className="flex items-center space-x-2 ml-2">
                     <button
                       onClick={handleOpenLogin}
-                      className="inline-flex mr-2 items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
+                      className="inline-flex mr-2 items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
                     >
-                      Login
+                      Login/Register
                     </button>
-                    <button
+                    {/* <button
                       onClick={handleOpenRegister}
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 whitespace-nowrap transition-colors"
                     >
                       Register
-                    </button>
+                    </button> */}
                   </div>
                 )}
 

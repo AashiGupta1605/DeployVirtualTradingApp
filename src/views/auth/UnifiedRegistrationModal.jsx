@@ -43,7 +43,7 @@ const UnifiedRegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
       <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-xl">
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-lightBlue-600 rounded-lg flex items-center justify-center">
               <i className="fas fa-user text-white text-sm" />
