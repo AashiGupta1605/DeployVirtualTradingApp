@@ -91,12 +91,12 @@ const StocksGainerLosser = ({ showHeader = true }) => {
   }
 
   return (
-    <div className="px-4 mx-auto w-full -mt-12">
+    <div className="px-2 sm:px-4 mx-auto w-full -mt-8 sm:-mt-12">
       {/* Top Gainers Section */}
       <div className="mb-8">
         {showHeader && <h2 className="text-xl font-bold text-blueGray-700 mb-4">Top Gainers</h2>}
-        <div className="grid grid-cols-1 lg:grid-cols-3 justify-between space-x-2">
-          <div className="overflow-hidden mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="overflow-hidden">
             <CardSocialTraffic 
               title="Nifty 50 Gainers" 
               data={nifty50Gainers} 
@@ -104,7 +104,7 @@ const StocksGainerLosser = ({ showHeader = true }) => {
               destination="admin/niftytable"
             />
           </div>
-          <div className="overflow-hidden mb-4">
+          <div className="overflow-hidden">
             <CardSocialTraffic 
               title="Nifty 500 Gainers" 
               data={nifty500Gainers} 
@@ -112,7 +112,7 @@ const StocksGainerLosser = ({ showHeader = true }) => {
               destination="admin/nifty500table"
             />
           </div>
-          <div className="overflow-hidden mb-4">
+          <div className="overflow-hidden">
             <CardSocialTraffic 
               title="ETF Gainers" 
               data={etfGainers} 
@@ -124,10 +124,10 @@ const StocksGainerLosser = ({ showHeader = true }) => {
       </div>
 
       {/* Top Losers Section */}
-      <div className="-mt-16">
+      <div className="mt-4 sm:mt-0">
         {showHeader && <h2 className="text-xl font-bold text-blueGray-700 mb-4">Top Losers</h2>}
-        <div className="grid grid-cols-1 lg:grid-cols-3 justify-between space-x-2">
-          <div className="overflow-hidden mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="overflow-hidden">
             <CardSocialTraffic 
               title="Nifty 50 Losers" 
               data={nifty50Losers} 
@@ -135,7 +135,7 @@ const StocksGainerLosser = ({ showHeader = true }) => {
               destination="admin/niftytable"
             />
           </div>
-          <div className="overflow-hidden mb-4">
+          <div className="overflow-hidden">
             <CardSocialTraffic 
               title="Nifty 500 Losers" 
               data={nifty500Losers} 
@@ -143,7 +143,7 @@ const StocksGainerLosser = ({ showHeader = true }) => {
               destination="admin/nifty500table"
             />
           </div>
-          <div className="overflow-hidden mb-4">
+          <div className="overflow-hidden">
             <CardSocialTraffic 
               title="ETF Losers" 
               data={etfLosers} 

@@ -134,9 +134,7 @@ const StartScreenPopupModal = () => {
               <h2 className="text-lg text-lightBlue-600 font-semibold">
                 Virtual Trading Platform
               </h2>
-              <p className="text-sm text-gray-500 mt-1">
-                Terms of Use Agreement
-              </p>
+
             </div>
           </div>
 

@@ -73,7 +73,7 @@ const NiftyTable = () => {
         <StatsSection isDashboard={false} pageType="stocks" />
 
       <div className="flex flex-wrap -mt-7">
-        <div className="w-full mb-12 px-4 -mt-42">
+        <div className="w-full mb-12 px-4 mt-8">
           <CardTable tableType="nifty50" userData={userData} />
         </div>
       </div>

@@ -1323,14 +1323,14 @@ const MainHomeNavbar = () => {
                       onClick={handleOpenLogin}
                       className="inline-flex mr-2 items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
                     >
-                      Login
+                      Login/Register
                     </button>
-                    <button
+                    {/* <button
                       onClick={handleOpenRegister}
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 whitespace-nowrap transition-colors"
                     >
                       Register
-                    </button>
+                    </button> */}
                   </div>
                 )}
 
