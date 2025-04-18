@@ -74,8 +74,10 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="text"
               name="name"
               {...formik.getFieldProps("name")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               required
             />
             {formik.touched.name && formik.errors.name && (
@@ -89,8 +91,10 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="text"
               name="address"
               {...formik.getFieldProps("address")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               required
             />
             {formik.touched.address && formik.errors.address && (
@@ -104,8 +108,10 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="text"
               name="website"
               {...formik.getFieldProps("website")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
             />
             {formik.touched.website && formik.errors.website && (
               <div className="text-red-500 text-xs">{formik.errors.website}</div>
@@ -120,8 +126,10 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="text"
               name="contactPerson"
               {...formik.getFieldProps("contactPerson")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
             />
             {formik.touched.contactPerson && formik.errors.contactPerson && (
               <div className="text-red-500 text-xs">{formik.errors.contactPerson}</div>
@@ -134,8 +142,10 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="email"
               name="email"
               {...formik.getFieldProps("email")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               required
             />
             {formik.touched.email && formik.errors.email && (
@@ -149,8 +159,10 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="text"
               name="mobile"
               {...formik.getFieldProps("mobile")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
             />
             {formik.touched.mobile && formik.errors.mobile && (
               <div className="text-red-500 text-xs">{formik.errors.mobile}</div>
@@ -158,15 +170,17 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
           </div>
         </div>
 
-        <div className="md:col-span-2 space-y-3">
+     
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input
               type="password"
               name="password"
               {...formik.getFieldProps("password")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               required
             />
             {formik.touched.password && formik.errors.password && (
@@ -180,15 +194,17 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               type="password"
               name="confirmPassword"
               {...formik.getFieldProps("confirmPassword")}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 text-sm
-                focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all"
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
               required
             />
             {formik.touched.confirmPassword && formik.errors.confirmPassword && (
               <div className="text-red-500 text-xs">{formik.errors.confirmPassword}</div>
             )}
           </div>
-        </div>
+      
 
         <div className="md:col-span-2 flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-100">
           <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
@@ -212,7 +228,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
                 dispatch(resetAuthState());
                 onClose();
               }}
-              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm"
+              className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm "
             >
               Cancel
             </button>
