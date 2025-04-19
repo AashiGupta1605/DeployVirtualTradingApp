@@ -51,7 +51,7 @@ const ContactPage = () => {
         </div>
 
         {/* Right - Image */}
-        <div className="md:w-1/2 px-6 mt-25 md:mt-0">
+        <div className="md:w-1/2 px-6 !mt-20 md:mt-0">
           <img
             src={StockP}
             alt="Stock Market"
@@ -59,6 +59,49 @@ const ContactPage = () => {
           />
         </div>
       </div>
+
+      {/* Contact Info Cards */}
+<div className="px-6 py-12 !mt-0 !mb-25 bg-gradient-to-b from-blue-50 to-white">
+  <h2 className="text-3xl font-bold text-center text-blueGray-800 mb-10">
+    Our Contact Info
+  </h2>
+  <div className="grid gap-8 grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto">
+    {/* Card 1 - Email */}
+    <div className="bg-white shadow-xl rounded-xl p-6 text-center hover:shadow-2xl transition">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-lightBlue-100 flex items-center justify-center text-lightBlue-600 text-2xl">
+        <i className="fas fa-envelope"></i>
+      </div>
+      <h3 className="text-xl font-semibold mb-2">Email Us</h3>
+      <p className="text-gray-600 mb-2">support@stocksphere.com</p>
+      <Link to="mailto:support@stocksphere.com" className="text-blue-500 underline text-sm">
+        Send a Message
+      </Link>
+    </div>
+
+    {/* Card 2 - Call */}
+    <div className="bg-white shadow-xl rounded-xl p-6 text-center hover:shadow-2xl transition">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-lightBlue-100 flex items-center justify-center text-lightBlue-600 text-2xl">
+        <i className="fas fa-phone"></i>
+      </div>
+      <h3 className="text-xl font-semibold mb-2">Call Us</h3>
+      <p className="text-gray-600 mb-2">+1 (800) 123-4567</p>
+      <a href="tel:+18001234567" className="text-blue-500 underline text-sm">
+        Call Now
+      </a>
+    </div>
+
+    {/* Card 3 - Office Hours */}
+    <div className="bg-white shadow-xl rounded-xl p-6 text-center hover:shadow-2xl transition">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-lightBlue-100 flex items-center justify-center text-lightBlue-600 text-2xl">
+        <i className="fas fa-clock"></i>
+      </div>
+      <h3 className="text-xl font-semibold mb-2">Support Hours</h3>
+      <p className="text-gray-600">Mon - Fri: 9am - 6pm</p>
+      <p className="text-gray-600">Sat - Sun: 10am - 4pm</p>
+    </div>
+  </div>
+</div>
+
 
       {/* Contact Modal */}
       {isModalOpen && <ContactModal onClose={() => setIsModalOpen(false)} />}
