@@ -141,7 +141,7 @@ export default function FeedbackTable() {
 
       <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">   
           <h2 className="text-xl font-bold text-gray-800 flex items-center">
-          <MessageSquare className="mr-2 text-blue-600" size={24} />
+          <MessageSquare className="mr-2 text-lightBlue-600" size={24} />
             My Feedbacks
             </h2>
        
