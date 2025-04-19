@@ -258,7 +258,7 @@ const activeSubscription = userSubscriptions.find(sub =>
                 showDetails: true,
                 statItems: [
                   { label: "nifty50", value:nifty50Data.length - 1 || "0" },
-                  { label: "nifty500", value: nifty500Data.length - 1 || "0" },
+                  { label: "etf", value: etfData.length - 1 || "0" },
                   // { label: "nifty500", value: stats?.stocks?.nifty500?.toString() || "0" },
                   // { label: "Pending", value: orgStats.pending.toString() },
                   // { label: "Inactive", value: orgStats.inactive.toString() }
@@ -746,7 +746,7 @@ const activeSubscription = userSubscriptions.find(sub =>
   const currentStats = commonStats[pageType] || commonStats.dashboard;
 
   return (
-    <div className="bg-lightBlue-600 md:pt-10 pb-16 ">
+    <div className="bg-lightBlue-600 md:pt-10 pb-16">
       <div className="px-4 mx-auto w-full">
         <div className="flex flex-wrap">
           {currentStats.map((stat, index) => (

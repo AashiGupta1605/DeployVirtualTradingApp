@@ -20,6 +20,8 @@ import ComplaintTable from "../views/user/complainttable";
 import TradingNifty from "../views/user/tradingnifty";
 import EventsPage from "../views/user/eventsPage";
 import MyEventsPage from "../views/user/MyEventsPage";
+// import MyCertifications from "views/user/MyCertifications";
+import MyCertifications from "../views/user/MyCertifications";
 
 // Redux Actions
 import { logout } from "../redux/User/authSlice";
@@ -71,6 +73,7 @@ export default function User() {
         sidebarExpanded={sidebarExpanded}
         setSidebarExpanded={setSidebarExpanded}
       />
+
       
       <div className="relative flex flex-col min-h-screen">
         <UserNavbar 
@@ -90,6 +93,7 @@ export default function User() {
               <Route path="nifty500table" element={<Nifty500Table />} />
               <Route path="etftable" element={<EtfTable />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="my-certificates" element={<MyCertifications />} />
               <Route path="feedback" element={<FeedbackTable />} />
               <Route path="complaint" element={<ComplaintTable />} />
               <Route path="tradingnifty" element={<TradingNifty />} />
@@ -97,6 +101,7 @@ export default function User() {
               <Route path="my-events" element={<MyEventsPage />} />
               <Route path="*" element={<Navigate to="dashboard" replace />} />
             </Routes>
+
           </div>
         </div>
         

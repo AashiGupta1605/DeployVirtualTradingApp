@@ -29,6 +29,10 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
+  };
+
   return (
     <>
       {sidebarExpanded && (
@@ -40,7 +44,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
 
       <div
         className={`fixed top-0 left-0 bottom-0 z-30 w-64 bg-white shadow-xl transition-all duration-300 ease-in-out
-          ${sidebarExpanded ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-20"}`}
+          ${sidebarExpanded ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-16"}`}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between w-full h-[73px] px-4 border-b border-gray-200">
@@ -71,7 +75,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
             )}
           </div>
 
-          <div className={`flex-1 overflow-y-auto ${sidebarExpanded ? "px-1" : "px-1"}`}>
+          <div className={`flex-1 overflow-y-auto ${sidebarExpanded ? "px-1" : "px-0"}`}>
             <SidebarSection
               name="dashboard"
               icon="fas fa-tachometer-alt"
@@ -137,6 +141,23 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               />
             </SidebarSection>
             
+            <SidebarSection
+              name="certificates"
+              icon="fas fa-certificate"
+              label="Certificates"
+              activeMenu={activeMenu}
+              toggleMenu={toggleMenu}
+              sidebarExpanded={sidebarExpanded}
+            >
+              <MenuLink 
+                to="/user/my-certificates" 
+                icon="fas fa-certificate" 
+                label="My Certificates" 
+                isActive={location.pathname === "/user/my-certificates"} 
+                sidebarExpanded={sidebarExpanded}
+              />
+            </SidebarSection>
+
             <SidebarSection
               name="feedback"
               icon="fas fa-comment"
@@ -237,9 +258,8 @@ const SidebarSection = ({ name, icon, label, activeMenu, toggleMenu, sidebarExpa
     <div className="space-y-1">
       <button
         onClick={() => toggleMenu(name)}
-        className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 
-          ${activeMenu === name ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"}
-          ${!sidebarExpanded && "justify-center"}`}
+        className={`w-full flex items-center ${sidebarExpanded ? "justify-between p-2" : "justify-center p-3"} rounded-lg transition-all duration-200 
+          ${activeMenu === name ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"}`}
         title={!sidebarExpanded ? label : ""}
       >
         <div className="flex items-center space-x-2">
@@ -270,7 +290,7 @@ const MenuLink = ({ to, icon, label, isActive, sidebarExpanded }) => {
   return (
     <Link
       to={to}
-      className={`flex items-center ${sidebarExpanded ? "space-x-3" : "justify-center"} px-4 py-2 rounded-lg transition-all duration-200 
+      className={`flex items-center ${sidebarExpanded ? "space-x-3 px-4 py-2" : "justify-center p-3"} rounded-lg transition-all duration-200 
         ${isActive ? "bg-blue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"}`}
       title={!sidebarExpanded ? label : ""}
     >

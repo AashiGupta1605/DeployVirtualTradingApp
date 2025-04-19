@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
-
+const user = JSON.parse(localStorage.getItem('user'));
+const userId = user?._id;
+console.log(userId);
 // Async thunks
 export const fetchUserEvents = createAsyncThunk(
   'events/fetchUserEvents',
@@ -54,6 +56,48 @@ export const fetchEventSpecificTransactions = createAsyncThunk(
   }
 );
 
+
+
+
+// certificate slice.
+
+// Add these async thunks to your eventsSlice
+export const fetchUserCertificates = createAsyncThunk(
+  'events/fetchUserCertificates',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_API_URL}/user/certificates/${userId}/my-certificate`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+export const downloadCertificate = createAsyncThunk(
+  'events/downloadCertificate',
+  async (certificateId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_API_URL}/user/certificates/${certificateId}/${userId}/download`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          responseType: 'blob' // Important for file downloads
+        }
+      );
+      return { data: response.data, certificateId };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+
 const initialState = {
   events: [],
   selectedEvent: null,
@@ -71,7 +115,13 @@ const initialState = {
     totalInvested: 0,
     completedEvents: 0,
     totalReturns: 0
-  }
+  },
+
+  certificates: [],
+  certificatesStatus: 'idle',
+  certificatesError: null,
+  downloadingCertificate: null
+
 };
 
 const eventsSlice = createSlice({
@@ -165,6 +215,35 @@ const eventsSlice = createSlice({
       })
       .addCase(fetchEventSpecificTransactions.fulfilled, (state, action) => {
         state.eventTransactions = action.payload.transactions || [];
+      })  .addCase(fetchUserCertificates.pending, (state) => {
+        state.certificatesStatus = 'loading';
+      })
+      .addCase(fetchUserCertificates.fulfilled, (state, action) => {
+        state.certificatesStatus = 'succeeded';
+        state.certificates = action.payload.certificates || [];
+        state.certificatesError = null;
+      })
+      .addCase(fetchUserCertificates.rejected, (state, action) => {
+        state.certificatesStatus = 'failed';
+        state.certificatesError = action.payload;
+      })
+      .addCase(downloadCertificate.pending, (state, action) => {
+        state.downloadingCertificate = action.meta.arg;
+      })
+      .addCase(downloadCertificate.fulfilled, (state, action) => {
+        state.downloadingCertificate = null;
+        // Handle file download
+        const url = window.URL.createObjectURL(new Blob([action.payload.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `certificate_${action.payload.certificateId}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .addCase(downloadCertificate.rejected, (state, action) => {
+        state.downloadingCertificate = null;
+        state.certificatesError = action.payload;
       });
   }
 });
@@ -202,4 +281,12 @@ export const selectEventError = (state) => state.user.events?.error;
 export const selectEventFilters = (state) => state.user.events?.filters || initialState.filters;
 export const selectEventStatistics = (state) => state.user.events?.statistics || initialState.statistics;
 
+
+// certificate
+
+// Add selectors
+export const selectAllCertificates = (state) => state.user.events?.certificates || [];
+export const selectCertificatesStatus = (state) => state.user.events?.certificatesStatus || 'idle';
+export const selectCertificatesError = (state) => state.user.events?.certificatesError;
+export const selectDownloadingCertificate = (state) => state.user.events?.downloadingCertificate;
 export default eventsSlice.reducer;

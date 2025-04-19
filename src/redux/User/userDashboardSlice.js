@@ -4,7 +4,8 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 import toast from 'react-hot-toast';
 
-const userId = JSON.parse(localStorage.getItem('user'))?._id;
+const user = JSON.parse(localStorage.getItem('user'));
+const userId = user?._id;
 console.log(userId);
 
 
@@ -24,6 +25,8 @@ export const fetchUserStats = createAsyncThunk(
 
       const requests = endpoints.map(endpoint => 
         axios.get(`${BASE_API_URL}/user/stats/${userId}/${endpoint}`)
+        // axios.get(`${BASE_API_URL}/user/stats/${endpoint}`)
+
       );
 
       const responses = await Promise.all(requests);
