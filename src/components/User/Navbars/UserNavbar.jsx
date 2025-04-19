@@ -5,7 +5,7 @@ import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchUserData } from "../../../redux/User/userprofileSlice";
 import ChangePasswordModal from "../Cards/ChangePasswordModal";
 import { useDispatch, useSelector } from "react-redux";
-import { Trophy, X, ChevronDown, Menu, X as Close } from 'lucide-react';
+import { Trophy, X, ChevronDown, Menu } from 'lucide-react';
 import { 
   clearActiveEvent, 
   selectActiveEvent,
@@ -23,7 +23,6 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
   const [isEventDropdownOpen, setIsEventDropdownOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const eventDropdownRef = useRef(null);
@@ -35,20 +34,14 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
   const userName = userData ? userData.name : "User";
   const userPhoto = userData?.userPhoto || "https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png";
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-    setIsMobileMenuOpen(false);
-  };
-
   const handleProfile = () => {
     setIsProfileModalOpen(true);
-    setIsMobileMenuOpen(false);
+    setIsDropdownOpen(false);
   };
 
   const handleChangePassword = () => {
     setIsChangePasswordModalOpen(true);
-    setIsMobileMenuOpen(false);
+    setIsDropdownOpen(false);
   };
 
   const handleClearActiveEvent = () => {
@@ -59,7 +52,6 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
   const handleEventSelect = (event) => {
     dispatch(setActiveEvent(event));
     setIsEventDropdownOpen(false);
-    setIsMobileMenuOpen(false);
   };
 
   useEffect(() => {
@@ -80,7 +72,7 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
 
   return (
     <nav className={`sticky top-0 w-full h-auto min-h-[73px] z-10 bg-white shadow-lg transition-all duration-300 ease-in-out ${
-      sidebarExpanded ? "lg:pl-64" : "lg:pl-20"
+      sidebarExpanded ? "lg:pl-64" : "lg:pl-16"
     }`}>
       <div className="w-full mx-auto flex flex-wrap items-center justify-between px-4 py-3 md:px-10">
         {/* Logo and Brand */}
@@ -99,23 +91,11 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
           <span className="hidden lg:block text-xl ml-4 font-bold">PGR - Virtual Trading App</span>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2 rounded-lg hover:bg-gray-100"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? (
-            <Close className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </button>
-
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="flex items-center space-x-4">
           {/* Event Selection - Desktop */}
           {events && events.length > 0 && (
-            <div className="relative" ref={eventDropdownRef}>
+            <div className="relative hidden md:block" ref={eventDropdownRef}>
               <div className="flex items-center space-x-2">
                 {activeEvent && (
                   <div className="flex items-center bg-blue-50 px-3 py-1 rounded-full text-sm text-blue-800 shadow-sm">
@@ -157,11 +137,6 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
             </div>
           )}
 
-          {/* User Name */}
-          <div className="bg-lightBlue-600 text-white px-4 py-2.5 rounded-lg hover:bg-lightBlue-400 transition-all">
-            <p className="text-sm sm:text-base truncate max-w-xs">{userName}</p>
-          </div>
-
           {/* User Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
@@ -179,48 +154,11 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
                 <div className="py-1">
                   <button onClick={handleProfile} className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</button>
                   <button onClick={handleChangePassword} className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Change Password</button>
-                  <button onClick={handleLogout} className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
                 </div>
               </div>
             )}
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden w-full mt-4 bg-white rounded-lg shadow-lg">
-            <div className="p-4 border-b">
-              <div className="flex items-center space-x-3 mb-4">
-                <img
-                  src={userPhoto}
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-                <span className="font-medium text-gray-900">{userName}</span>
-              </div>
-              <div className="space-y-2">
-                <button
-                  onClick={handleProfile}
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  Profile
-                </button>
-                <button
-                  onClick={handleChangePassword}
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  Change Password
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Modals */}
