@@ -78,7 +78,7 @@
 //       <div className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100" style={{ width: "100%", maxWidth: "80%" }}>
 //         <div className="flex justify-between items-center p-6 border-b border-gray-100">
 //           <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
-//             <i className="fas fa-comment-dots text-blue-600 mr-2"></i> {feedbackData ? "Edit Feedback" : "Submit Feedback"}
+//             <i className="fas fa-comment-dots text-lightBlue-600 mr-2"></i> {feedbackData ? "Edit Feedback" : "Submit Feedback"}
 //           </h2>
 //           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200">
 //             <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
@@ -94,7 +94,7 @@
 //                   value={formData.feedbackCategory}
 //                   onChange={handleChange}
 //                   required
-//                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+//                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
 //                 >
 //                   <option value="">Select Category</option>
 //                   <option value="Website UI/UX">Website UI/UX</option>
@@ -130,7 +130,7 @@
 //                   value={formData.feedbackMessage}
 //                   onChange={handleChange}
 //                   required
-//                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+//                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
 //                 ></textarea>
 //               </div>
 //               <div>
@@ -139,7 +139,7 @@
 //                   name="suggestions"
 //                   value={formData.suggestions}
 //                   onChange={handleChange}
-//                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+//                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
 //                 ></textarea>
 //               </div>
 //             </div>
@@ -177,7 +177,7 @@
 //               <button type="button" onClick={onClose} className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100">
 //                 Cancel
 //               </button>
-//               <button type="submit" className="px-6 py-3 rounded-xl bg-blue-600 text-white" disabled={loading}>
+//               <button type="submit" className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white" disabled={loading}>
 //                 {loading ? "Submitting..." : feedbackData ? "Update Feedback" : "Submit Feedback"}
 //               </button>
 //             </div>
@@ -273,7 +273,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
       <div className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100" style={{ width: "100%", maxWidth: "80%" }}>
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
-            <i className="fas fa-comment-dots text-blue-600 mr-2"></i> {feedbackData ? "Edit Feedback" : "Submit Feedback"}
+            <i className="fas fa-comment-dots text-lightBlue-600 mr-2"></i> {feedbackData ? "Edit Feedback" : "Submit Feedback"}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200">
             <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
@@ -289,7 +289,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                   value={formData.feedbackCategory}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 >
                   <option value="">Select Category</option>
                   <option value="Website UI/UX">Website UI/UX</option>
@@ -325,7 +325,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                   value={formData.feedbackMessage}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 ></textarea>
               </div>
               <div>
@@ -334,7 +334,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                   name="suggestions"
                   value={formData.suggestions}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 ></textarea>
               </div>
             </div>
@@ -372,7 +372,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
               <button type="button" onClick={onClose} className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100">
                 Cancel
               </button>
-              <button type="submit" className="px-6 py-3 rounded-xl bg-blue-600 text-white" disabled={loading}>
+              <button type="submit" className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white" disabled={loading}>
                 {loading ? "Submitting..." : feedbackData ? "Update Feedback" : "Submit Feedback"}
               </button>
             </div>

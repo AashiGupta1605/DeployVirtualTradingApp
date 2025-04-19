@@ -198,7 +198,7 @@ const MyEventsPage = () => {
     const Icon = config.icon;
 
     return (
-      <span className={`flex items-center px-3 py-1 rounded-full text-sm ${config.color}`}>
+      <span className={`flex items-center px-3 py-1 rounded-full text-xs sm:text-sm ${config.color}`}>
         <Icon size={14} className="mr-1" />
         {status}
       </span>
@@ -317,21 +317,21 @@ const MyEventsPage = () => {
     const status = getEventStatus();
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-4">
         <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-        <div className="relative w-full max-w-[60%] max-h-[80%] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-white">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100">
-                <Trophy className="text-lightBlue-600" size={24} />
+        <div className="relative w-full max-w-full sm:max-w-[90%] md:max-w-[80%] lg:max-w-[60%] max-h-[90vh] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
+          <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center bg-white">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="p-2 sm:p-3 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100">
+                <Trophy className="text-lightBlue-600" size={20} />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">{event.title}</h2>
-                <div className="flex items-center mt-2 space-x-3">
-                  <span className={`px-3 py-1 rounded-full text-sm ${status.bg} ${status.color}`}>
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">{event.title}</h2>
+                <div className="flex items-center mt-1 sm:mt-2 space-x-2 sm:space-x-3">
+                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm ${status.bg} ${status.color}`}>
                     {status.text}
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-xs sm:text-sm text-gray-500">
                     ID: {event._id.slice(-8).toUpperCase()}
                   </span>
                 </div>
@@ -339,42 +339,42 @@ const MyEventsPage = () => {
             </div>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+              className="p-1 sm:p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
             >
-              <X className="text-gray-500" size={24} />
+              <X className="text-gray-500" size={20} />
             </button>
           </div>
 
-          <div className="overflow-y-auto flex-1 p-6">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <Info className="mr-2 text-lightBlue-600" size={18} />
+          <div className="overflow-y-auto flex-1 p-2 sm:p-4 md:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
+                    <Info className="mr-2 text-lightBlue-600" size={16} />
                     Event Details
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Registration Date</span>
-                      <span className="font-medium">
+                      <span className="text-xs sm:text-sm text-gray-600">Registration Date</span>
+                      <span className="text-xs sm:text-sm font-medium">
                         {new Date(event.registrationDate).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Start Date</span>
-                      <span className="font-medium">
+                      <span className="text-xs sm:text-sm text-gray-600">Start Date</span>
+                      <span className="text-xs sm:text-sm font-medium">
                         {new Date(event.startDate).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">End Date</span>
-                      <span className="font-medium">
+                      <span className="text-xs sm:text-sm text-gray-600">End Date</span>
+                      <span className="text-xs sm:text-sm font-medium">
                         {new Date(event.endDate).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Duration</span>
-                      <span className="font-medium">
+                      <span className="text-xs sm:text-sm text-gray-600">Duration</span>
+                      <span className="text-xs sm:text-sm font-medium">
                         {Math.ceil((new Date(event.endDate) - new Date(event.startDate)) / (1000 * 60 * 60 * 24))} days
                       </span>
                     </div>
@@ -384,40 +384,40 @@ const MyEventsPage = () => {
                 <EventPerformanceCard event={event} />
               </div>
 
-              <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <Trophy className="mr-2 text-lightBlue-600" size={18} />
+              <div className="space-y-4 sm:space-y-6">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
+                    <Trophy className="mr-2 text-lightBlue-600" size={16} />
                     Prize Information
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Entry Fee Paid</span>
-                      <span className="font-medium">₹{event.entryFee}</span>
+                      <span className="text-xs sm:text-sm text-gray-600">Entry Fee Paid</span>
+                      <span className="text-xs sm:text-sm font-medium">₹{event.entryFee}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Prize Pool</span>
-                      <span className="font-medium text-green-600">{event.prize}</span>
+                      <span className="text-xs sm:text-sm text-gray-600">Prize Pool</span>
+                      <span className="text-xs sm:text-sm font-medium text-green-600">{event.prize}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Potential Rewards</span>
-                      <span className="font-medium text-purple-600">
+                      <span className="text-xs sm:text-sm text-gray-600">Potential Rewards</span>
+                      <span className="text-xs sm:text-sm font-medium text-purple-600">
                         Up to {event.maxReward || '200'}% returns
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <Shield className="mr-2 text-lightBlue-600" size={18} />
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
+                    <Shield className="mr-2 text-lightBlue-600" size={16} />
                     Rules & Requirements
                   </h3>
-                  <ul className="space-y-2">
+                  <ul className="space-y-1 sm:space-y-2">
                     {event.rules?.map((rule, index) => (
                       <li key={index} className="flex items-start">
                         <div className="mt-1.5 mr-2 w-2 h-2 rounded-full bg-lightBlue-600"></div>
-                        <span className="text-gray-700">{rule}</span>
+                        <span className="text-xs sm:text-sm text-gray-700">{rule}</span>
                       </li>
                     ))}
                   </ul>
@@ -426,24 +426,24 @@ const MyEventsPage = () => {
             </div>
           </div>
 
-          <div className="bg-gray-50 border-t border-gray-200 p-4 flex justify-end space-x-3">
+          <div className="bg-gray-50 border-t border-gray-200 p-3 sm:p-4 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-3 sm:px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
             >
               Close
             </button>
 
             <Link
-  to={{
-    pathname: `/user/tradingnifty`,
-    state: { eventId: event._id }
-  }}
-  className="px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
->
-  <BarChart2 className="mr-2" size={16} />
-  View Trading Dashboard
-</Link>
+              to={{
+                pathname: `/user/tradingnifty`,
+                state: { eventId: event._id }
+              }}
+              className="px-3 sm:px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+            >
+              <BarChart2 className="mr-2" size={16} />
+              View Trading Dashboard
+            </Link>
           </div>
         </div>
       </div>
@@ -452,21 +452,21 @@ const MyEventsPage = () => {
 
   // Empty State Component
   const EmptyState = () => (
-    <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
-      <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <Calendar className="text-gray-400" size={36} />
+    <div className="text-center py-8 sm:py-16 bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="mx-auto w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+        <Calendar className="text-gray-400 w-6 h-6 sm:w-8 sm:h-8" />
       </div>
-      <h3 className="text-2xl font-semibold text-gray-600 mb-4">
+      <h3 className="text-xl sm:text-2xl font-semibold text-gray-600 mb-3 sm:mb-4">
         No events found
       </h3>
-      <p className="text-gray-500 max-w-md mx-auto mb-6">
+      <p className="text-sm sm:text-base text-gray-500 max-w-md mx-auto mb-4 sm:mb-6">
         {filters.status !== 'all' 
           ? `No ${filters.status.toLowerCase()} events found. Try changing your filters.`
           : 'Start your trading journey by joining exciting events and competitions!'}
       </p>
       <Link 
         to="/user/eventspage"
-        className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
+        className="px-4 sm:px-6 py-2 sm:py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block text-sm sm:text-base"
       >
         Browse Events
       </Link>
@@ -492,14 +492,14 @@ const MyEventsPage = () => {
       <div 
         className="bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md border border-gray-200"
       >
-        <div className="p-5">
-          <div className="flex justify-between items-start mb-4">
+        <div className="p-4 sm:p-5">
+          <div className="flex justify-between items-start mb-3 sm:mb-4">
             <div className="flex items-center">
-              <div className="p-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-xs mr-3">
-                <Trophy className="text-lightBlue-600" size={20} />
+              <div className="p-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-xs mr-2 sm:mr-3">
+                <Trophy className="text-lightBlue-600 w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800 line-clamp-1">
+                <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 line-clamp-1">
                   {event.title}
                 </h3>
                 <StatusBadge status={
@@ -510,26 +510,26 @@ const MyEventsPage = () => {
             </div>
           </div>
   
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center justify-between text-xs sm:text-sm">
               <div className="flex items-center">
-                <Calendar className="mr-1.5 text-gray-500" size={14} />
+                <Calendar className="mr-1 text-gray-500 w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="text-gray-600">
                   {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
                 </span>
               </div>
             </div>
   
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center text-sm">
-                <IndianRupee className="mr-1.5 text-gray-500" size={14} />
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <div className="flex items-center text-xs sm:text-sm">
+                <IndianRupee className="mr-1 text-gray-500 w-3 h-3 sm:w-4 sm:h-4" />
                 <div>
                   <span className="text-gray-500">Entry Fee</span>
                   <p className="font-medium">₹{event.entryFee}</p>
                 </div>
               </div>
-              <div className="flex items-center text-sm">
-                <Users className="mr-1.5 text-gray-500" size={14} />
+              <div className="flex items-center text-xs sm:text-sm">
+                <Users className="mr-1 text-gray-500 w-3 h-3 sm:w-4 sm:h-4" />
                 <div>
                   <span className="text-gray-500">Participants</span>
                   <p className="font-medium">{event.participants} joined</p>
@@ -538,18 +538,18 @@ const MyEventsPage = () => {
             </div>
   
             {event.currentPnL !== undefined && (
-              <div className="bg-gray-50 rounded-lg p-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-600">Current P&L</span>
-                  <span className={`text-sm font-semibold ${
+              <div className="bg-gray-50 rounded-lg p-2 sm:p-3">
+                <div className="flex justify-between items-center mb-1 sm:mb-2">
+                  <span className="text-xs sm:text-sm text-gray-600">Current P&L</span>
+                  <span className={`text-xs sm:text-sm font-semibold ${
                     (event.currentPnL || 0) >= 0 ? 'text-green-600' : 'text-red-600'
                   }`}>
                     {(event.currentPnL || 0) >= 0 ? '+' : ''}{event.currentPnL || '0'}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <div className="w-full bg-gray-200 rounded-full h-1 sm:h-1.5">
                   <div 
-                    className={`h-1.5 rounded-full ${
+                    className={`h-1 sm:h-1.5 rounded-full ${
                       (event.currentPnL || 0) >= 0 ? 'bg-green-500' : 'bg-red-500'
                     }`}
                     style={{ width: `${Math.min(Math.abs(event.currentPnL || 0), 100)}%` }}
@@ -559,28 +559,28 @@ const MyEventsPage = () => {
             )}
   
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-xs sm:text-sm mb-1">
                 <span className="text-gray-500">Event Progress</span>
                 <span className="text-gray-700 font-medium">{getEventProgress()}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5">
+              <div className="w-full bg-gray-200 rounded-full h-1 sm:h-1.5">
                 <div 
-                  className="bg-lightBlue-600 h-1.5 rounded-full"
+                  className="bg-lightBlue-600 h-1 sm:h-1.5 rounded-full"
                   style={{ width: `${getEventProgress()}%` }}
                 />
               </div>
             </div>
   
-            <div className="bg-gray-50 rounded-lg p-3">
+            <div className="bg-gray-50 rounded-lg p-2 sm:p-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Medal className="mr-1.5 text-yellow-500" size={14} />
-                  <span className="text-sm text-gray-600">Prize Pool</span>
+                  <Medal className="mr-1 text-yellow-500 w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm text-gray-600">Prize Pool</span>
                 </div>
-                <span className="text-sm font-semibold text-gray-800">{event.prize}</span>
+                <span className="text-xs sm:text-sm font-semibold text-gray-800">{event.prize}</span>
               </div>
               {event.maxReward && (
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xxs sm:text-xs text-gray-500 mt-1">
                   Up to {event.maxReward}% potential returns
                 </div>
               )}
@@ -589,9 +589,9 @@ const MyEventsPage = () => {
             <div className="flex space-x-2">
               <button
                 onClick={onViewDetails}
-                className="flex-1 py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors flex items-center justify-center"
+                className="flex-1 py-2 px-3 sm:px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors flex items-center justify-center text-xs sm:text-sm"
               >
-                <Info className="mr-2" size={16} />
+                <Info className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                 View Details
               </button>
             </div>
@@ -604,72 +604,72 @@ const MyEventsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Main Content */}
-      <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="pt-16 sm:pt-24 pb-8 sm:pb-12 px-3 sm:px-4 md:px-6 max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-12 relative">
-          <div className="absolute -top-8 -left-8 w-32 h-32 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div className="absolute -bottom-12 -right-8 w-32 h-32 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-          <div className="absolute top-0 right-20 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="text-center -mt-12 sm:-mt-24 mb-8 sm:mb-12 relative">
+          <div className="absolute -top-8 -left-8 w-24 h-24 sm:w-32 sm:h-32 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+          <div className="absolute -bottom-8 sm:-bottom-12 -right-8 w-24 h-24 sm:w-32 sm:h-32 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-0 right-8 sm:right-20 w-24 h-24 sm:w-32 sm:h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
 
-          <div className="relative mt-10">
-            <h1 className="text-4xl font-extrabold text-gray-900">
+          <div className="relative mt-6 sm:mt-10">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900">
               My Trading Events
             </h1>
-            <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Track your event participation, performance, and potential rewards
             </p>
           </div>
         </div>
 
         {/* Stats Bar */}
-        <div className="bg-white rounded-lg shadow-xs p-4 mb-6 grid grid-cols-4 gap-4 border border-gray-100">
+        <div className="bg-white rounded-lg shadow-xs p-3 sm:p-4 mb-4 sm:mb-6 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 border border-gray-100">
           {/* Active Events Stat */}
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-green-50 rounded-lg">
-              <BarChart2 className="text-green-600" size={18} />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="p-1 sm:p-2 bg-green-50 rounded-lg">
+              <BarChart2 className="text-green-600 w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Active Events</p>
-              <p className="text-base font-semibold">
+              <p className="text-xxs sm:text-xs text-gray-500">Active Events</p>
+              <p className="text-sm sm:text-base font-semibold">
                 {statistics.activeEvents || 0}
               </p>
             </div>
           </div>
 
           {/* Total Invested Stat */}
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-50 rounded-lg">
-              <IndianRupee className="text-lightBlue-600" size={18} />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="p-1 sm:p-2 bg-blue-50 rounded-lg">
+              <IndianRupee className="text-lightBlue-600 w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Total Invested</p>
-              <p className="text-base font-semibold">
+              <p className="text-xxs sm:text-xs text-gray-500">Total Invested</p>
+              <p className="text-sm sm:text-base font-semibold">
                 {formatCurrency(statistics.totalInvested || 0)}
               </p>
             </div>
           </div>
 
           {/* Completed Events Stat */}
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-purple-50 rounded-lg">
-              <Award className="text-purple-600" size={18} />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="p-1 sm:p-2 bg-purple-50 rounded-lg">
+              <Award className="text-purple-600 w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Completed Events</p>
-              <p className="text-base font-semibold">
+              <p className="text-xxs sm:text-xs text-gray-500">Completed Events</p>
+              <p className="text-sm sm:text-base font-semibold">
                 {statistics.completedEvents || 0}
               </p>
             </div>
           </div>
 
           {/* Total Rewards Stat */}
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-yellow-50 rounded-lg">
-              <Trophy className="text-yellow-600" size={18} />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="p-1 sm:p-2 bg-yellow-50 rounded-lg">
+              <Trophy className="text-yellow-600 w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Total Rewards</p>
-              <p className="text-base font-semibold">
+              <p className="text-xxs sm:text-xs text-gray-500">Total Rewards</p>
+              <p className="text-sm sm:text-base font-semibold">
                 {formatCurrency(statistics.totalRewards || 0)}
               </p>
             </div>
@@ -677,21 +677,21 @@ const MyEventsPage = () => {
         </div>
 
         {/* Event Tabs */}
-        <div className="flex justify-center mb-10">
-          <div className="bg-white rounded-full shadow-sm p-1 flex space-x-2 border border-gray-200">
+        <div className="flex justify-center mb-6 sm:mb-10">
+          <div className="bg-white rounded-full shadow-sm p-1 flex flex-wrap justify-center sm:flex-nowrap sm:space-x-2 border border-gray-200">
             {['all', 'Ongoing', 'Upcoming', 'Completed'].map(tab => (
               <button
                 key={tab}
                 onClick={() => handleFilterChange(tab)}
-                className={`px-6 py-2 rounded-full transition-colors duration-200 flex items-center ${
+                className={`px-3 sm:px-4 py-1 sm:py-2 m-1 sm:m-0 rounded-full transition-colors duration-200 flex items-center ${
                   filters.status === tab 
                     ? 'bg-lightBlue-600 text-white shadow-sm' 
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                {tab === 'Ongoing' && <Zap className="mr-2" size={16} />}
-                {tab === 'Upcoming' && <Calendar className="mr-2" size={16} />}
-                {tab === 'Completed' && <Award className="mr-2" size={16} />}
+                {tab === 'Ongoing' && <Zap className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />}
+                {tab === 'Upcoming' && <Calendar className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />}
+                {tab === 'Completed' && <Award className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />}
                 {tab === 'all' && 'All Events'}
                 {tab !== 'all' && `${tab} Events`}
               </button>
@@ -700,17 +700,20 @@ const MyEventsPage = () => {
         </div>
 
         {/* Sort Dropdown */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-end mb-4 sm:mb-6">
           <div className="relative">
             <select
               value={filters.sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="appearance-none bg-white border border-gray-200 rounded-lg px-3 py-1 sm:px-4 sm:py-2 pr-6 sm:pr-8 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="startDate">Sort by Date</option>
               <option value="entryFee">Sort by Entry Fee</option>
               <option value="performance">Sort by Performance</option>
             </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
+            </div>
           </div>
         </div>
 
@@ -718,7 +721,7 @@ const MyEventsPage = () => {
         {filteredEvents.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredEvents.map(event => (
               <EventCard 
                 key={event._id}
@@ -737,16 +740,6 @@ const MyEventsPage = () => {
             event={selectedEvent}
           />
         )}
-
-        {/* Download Button
-        <div className="fixed bottom-8 right-8">
-          <button
-            onClick={() => window.print()}
-            className="bg-white p-4 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-200 flex items-center justify-center"
-          >
-            <Download className="text-gray-700" size={24} />
-          </button>
-        </div> */}
       </div>
     </div>
   );
