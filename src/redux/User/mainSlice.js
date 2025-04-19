@@ -6,7 +6,7 @@ import complaintReducer from './complaintSlice';
 import tradingReducer from './trading/tradingSlice';
 import forgetpasswordReducer from './forgetPasswordSlice';
 import eventsReducer from './events/eventsSlice';
-
+import certificateReducer from "./certificateSlice";
 // import userSlice from './userSlice';
 import dashboardReducer from "./userSlice";
 import subscriptionPlanReducer from './userSubscriptionPlan/userSubscriptionPlansSlice';
@@ -22,7 +22,8 @@ const userReducer = combineReducers({
   tradingModal: tradingReducer,
   forgetpassword: forgetpasswordReducer,
   events: eventsReducer,
-  userDashboard:userDashboardReducer
+  userDashboard:userDashboardReducer,
+  certificate:certificateReducer
 });
 
 export default userReducer;

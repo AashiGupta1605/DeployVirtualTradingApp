@@ -4,12 +4,42 @@ import { BASE_API_URL } from '../../../utils/BaseUrl';
 import { toast } from 'react-hot-toast';
 
 // Async Thunks
+// export const fetchAllParticipants = createAsyncThunk(
+//   'adminParticipants/fetchAll',
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.get(`${BASE_API_URL}/admin/events/event-registrations`);
+//       console.log(response);
+//       return response.data.registrations;
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data?.message || "Failed to fetch participants");
+//     }
+//   }
+// );
+
+// In participantSlice.js, update the fetchAllParticipants thunk:
 export const fetchAllParticipants = createAsyncThunk(
   'adminParticipants/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${BASE_API_URL}/admin/events/event-registrations`);
-      return response.data.registrations;
+      // Group by user to show unique users
+      const uniqueUsersMap = new Map();
+      response.data.registrations.forEach(reg => {
+        if (!uniqueUsersMap.has(reg.userId._id)) {
+          uniqueUsersMap.set(reg.userId._id, {
+            ...reg,
+            userId: {
+              _id: reg.userId._id,
+              name: reg.userId.name,
+              email: reg.userId.email,
+              mobile: reg.userId.mobile,
+              gender: reg.userId.gender
+            }
+          });
+        }
+      });
+      return Array.from(uniqueUsersMap.values());
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Failed to fetch participants");
     }
@@ -233,3 +263,6 @@ export const selectUserEvents = (userId) => (state) => state.admin.participants.
 
 
 export default adminParticipantsSlice.reducer;
+
+
+

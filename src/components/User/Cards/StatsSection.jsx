@@ -258,7 +258,7 @@ const activeSubscription = userSubscriptions.find(sub =>
                 showDetails: true,
                 statItems: [
                   { label: "nifty50", value:nifty50Data.length - 1 || "0" },
-                  { label: "nifty500", value: nifty500Data.length - 1 || "0" },
+                  { label: "etf", value: etfData.length - 1 || "0" },
                   // { label: "nifty500", value: stats?.stocks?.nifty500?.toString() || "0" },
                   // { label: "Pending", value: orgStats.pending.toString() },
                   // { label: "Inactive", value: orgStats.inactive.toString() }
