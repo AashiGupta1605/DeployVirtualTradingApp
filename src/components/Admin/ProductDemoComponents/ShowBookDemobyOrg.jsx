@@ -145,6 +145,11 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
   const [timeSlot, setTimeSlot]=useState("all")
   const [status, setStatus]=useState("all")
 
+  useEffect(()=>{
+    if(search.trim()==="")
+      setField("name")
+  },[search])
+
   useEffect(() => {
     let count = 0;
     let filters = {};
@@ -209,7 +214,8 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
       const searchQuery = search.trim() === "" ? "all" : search;
 
       const response = await axios.get(
-        `${BASE_API_URL}/admin/demo/getDemobyOrganization`
+        // `${BASE_API_URL}/admin/demo/getDemobyOrganization`
+        `${BASE_API_URL}/admin/demo/getDemobyOrganization/${timeSlot}/${status}/${field}/${searchQuery}`
       );
 
       console.log("Book Demo Data: ", response.data);
@@ -237,7 +243,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
       }
     };
     fetchData();
-  }, [timeSlot, status, search]);
+  }, [timeSlot, status, search, field]);
 
   const refreshData = () => {
     fetchBookDemobyOrgData();
@@ -315,7 +321,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                   <div className="relative group">
                     <select
                     name="SelectField"
-                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-28 pr-8"
+                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-28 pr-10 truncate"
                     value={field}
                     onChange={(e) => setField(e.target.value || "")}
                     >
@@ -334,20 +340,39 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                 {/* Search bar */}
                 <div className="relative">
                   <div className="relative w-[220px]">
-                    {/* Search Icon */}
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
-                      alt="search"
-                      className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
-                    />
-                    {/* Search Input */}
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value || "")}
-                      className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[36px] focus:outline-none focus:shadow-md focus:border-black"
-                    />
+
+                    {/* Search/Calender Icon */}
+                    {field=='demoRequestDate' || field=='demoResolveDate' || field=='preferredDate'
+                      ?<img
+                        src="https://cdn-icons-png.flaticon.com/512/747/747310.png"
+                        alt="calendar"
+                        className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
+                      />
+                      :<img
+                        src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+                        alt="search"
+                        className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
+                      />
+                    }
+                  
+                    {/* Search/Date Input */}
+                    {field=='demoRequestDate' || field=='demoResolveDate' || field=='preferredDate'
+                      ?<input
+                        type="date"
+                        placeholder="Date..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value || "")}
+                        className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black"
+                      />
+                      :<input
+                        type="text"
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value || "")}
+                        className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black"
+                      />
+                    }
+
                   </div>
                 </div>
 
@@ -374,7 +399,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                   <div className="relative">
                     <select
                       name="TimeSlot"
-                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8 truncate"
                       value={timeSlot}
                       onChange={(e) =>
                         setTimeSlot(e.target.value || "all")
@@ -400,7 +425,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                   <div className="relative">
                     <select
                       name="Status"
-                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+                      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8 truncate"
                       value={status}
                       onChange={(e) => setStatus(e.target.value || "all")}
                     >
@@ -457,9 +482,9 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
               } w-full max-h-[500px] rounded-lg`}
             >
               <table
-                className={`-ml-5 -mr-14 inset-0 min-w-full table-fixed ${
-                  data.length > 0 ? "divide-y" : ""
-                } divide-gray-200 border-collapse bg-white`}
+                className={`-ml-5 -mr-14 inset-0 min-w-full table-fixed border-collapse bg-white ${
+                data.length > 0 ? "divide-y divide-gray-200" : "w-[805px] overflow-hidden ml-1"
+                }`}
               >
                 <thead className="bg-gray-50 sticky top-0 z-10">
                   <tr>
@@ -505,7 +530,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                 {err && (
                   <tbody className="bg-white divide-y divide-gray-200">
                     <tr>
-                      <td colSpan="6">
+                      <td colSpan="12">
                         <div className="mt-9 ml-15 flex justify-center items-center min-h-[180px]">
                           <div className="flex flex-col items-center justify-center w-96 bg-gray-100 rounded-lg shadow-lg p-6">
                             <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
@@ -536,8 +561,8 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
 
                 <tbody
                   className={`bg-white ${
-                    data.length > 0 ? "divide-y" : ""
-                  } divide-gray-200`}
+                    data.length > 0 ? "divide-y divide-gray-200" : "overflow-hidden"
+                  } `}
                 >
                   {data.length > 0
                     ? currentRows.map((data, index) => {
@@ -652,10 +677,10 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                     : !err && (
                         <tr>
                           <td
-                            colSpan="6"
+                            colSpan="12"
                             className="p-6 text-center text-gray-500 text-base font-medium bg-gray-50 rounded-md mt-4"
                           >
-                            <div className="pt-25 pb-30 flex flex-col items-center space-y-2">
+                            <div className={`${showFilters ? "pt-8 pb-8" : "pt-16 pb-17"} flex flex-col items-center space-y-2`}>
                               <FolderOpen className="w-10 h-10 text-gray-400" />
                               <span>No Bookings available.</span>
                             </div>
