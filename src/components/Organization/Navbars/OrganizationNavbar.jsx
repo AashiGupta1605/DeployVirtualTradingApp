@@ -124,7 +124,7 @@ const {orgId, orgName, currentOrg} = useSelector((state) => state.organization.a
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-lg font-bold text-gray-900">PGR - Virtual Trading App</span>
+          <span className="text-xl font-bold text-gray-900">PGR - Virtual Trading App</span>
         </a>
 
         {/* Form */}
