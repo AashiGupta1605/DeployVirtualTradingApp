@@ -155,16 +155,24 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
   }, []);
 
   // Effects
-  useEffect(() => {
-    if (isOpen && symbol) {
-      dispatch(fetchCompanyDetails({ symbol, type }));
-    }
-    return () => {
-      if (!isOpen) {
-        dispatch(resetCompanyDetails());
-      }
-    };
-  }, [isOpen, symbol, type, dispatch]);
+// In CompanyDetailModal.jsx
+
+useEffect(() => {
+  if (isOpen && symbol) {
+    console.log('Fetching data for symbol:', symbol);
+    dispatch(fetchCompanyDetails({ symbol, type }))
+      .then(() => {
+        console.log('Successfully fetched company details');
+        return dispatch(fetchHistoricalData({ symbol, type, timeRange: '1D' }));
+      })
+      .then(() => {
+        console.log('Successfully fetched historical data');
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }
+}, [isOpen, symbol, type, dispatch]);
 
   useEffect(() => {
     if (isOpen && userId && subscriptionPlanId) {
@@ -219,39 +227,45 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
         return (
           <TradingViewTab symbol={symbol} loading={loading || isRefreshing} />
         );
-      case 'historical':
-        return (
-          <HistoricalTab
-            data={historicalData.rawData}
-            loading={historicalLoading || isRefreshing}
-            error={error}
-            onTimeRangeChange={handleFilterChange}
-            onRefresh={handleRefresh}
-          />
-        );
-      case 'trading':
-        return (
-          <Buy_SellTab
-            symbol={symbol}
-            activeEvent={activeEvent}
-            data={{
-              companyName: data?.companyName,
-              currentPrice: data?.lastPrice,
-              change: data?.change,
-              changePercent: data?.pChange,
-              dayHigh: data?.dayHigh,
-              dayLow: data?.dayLow,
-              yearHigh: data?.yearHigh,
-              yearLow: data?.yearLow,
-              volume: data?.totalTradedVolume,
-              marketCap: data?.marketCap,
-            }}
-            loading={loading || isRefreshing}
-            error={error}
-            onRefresh={handleRefresh}
-            onOpenSubscriptionModal={() => setIsSubscriptionModalOpen(true)}
-          />
-        );
+        case 'historical':
+          return (
+            <HistoricalTab
+              data={historicalData}
+              loading={historicalLoading}
+              error={error}
+              onTimeRangeChange={(range) => {
+                dispatch(setActiveFilter(range));
+                dispatch(setCurrentPage(1));
+              }}
+              onRefresh={handleRefresh}
+            />
+          );
+// In CompanyDetailModal.jsx, modify the trading case in renderTabContent:
+
+case 'trading':
+  return (
+    <Buy_SellTab
+      symbol={symbol}
+      data={{
+        type: type,
+        companyName: data?.companyName,
+        currentPrice: data?.lastPrice || data?.currentPrice,
+        lastPrice: data?.lastPrice,
+        change: data?.change,
+        changePercent: data?.pChange,
+        dayHigh: data?.dayHigh,
+        dayLow: data?.dayLow,
+        yearHigh: data?.yearHigh,
+        yearLow: data?.yearLow,
+        volume: data?.totalTradedVolume,
+        marketCap: data?.marketCap,
+        historicalData: historicalData?.rawData || []
+      }}
+      loading={loading || historicalLoading || isRefreshing}
+      error={error}
+      onOpenSubscriptionModal={() => setIsSubscriptionModalOpen(true)}
+    />
+  );
       default:
         return null;
     }
@@ -273,7 +287,7 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
       />
 
       <div className="fixed inset-0 flex items-center justify-center z-10">
-        <div className="relative w-[90%] h-[90%] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full transition-all duration-200 z-10 group"

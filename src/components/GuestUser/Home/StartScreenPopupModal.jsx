@@ -132,7 +132,7 @@ const StartScreenPopupModal = () => {
                 Praedico Global Research
               </h1>
               <h2 className="text-lg text-lightBlue-600 font-semibold">
-                Virtual Trading Platform
+                PGR - Virtual Trading App
               </h2>
 
             </div>

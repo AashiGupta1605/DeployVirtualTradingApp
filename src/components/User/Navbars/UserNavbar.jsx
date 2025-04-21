@@ -81,7 +81,7 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
             className="lg:hidden p-2 mr-2 rounded-lg hover:bg-gray-100"
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-6 w-6" /> 
           </button>
           <img 
             src={logoImage} 
