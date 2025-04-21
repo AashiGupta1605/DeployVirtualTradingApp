@@ -4,15 +4,15 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 import toast from 'react-hot-toast';
 
-const user = JSON.parse(localStorage.getItem('user'));
-const userId = user?._id;
-console.log(userId);
+// const user = JSON.parse(localStorage.getItem('user'));
+// const userId = user._id;
+// console.log(userId);
 
 
 
 export const fetchUserStats = createAsyncThunk(
   'userStats/fetchAll',
-  async (_, { rejectWithValue }) => {
+  async (userId, { rejectWithValue }) => {
     try {
       const endpoints = [
         'users',
