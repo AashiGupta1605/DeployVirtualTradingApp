@@ -26,7 +26,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
       .min(8, "Password must be at least 8 characters")
       .max(15, "Password cannot be more than 15 characters")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        /^(?=.*[A-Za-z])(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/,
         "Password must contain at least one letter and one special character"
       )
       .required("Password is required"),
@@ -60,7 +60,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
       mobile: "",
       gender: "",
       dob: "",
-      orgtype: "",
+      
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -260,7 +260,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           )}
         </div>
         
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Organization Type</label>
           <input
             type="text"
@@ -274,7 +274,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           {formik.touched.orgtype && formik.errors.orgtype && (
             <p className="text-red-500 text-xs">{formik.errors.orgtype}</p>
           )}
-        </div>
+        </div> */}
 
         <div className="col-span-2 flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-100">
           <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
