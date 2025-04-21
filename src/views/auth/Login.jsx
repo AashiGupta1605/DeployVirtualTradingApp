@@ -30,7 +30,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
         .min(8, "Password must be at least 8 characters")
         .max(15, "Password cannot be more than 15 characters")
         .matches(
-          /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          /^(?=.*[A-Za-z])(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/,
           "Password must contain at least one letter and one special character"
         )
         .required("Password is required"),

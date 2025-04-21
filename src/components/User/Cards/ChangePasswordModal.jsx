@@ -14,7 +14,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
       .min(8, "Old password must be at least 8 characters")
       .max(15, "Old password cannot be more than 15 characters")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        /^(?=.*[A-Za-z])(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/,
         "Old password must contain at least one letter and one special character"
       )
       .required("Old password is required"),
@@ -23,7 +23,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
       .min(8, "New password must be at least 8 characters")
       .max(15, "New password cannot be more than 15 characters")
       .matches(
-        /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        /^(?=.*[A-Za-z])(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/,
         "New password must contain at least one letter and one special character"
       )
       .notOneOf([Yup.ref("oldPassword")], "New password must be different from the old password")
