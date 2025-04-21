@@ -368,11 +368,16 @@ const AddGalleryImage = ({ closeModal }) => {
       .max(600, "Description must be at most 600 characters"),
     
     photo: Yup.string()
+    .nullable()
     .required("Photo is required")
     .test('is-base64', 'Invalid Image. Please Re-Upload Image.', value => {
     if (!value) return false;
-    // Simple base64 validation
-    return /^[A-Za-z0-9+/]+={0,2}$/.test(value);
+    try {
+      return /^[A-Za-z0-9+/]+={0,2}$/.test(value);
+    } 
+    catch (err) {
+      return false;
+    }
   }),
 
   });  
@@ -384,7 +389,7 @@ const AddGalleryImage = ({ closeModal }) => {
     }, delay);
   };
   
-  const handleImageUpload = async (event, setFieldValue) => {
+  const handleImageUpload = async (event, setFieldValue, setTouched) => {
     const file = event.target.files[0];
 
     if (!file) {
@@ -404,6 +409,7 @@ const AddGalleryImage = ({ closeModal }) => {
       reader.onloadend = () => {
         const base64String = reader.result.split(',')[1]; // Remove the data URL prefix
         setFieldValue("photo", base64String);
+        setTouched({ photo: true });
         toast.success("Image ready for upload!");
       };
       reader.readAsDataURL(file);
@@ -524,7 +530,7 @@ const AddGalleryImage = ({ closeModal }) => {
             validationSchema={validationSchema}
             onSubmit={addGalleryImage}
           >
-            {({ isSubmitting, isValid, setFieldValue}) => (
+            {({ isSubmitting, isValid, setFieldValue, setTouched }) => (
               <Form className="space-y-6">
                 <div className="flex flex-col md:flex-row gap-5">
                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
@@ -547,7 +553,7 @@ const AddGalleryImage = ({ closeModal }) => {
                         type="file"
                         name="photo"
                         accept="image/*"
-                        onChange={(event) => handleImageUpload(event, setFieldValue)}
+                        onChange={(event) => handleImageUpload(event, setFieldValue, setTouched)}
                         className="file-input"
                       />
         
