@@ -1,386 +1,10 @@
-// // Buy_SellTab.jsx
-// import React, { useState, useEffect, useMemo } from 'react';
-// import PropTypes from 'prop-types';
-// import { useDispatch, useSelector } from 'react-redux';
-// import toast from 'react-hot-toast';
-
-// import {
-//   placeOrder,
-//   selectLoadingState,
-//   fetchTransactionHistory,
-//   selectTransactions,
-//   selectHoldings,
-//   selectStatistics,
-//   selectHoldingBySymbol,
-//   fetchHoldings,
-// } from '../../../../../redux/User/trading/tradingSlice';
-// import { getUserSubscriptions } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
-// import ConfirmationModal from '../../ConformationModal';
-// import PraedicoAnalysis from './PraedicoAnalysis';
-// import TransactionHistory from './TransactionHistory';
-// import TradingControls from './TradingControls';
-// import MarketStatusOverlay from './../parts/MarketStatusOverlay';
-// import { isMarketOpen } from '../../../../../utils/marketStatus';
-
-// const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal,activeEvent, }) => {
-//   const dispatch = useDispatch();
-//   const safeData = useMemo(() => data || {}, [data]);
-//   const currentMarketPrice = useMemo(() => safeData.currentPrice || 0, [safeData]);
-
-//   // Get active event from Redux
-//   const activeEvent = useSelector((state) => state.user.events?.activeEvent);
-
-//   const [activeTab, setActiveTab] = useState('buy');
-//   const [showConfirmation, setShowConfirmation] = useState(false);
-//   const [quantity, setQuantity] = useState(0);
-//   const [orderType, setOrderType] = useState('market');
-//   const [price, setPrice] = useState(currentMarketPrice);
-//   const [stopPrice, setStopPrice] = useState(currentMarketPrice);
-
-
-//   const userId = useSelector((state) => state.user.auth?.user?._id);
-//   const userSubscriptions = useSelector((state) => state.user.subscriptionPlan?.userSubscriptions || []);
-//   const transactions = useSelector(selectTransactions);
-//   const holdings = useSelector(selectHoldings);
-//   const currentHolding = useSelector((state) => selectHoldingBySymbol(state, symbol));
-//   const statistics = useSelector(selectStatistics);
-//   const { loading: tradingLoading, orderStatus } = useSelector(selectLoadingState);
-
-//   const activeSubscription = useMemo(
-//     () => userSubscriptions.find((sub) => sub.status === 'Active' && !sub.isDeleted),
-//     [userSubscriptions]
-//   );
-
-//   const calculateRemainingBalance = () => {
-//     if (!activeSubscription) return 0;
-//     const totalHoldings = holdings.reduce(
-
-//       (total, holding) => total + holding.quantity * holding.averageBuyPrice,
-//       0
-//     );
-//     return activeSubscription.vertualAmount - totalHoldings;
-//   };
-
-//   const marketOpen = isMarketOpen();
-
-
-//   console.log('User ID:', userId);
-
-//   useEffect(() => {
-//     setPrice(currentMarketPrice);
-//     setStopPrice(currentMarketPrice);
-//   }, [currentMarketPrice]);
-
-//   useEffect(() => {
-//     setQuantity(0);
-//     setOrderType('market');
-//     setPrice(currentMarketPrice);
-//     setStopPrice(currentMarketPrice);
-//   }, [activeTab, currentMarketPrice]);
-
-
-//   // roshni code
-//   // useEffect(() => {
-//   //   if (userId) {
-//   //     dispatch(getUserSubscriptions(userId));
-//   //     dispatch(fetchHoldings(userId));
-//   //     if (activeSubscription?._id) {
-
-//   //       dispatch(
-//   //         fetchTransactionHistory({
-//   //           userId,
-//   //           subscriptionPlanId: activeSubscription._id,
-//   //         })
-//   //       );
-//   //     }
-//   //   }
-//   // }, [dispatch, userId, activeSubscription?._id]);
-
-
-//   // my code
-
-//   useEffect(() => {
-//     if (userId) {
-//       dispatch(getUserSubscriptions(userId));
-//       dispatch(fetchHoldings(userId));
-//     }
-//   }, [dispatch, userId]);
-  
-//   useEffect(() => {
-//     if (userId && activeSubscription?._id) { // Ensure activeSubscription._id is defined
-//       dispatch(
-//         fetchTransactionHistory({
-//           userId,
-//           subscriptionPlanId: activeSubscription._id,
-//         })
-//       );
-//     }
-//   }, [dispatch, userId, activeSubscription?._id]);
-  
-//   const handleQuantityChange = (value) => {
-//     let newValue = Math.max(0, parseInt(value) || 0);
-
-//     if (activeTab === 'buy') {
-//       const maxAffordable = Math.floor(calculateRemainingBalance() / currentMarketPrice);
-//       newValue = Math.min(newValue, maxAffordable);
-//     } else {
-//       const availableShares = currentHolding?.quantity || 0;
-//       newValue = Math.min(newValue, availableShares);
-//     }
-
-//     setQuantity(newValue);
-//   };
-
-//   const handlePlaceOrder = async (orderDetails) => {
-//     try {
-//       const result = await dispatch(
-//         placeOrder({
-//           ...orderDetails,
-//           symbol,
-//           currentMarketPrice: data.currentPrice,
-//           eventId: activeEvent?._id // Include active event ID
-//         })
-//       ).unwrap();
-
-//       toast.success(
-//         `Successfully placed ${orderDetails.type.toUpperCase()} order for ${
-//           orderDetails.numberOfShares
-//         } shares at ₹${orderDetails.price.toFixed(2)}`,
-//         { position: 'top-right' }
-//       );
-
-//       setShowConfirmation(false);
-//     } catch (error) {
-//       console.error('Order Placement Error:', error);
-//       toast.error(error.message || 'Failed to place order. Please try again.', {
-//         position: 'top-right',
-//       });
-//       setShowConfirmation(false);
-//     }
-//   };
-
-//   const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance() > 0;
-//   // rohni code --
-//   // const isDisabled = loading || tradingLoading || !marketOpen;
-
-//   // my code --
-//   const isDisabled = loading || tradingLoading;
-
-
-
-//   if (loading || tradingLoading) {
-//     return (
-//       <div className="w-full bg-white rounded-xl shadow-lg p-6 animate-pulse">
-//         Loading...
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="w-full bg-white rounded-xl shadow-lg p-6 text-center text-red-500">
-//         Error: {error}
-//       </div>
-//     );
-//   }
-
-//   if (!canTrade) {
-//     return (
-//       <div className="w-full h-96 flex items-center justify-center flex-col gap-4">
-//         <div className="text-xl text-gray-600">
-
-//           {!activeSubscription
-//             ? 'Please subscribe to start trading'
-//             : 'Your subscription has expired or has insufficient balance'}
-//         </div>
-//         <button
-//           onClick={onOpenSubscriptionModal} // Use the prop passed from the parent
-//           className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-//         >
-//           View Subscription Plans
-//         </button>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6 relative">
-
-//       {!marketOpen && <MarketStatusOverlay tradingPreference={activeSubscription?.tradingPreference} />}
-
-//       <div className="flex gap-6">
-//         {/* Left Side: Account Summary, Buy/Sell Tabs, and Trading Controls */}
-//         <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 60%' }}>
-//           {/* Account Summary - Small Cards */}
-//           <div className="grid grid-cols-3 gap-4 mb-6">
-//             {/* Shares Card */}
-//             <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 shadow-sm border border-blue-100">
-//               <h4 className="text-sm text-gray-600 mb-2">Shares</h4>
-//               <p className="text-xl font-bold text-blue-600">
-//                 {currentHolding?.quantity || 0}
-//               </p>
-//             </div>
-
-//             {/* Avg. Buy Price Card */}
-//             <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 shadow-sm border border-green-100">
-//               <h4 className="text-sm text-gray-600 mb-2">Avg. Buy Price</h4>
-//               <p className="text-xl font-bold text-green-600">
-//                 ₹{currentHolding?.averageBuyPrice?.toFixed(2) || '0.00'}
-//               </p>
-//             </div>
-
-//             {/* Value Card */}
-//             <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 shadow-sm border border-purple-100">
-//               <h4 className="text-sm text-gray-600 mb-2">Value</h4>
-//               <p className="text-xl font-bold text-purple-600">
-//                 ₹{((currentHolding?.quantity || 0) * currentMarketPrice).toFixed(2)}
-//               </p>
-//             </div>
-//           </div>
-
-//           {/* Buy/Sell Tabs */}
-//           <div className="bg-gray-100 p-0.5 rounded-lg inline-flex gap-1 shadow-md mb-2">
-
-//             <button
-//               onClick={() => setActiveTab('buy')}
-//               className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
-//                 activeTab === 'buy'
-//                   ? 'bg-green-500 text-white shadow-lg'
-//                   : 'text-gray-600 hover:bg-green-50'
-//               }`}
-//             >
-//               Buy
-//             </button>
-
-//             <button
-//               onClick={() => setActiveTab('sell')}
-//               className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
-//                 activeTab === 'sell'
-//                   ? 'bg-red-500 text-white shadow-lg'
-//                   : 'text-gray-600 hover:bg-red-50'
-//               }`}
-//             >
-//               Sell
-//             </button>
-//           </div>
-
-
-//           {/* Trading Controls */}
-//           <TradingControls
-//             activeTab={activeTab}
-//             currentMarketPrice={currentMarketPrice}
-//             quantity={quantity}
-//             setQuantity={handleQuantityChange}
-//             orderType={orderType}
-//             setOrderType={setOrderType}
-//             price={price}
-//             setPrice={setPrice}
-//             stopPrice={stopPrice}
-//             setStopPrice={setStopPrice}
-//             isDisabled={isDisabled}
-//             setShowConfirmation={setShowConfirmation}
-//             calculateTotal={() => quantity * (orderType === 'market' ? currentMarketPrice : price)}
-//           />
-//         </div>
-
-//         {/* Right Side: Praedico Analysis */}
-//         <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 40%' }}>
-//           <PraedicoAnalysis
-//             data={{
-//               ...safeData,
-//               signals: {
-//                 strongBuy: safeData.change > 5 ? 12 : 6,
-//                 buy: safeData.pChange > 2 ? 8 : 4,
-//                 hold: safeData.change === 0 ? 3 : 2,
-//                 sell: safeData.change < -2 ? 2 : 1,
-//                 strongSell: safeData.change < -5 ? 1 : 0,
-//               },
-//             }}
-//             timeframe="1D"
-//           />
-//         </div>
-//       </div>
-
-//       {/* Transaction History at the Bottom */}
-//       <div className="bg-gray-50 rounded-xl p-6">
-//         <TransactionHistory currentPrice={currentMarketPrice} symbol={symbol} />
-//       </div>
-
-//       {/* Confirmation Modal */}
-//       {showConfirmation && (
-//         <ConfirmationModal
-//           isOpen={showConfirmation}
-//           onClose={() => setShowConfirmation(false)}
-
-//           onConfirm={() =>
-//             handlePlaceOrder({
-//               userId,
-//               subscriptionPlanId: activeSubscription._id,
-//               symbol,
-//               type: activeTab,
-//               numberOfShares: quantity,
-//               price: orderType === 'market' ? currentMarketPrice : price,
-//               orderType,
-//               total: quantity * (orderType === 'market' ? currentMarketPrice : price),
-//               currentMarketPrice,
-//             })
-//           }
-//           title="Confirm Order"
-//           message={`Are you sure you want to ${activeTab} ${quantity} shares at ₹${(
-//             orderType === 'market' ? currentMarketPrice : price
-//           ).toFixed(2)}?`}
-//         />
-//       )}
-//     </div>
-//   );
-// };
-
-// Buy_SellTab.propTypes = {
-//   symbol: PropTypes.string.isRequired,
-//   data: PropTypes.shape({
-//     companyName: PropTypes.string,
-//     currentPrice: PropTypes.number,
-//     change: PropTypes.number,
-//     changePercent: PropTypes.number,
-//     dayHigh: PropTypes.number,
-//     dayLow: PropTypes.number,
-//     yearHigh: PropTypes.number,
-//     yearLow: PropTypes.number,
-//     volume: PropTypes.number,
-//     marketCap: PropTypes.number,
-//   }),
-//   loading: PropTypes.bool,
-//   error: PropTypes.string,
-//   onOpenSubscriptionModal: PropTypes.func.isRequired, // Add this prop type
-// };
-
-// Buy_SellTab.defaultProps = {
-//   data: {
-//     companyName: '',
-//     currentPrice: 0,
-//     change: 0,
-//     changePercent: 0,
-//     dayHigh: 0,
-//     dayLow: 0,
-//     yearHigh: 0,
-//     yearLow: 0,
-//     volume: 0,
-//     marketCap: 0,
-//   },
-//   loading: false,
-//   error: null,
-// };
-
-// export default Buy_SellTab;
-
+// BuySellTab.jsx - Part 1
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { 
   selectActiveEvent,
-  selectActiveEvents,
-  setActiveEvent
 } from '../../../../../redux/User/events/eventsSlice';
 import {
   placeOrder,
@@ -388,10 +12,15 @@ import {
   fetchTransactionHistory,
   selectTransactions,
   selectHoldings,
-  selectStatistics,
   selectHoldingBySymbol,
   fetchHoldings,
 } from '../../../../../redux/User/trading/tradingSlice';
+import { 
+  fetchHistoricalData,
+  selectCurrentPrice,
+  selectPriceAnalysis,
+  selectHistoricalData
+} from '../../../../../redux/Common/companyDetailsSlice';
 import { getUserSubscriptions } from '../../../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice';
 import ConfirmationModal from '../../ConformationModal';
 import PraedicoAnalysis from './PraedicoAnalysis';
@@ -400,44 +29,120 @@ import TradingControls from './TradingControls';
 import MarketStatusOverlay from './../parts/MarketStatusOverlay';
 import { isMarketOpen } from '../../../../../utils/marketStatus';
 
-const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) => {
+// Helper function to format currency
+const formatCurrency = (amount) => {
+  if (!amount || isNaN(amount)) return '₹0.00';
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
+// Helper function to validate order
+const validateOrder = (orderDetails, holdings, remainingBalance) => {
+  const { type, numberOfShares, price, currentMarketPrice } = orderDetails;
+  const orderValue = numberOfShares * (price || currentMarketPrice);
+
+  if (!numberOfShares || numberOfShares <= 0) {
+    throw new Error('Please enter a valid number of shares');
+  }
+
+  if (type === 'buy') {
+    if (orderValue > remainingBalance) {
+      throw new Error('Insufficient balance for this order');
+    }
+  } else if (type === 'sell') {
+    const currentHolding = holdings.find(h => h.symbol === orderDetails.symbol);
+    if (!currentHolding || currentHolding.quantity < numberOfShares) {
+      throw new Error('Insufficient shares for this order');
+    }
+  }
+
+  return true;
+};
+
+const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) => {
   const dispatch = useDispatch();
-  const safeData = useMemo(() => data || {}, [data]);
-  const currentMarketPrice = useMemo(() => safeData.currentPrice || 0, [safeData]);
+  
+  // Redux selectors
+  const userId = useSelector((state) => state.user.auth?.user?._id);
+  const userSubscriptions = useSelector((state) => 
+    state.user.subscriptionPlan?.userSubscriptions || []
+  );
+  const holdings = useSelector(selectHoldings);
+  const currentHolding = useSelector((state) => selectHoldingBySymbol(state, symbol));
+  const { loading: tradingLoading } = useSelector(selectLoadingState);
+  const activeEvent = useSelector(selectActiveEvent);
+  const currentPrice = useSelector(selectCurrentPrice);
+  const priceAnalysis = useSelector(selectPriceAnalysis);
+  const historicalData = useSelector(selectHistoricalData);
 
-  // Get active event from Redux
-  const activeEvent = useSelector((state) => state.user.events?.activeEvent);
-
+  // Local state
+  const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('buy');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [orderType, setOrderType] = useState('market');
-  const [price, setPrice] = useState(currentMarketPrice);
-  const [stopPrice, setStopPrice] = useState(currentMarketPrice);
+  const [price, setPrice] = useState(currentPrice);
+  const [stopPrice, setStopPrice] = useState(currentPrice);
 
-  const userId = useSelector((state) => state.user.auth?.user?._id);
-  const userSubscriptions = useSelector((state) => state.user.subscriptionPlan?.userSubscriptions || []);
-  const transactions = useSelector(selectTransactions);
-  const holdings = useSelector(selectHoldings);
-  const currentHolding = useSelector((state) => selectHoldingBySymbol(state, symbol));
-  const statistics = useSelector(selectStatistics);
-  const { loading: tradingLoading, orderStatus } = useSelector(selectLoadingState);
+  // Memoized values
+  const safeData = useMemo(() => data || {}, [data]);
+  
+  const currentMarketPrice = useMemo(() => {
+    const price = Number(currentPrice) || 
+                 Number(safeData.currentPrice) || 
+                 Number(safeData.lastPrice) || 0;
+    return isNaN(price) ? 0 : price;
+  }, [currentPrice, safeData]);
 
   const activeSubscription = useMemo(
     () => userSubscriptions.find((sub) => sub.status === 'Active' && !sub.isDeleted),
     [userSubscriptions]
   );
 
-  const calculateRemainingBalance = () => {
+  const calculateRemainingBalance = useMemo(() => {
     if (!activeSubscription) return 0;
     const totalHoldings = holdings.reduce(
-      (total, holding) => total + holding.quantity * holding.averageBuyPrice,
+      (total, holding) => total + (holding.quantity * holding.averageBuyPrice),
       0
     );
     return activeSubscription.vertualAmount - totalHoldings;
-  };
+  }, [activeSubscription, holdings]);
 
   const marketOpen = isMarketOpen();
+
+  // BuySellTab.jsx - Part 2
+
+  // Effects
+  useEffect(() => {
+    const initializeData = async () => {
+      if (symbol && userId) {
+        try {
+          setIsLoading(true);
+          await Promise.all([
+            dispatch(fetchHistoricalData({ 
+              symbol, 
+              type: data?.type || 'nifty50', 
+              timeRange: '1M' 
+            })),
+            dispatch(getUserSubscriptions(userId)),
+            dispatch(fetchHoldings(userId)),
+            dispatch(fetchTransactionHistory({ userId, symbol }))
+          ]);
+        } catch (error) {
+          console.error('Error initializing data:', error);
+          toast.error('Failed to load trading data');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    initializeData();
+  }, [dispatch, symbol, userId, data?.type]);
 
   useEffect(() => {
     setPrice(currentMarketPrice);
@@ -445,66 +150,92 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
   }, [currentMarketPrice]);
 
   useEffect(() => {
+    // Reset form when tab changes
     setQuantity(0);
     setOrderType('market');
     setPrice(currentMarketPrice);
     setStopPrice(currentMarketPrice);
   }, [activeTab, currentMarketPrice]);
 
-  useEffect(() => {
-    if (userId) {
-      dispatch(getUserSubscriptions(userId));
-      dispatch(fetchHoldings(userId));
-    }
-  }, [dispatch, userId]);
-  
-  useEffect(() => {
-    if (userId && activeSubscription?._id) {
-      dispatch(
-        fetchTransactionHistory({
-          userId,
-          subscriptionPlanId: activeSubscription._id,
-          eventId: activeEvent?._id
-        })
-      );
-    }
-  }, [dispatch, userId, activeSubscription?._id, activeEvent?._id]);
-
+  // Handlers
   const handleQuantityChange = (value) => {
     let newValue = Math.max(0, parseInt(value) || 0);
-
+    
     if (activeTab === 'buy') {
-      const maxAffordable = Math.floor(calculateRemainingBalance() / currentMarketPrice);
+      const maxAffordable = Math.floor(calculateRemainingBalance / currentMarketPrice);
       newValue = Math.min(newValue, maxAffordable);
     } else {
       const availableShares = currentHolding?.quantity || 0;
       newValue = Math.min(newValue, availableShares);
     }
-
+    
     setQuantity(newValue);
+  };
+
+  const handlePriceChange = (value) => {
+    const newPrice = Math.max(0, parseFloat(value) || 0);
+    setPrice(newPrice);
+  };
+
+  const handleStopPriceChange = (value) => {
+    const newStopPrice = Math.max(0, parseFloat(value) || 0);
+    setStopPrice(newStopPrice);
+  };
+
+  const handleOrderTypeChange = (type) => {
+    setOrderType(type);
+    if (type === 'market') {
+      setPrice(currentMarketPrice);
+      setStopPrice(currentMarketPrice);
+    }
+  };
+
+  const calculateOrderValue = () => {
+    const orderPrice = orderType === 'market' ? currentMarketPrice : price;
+    return quantity * orderPrice;
   };
 
   const handlePlaceOrder = async (orderDetails) => {
     try {
-      const result = await dispatch(
-        placeOrder({
-          ...orderDetails,
-          symbol,
-          currentMarketPrice: data.currentPrice,
-          eventId: activeEvent?._id
-        })
-      ).unwrap();
+      // Validate order before proceeding
+      validateOrder(orderDetails, holdings, calculateRemainingBalance);
 
+      // Add additional order metadata
+      const enrichedOrderDetails = {
+        ...orderDetails,
+        symbol,
+        currentMarketPrice,
+        eventId: activeEvent?._id,
+        orderValue: calculateOrderValue(),
+        timestamp: new Date().toISOString()
+      };
+
+      // Dispatch order placement
+      await dispatch(placeOrder(enrichedOrderDetails)).unwrap();
+
+      // Show success message
       toast.success(
         `Successfully placed ${orderDetails.type.toUpperCase()} order for ${
           orderDetails.numberOfShares
-        } shares at ₹${orderDetails.price.toFixed(2)}`,
+        } shares at ${formatCurrency(orderDetails.price)}`,
         { position: 'top-right' }
       );
 
+      // Reset form and close confirmation
       setShowConfirmation(false);
+      setQuantity(0);
+      setOrderType('market');
+      setPrice(currentMarketPrice);
+      setStopPrice(currentMarketPrice);
+      
+      // Refresh holdings and transaction history
+      if (userId) {
+        await Promise.all([
+          dispatch(fetchHoldings(userId)),
+          dispatch(fetchTransactionHistory({ userId, symbol }))
+        ]);
+      }
     } catch (error) {
-      console.error('Order Placement Error:', error);
       toast.error(error.message || 'Failed to place order. Please try again.', {
         position: 'top-right',
       });
@@ -512,29 +243,131 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
     }
   };
 
-  const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance() > 0;
-  const isDisabled = loading || tradingLoading;
+  // Render helpers
+  const renderTradingStats = () => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-3 sm:p-4 border border-blue-100">
+        <h4 className="text-xs sm:text-sm text-gray-600 mb-1">Holdings</h4>
+        <p className="text-lg sm:text-xl font-bold text-blue-600">
+          {currentHolding?.quantity || 0} shares
+        </p>
+      </div>
+      <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-3 sm:p-4 border border-green-100">
+        <h4 className="text-xs sm:text-sm text-gray-600 mb-1">Avg. Price</h4>
+        <p className="text-lg sm:text-xl font-bold text-green-600">
+          {formatCurrency(currentHolding?.averageBuyPrice || 0)}
+        </p>
+      </div>
+      <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-3 sm:p-4 border border-purple-100">
+        <h4 className="text-xs sm:text-sm text-gray-600 mb-1">Current Value</h4>
+        <p className="text-lg sm:text-xl font-bold text-purple-600">
+          {formatCurrency((currentHolding?.quantity || 0) * currentMarketPrice)}
+        </p>
+      </div>
+    </div>
+  );
 
-  if (loading || tradingLoading) {
+  // BuySellTab.jsx - Part 3
+
+  const renderTradingTabs = () => (
+    <div className="bg-gray-100 p-0.5 rounded-lg inline-flex gap-1 shadow-sm mb-3 sm:mb-4">
+      <button
+        onClick={() => setActiveTab('buy')}
+        className={`px-4 sm:px-6 py-1 rounded-md text-sm sm:text-base font-semibold ${
+          activeTab === 'buy'
+            ? 'bg-green-500 text-white'
+            : 'text-gray-600 hover:bg-green-50'
+        }`}
+      >
+        Buy
+      </button>
+      <button
+        onClick={() => setActiveTab('sell')}
+        className={`px-4 sm:px-6 py-1 rounded-md text-sm sm:text-base font-semibold ${
+          activeTab === 'sell'
+            ? 'bg-red-500 text-white'
+            : 'text-gray-600 hover:bg-red-50'
+        }`}
+      >
+        Sell
+      </button>
+    </div>
+  );
+
+  // const renderOrderSummary = () => (
+  //   <div className="bg-gray-50 rounded-lg p-4 mt-4">
+  //     <h4 className="text-sm font-semibold text-gray-700 mb-3">Order Summary</h4>
+  //     <div className="space-y-2">
+  //       <div className="flex justify-between text-sm">
+  //         <span className="text-gray-600">Order Type</span>
+  //         <span className="font-medium">{orderType.toUpperCase()}</span>
+  //       </div>
+  //       <div className="flex justify-between text-sm">
+  //         <span className="text-gray-600">Quantity</span>
+  //         <span className="font-medium">{quantity} shares</span>
+  //       </div>
+  //       <div className="flex justify-between text-sm">
+  //         <span className="text-gray-600">Price per share</span>
+  //         <span className="font-medium">
+  //           {formatCurrency(orderType === 'market' ? currentMarketPrice : price)}
+  //         </span>
+  //       </div>
+  //       <div className="border-t border-gray-200 my-2 pt-2">
+  //         <div className="flex justify-between text-sm font-semibold">
+  //           <span className="text-gray-700">Total Value</span>
+  //           <span className="text-gray-900">{formatCurrency(calculateOrderValue())}</span>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+
+  // Loading State
+  if (loading || tradingLoading || isLoading) {
     return (
-      <div className="w-full bg-white rounded-xl shadow-lg p-6 animate-pulse">
-        Loading...
+      <div className="w-full bg-white rounded-xl shadow-lg p-6">
+        <div className="animate-pulse">
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 bg-gray-200 rounded-xl"></div>
+            ))}
+          </div>
+          <div className="h-10 bg-gray-200 rounded-lg mb-4 w-1/2"></div>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-4 bg-gray-200 rounded w-full"></div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
+  // Error State
   if (error) {
     return (
-      <div className="w-full bg-white rounded-xl shadow-lg p-6 text-center text-red-500">
-        Error: {error}
+      <div className="w-full bg-white rounded-xl shadow-lg p-6">
+        <div className="text-center text-red-500 flex flex-col items-center">
+          <span className="text-lg font-semibold mb-2">Error Loading Data</span>
+          <span className="text-sm">{error}</span>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
 
+  // Subscription Check
+  const canTrade = activeSubscription?.status === 'Active' && calculateRemainingBalance > 0;
+  
   if (!canTrade) {
     return (
-      <div className="w-full h-96 flex items-center justify-center flex-col gap-4">
-        <div className="text-xl text-gray-600">
+      <div className="w-full min-h-[300px] flex items-center justify-center flex-col gap-4 p-4">
+        <div className="text-lg sm:text-xl text-gray-600 text-center">
           {!activeSubscription
             ? 'Please subscribe to start trading'
             : 'Your subscription has expired or has insufficient balance'}
@@ -549,103 +382,59 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
     );
   }
 
+  // Main Render
   return (
-    <div className="w-full bg-white rounded-xl shadow-lg p-6 space-y-6 relative">
+    <div className="w-full bg-white rounded-xl shadow-lg p-4 sm:p-6 space-y-4 sm:space-y-6 relative">
       {!marketOpen && <MarketStatusOverlay tradingPreference={activeSubscription?.tradingPreference} />}
 
-      <div className="flex gap-6">
-        {/* Left Side: Account Summary, Buy/Sell Tabs, and Trading Controls */}
-        <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 60%' }}>
-          {/* Account Summary - Small Cards */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            {/* Shares Card */}
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 shadow-sm border border-blue-100">
-              <h4 className="text-sm text-gray-600 mb-2">Shares</h4>
-              <p className="text-xl font-bold text-blue-600">
-                {currentHolding?.quantity || 0}
-              </p>
-            </div>
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        {/* Left Side - Trading Controls */}
+        <div className="flex-1 bg-gray-50 rounded-xl p-4 sm:p-6">
+          {renderTradingStats()}
+          {renderTradingTabs()}
 
-            {/* Avg. Buy Price Card */}
-            <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 shadow-sm border border-green-100">
-              <h4 className="text-sm text-gray-600 mb-2">Avg. Buy Price</h4>
-              <p className="text-xl font-bold text-green-600">
-                ₹{currentHolding?.averageBuyPrice?.toFixed(2) || '0.00'}
-              </p>
-            </div>
-
-            {/* Value Card */}
-            <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 shadow-sm border border-purple-100">
-              <h4 className="text-sm text-gray-600 mb-2">Value</h4>
-              <p className="text-xl font-bold text-purple-600">
-                ₹{((currentHolding?.quantity || 0) * currentMarketPrice).toFixed(2)}
-              </p>
-            </div>
-          </div>
-
-          {/* Buy/Sell Tabs */}
-          <div className="bg-gray-100 p-0.5 rounded-lg inline-flex gap-1 shadow-md mb-2">
-            <button
-              onClick={() => setActiveTab('buy')}
-              className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
-                activeTab === 'buy'
-                  ? 'bg-green-500 text-white shadow-lg'
-                  : 'text-gray-600 hover:bg-green-50'
-              }`}
-            >
-              Buy
-            </button>
-            <button
-              onClick={() => setActiveTab('sell')}
-              className={`px-6 py-1 rounded-md transition-all duration-200 text-lg font-semibold ${
-                activeTab === 'sell'
-                  ? 'bg-red-500 text-white shadow-lg'
-                  : 'text-gray-600 hover:bg-red-50'
-              }`}
-            >
-              Sell
-            </button>
-          </div>
-
-          {/* Trading Controls */}
           <TradingControls
             activeTab={activeTab}
             currentMarketPrice={currentMarketPrice}
             quantity={quantity}
             setQuantity={handleQuantityChange}
             orderType={orderType}
-            setOrderType={setOrderType}
+            setOrderType={handleOrderTypeChange}
             price={price}
-            setPrice={setPrice}
+            setPrice={handlePriceChange}
             stopPrice={stopPrice}
-            setStopPrice={setStopPrice}
-            isDisabled={isDisabled}
+            setStopPrice={handleStopPriceChange}
+            isDisabled={!marketOpen}
             setShowConfirmation={setShowConfirmation}
-            calculateTotal={() => quantity * (orderType === 'market' ? currentMarketPrice : price)}
+            calculateTotal={calculateOrderValue}
+            maxQuantity={activeTab === 'buy' 
+              ? Math.floor(calculateRemainingBalance / currentMarketPrice)
+              : currentHolding?.quantity || 0
+            }
           />
+
+          {/* {renderOrderSummary()} */}
         </div>
 
-        {/* Right Side: Praedico Analysis */}
-        <div className="flex-1 bg-gray-50 rounded-xl p-6" style={{ flex: '0 0 40%' }}>
+        {/* Right Side - Analysis */}
+        <div className="flex-1 bg-gray-50 rounded-xl p-4 sm:p-6">
           <PraedicoAnalysis
             data={{
-              ...safeData,
-              signals: {
-                strongBuy: safeData.change > 5 ? 12 : 6,
-                buy: safeData.pChange > 2 ? 8 : 4,
-                hold: safeData.change === 0 ? 3 : 2,
-                sell: safeData.change < -2 ? 2 : 1,
-                strongSell: safeData.change < -5 ? 1 : 0,
-              },
+              lastPrice: currentMarketPrice,
+              historicalData: historicalData,
+              type: data?.type || 'nifty50',
+              priceAnalysis: priceAnalysis
             }}
-            timeframe="1D"
           />
         </div>
       </div>
 
-      {/* Transaction History at the Bottom */}
-      <div className="bg-gray-50 rounded-xl p-6">
-        <TransactionHistory currentPrice={currentMarketPrice} symbol={symbol} />
+      {/* Transaction History */}
+      <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
+        <TransactionHistory 
+          symbol={symbol}
+          currentPrice={currentMarketPrice}
+        />
       </div>
 
       {/* Confirmation Modal */}
@@ -662,25 +451,27 @@ const Buy_SellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) 
               numberOfShares: quantity,
               price: orderType === 'market' ? currentMarketPrice : price,
               orderType,
-              total: quantity * (orderType === 'market' ? currentMarketPrice : price),
+              total: calculateOrderValue(),
               currentMarketPrice,
             })
           }
           title="Confirm Order"
-          message={`Are you sure you want to ${activeTab} ${quantity} shares at ₹${(
-            orderType === 'market' ? currentMarketPrice : price
-          ).toFixed(2)}?`}
+          message={`Are you sure you want to ${activeTab} ${quantity} shares at ${
+            formatCurrency(orderType === 'market' ? currentMarketPrice : price)
+          }?`}
         />
       )}
     </div>
   );
 };
 
-Buy_SellTab.propTypes = {
+BuySellTab.propTypes = {
   symbol: PropTypes.string.isRequired,
   data: PropTypes.shape({
+    type: PropTypes.string,
     companyName: PropTypes.string,
     currentPrice: PropTypes.number,
+    lastPrice: PropTypes.number,
     change: PropTypes.number,
     changePercent: PropTypes.number,
     dayHigh: PropTypes.number,
@@ -689,16 +480,19 @@ Buy_SellTab.propTypes = {
     yearLow: PropTypes.number,
     volume: PropTypes.number,
     marketCap: PropTypes.number,
+    historicalData: PropTypes.array
   }),
   loading: PropTypes.bool,
   error: PropTypes.string,
   onOpenSubscriptionModal: PropTypes.func.isRequired,
 };
 
-Buy_SellTab.defaultProps = {
+BuySellTab.defaultProps = {
   data: {
+    type: 'nifty50',
     companyName: '',
     currentPrice: 0,
+    lastPrice: 0,
     change: 0,
     changePercent: 0,
     dayHigh: 0,
@@ -707,9 +501,10 @@ Buy_SellTab.defaultProps = {
     yearLow: 0,
     volume: 0,
     marketCap: 0,
+    historicalData: []
   },
   loading: false,
   error: null,
 };
 
-export default Buy_SellTab;
+export default BuySellTab;

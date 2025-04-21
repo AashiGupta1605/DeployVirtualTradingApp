@@ -1,40 +1,197 @@
-// src/redux/Common/companyDetailsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 import axios from "axios";
-// Helper function to calculate SMA
-const calculateSMA = (data, period = 20) => {
-  if (!Array.isArray(data) || data.length === 0) return [];
 
-  const sma = [];
-  for (let i = 0; i < data.length; i++) {
-    if (i < period - 1) {
-      sma.push({ x: data[i].x, y: null });
-      continue;
-    }
-    
-    let sum = 0;
-    let validPoints = 0;
-    for (let j = 0; j < period; j++) {
-      const price = data[i - j]?.y?.[3];
-      if (typeof price === 'number' && !isNaN(price)) {
-        sum += price;
-        validPoints++;
-      }
-    }
-    sma.push({ 
-      x: data[i].x, 
-      y: validPoints > 0 ? sum / validPoints : null 
-    });
+// Enhanced helper function to normalize historical data
+const normalizeHistoricalData = (data, symbol) => {
+  console.log(`Normalizing data for ${symbol}, input data:`, data);
+  
+  if (!data) {
+    console.warn('No data provided to normalize');
+    return [];
   }
-  return sma;
+
+  // Handle both array response and object with data array
+  let dataArray = Array.isArray(data) ? data : (data.data || []);
+  
+  if (!Array.isArray(dataArray)) {
+    console.warn('Data is not an array:', dataArray);
+    return [];
+  }
+
+  console.log(`Found ${dataArray.length} records for ${symbol}`);
+
+  return dataArray.map(item => {
+    // Handle different API response formats
+    const date = item.fetchTime || item.date || item.lastUpdateTime;
+    const open = Number(item.open) || Number(item.dayOpen) || 0;
+    const high = Number(item.high) || Number(item.dayHigh) || 0;
+    const low = Number(item.low) || Number(item.dayLow) || 0;
+    const close = Number(item.close) || Number(item.lastPrice) || 0;
+    const volume = Number(item.volume) || Number(item.totalTradedVolume) || 0;
+    
+    // Calculate percentage change if not provided
+    let pChange = Number(item.pChange) || Number(item.changePercent) || 0;
+    if (pChange === 0 && open !== 0) {
+      pChange = ((close - open) / open) * 100;
+    }
+
+    // Calculate value if not provided
+    let value = Number(item.value) || 0;
+    if (value === 0 && close !== 0 && volume !== 0) {
+      value = close * volume;
+    }
+
+    return {
+      id: item._id || `${symbol}-${date}`,
+      symbol: symbol,
+      date: date,
+      open: open,
+      high: high,
+      low: low,
+      close: close,
+      volume: volume,
+      pChange: pChange,
+      value: value
+    };
+  });
 };
 
+// Enhanced time range filtering
+const filterDataByTimeRange = (data, timeRange) => {
+  if (!Array.isArray(data)) {
+    console.warn('Invalid data passed to filter:', data);
+    return [];
+  }
+
+  if (data.length === 0) return [];
+
+  // Get the most recent date in the data
+  const dates = data.map(item => new Date(item.date));
+  const lastDate = new Date(Math.max(...dates));
+  console.log('Last date in data:', lastDate);
+
+  let cutoffDate = new Date(lastDate);
+
+  switch (timeRange) {
+    case '1D':
+      cutoffDate.setDate(cutoffDate.getDate() - 1);
+      break;
+    case '1W':
+      cutoffDate.setDate(cutoffDate.getDate() - 7);
+      break;
+    case '1M':
+      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+      break;
+    case '3M':
+      cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+      break;
+    case 'YTD':
+      cutoffDate = new Date(cutoffDate.getFullYear(), 0, 1);
+      break;
+    default:
+      return data;
+  }
+
+  console.log(`Filtering data from ${cutoffDate} to ${lastDate}`);
+
+  const filteredData = data.filter(item => {
+    const itemDate = new Date(item.date);
+    return itemDate >= cutoffDate;
+  });
+
+  console.log(`Filtered ${filteredData.length} records for ${timeRange} range`);
+  return filteredData;
+};
+
+// Calculate technical indicators
+const calculateTechnicalIndicators = (data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return {
+      sma20: [],
+      sma50: [],
+      sma200: []
+    };
+  }
+
+  const calculateSMA = (period) => {
+    return data.map((_, index) => {
+      if (index < period - 1) return null;
+      const slice = data.slice(index - period + 1, index + 1);
+      const sum = slice.reduce((acc, val) => acc + val.close, 0);
+      return sum / period;
+    });
+  };
+
+  return {
+    sma20: calculateSMA(20),
+    sma50: calculateSMA(50),
+    sma200: calculateSMA(200)
+  };
+};
+
+// Price analysis helper
+const analyzePriceData = (data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return {
+      currentPrice: 0,
+      averagePrice: 0,
+      percentageDiff: 0,
+      recommendation: 'HOLD'
+    };
+  }
+
+  const currentPrice = data[data.length - 1].close;
+  const prices = data.map(item => item.close);
+  const averagePrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+  const percentageDiff = ((currentPrice - averagePrice) / averagePrice) * 100;
+
+  let recommendation = 'HOLD';
+  if (percentageDiff > 5) recommendation = 'SELL';
+  if (percentageDiff < -5) recommendation = 'BUY';
+
+  return {
+    currentPrice,
+    averagePrice,
+    percentageDiff,
+    recommendation
+  };
+};
+
+const initialState = {
+  data: null,
+  historicalData: {
+    rawData: [],
+    processedData: [],
+    timeRange: '1D',
+  },
+  technicalIndicators: {
+    sma20: [],
+    sma50: [],
+    sma200: []
+  },
+  priceAnalysis: {
+    currentPrice: 0,
+    averagePrice: 0,
+    percentageDiff: 0,
+    recommendation: 'HOLD'
+  },
+  loading: false,
+  historicalLoading: false,
+  error: null,
+  activeTab: 'overview',
+  activeFilter: '1D',
+  currentPage: 1,
+  itemsPerPage: 10,
+  isRefreshing: false,
+  lastUpdated: null
+};
+
+// Fetch company details thunk
 export const fetchCompanyDetails = createAsyncThunk(
   'companyDetails/fetchCompanyDetails',
   async ({ symbol, type }, { rejectWithValue }) => {
     try {
-      // Multiple potential endpoints
       const endpoints = [
         `${BASE_API_URL}/admin/nifty/company/${symbol}`,
         `${BASE_API_URL}/admin/nifty500/company/${symbol}`,
@@ -46,136 +203,96 @@ export const fetchCompanyDetails = createAsyncThunk(
         try {
           const response = await axios.get(endpoint);
           if (response.data) {
-            return response.data;
+            const normalizedData = {
+              ...response.data,
+              lastPrice: response.data.lastPrice || response.data.currentPrice || 0,
+              currentPrice: response.data.currentPrice || response.data.lastPrice || 0,
+              lastUpdateTime: response.data.lastUpdateTime || new Date().toISOString(),
+              dayHigh: response.data.dayHigh || response.data.high || 0,
+              dayLow: response.data.dayLow || response.data.low || 0,
+              totalTradedVolume: response.data.totalTradedVolume || response.data.volume || 0,
+              changePercent: response.data.pChange || response.data.changePercent || 0
+            };
+            return normalizedData;
           }
         } catch (error) {
           console.warn(`Failed to fetch from ${endpoint}:`, error.message);
           continue;
         }
       }
-
-      // If all endpoints fail
       throw new Error(`Could not find details for symbol: ${symbol}`);
     } catch (error) {
-      console.error('Error fetching company details:', error);
-      return rejectWithValue({
-        message: error.message || `Failed to fetch details for ${symbol}`,
-        symbol
-      });
+      return rejectWithValue(error.message || `Failed to fetch details for ${symbol}`);
     }
   }
 );
-// Updated fetchHistoricalData thunk
+
+// Fetch historical data thunk
 export const fetchHistoricalData = createAsyncThunk(
   'companyDetails/fetchHistoricalData',
-  async ({ symbol, type, timeRange }, { rejectWithValue }) => {
+  async ({ symbol, type, timeRange = '1D' }, { rejectWithValue }) => {
     try {
       let endpoint;
       switch (type) {
         case 'nifty50':
-          endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}`;
           break;
         case 'nifty500':
-          endpoint = `${BASE_API_URL}/admin/nifty500/symbol/${symbol}/historical?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/nifty500/company/history/${symbol}`;
           break;
         case 'etf':
-          endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}?timeRange=${timeRange}`;
+          endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}`;
           break;
         default:
-          throw new Error(`Unsupported type: ${type}`);
+          endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}`;
       }
 
-      console.log(`Fetching historical data from: ${endpoint}`); // Log the endpoint
-
+      console.log(`Fetching historical data for ${symbol} from ${endpoint}`);
       const response = await axios.get(endpoint);
-      return response.data; // Assuming the data is already in the format you need for the table
+      console.log('Raw API response:', response.data);
+
+      const normalizedData = normalizeHistoricalData(response.data, symbol);
+      console.log(`Normalized ${normalizedData.length} records for ${symbol}`);
+
+      const filteredData = filterDataByTimeRange(normalizedData, timeRange);
+      console.log(`Filtered to ${filteredData.length} records for ${timeRange}`);
+
+      const technicalIndicators = calculateTechnicalIndicators(normalizedData);
+      const priceAnalysis = analyzePriceData(filteredData);
+
+      return {
+        rawData: normalizedData,
+        processedData: filteredData,
+        timeRange,
+        technicalIndicators,
+        priceAnalysis
+      };
     } catch (error) {
       console.error('Error fetching historical data:', error);
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message || 'Failed to fetch historical data');
     }
   }
 );
 
-// Helper function to process chart data
-const processChartData = (data) => {
-  if (!Array.isArray(data) || data.length === 0) {
-    throw new Error('Invalid chart data format');
-  }
+// Refresh market data thunk
+export const refreshMarketData = createAsyncThunk(
+  'companyDetails/refreshMarketData',
+  async ({ symbol, type, timeRange = '1D' }, { dispatch }) => {
+    try {
+      const [companyDetails, historicalData] = await Promise.all([
+        dispatch(fetchCompanyDetails({ symbol, type })).unwrap(),
+        dispatch(fetchHistoricalData({ symbol, type, timeRange })).unwrap()
+      ]);
 
-  try {
-    // Process candlestick data
-    const candlestick = data.map(item => ({
-      x: new Date(item.date).getTime(),
-      y: [
-        Number(item.open),
-        Number(item.high),
-        Number(item.low),
-        Number(item.close)
-      ]
-    })).filter(item => 
-      !item.y.some(val => isNaN(val)) && 
-      !isNaN(item.x)
-    );
-
-    // Process volume data
-    const volume = data.map(item => ({
-      x: new Date(item.date).getTime(),
-      y: Number(item.volume) || 0
-    })).filter(item => !isNaN(item.x));
-
-    // Calculate technical indicators
-    const sma20 = calculateSMA(candlestick, 20);
-    const sma50 = calculateSMA(candlestick, 50);
-    const sma200 = calculateSMA(candlestick, 200);
-
-    return {
-      rawData: data,
-      processedData: {
-        candlestick,
-        volume,
-        technicalIndicators: {
-          sma20,
-          sma50,
-          sma200
-        }
-      }
-    };
-  } catch (error) {
-    console.error('Error processing chart data:', error);
-    throw new Error('Failed to process chart data');
-  }
-};
-
-const initialState = {
-  data: null,
-  historicalData: {
-    rawData: [],
-    processedData: {
-      candlestick: [],
-      volume: [],
-      technicalIndicators: {
-        sma20: [],
-        sma50: [],
-        sma200: []
-      }
+      return {
+        companyDetails,
+        historicalData
+      };
+    } catch (error) {
+      throw error;
     }
-  },
-  loading: false,
-  historicalLoading: false,
-  error: null,
-  activeTab: 'overview',
-  activeFilter: '1D',
-  currentPage: 1,
-  itemsPerPage: 5,
-  isRefreshing: false,
-  chartSettings: {
-    theme: 'light',
-    showGrid: true,
-    showVolume: true,
-    showIndicators: true,
-    showToolbar: true
   }
-};
+);
 
 const companyDetailsSlice = createSlice({
   name: 'companyDetails',
@@ -186,6 +303,12 @@ const companyDetailsSlice = createSlice({
     },
     setActiveFilter: (state, action) => {
       state.activeFilter = action.payload;
+      state.historicalData.processedData = filterDataByTimeRange(
+        state.historicalData.rawData,
+        action.payload
+      );
+      state.historicalData.timeRange = action.payload;
+      state.priceAnalysis = analyzePriceData(state.historicalData.processedData);
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
@@ -196,17 +319,10 @@ const companyDetailsSlice = createSlice({
     setIsRefreshing: (state, action) => {
       state.isRefreshing = action.payload;
     },
-    updateChartSettings: (state, action) => {
-      state.chartSettings = {
-        ...state.chartSettings,
-        ...action.payload
-      };
-    },
     resetCompanyDetails: () => initialState
   },
   extraReducers: (builder) => {
     builder
-      // Handle fetchCompanyDetails
       .addCase(fetchCompanyDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -215,60 +331,87 @@ const companyDetailsSlice = createSlice({
         state.loading = false;
         state.data = action.payload;
         state.error = null;
+        state.lastUpdated = new Date().toISOString();
       })
       .addCase(fetchCompanyDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-
-      // Handle fetchHistoricalData
       .addCase(fetchHistoricalData.pending, (state) => {
         state.historicalLoading = true;
         state.error = null;
       })
       .addCase(fetchHistoricalData.fulfilled, (state, action) => {
         state.historicalLoading = false;
-        state.historicalData = action.payload;
+        state.historicalData = {
+          rawData: action.payload.rawData,
+          processedData: action.payload.processedData,
+          timeRange: action.payload.timeRange
+        };
+        state.technicalIndicators = action.payload.technicalIndicators;
+        state.priceAnalysis = action.payload.priceAnalysis;
         state.error = null;
+        state.lastUpdated = new Date().toISOString();
       })
       .addCase(fetchHistoricalData.rejected, (state, action) => {
         state.historicalLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(refreshMarketData.pending, (state) => {
+        state.isRefreshing = true;
+        state.error = null;
+      })
+      .addCase(refreshMarketData.fulfilled, (state, action) => {
+        state.isRefreshing = false;
+        state.data = action.payload.companyDetails;
+        state.historicalData = action.payload.historicalData;
+        state.error = null;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(refreshMarketData.rejected, (state, action) => {
+        state.isRefreshing = false;
         state.error = action.payload;
       });
   }
 });
 
-// Export actions
+// Selectors
+export const selectCompanyDetails = (state) => state.common.companyDetails;
+export const selectHistoricalTimeRange = (state) => 
+  state.common.companyDetails?.historicalData?.timeRange;
+export const selectCurrentPrice = (state) => 
+  state.common.companyDetails?.data?.lastPrice || 
+  state.common.companyDetails?.data?.currentPrice || 0;
+export const selectHistoricalData = (state) => 
+  state.common.companyDetails?.historicalData?.processedData || [];
+export const selectRawHistoricalData = (state) => 
+  state.common.companyDetails?.historicalData?.rawData || [];
+export const selectTechnicalIndicators = (state) => 
+  state.common.companyDetails?.technicalIndicators;
+export const selectPriceAnalysis = (state) => 
+  state.common.companyDetails?.priceAnalysis;
+export const selectLoadingState = (state) => ({
+  loading: state.common.companyDetails?.loading || false,
+  historicalLoading: state.common.companyDetails?.historicalLoading || false,
+  isRefreshing: state.common.companyDetails?.isRefreshing || false
+});
+export const selectLastUpdated = (state) => 
+  state.common.companyDetails?.lastUpdated;
+
+export const selectLoadingStates = (state) => ({
+  loading: state.common.companyDetails?.loading || false,
+  historicalLoading: state.common.companyDetails?.historicalLoading || false,
+  isRefreshing: state.common.companyDetails?.isRefreshing || false
+});
+ 
+
 export const {
   setActiveTab,
   setActiveFilter,
   setCurrentPage,
   setItemsPerPage,
   setIsRefreshing,
-  updateChartSettings,
   resetCompanyDetails
 } = companyDetailsSlice.actions;
-
-// // Export selectors
-// export const selectCompanyDetails = (state) => state.companyDetails;
-// export const selectChartData = (state) => state.companyDetails.historicalData.processedData;
-// export const selectLoadingState = (state) => ({
-//   loading: state.companyDetails.loading,
-//   historicalLoading: state.companyDetails.historicalLoading,
-//   isRefreshing: state.companyDetails.isRefreshing
-// });
-// export const selectChartSettings = (state) => state.companyDetails.chartSettings;
-
-// src/redux/Common/companyDetailsSlice.js
-
-// Update the selectors to access the nested state
-export const selectCompanyDetails = (state) => state.common.companyDetails || initialState;
-export const selectChartData = (state) => state.common.companyDetails?.historicalData.processedData;
-export const selectLoadingState = (state) => ({
-  loading: state.common.companyDetails?.loading || false,
-  historicalLoading: state.common.companyDetails?.historicalLoading || false,
-  isRefreshing: state.common.companyDetails?.isRefreshing || false
-});
-export const selectChartSettings = (state) => state.common.companyDetails?.chartSettings || initialState.chartSettings;
 
 export default companyDetailsSlice.reducer;
