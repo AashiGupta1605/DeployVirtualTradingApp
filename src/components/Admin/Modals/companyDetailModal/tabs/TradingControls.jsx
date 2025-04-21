@@ -47,7 +47,7 @@ const TradingControls = ({
   const incrementQuantity = () => handleQuantityChange(quantity + 1);
   const decrementQuantity = () => handleQuantityChange(quantity - 1);
 
-  const isButtonDisabled = isDisabled || quantity === 0;
+  const isButtonDisabled = quantity === 0; // Only disable when quantity is 0
 
   return (
     <div className="bg-gray-50 rounded-2xl shadow-lg p-4 space-y-4">
@@ -100,7 +100,7 @@ const TradingControls = ({
                 type="number" 
                 value={quantity} 
                 onChange={(e) => handleQuantityChange(e.target.value)} 
-                className="flex-1 text-center text-lg font-bold bg-gray-50 py-2 rounded-lg" 
+                className="flex-1 text-center w-10 text-lg font-bold bg-gray-50 py-2 rounded-lg" 
                 min="0" 
               />
               <button 
@@ -195,7 +195,6 @@ const TradingControls = ({
       {/* Place Order Button */}
       <button 
         onClick={() => setShowConfirmation(true)} 
-        // disabled={isDisabled} 
         disabled={isButtonDisabled} 
         className={`
           w-full py-2.5 rounded-lg font-semibold transition-colors 
