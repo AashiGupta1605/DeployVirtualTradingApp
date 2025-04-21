@@ -22,7 +22,7 @@ export default function AdminNavbar({ sidebarExpanded }) {
       <div className="w-full mx-auto flex items-center justify-between p-4 md:px-10 px-4">
         {/* Brand with Logo - Adjust margin based on sidebar state */}
         <a
-          className={`text-gray-700 text-lg uppercase lg:flex hidden items-center space-x-4 font-bold hover:text-gray-900 transition-colors ${
+          className={`text-gray-700 text-lg lg:flex hidden items-center space-x-4 font-bold hover:text-gray-900 transition-colors ${
             sidebarExpanded ? 'ml-64' : 'ml-20'  // Adjust these values based on your sidebar width
           } transition-all duration-300`}
           href="#pablo"
@@ -33,7 +33,7 @@ export default function AdminNavbar({ sidebarExpanded }) {
             alt="PGR Logo" 
             className="h-10 w-10 object-contain rounded-full"
           />
-          <span className="text-xl">PGR - Virtual Trading App</span>
+          <span className="text-xl font-bold text-gray-900">PGR - Virtual Trading App</span>
         </a>
 
         {/* Form */}

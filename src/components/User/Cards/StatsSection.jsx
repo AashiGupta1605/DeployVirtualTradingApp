@@ -4,6 +4,7 @@
 
 
 // components/User/Cards/UserStatsSection.js
+
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CardStats from './CardStats';
@@ -715,14 +716,14 @@ const activeSubscription = userSubscriptions.find(sub =>
             {
               statIconName: "fas fa-inbox",
               statSubtitle: "VIRTUAL AMOUNT",
-              statTitle: activeSubscription?.vertualAmount?.toFixed(2).toString() + "₹" || "0",
+              statTitle: "₹" + activeSubscription?.vertualAmount?.toFixed(2).toString() || "0",
               statIconColor: "bg-purple-500",
               showDetails: false
             },
             {
               statIconName: "fas fa-clock",
               statSubtitle: "TOTAL INVESTMENT",
-              statTitle: statistics.totalInvestment?.toFixed(2).toString() + "₹" || "0", // Replace with actual data
+              statTitle: "₹" + statistics.totalInvestment?.toFixed(2).toString() || "0", // Replace with actual data
               statIconColor: "bg-blue-400",
               showDetails: false
             },
