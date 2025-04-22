@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FiUsers, FiBriefcase, FiActivity, FiDatabase } from "react-icons/fi";
 import CountUp from 'react-countup';
 
-const InfoCards = () => {
+const InfoCards = ({shouldRefetch}) => {
   const [userData, setUserData] = useState([]);
   const [orgData, setOrgData] = useState([]);
   const [activeUsers, setActiveUsers] = useState(0);
@@ -34,9 +34,11 @@ const InfoCards = () => {
   };
 
   useEffect(() => {
-    fetchOrgData();
-    fetchUserData();
-  }, []);
+    if (shouldRefetch) {
+      fetchOrgData();
+      fetchUserData();
+    }
+  }, [shouldRefetch]);
 
   const stats = [
     { 

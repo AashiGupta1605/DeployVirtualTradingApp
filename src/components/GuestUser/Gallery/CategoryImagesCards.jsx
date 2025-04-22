@@ -41,7 +41,7 @@ const ImageModal = ({ isOpen, onClose, image, title }) => {
           <img
             src={image}
             alt={title}
-            className="w-full max-h-[80vh] object-contain"
+            className="w-full max-h-[80vh] object-cover"
           />
           {title && (
             <div className="p-4 bg-white border-t border-gray-100">

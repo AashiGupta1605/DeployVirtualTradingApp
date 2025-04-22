@@ -60,13 +60,13 @@ const ShowGalleryImages = () => {
 
     {/* Right: Filter Dropdown */}
     <div className="relative w-full md:w-64">
-  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+  {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
     <Search className="text-gray-400" size={18} />
-  </div>
+  </div> */}
   <select
     value={search}
     onChange={(e) => setSearch(e.target.value)}
-    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none bg-white text-gray-700 text-sm shadow-sm"
+    className="w-full pl-6 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none bg-white text-gray-700 text-sm shadow-sm"
   >
     <option value="all">All Categories</option>
     {galleryCategories.map((category, index) => (
