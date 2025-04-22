@@ -251,11 +251,11 @@ const EventModal = ({ event, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-      <div className="relative w-full max-w-[60%] max-h-[80%] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-[60%] max-h-[80%] mx-2 my-4 bg-white rounded-2xl shadow-xl border !border-gray-200 overflow-hidden flex flex-col">
         {/* Modal Header */}
-        <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-white">
+        <div className="p-6 border !border-gray-200 flex justify-between items-center bg-white">
           <div className="flex items-center space-x-4">
-            <div className="p-2 bg-lightBlue-100 rounded-xl">
+            <div className="p-2 bg-lightBlue-100 !rounded-xl">
               <Trophy className="text-lightBlue-600" size={24} />
             </div>
             <h2 className="text-2xl font-bold text-gray-800">
@@ -264,7 +264,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
           </div>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+            className="p-2 hover:bg-gray-100 !rounded-xl transition-colors duration-200"
           >
             <X className="text-gray-500" size={24} />
           </button>
@@ -285,7 +285,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     placeholder="Event Title"
-                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.title && formik.touched.title && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.title}</p>
@@ -299,7 +299,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.type}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.type && formik.touched.type ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.type && formik.touched.type ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                   >
                     <option value="ongoing">Ongoing</option>
                     <option value="upcoming">Upcoming</option>
@@ -318,7 +318,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.startDate}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.startDate && formik.touched.startDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.startDate && formik.touched.startDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.startDate && formik.touched.startDate && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.startDate}</p>
@@ -333,7 +333,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.endDate}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.endDate && formik.touched.endDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.endDate && formik.touched.endDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.endDate && formik.touched.endDate && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.endDate}</p>
@@ -346,7 +346,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     name="difficulty"
                     value={formik.values.difficulty}
                     onChange={formik.handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                   >
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
@@ -367,7 +367,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     placeholder="Total Prize Pool (e.g., $10,000)"
-                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.prize && formik.touched.prize ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.prize && formik.touched.prize ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.prize && formik.touched.prize && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.prize}</p>
@@ -387,7 +387,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                       placeholder="0.00"
                       min="0"
                       step="0.01"
-                      className={`w-full px-4 py-3 pl-10 rounded-xl border ${formik.errors.entryFee && formik.touched.entryFee ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                      className={`w-full px-4 py-3 pl-10 !rounded-xl border ${formik.errors.entryFee && formik.touched.entryFee ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                     />
                   </div>
                   {formik.errors.entryFee && formik.touched.entryFee && (
@@ -407,7 +407,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                       placeholder="0"
                       min="0"
                       max="100"
-                      className={`w-full px-4 py-3 pr-10 rounded-xl border ${formik.errors.cashbackPercentage && formik.touched.cashbackPercentage ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                      className={`w-full px-4 py-3 pr-10 !rounded-xl border ${formik.errors.cashbackPercentage && formik.touched.cashbackPercentage ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                     />
                     <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
                   </div>
@@ -425,7 +425,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     min="0"
-                    className={`w-full px-4 py-3 rounded-xl border ${formik.errors.participants && formik.touched.participants ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.participants && formik.touched.participants ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.participants && formik.touched.participants && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.participants}</p>
@@ -438,7 +438,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     name="icon"
                     value={formik.values.icon}
                     onChange={formik.handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                   >
                     {iconOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -458,7 +458,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     placeholder="Event description"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                     rows="3"
                   />
                 </div>
@@ -469,7 +469,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     name="backgroundColor"
                     value={formik.values.backgroundColor}
                     onChange={formik.handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                   >
                     {backgroundOptions.map(option => (
                       <option key={option.value} value={option.value}>{option.label}</option>
@@ -485,7 +485,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.requirements}
                     onChange={formik.handleChange}
                     placeholder="Event requirements"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                   />
                 </div>
 
@@ -497,7 +497,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.highlight}
                     onChange={formik.handleChange}
                     placeholder="Event highlight"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                   />
                 </div>
               </div>
@@ -533,7 +533,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                             value={tier.tier}
                             onChange={(e) => handleRewardTierChange(index, 'tier', e.target.value)}
                             placeholder="e.g. 5%+ Gain"
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                            className="w-full px-3 py-2 rounded-lg border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                           />
                         </div>
                         <div>
@@ -543,7 +543,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                             value={tier.description}
                             onChange={(e) => handleRewardTierChange(index, 'description', e.target.value)}
                             placeholder="e.g. 50% of entry fee returned"
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                            className="w-full px-3 py-2 rounded-lg border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                           />
                         </div>
                       </div>
@@ -578,12 +578,12 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                         placeholder="Reward description"
                         value={reward}
                         onChange={(e) => handleRewardsChange(index, e.target.value)}
-                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                        className="flex-1 px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                       />
                       <button
                         type="button"
                         onClick={() => removeReward(index)}
-                        className="p-3 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl hover:bg-red-50 transition-colors"
+                        className="p-3 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed !rounded-xl hover:bg-red-50 transition-colors"
                         disabled={formik.values.rewards.length <= 1}
                       >
                         <Trash2 size={18} />
@@ -612,7 +612,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     placeholder="0"
                     min="0"
                     max="100"
-                    className="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 pr-10 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                   />
                   <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
                 </div>
@@ -626,7 +626,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                   value={formik.values.progressText}
                   onChange={formik.handleChange}
                   placeholder="Progress description"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                  className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
                 />
               </div>
             </div>
@@ -636,13 +636,13 @@ const EventModal = ({ event, onClose, onSubmit }) => {
               <button 
                 type="button"
                 onClick={onClose}
-                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                className="px-6 py-3 !rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
-                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 transition-colors duration-200"
+                className="px-6 py-3 !rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 transition-colors duration-200"
               >
                 {event ? 'Update Event' : 'Create Event'}
               </button>

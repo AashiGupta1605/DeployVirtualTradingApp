@@ -30,7 +30,7 @@ const Show_ETFData_Page = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
-        className="bg-white rounded-xl -mt-36 shadow-lg overflow-hidden border border-gray-100 relative z-10" // Added relative and z-index 10
+        className="bg-white rounded-xl -mt-12 shadow-lg overflow-hidden border border-gray-100 relative z-10" // Added relative and z-index 10
       >
         <StockTable />
       </motion.div>

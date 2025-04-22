@@ -71,9 +71,9 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
   }, []);
 
   return (
-    <nav className={`sticky top-0 w-full h-auto min-h-[73px] z-10 bg-white shadow-lg transition-all duration-300 ease-in-out ${
-      sidebarExpanded ? "lg:pl-64" : "lg:pl-16"
-    }`}>
+<nav className={`sticky top-0 w-full h-auto min-h-[73px] z-30 bg-white shadow-lg transition-all duration-300 ease-in-out ${
+  sidebarExpanded ? "lg:pl-64" : "lg:pl-16"
+}`}>
       <div className="w-full mx-auto flex flex-wrap items-center justify-between px-4 py-3 md:px-10">
         {/* Logo and Brand */}
         <div className="flex items-center">

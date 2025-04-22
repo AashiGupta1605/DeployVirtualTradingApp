@@ -1,11 +1,10 @@
-// Sidebar.jsx
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import PropTypes from 'prop-types';
 import { resetAdminState } from '../../../redux/Admin/AdminSlice';
 import toast from "react-hot-toast";
-import logoImage from "../../../assets/img/PGR_logo.jpeg";
+import { X, ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -33,25 +32,12 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
-  // roshni code
-  // const menuItems = {
-  //   admin: [
-  //     { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
-  //     { to: "/admin/niftytable", icon: "fas fa-table", label: "Nifty 50" },
-  //     { to: "/admin/nifty500table", icon: "fas fa-chart-line", label: "Nifty 500" },
-  //     { to: "/admin/etftable", icon: "fas fa-list", label: "ETF" },
-  //     { to: "/admin/registeredUsers", icon: "fas fa-users", label: "Users" },
-  //     { to: "/admin/OrgRegister", icon: "fas fa-building", label: "Organizations" },
-  //     { to: "/admin/queries", icon: "fas fa-envelope", label: "Queries" },
-  //     { to: "/admin/feedback", icon: "fas fa-comments", label: "Feedback" },
-  //     { to: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
-  //   ],
-  //   events: [
-  //     { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
-  //    ],
-  // };
+  const handleLinkClick = () => {
+    if (window.innerWidth < 1024) {
+      setSidebarExpanded(false);
+    }
+  };
 
-  // my code udapted for sidebar
   const menuItems = {
     dashboard: [
       { to: "/admin/dashboard", icon: "fas fa-chart-line", label: "Dashboard" },
@@ -81,154 +67,162 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
       { to: "/admin/events", icon: "fas fa-calendar-alt", label: "Events" },
       { to: "/admin/participants", icon: "fas fa-calendar-alt", label: "Participants" },
     ],
-    // gallery: {
-    //   icon: "fas fa-images",
-    //   items: [
-    //     { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
-    //     { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
-    //   ]
-    // },
     gallery: [
-        { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
-        { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
+      { to: "/admin/gallery/categories", icon: "fas fa-folder-open", label:"Categories"},
+      { to: "/admin/gallery/images", icon: "fas fa-photo-video", label:"Images"}
     ],
     BookedDemos: [
       {to: "/admin/demo/userDemo", icon: "fas fa-chalkboard-teacher", label:"User Bookings"},
       {to: "/admin/demo/organizationDemo", icon: "fas fa-handshake", label:"Organization Bookings"}
     ],
-};
+  };
 
   return (
-    <nav className={`${sidebarExpanded ? "md:w-64" : "md:w-20"} fixed left-0 top-0 bottom-0 bg-white shadow-xl transition-all duration-300 ease-in-out z-50`}>
-      <div className="flex flex-col h-full ">
-        {/* Logo Section */}
-        <div className="flex items-center justify-between w-full h-[73px] px-6 border-b border-gray-200">
-          <span className="text-lg font-bold leading-relaxed uppercase">
-            {sidebarExpanded ? "Admin" : ""}
-          </span>
-          <button
-            onClick={handleSidebarToggle}
-            className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-0 ml-auto"
-          >
-            <i className={`fas fa-${sidebarExpanded ? "times" : "bars"} text-gray-400 text-base`}></i>
-          </button>
-        </div>
+    <>
+      {sidebarExpanded && (
+        <div 
+          className="fixed inset-0 bg-black/50 lg:hidden z-20"
+          onClick={() => setSidebarExpanded(false)}
+        />
+      )}
 
-        {/* Navigation */}
-        {/* <div className="flex-1 overflow-y-auto px-4 py-1 space-y-0"> */}
-        <div className={`${sidebarExpanded ? "px-3" : "px-6"} flex-1 overflow-y-auto py-1 space-y-0`}>
-          {Object.entries(menuItems).map(([section, items]) => (
-            <div key={section} className="space-y-4">
-              <button
-                onClick={() => handleMenuToggle(section)}
-                className={`w-full flex items-center justify-between p-1 rounded-lg transition-all duration-200 ${ //here i do p-1 instead of p-3
-                  activeMenu === section
-                    ? "bg-lightBlue-600 text-white shadow-lg shadow-lightBlue-500/20"
-                    : "text-gray-600"
-                }`}
-              >
-                <div className="flex items-center space-x-2">
-                  <div className={`w-8 h-8 bg-white flex items-center justify-center rounded-lg ${activeMenu === section ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
-                    <i className={`fas fa-${getSectionIcon(section)} ${activeMenu === section ? "text-gray-500" : "text-gray-500"}`}></i>
-                  </div>
-                  {sidebarExpanded && <span className="font-medium capitalize">{section}</span>}
-                </div>
-                {sidebarExpanded && (
-                  <i className={`fas fa-chevron-${activeMenu === section ? "down" : "right"} transition-transform duration-200 text-sm`}></i>
-                )}
-              </button>
-
-              {sidebarExpanded && activeMenu === section && (
-                <div className="pl-4">
-                  {items.map((item) => (
-                    <MenuLink
-                      key={item.to}
-                      to={item.to}
-                      icon={item.icon}
-                      label={item.label}
-                      isActive={location.pathname === item.to}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="p-4">
-          <button 
-            onClick={handleLogout}
-            className={`w-full flex items-center justify-center text-red-500 hover:text-red-700 transition-colors rounded-lg p-3
-              ${sidebarExpanded ? "bg-red-50 hover:bg-red-100 space-x-2" : "hover:bg-red-50"}`}
-          >
-            <i className="fas fa-sign-out-alt"></i>
-            {sidebarExpanded && <span>Logout</span>}
-          </button>
-        </div>
-        {/* User Profile Section */}
-        <div className={`border-t bg-gray-50 p-4 flex items-center ${sidebarExpanded ? "justify-between" : "justify-center"}`}>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
-                <i className="fas fa-user text-white"></i>
+      <div className={`fixed top-0 left-0 bottom-0 z-30 w-64 bg-white shadow-xl transition-all duration-300 ease-in-out
+        ${sidebarExpanded ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-20"}`}
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between w-full h-[73px] px-4 border-b border-gray-200">
+            {sidebarExpanded ? (
+              <div className="flex items-center justify-between w-full">
+                <span className="text-lg font-semibold">Admin Panel</span>
+                <button
+                  onClick={handleSidebarToggle}
+                  className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
               </div>
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-            </div>
-            {sidebarExpanded && (
-              <div>
-                <div className="font-medium">Admin</div>
-                <div className="text-sm">Administrator</div>
+            ) : (
+              <div className="w-full flex justify-center">
+                <button
+                  onClick={handleSidebarToggle}
+                  className="p-1 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none"
+                >
+                  <i className="fas fa-bars text-gray-600"></i>
+                </button>
               </div>
             )}
           </div>
+                    <div className={`flex-1 overflow-y-auto ${sidebarExpanded ? "px-1" : "px-0"}`}>
+            {Object.entries(menuItems).map(([section, items]) => (
+              <div key={section} className="space-y-1">
+                <button
+                  onClick={() => handleMenuToggle(section)}
+                  className={`w-full flex items-center ${sidebarExpanded ? "justify-between p-2" : "justify-center p-3"} rounded-lg transition-all duration-200 
+                    ${activeMenu === section ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"}`}
+                  title={!sidebarExpanded ? section : ""}
+                >
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 
+                      ${activeMenu === section ? "bg-white/20" : "bg-lightBlue-100 hover:bg-gray-200"}`}>
+                      <i className={`${getSectionIcon(section)} ${activeMenu === section ? "text-white" : "text-gray-500"}`}></i>
+                    </div>
+                    {sidebarExpanded && <span className="font-medium capitalize">{section}</span>}
+                  </div>
+                  {sidebarExpanded && (
+                    activeMenu === section ? (
+                      <ChevronDown className="w-4 h-4 transition-transform duration-200" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 transition-transform duration-200" />
+                    )
+                  )}
+                </button>
+
+                {sidebarExpanded && activeMenu === section && (
+                  <div className="pl-4 space-y-1">
+                    {items.map((item) => (
+                      <MenuLink 
+                        key={item.to}
+                        to={item.to}
+                        icon={item.icon}
+                        label={item.label}
+                        isActive={location.pathname === item.to}
+                        sidebarExpanded={sidebarExpanded}
+                        onClick={handleLinkClick}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-auto">
+            <div className="p-4">
+              <button 
+                onClick={handleLogout}
+                className={`w-full flex items-center justify-center text-red-500 hover:text-red-700 transition-colors rounded-lg p-3
+                  ${sidebarExpanded ? "bg-red-50 hover:bg-red-100 space-x-2" : "hover:bg-red-50"}`}
+                title={!sidebarExpanded ? "Logout" : ""}
+              >
+                <i className="fas fa-sign-out-alt"></i>
+                {sidebarExpanded && <span>Logout</span>}
+              </button>
+            </div>
+
+            <div className={`border-t bg-gray-50 p-4 flex items-center ${sidebarExpanded ? "justify-between" : "justify-center"}`}>
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-xl bg-lightBlue-600 flex items-center justify-center shadow-lg">
+                    <i className="fas fa-user text-white"></i>
+                  </div>
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                </div>
+                {sidebarExpanded && (
+                  <div>
+                    <div className="font-medium">Admin</div>
+                    <div className="text-sm text-gray-500">Administrator</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Logout Button */}
-
       </div>
-    </nav>
+    </>
   );
 }
 
-const MenuLink = ({ to, icon, label, isActive }) => (
+const MenuLink = ({ to, icon, label, isActive, sidebarExpanded, onClick }) => (
   <Link
     to={to}
-    className={`flex items-center space-x-3 px-3 py-1 rounded-xl transition-all duration-200 border-none outline-none ${
-      isActive ? "bg-lightBlue-50 text-lightBlue-600 border-none outline-none" : "text-gray-600 hover:bg-gray-100"
-    }`}
+    onClick={onClick}
+    className={`flex items-center ${sidebarExpanded ? "space-x-3 px-4 py-2" : "justify-center p-3"} rounded-lg transition-all duration-200 
+      ${isActive ? "bg-blue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"}`}
+    title={!sidebarExpanded ? label : ""}
   >
-    <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isActive ? "bg-lightBlue-100" : "bg-gray-100"}`}>
-      <i className={`${icon} ${isActive ? "text-lightBlue-600 border-none outline-none" : "text-gray-500"}`}></i>
+    <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+      isActive ? "bg-blue-100" : "bg-gray-100"
+    }`}>
+      <i className={`${icon} ${isActive ? "text-lightBlue-600" : "text-gray-500"}`}></i>
     </div>
-    <span className="text-sm font-medium">{label}</span>
+    {sidebarExpanded && <span className="text-sm font-medium">{label}</span>}
   </Link>
 );
 
-// roshni code ---
-// const getSectionIcon = (section) => {
-//   const icons = {
-//     admin: "shield-alt",
-//     user: "user",
-//     organization: "building",
-//   };
-//   return icons[section] || "circle";
-// };
-
-// my code--
 const getSectionIcon = (section) => {
   const icons = {
-    dashboard: "chart-line",
-    stocks: "chart-bar",
-    users: "users",
-    organizations: "building",
-    queries: "envelope",
-    feedback: "comments",
-    complaint: "exclamation-circle",
-    events: "calendar-alt",
+    dashboard: "fas fa-chart-line",
+    stocks: "fas fa-chart-bar",
+    users: "fas fa-users",
+    organizations: "fas fa-building",
+    queries: "fas fa-envelope",
+    feedback: "fas fa-comments",
+    complaint: "fas fa-exclamation-circle",
+    events: "fas fa-calendar-alt",
     gallery: "fas fa-images",
     BookedDemos: "fas fa-calendar-check",
   };
-  return icons[section] || "circle";
+  return icons[section] || "fas fa-circle";
 };
 
 Sidebar.propTypes = {
@@ -241,4 +235,6 @@ MenuLink.propTypes = {
   icon: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   isActive: PropTypes.bool.isRequired,
+  sidebarExpanded: PropTypes.bool.isRequired,
+  onClick: PropTypes.func
 };
