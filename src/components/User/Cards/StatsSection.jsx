@@ -216,7 +216,7 @@ const activeSubscription = userSubscriptions.find(sub =>
         showDetails: true,
         statItems: [
           { label: "Total", value: stats?.feedback?.total?.toString() || "0" },
-          { label: "RATING", value: stats?.feedback?.averageRating?.toString() || "0" },
+          { label: "Rating", value: stats?.feedback?.averageRating?.toString() || "0" },
           // { label: "Recommend %", value: stats?.feedback?.recommendationRate?.toString() || "0" }
         ],
         onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
@@ -588,7 +588,7 @@ const activeSubscription = userSubscriptions.find(sub =>
             {
               statIconName: "fas fa-clock",
               statSubtitle: "PENDING COMPLAINTS",
-              statTitle: stats?.complaints?.pendingComplaint?.toString() || 0, // Replace with actual data
+              statTitle: stats?.complaints?.pending?.toString() || 0, // Replace with actual data
               statIconColor: "bg-blue-400",
               showDetails: false,
         onClick: () => handleCardClick('complaints', 'Complaint Statistics')
@@ -596,7 +596,7 @@ const activeSubscription = userSubscriptions.find(sub =>
             {
               statIconName: "fas fa-chart-line",
               statSubtitle: "RESOLVED COMPLAINTS",
-              statTitle: stats?.complaints?.resolvedComplaints?.toString() || 0,// Replace with actual data
+              statTitle: stats?.complaints?.resolved?.toString() || 0,// Replace with actual data
               statIconColor: "bg-green-400",
               showDetails: false,
         onClick: () => handleCardClick('complaints', 'Complaint Statistics')
@@ -716,7 +716,7 @@ const activeSubscription = userSubscriptions.find(sub =>
             {
               statIconName: "fas fa-inbox",
               statSubtitle: "VIRTUAL AMOUNT",
-              statTitle: "₹" + activeSubscription?.vertualAmount?.toFixed(2).toString() || "0",
+              statTitle:  activeSubscription?.vertualAmount?.toFixed(2).toString() || "0",
               statIconColor: "bg-purple-500",
               showDetails: false
             },

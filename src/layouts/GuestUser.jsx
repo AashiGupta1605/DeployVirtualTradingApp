@@ -15,6 +15,7 @@ import GalleryPage from '../views/GuestUser/GalleryPage';
 import EventsPage from '../views/GuestUser/GuestEventPage';
 import Footer from "../components/GuestUser/Footers/Footer";
 import StartScreenPopupModal from '../components/GuestUser/Home/StartScreenPopupModal';
+import ScrollToTopButton from '../components/Common/ScrollToTopButton';
 
 const GuestUser = () => {
   const location = useLocation();
@@ -44,6 +45,8 @@ const GuestUser = () => {
       
       {/* Show footer on all pages except the home page */}
       {!isHomePage && <Footer className="mt-auto" />}
+
+      <ScrollToTopButton/>
     </div>
   )
 }

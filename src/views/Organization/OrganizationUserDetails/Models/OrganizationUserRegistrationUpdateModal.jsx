@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
     return new Date().getFullYear() - new Date(value).getFullYear() >= 18;
   }),
   addedby: Yup.string().required("Added by is required"),
-  status: Yup.boolean().default(true).required("Status is required"),
+  // status: Yup.boolean().default(true).required("Status is required"),
 });
 
 const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshStudents, refreshDashboard }) => {
@@ -34,7 +34,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
       gender: "",
       dob: "",
       addedby: "",
-      status: true,
+      // status: true,
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -50,7 +50,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
         // resetForm(); // Reset form values
         // onClose(); // Close the modal after successful submission
         refreshStudents();
-        refreshDashboard();
+        // refreshDashboard();
       } catch (error) {
         console.error("Error submitting form:", error);
       }
