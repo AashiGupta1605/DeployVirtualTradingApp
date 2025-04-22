@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -21,8 +21,10 @@ import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
 import Stock from "../../assets/stock.jpg";
+import ScrollToTopButton from "../../components/Common/ScrollToTopButton";
 
 const MainHomePage = () => {
+  const scrollContainerRef = useRef();
   // Animation controls for each section
   const [heroRef, heroInView] = useInView({ threshold: 0.8, triggerOnce: true });
   const [featuresRef, featuresInView] = useInView({ threshold: 0.8, triggerOnce: true });
@@ -130,6 +132,7 @@ const MainHomePage = () => {
 
   return (
     <motion.div 
+    ref={scrollContainerRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -547,6 +550,7 @@ const MainHomePage = () => {
           </div>
         </div>
       </footer>
+      <ScrollToTopButton />
     </motion.div>
   );
 };

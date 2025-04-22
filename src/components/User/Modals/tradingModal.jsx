@@ -30,10 +30,9 @@ import {
 import StockDetailsModal from './StockDetailsModal';
 import PortfolioTable from './PortfolioTable';
 import StatsSection from "../Cards/StatsSection";
-
+import { useUserStats } from "../../../hooks/userUserStats";
 const UserPortfolioPage = () => {
-
-
+const {refetch} = useUserStats();
     const dispatch = useDispatch();
     const location = useLocation();
     const activeEvent = useSelector(selectActiveEvent);
