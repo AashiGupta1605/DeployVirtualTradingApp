@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import StockP from "../../assets/p-stock.jpg";
 import "../../components/GuestUser/Contact/ContactPage.css"; 
@@ -14,10 +14,38 @@ const ContactPage = () => {
 
   return (
     <>
+     {/* Hero Section */}
+     <div className="relative overflow-hidden bg-lightBlue-600 !mt-10 py-16 z-10 mb-0 ">
+        <div className="absolute inset-0 opacity-20 z-0">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
+          >
+            <h1 className="text-4xl md:text-5xl pt-16 pb-0 font-extrabold text-white tracking-tight leading-snug">
+              <span className="block">Contact Us</span>
+              <motion.span
+                className="block text-blue-200 mt-2 text-xl md:text-2xl font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+              >
+                 We'd love to hear from you! Get in touch with our team today.
+              </motion.span>
+            </h1>
+           
+          </motion.div>
+        </div>
+      </div>
       {/* Contact Section */}
-      <div className="mt-7 min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 relative">
+      <div className="mt-0 pt-0 py-16 mb-2  flex flex-col md:flex-row items-center justify-center px-6">
         {/* Left - Content */}
-        <div className="text-black md:w-1/2 px-6">
+        <div className="text-black md:w-1/2 px-6 ">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
             Get in Touch with StockSphere
           </h1>
