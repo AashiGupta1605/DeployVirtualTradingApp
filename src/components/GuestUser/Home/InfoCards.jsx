@@ -24,7 +24,7 @@ const InfoCards = () => {
     try {
       const response = await axios.get(`${BASE_API_URL}/guestUser/getAllUsers`);
       setUserData(response.data.data);
-      const activeCount = response.data.data.filter(user => user.status === true).length;
+      const activeCount = response.data.data.filter(user => user.isDeleted === false).length;
       setActiveUsers(activeCount);
       setLoading(false);
     } catch (error) {

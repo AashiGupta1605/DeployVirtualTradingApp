@@ -910,7 +910,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         showDetails: true,
         statItems: [
           { label: "Total", value: stats?.feedback?.total?.toString() || "0" },
-          { label: "RATING", value: stats?.feedback?.averageRating?.toString() || "0" },
+          { label: "Rating", value: stats?.feedback?.averageRating?.toString() || "0" },
           // { label: "Recommend %", value: stats?.feedback?.recommendationRate?.toString() || "0" }
         ],
         onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
