@@ -25,14 +25,11 @@ const NiftyNavbarCarousel = () => {
       }
 
       const formattedData = data.data[0].stocks.map((item) => ({
-        name: item.symbol || "Unknown",
-        price: typeof item.lastPrice === "number" ? item.lastPrice.toFixed(2) : "N/A",
-        change: typeof item.pChange === "number"
-          ? item.pChange > 0
-            ? `+${item.pChange.toFixed(2)}%`
-            : `${item.pChange.toFixed(2)}%`
-          : "N/A",
-        isPositive: item.pChange > 0
+        name: item.symbol,
+        price: ` ${item.lastPrice.toFixed(2)}`,
+        change: item.change > 0 ? `INR+${item.change.toFixed(2)}` : `INR-${item.change.toFixed(2)}`,
+        changePer: ` (${item.pChange.toFixed(2)}%)`,
+        isPositive: item.change > 0
       }));
 
       setStockData(formattedData);
@@ -47,7 +44,7 @@ const NiftyNavbarCarousel = () => {
 
   useEffect(() => {
     fetchStockData();
-    const interval = setInterval(fetchStockData, 60000); // Refresh every minute
+    const interval = setInterval(fetchStockData, 120000); // Refresh every 2 minutes
     return () => clearInterval(interval);
   }, []);
 
@@ -55,7 +52,7 @@ const NiftyNavbarCarousel = () => {
     dots: false,
     infinite: true,
     speed: 2000,
-    slidesToShow: 7,
+    slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 4000,
@@ -65,41 +62,41 @@ const NiftyNavbarCarousel = () => {
     responsive: [
       {
         breakpoint: 1280,
-        settings: { slidesToShow: 6 }
-      },
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 5 }
-      },
-      {
-        breakpoint: 768,
         settings: { slidesToShow: 4 }
       },
       {
-        breakpoint: 640,
+        breakpoint: 1024,
         settings: { slidesToShow: 3 }
       },
       {
-        breakpoint: 480,
+        breakpoint: 768,
         settings: { slidesToShow: 2 }
+      },
+      {
+        breakpoint: 640,
+        settings: { slidesToShow: 1 }
+      },
+      {
+        breakpoint: 480,
+        settings: { slidesToShow: 1 }
       }
     ]
   };
 
   return (
-    <div className="fixed mt-1.5 left-0 top-24 w-full bg-white border-b border-gray-200 z-30 h-9">
+    <div className="fixed mt-1.5 left-0 top-15 w-full bg-white border-b border-gray-200 z-30 h-9">
       <div className="max-w-screen-2xl mx-auto px-2 h-full flex items-center">
         {/* Nifty Label - Perfectly centered */}
         <div className="flex-shrink-0 h-full flex items-center pr-3">
           <span className="font-bold text-xs bg-amber-50 text-amber-600 px-2 py-0.5 rounded">
-            NIFTY 50
+            NIFTY50 STOCKS
           </span>
         </div>
 
         {/* Stock Ticker - Centered content */}
         <div className="flex-1 h-full overflow-hidden">
           {loading ? (
-            <div className="h-full flex items-center space-x-4">
+            <div className="h-full flex items-center space-x-3">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="h-3 bg-gray-100 rounded w-24"></div>
               ))}
@@ -111,20 +108,20 @@ const NiftyNavbarCarousel = () => {
           ) : (
             <Slider {...settings} className="h-full">
               {stockData.map((stock, index) => (
-                <div key={index} className="h-full px-0.5">
-                  <div className="h-full flex items-center space-x-2 px-2 hover:bg-gray-50 transition-colors">
-                    <span className="font-medium text-xs text-gray-800 truncate max-w-[60px]">
+                <div key={index} className="h-full -px-1">
+                  <div className="mt-2 h-full flex items-center space-x-1 px-0 hover:bg-gray-50 transition-colors">
+                    <span className="font-medium text-xs text-gray-800 truncate max-w-[100px]">
                       {stock.name}
                     </span>
-                    <span className="text-xs text-gray-600">
+                    <span className="text-[13.5px] font-semibold text-gray-600">
                       {stock.price}
                     </span>
-                    <span className={`text-xs font-medium ${
+                    <span className={`mt-1 text-[12px] truncate max-w-[95px] ${
                       stock.isPositive 
                         ? "text-green-500" 
                         : "text-red-500"
                     }`}>
-                      {stock.change}
+                      {stock.change}{stock.changePer}
                     </span>
                   </div>
                 </div>
