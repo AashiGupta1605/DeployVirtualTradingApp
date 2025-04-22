@@ -35,8 +35,8 @@ export default function CardSettings({ isOpen, onClose }) {
   return (
     isOpen && (
       <>
-               <div className="fixed inset-0 bg-gray-900/50 z-40"></div>
-               <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+<div className="fixed inset-0 bg-gray-900/50 z-40"></div> 
+<div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
           <div
             style={{ width: "100%", maxWidth: "80%" }}
             className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"

@@ -7,7 +7,7 @@ import {
   ChevronDown,
   ChevronUp,
   PlusCircle,
-  Clock3 ,
+  Clock3,
   CheckCircle,
   Star,
   ThumbsUp,
@@ -56,13 +56,13 @@ CustomOption.propTypes = {
 };
 
 // Filter Button Component
-const FilterButton = ({ onClick, children, variant = "secondary" }) => (
+const FilterButton = ({ onClick, children, variant = "secondary", className = "" }) => (
   <button
     onClick={onClick}
     className={`h-10 px-4 rounded-lg transition-colors text-sm font-medium flex items-center gap-2 
       ${variant === "primary" 
         ? "bg-lightBlue-600 text-white hover:bg-lightBlue-700" 
-        : "border border-gray-300 hover:bg-gray-50"}`}
+        : "border border-gray-300 hover:bg-gray-50"} ${className}`}
   >
     {children}
   </button>
@@ -71,7 +71,8 @@ const FilterButton = ({ onClick, children, variant = "secondary" }) => (
 FilterButton.propTypes = {
   onClick: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(["primary", "secondary"])
+  variant: PropTypes.oneOf(["primary", "secondary"]),
+  className: PropTypes.string
 };
 
 // Common Filter Select Component
@@ -161,9 +162,9 @@ DateRangeFilter.propTypes = {
   width: PropTypes.string
 };
 
-// Action Buttons Component with updated positioning
+// Action Buttons Component
 const ActionButtons = ({ onClear, onApply }) => (
-  <div className="flex gap-2 ml-auto"> {/* Added ml-auto for right alignment */}
+  <div className="flex gap-2 ml-auto">
     <FilterButton onClick={onClear}>
       <X size={16} />
       Clear
@@ -179,8 +180,48 @@ ActionButtons.propTypes = {
   onApply: PropTypes.func.isRequired
 };
 
-// Updated Filter Configurations with all necessary filters
-// Updated Filter Configurations with corrected organization status options
+// Search Bar Component
+const SearchBar = ({ searchQuery, setSearchQuery, setActiveFilters }) => (
+  <div className="relative w-[300px] border border-gray-50 rounded-lg 
+                  focus-within:border-gray-300 focus-within:ring-1 
+                  focus-within:ring-lightBlue-500 transition-colors">
+    <SearchIcon 
+      size={18} 
+      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" 
+    />
+    <input
+      type="text"
+      placeholder="Search..."
+      value={searchQuery}
+      onChange={(e) => {
+        setSearchQuery(e.target.value);
+        setActiveFilters(prev => ({ ...prev, search: e.target.value !== '' }));
+      }}
+      className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                 text-sm placeholder-gray-500"
+    />
+    {searchQuery && (
+      <button
+        onClick={() => {
+          setSearchQuery("");
+          setActiveFilters(prev => ({ ...prev, search: false }));
+        }}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+      >
+        <X size={16} />
+      </button>
+    )}
+  </div>
+);
+
+SearchBar.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  setActiveFilters: PropTypes.func.isRequired
+};
+
+// Filter Configurations
 const FILTER_CONFIGS = {
   queries: {
     type: {
@@ -225,10 +266,8 @@ const FILTER_CONFIGS = {
       width: 'w-[180px]',
       options: [
         { value: 'all', label: 'All Genders' },
-       
-        { value: 'Male', label: 'Male' }, // Capitalized
-      
-        { value: 'Female', label: 'Female' } 
+        { value: 'Male', label: 'Male' },
+        { value: 'Female', label: 'Female' }
       ]
     },
     dateRange: {
@@ -273,11 +312,11 @@ const FILTER_CONFIGS = {
           label: <CustomOption icon={<UserCheck size={16} />}>All</CustomOption> 
         },
         { 
-          value: 'Approved', // lowercase to match backend
+          value: 'Approved',
           label: <CustomOption icon={<UserCheck size={16} />}>Approved</CustomOption> 
         },
         { 
-          value: 'Rejected', // lowercase to match backend
+          value: 'Rejected',
           label: <CustomOption icon={<X size={16} />}>Rejected</CustomOption> 
         }
       ]
@@ -318,8 +357,6 @@ const FILTER_CONFIGS = {
         { value: 'All', label: <CustomOption icon={<Clock3 size={16} />}>All</CustomOption> },
         { value: 'pending', label: <CustomOption icon={<Clock3 size={16} />}>Pending</CustomOption> },
         { value: 'solved', label: <CustomOption icon={<CheckCircle size={16} />}>Solved</CustomOption> },
-        // { value: 'satisfied', label: <CustomOption icon={<UserCheck size={16} />}>Satisfied</CustomOption> },
-        // { value: 'not satisfied', label: <CustomOption icon={<X size={16} />}>Not Satisfied</CustomOption> }
       ]
     },
     dateRange: {
@@ -374,11 +411,9 @@ const InlineFilterLayout = ({
   setIsFilterOpen,
   filterType
 }) => {
-  // Function to render filters based on filter type
   const renderFilters = () => {
     const filters = [];
 
-    // Add status filter for users and organizations
     if ((filterType === 'users' || filterType === 'organizations') && filterConfig.status) {
       filters.push(
         <FilterSelect
@@ -394,7 +429,6 @@ const InlineFilterLayout = ({
       );
     }
 
-    // Add gender filter for users
     if (filterType === 'users' && filterConfig.gender) {
       filters.push(
         <FilterSelect
@@ -410,7 +444,6 @@ const InlineFilterLayout = ({
       );
     }
 
-    // Add query type filter for queries
     if (filterType === 'queries' && filterConfig.type) {
       filters.push(
         <FilterSelect
@@ -430,12 +463,10 @@ const InlineFilterLayout = ({
   };
 
   return (
-    <div className="flex items-end w-full">
-      <div className="flex items-end gap-4 flex-grow">
-        {/* Render specific filters based on filter type */}
+    <div className="w-full">
+      <div className="flex flex-col md:flex-row items-end gap-4 flex-grow">
         {renderFilters()}
 
-        {/* Date Range Filter */}
         {filterConfig.dateRange && (
           <DateRangeFilter
             startDate={tempFilters.startDate}
@@ -447,7 +478,7 @@ const InlineFilterLayout = ({
         )}
       </div>
 
-      <div className="ml-6">
+      <div className="flex justify-end mt-4 md:mt-0">
         <ActionButtons
           onClear={clearFilters}
           onApply={() => {
@@ -458,18 +489,6 @@ const InlineFilterLayout = ({
       </div>
     </div>
   );
-};
-
-InlineFilterLayout.propTypes = {
-  filterConfig: PropTypes.object.isRequired,
-  tempFilters: PropTypes.object.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
-  handleStartDateChange: PropTypes.func.isRequired,
-  handleEndDateChange: PropTypes.func.isRequired,
-  applyFilters: PropTypes.func.isRequired,
-  clearFilters: PropTypes.func.isRequired,
-  setIsFilterOpen: PropTypes.func.isRequired,
-  filterType: PropTypes.string.isRequired
 };
 
 // Feedback Filter Layout
@@ -484,9 +503,8 @@ const FeedbackFilterLayout = ({
   setIsFilterOpen
 }) => {
   return (
-    <div className="flex items-end w-full">
-      <div className="flex items-end gap-4 flex-grow">
-        {/* Category Filter */}
+    <div className="w-full">
+      <div className="flex flex-col md:flex-row items-end gap-4 flex-grow">
         <FilterSelect
           name="category"
           value={tempFilters.category}
@@ -497,7 +515,6 @@ const FeedbackFilterLayout = ({
           icon={filterConfig.category.icon}
         />
 
-        {/* Status Filter */}
         <FilterSelect
           name="status"
           value={tempFilters.status}
@@ -508,7 +525,6 @@ const FeedbackFilterLayout = ({
           icon={filterConfig.status.icon}
         />
 
-        {/* Rating Filter */}
         <FilterSelect
           name="rating"
           value={tempFilters.rating}
@@ -519,7 +535,6 @@ const FeedbackFilterLayout = ({
           icon={filterConfig.rating.icon}
         />
 
-        {/* Date Range */}
         <DateRangeFilter
           startDate={tempFilters.startDate}
           endDate={tempFilters.endDate}
@@ -529,7 +544,7 @@ const FeedbackFilterLayout = ({
         />
       </div>
 
-      <div className="ml-6">
+      <div className="flex justify-end mt-4 md:mt-0">
         <ActionButtons
           onClear={clearFilters}
           onApply={() => {
@@ -542,17 +557,7 @@ const FeedbackFilterLayout = ({
   );
 };
 
-FeedbackFilterLayout.propTypes = {
-  filterConfig: PropTypes.object.isRequired,
-  tempFilters: PropTypes.object.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
-  handleStartDateChange: PropTypes.func.isRequired,
-  handleEndDateChange: PropTypes.func.isRequired,
-  applyFilters: PropTypes.func.isRequired,
-  clearFilters: PropTypes.func.isRequired,
-  setIsFilterOpen: PropTypes.func.isRequired
-};
-
+// Complaint Filter Layout
 const ComplaintFilterLayout = ({
   filterConfig,
   tempFilters,
@@ -564,9 +569,8 @@ const ComplaintFilterLayout = ({
   setIsFilterOpen
 }) => {
   return (
-    <div className="flex items-end w-full">
-      <div className="flex items-end gap-4 flex-grow">
-        {/* Category Filter */}
+    <div className="w-full">
+      <div className="flex flex-col md:flex-row items-end gap-4 flex-grow">
         <FilterSelect
           name="category"
           value={tempFilters.category}
@@ -577,7 +581,6 @@ const ComplaintFilterLayout = ({
           icon={filterConfig.category.icon}
         />
 
-        {/* Status Filter */}
         <FilterSelect
           name="status"
           value={tempFilters.status}
@@ -588,7 +591,6 @@ const ComplaintFilterLayout = ({
           icon={filterConfig.status.icon}
         />
 
-        {/* Date Range Filter */}
         <DateRangeFilter
           startDate={tempFilters.startDate}
           endDate={tempFilters.endDate}
@@ -598,7 +600,7 @@ const ComplaintFilterLayout = ({
         />
       </div>
 
-      <div className="ml-6">
+      <div className="flex justify-end mt-4 md:mt-0">
         <ActionButtons
           onClear={clearFilters}
           onApply={() => {
@@ -609,17 +611,6 @@ const ComplaintFilterLayout = ({
       </div>
     </div>
   );
-};
-
-ComplaintFilterLayout.propTypes = {
-  filterConfig: PropTypes.object.isRequired,
-  tempFilters: PropTypes.object.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
-  handleStartDateChange: PropTypes.func.isRequired,
-  handleEndDateChange: PropTypes.func.isRequired,
-  applyFilters: PropTypes.func.isRequired,
-  clearFilters: PropTypes.func.isRequired,
-  setIsFilterOpen: PropTypes.func.isRequired
 };
 
 // Active Filters Display Component
@@ -639,7 +630,6 @@ const ActiveFiltersDisplay = ({
       return `${tempFilters.startDate?.toLocaleDateString()} - ${tempFilters.endDate?.toLocaleDateString()}`;
     }
 
-    // Special rendering for feedback filters
     if (filterType === 'feedback') {
       if (key === 'rating') {
         return (
@@ -668,15 +658,13 @@ const ActiveFiltersDisplay = ({
       }
     }
     
-  // Special rendering for complaint filters (can be extended later)
-  if (filterType === 'complaint') {
-    if (key === 'status' || key === 'category') {
-      const option = config?.options.find(opt => opt.value === value);
-      return option?.label || value;
+    if (filterType === 'complaint') {
+      if (key === 'status' || key === 'category') {
+        const option = config?.options.find(opt => opt.value === value);
+        return option?.label || value;
+      }
     }
-  }
 
-    // For users and organizations specific filters
     if (key === 'status' || key === 'gender' || key === 'type') {
       const option = config?.options.find(opt => opt.value === value);
       return option?.label || value;
@@ -708,9 +696,9 @@ const ActiveFiltersDisplay = ({
   };
 
   return (
-    <div className="bg-gray-50 mt-0 px-6 py-2  flex items-center justify-between border border-gray-200">
-      <div className="flex items-center space-x-2">
-        <span className="text-sm font-small text-gray-600">Active Filters:</span>
+    <div className="bg-gray-50 mt-0 px-6 py-2 flex flex-col md:flex-row items-start md:items-center justify-between border border-gray-200">
+      <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-2">
+        <span className="text-sm font-medium text-gray-600">Active Filters:</span>
         <div className="flex flex-wrap gap-2">
           {Object.entries(activeFilters).map(([key, isActive]) => {
             if (!isActive) return null;
@@ -722,7 +710,7 @@ const ActiveFiltersDisplay = ({
             return (
               <span
                 key={key}
-                className="bg-blue-50 text-blue-700 text-sm font-small px-3 py-1 
+                className="bg-blue-50 text-blue-700 text-sm font-medium px-3 py-1 
                          rounded-full flex items-center gap-2 border border-blue-100"
               >
                 {config?.icon && <span className="text-blue-500">{config.icon}</span>}
@@ -738,63 +726,13 @@ const ActiveFiltersDisplay = ({
       
       <button
         onClick={clearFilters}
-        className="text-sm text-gray-600 hover:text-gray-800 flex items-center font-medium"
+        className="text-sm text-gray-600 hover:text-gray-800 flex items-center font-medium mt-2 md:mt-0"
       >
         <X size={16} className="mr-1" />
         Clear All
       </button>
     </div>
   );
-};
-
-ActiveFiltersDisplay.propTypes = {
-  activeFilters: PropTypes.object.isRequired,
-  tempFilters: PropTypes.object.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  filterConfig: PropTypes.object.isRequired,
-  clearFilters: PropTypes.func.isRequired,
-  filterType: PropTypes.string.isRequired
-};
-
-// Search Bar Component
-const SearchBar = ({ searchQuery, setSearchQuery, setActiveFilters }) => (
-  <div className="relative w-[300px] border border-gray-50 rounded-lg 
-                  focus-within:border-gray-300 focus-within:ring-1 
-                  focus-within:ring-lightBlue-500 transition-colors">
-    <SearchIcon 
-      size={18} 
-      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" 
-    />
-    <input
-      type="text"
-      placeholder="Search..."
-      value={searchQuery}
-      onChange={(e) => {
-        setSearchQuery(e.target.value);
-        setActiveFilters(prev => ({ ...prev, search: e.target.value !== '' }));
-      }}
-      className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-                 text-sm placeholder-gray-500"
-    />
-    {searchQuery && (
-      <button
-        onClick={() => {
-          setSearchQuery("");
-          setActiveFilters(prev => ({ ...prev, search: false }));
-        }}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-      >
-        <X size={16} />
-      </button>
-    )}
-  </div>
-);
-
-SearchBar.propTypes = {
-  searchQuery: PropTypes.string.isRequired,
-  setSearchQuery: PropTypes.func.isRequired,
-  setActiveFilters: PropTypes.func.isRequired
 };
 
 // Main TableFilters Component
@@ -820,33 +758,30 @@ const TableFilters = ({
   const filterConfig = FILTER_CONFIGS[filterType] || {};
   const layoutConfig = LAYOUT_CONFIGS[filterType] || {};
 
-  // Calculate active filters
   const localActiveFilters = useMemo(() => {
     const filters = {
       search: !!searchQuery,
       dateRange: !!(tempFilters.startDate && tempFilters.endDate)
     };
-    // Normalize gender filter input
-  const normalizedGender = tempFilters.gender ? tempFilters.gender.toLowerCase().trim() : "all";
 
-  // Add type-specific filters
-if (filterType === 'users') {
-  filters.status = tempFilters.status !== 'all';
-  filters.gender = tempFilters.gender && tempFilters.gender !== 'all';
-} else if (filterType === 'organizations') {
-  filters.status = tempFilters.status !== 'all';
-} else if (filterType === 'queries') {
-  filters.type = tempFilters.type !== 'all';
-  filters.status = tempFilters.status !== 'all';
-} else if (filterType === 'feedback') {
-  filters.category = tempFilters.category !== 'all';
-  filters.status = tempFilters.status !== 'all';
-  filters.rating = tempFilters.rating !== 'all';
-} else if (filterType === 'complaint') {
-  filters.category = tempFilters.category !== 'all';
-  filters.status = tempFilters.status !== 'all';
-}
-    
+    const normalizedGender = tempFilters.gender ? tempFilters.gender.toLowerCase().trim() : "all";
+
+    if (filterType === 'users') {
+      filters.status = tempFilters.status !== 'all';
+      filters.gender = tempFilters.gender && tempFilters.gender !== 'all';
+    } else if (filterType === 'organizations') {
+      filters.status = tempFilters.status !== 'all';
+    } else if (filterType === 'queries') {
+      filters.type = tempFilters.type !== 'all';
+      filters.status = tempFilters.status !== 'all';
+    } else if (filterType === 'feedback') {
+      filters.category = tempFilters.category !== 'all';
+      filters.status = tempFilters.status !== 'all';
+      filters.rating = tempFilters.rating !== 'all';
+    } else if (filterType === 'complaint') {
+      filters.category = tempFilters.category !== 'all';
+      filters.status = tempFilters.status !== 'all';
+    }
 
     return filters;
   }, [tempFilters, searchQuery, filterType]);
@@ -856,7 +791,6 @@ if (filterType === 'users') {
     [localActiveFilters]
   );
 
-  // Get the appropriate icon for the page title
   const getTitleIcon = () => {
     switch (filterType) {
       case 'queries':
@@ -867,14 +801,13 @@ if (filterType === 'users') {
         return <Building2 className="mr-2 text-gray-600" size={24} />;
       case 'feedback':
         return <MessageSquare className="mr-2 text-gray-600" size={24} />;
-        case 'complaint':
-      return <AlertCircle className="mr-2 text-gray-600" size={24} />;
+      case 'complaint':
+        return <AlertCircle className="mr-2 text-gray-600" size={24} />;
       default:
         return <Filter className="mr-2 text-gray-600" size={24} />;
     }
   };
 
-  // Render appropriate filter layout based on type
   const renderFilterLayout = () => {
     switch (filterType) {
       case 'feedback':
@@ -890,19 +823,19 @@ if (filterType === 'users') {
             setIsFilterOpen={setIsFilterOpen}
           />
         );
-        case 'complaint':
-          return (
-            <ComplaintFilterLayout
-              filterConfig={filterConfig}
-              tempFilters={tempFilters}
-              handleFilterChange={handleFilterChange}
-              handleStartDateChange={handleStartDateChange}
-              handleEndDateChange={handleEndDateChange}
-              applyFilters={applyFilters}
-              clearFilters={clearFilters}
-              setIsFilterOpen={setIsFilterOpen}
-            />
-          );
+      case 'complaint':
+        return (
+          <ComplaintFilterLayout
+            filterConfig={filterConfig}
+            tempFilters={tempFilters}
+            handleFilterChange={handleFilterChange}
+            handleStartDateChange={handleStartDateChange}
+            handleEndDateChange={handleEndDateChange}
+            applyFilters={applyFilters}
+            clearFilters={clearFilters}
+            setIsFilterOpen={setIsFilterOpen}
+          />
+        );
       case 'queries':
       case 'users':
       case 'organizations':
@@ -927,41 +860,44 @@ if (filterType === 'users') {
   return (
     <div className="space-y-4">
       {/* Header Bar */}
-      <div className="bg-white mb-0 rounded-lg shadow-sm px-6 py-4 flex items-center justify-between border border-gray-200">
+      <div className="bg-white mb-0 rounded-lg shadow-sm px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between border border-gray-200 gap-4 md:gap-0">
         <h2 className="text-xl font-bold text-gray-800 flex items-center">
           {getTitleIcon()}
           {pageTitle}
         </h2>
 
-        <div className="flex items-center space-x-4">
-          {/* Filter Button */}
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="h-10 px-4 rounded-lg mr-4 border border-gray-400 
-                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600  transition-colors flex items-center space-x-2"
-          >
-            <Filter size={18} />
-            {activeFiltersCount > 0 && (
-              <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
-                {activeFiltersCount}
-              </span>
-            )}
-            {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </button>
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full md:w-auto">
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {/* Filter Button */}
+            <button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className="h-10 px-4 rounded-lg border border-gray-400 
+                       hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                       transition-colors flex items-center space-x-2"
+            >
+              <Filter size={18} />
+              {activeFiltersCount > 0 && (
+                <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
+                  {activeFiltersCount}
+                </span>
+              )}
+              {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
 
-          {/* Search Bar */}
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setActiveFilters={setActiveFilters}
-          />
+            {/* Search Bar */}
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setActiveFilters={setActiveFilters}
+            />
+          </div>
 
           {/* Add Button */}
           {showAddButton && onAddNew && (
             <button
               onClick={onAddNew}
               className="h-10 px-4 bg-lightBlue-600 text-white rounded-lg 
-                       hover:bg-lightBlue-700 transition-colors flex items-center"
+                       hover:bg-lightBlue-700 transition-colors flex items-center justify-center md:justify-start"
             >
               <PlusCircle size={18} className="mr-2" />
               <span className="font-medium">{addButtonText}</span>
@@ -972,7 +908,7 @@ if (filterType === 'users') {
 
       {/* Filter Panel */}
       {isFilterOpen && (
-        <div className={`bg-gray-50 mb-0 shadow-l p-6 border border-gray-200 
+        <div className={`bg-gray-50 mb-0 shadow-lg p-6 border border-gray-200 
                         ${layoutConfig.containerClass || ''}`}>
           {renderFilterLayout()}
         </div>
