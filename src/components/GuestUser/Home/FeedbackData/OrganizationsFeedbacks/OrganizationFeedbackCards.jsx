@@ -227,11 +227,14 @@ const OrganizationFeedbackCards = () => {
                         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-gray-500">
-                              {new Date(feedback.createdAt).toLocaleDateString('en-US', {
+                              {/* {new Date(feedback.createdAt).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'short',
                                 day: 'numeric'
-                              })}
+                              })} */}
+                              {new Date(
+                              feedback.createdDate
+                              ).toLocaleDateString()}
                             </span>
                             <div className="flex items-center space-x-2">
                               <span className="text-xs text-gray-500">Verified</span>
