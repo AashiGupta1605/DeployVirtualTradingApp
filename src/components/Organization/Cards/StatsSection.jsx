@@ -173,7 +173,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         showDetails: true,
         statItems: [
           { label: "Total", value: feedbackStats?.total?.toString() || "0" },
-          { label: "RATING", value: feedbackStats?.averageRating?.toString() || "0" },
+          { label: "Rating", value: feedbackStats?.averageRating?.toString() || "0" },
           // { label: "Recommend %", value: stats?.feedback?.recommendationRate?.toString() || "0" }
         ],
         statArrow: "up",
