@@ -24,6 +24,7 @@ import UserDemo from "../views/admin/bookDemo/UserDemo";
 import OrgDemo from "../views/admin/bookDemo/OrgDemo";
 import AdminEventsPage from "../views/admin/AdminEventsPage";
 import Participants from "../views/admin/Participants";
+
 export default function Admin() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
@@ -38,9 +39,12 @@ export default function Admin() {
           sidebarExpanded ? "md:ml-64" : "md:ml-20"
         } transition-all duration-300 ease-in-out`}
       >
-        <AdminNavbar sidebarExpanded={sidebarExpanded} />
-        <div className="flex-1 relative"> {/* Changed to relative */}
-          <div className="absolute inset-0 overflow-auto"> {/* Added this wrapper */}
+        <AdminNavbar 
+          sidebarExpanded={sidebarExpanded} 
+          setSidebarExpanded={setSidebarExpanded} 
+        />
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 overflow-auto">
             <Routes>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="participants" element={<Participants />} />
