@@ -74,7 +74,7 @@ const NumberOfStocksCards = ({shouldRefetch}) => {
     try {
       setLoading(true);
       const response = await fetch(`${BASE_API_URL}/admin/etfdata`);
-      if (!response.ok) throw new Error("Failed to fetch ETF data");
+      if (!response.ok) throw new Error("Failed to fetch ETF Stocks");
 
       const data = await response.json();
 
