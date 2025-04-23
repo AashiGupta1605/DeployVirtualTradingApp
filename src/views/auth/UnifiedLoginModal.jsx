@@ -23,7 +23,7 @@ const ToggleSwitch = ({ isOn, onToggle, disabled = false }) => (
           isOn ? "translate-x-[90px] md:translate-x-[110px]" : "translate-x-0"
         }`}
       />
-      <div className="absolute inset-0 flex justify-between items-center px-3 md:px-4 text-sm font-medium z-10">
+      <div className="absolute inset-0 flex justify-between items-center px-5 md:px-4 text-sm font-medium z-10">
         <span className={`transition-colors duration-300 text-sm ${isOn ? "text-lightBlue-600" : "text-white"}`}>
           User
         </span>

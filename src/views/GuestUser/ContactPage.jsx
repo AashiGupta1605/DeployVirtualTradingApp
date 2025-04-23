@@ -148,7 +148,10 @@ const ContactPage = () => {
 
 const ContactModal = ({ onClose }) => {
   const contactValidationSchema = Yup.object().shape({
-    name: Yup.string().min(2, "Too short").required("Name is required"),
+    name: Yup.string()
+  .required("Name is required")
+  .min(5, "Name must be at least 5 characters")
+  .max(50, "Name must be less than 50 characters"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile must be 10 digits")
