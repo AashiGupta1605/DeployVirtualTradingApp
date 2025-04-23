@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
+import { FiSearch, FiCalendar } from "react-icons/fi";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
@@ -349,122 +350,108 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
         >
           <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-100 p-4 mt-1">
             {/* Top Header */}
-            <div className="flex justify-between items-center">
-              {/* Left Side (Icon + Heading) */}
-              <div className="flex items-center gap-3">
-                <FontAwesomeIcon
-                  icon={faChalkboardTeacher}
-                  className="text-gray-500 text-[21px]"
-                />
-                <h2 className="text-xl font-bold text-gray-800">
-                  Manage User's Demo Bookings
-                </h2>
-                {!sidebarExpanded ? (
-                  <p className="-ml-2 max-w-[9.5rem] rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 mt-2">
-                    Total Bookings: {data?.length}
-                  </p>
-                ) : null}
-              </div>
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
+  {/* Left Side (Icon + Heading) */}
+  <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3 w-full">
+    <div className="flex items-center gap-3">
+      <FontAwesomeIcon
+        icon={faChalkboardTeacher}
+        className="text-gray-500 text-[21px]"
+      />
+      <h2 className="text-xl font-bold text-gray-800">
+        Manage User's Demo Bookings
+      </h2>
+    </div>
 
-              <div className="flex items-center gap-3 -mr-2">
+    {!sidebarExpanded && (
+      <p className="rounded-2xl pt-1 pb-1 pl-2 pr-2 text-xs bg-gray-100 text-gray-700 lg:mt-0 mt-1 max-w-[10rem]">
+        Total Bookings: {data?.length}
+      </p>
+    )}
+  </div>
 
-              {/* Filter Icon */}
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`relative flex items-center gap-5 px-2 py-2 h-[38px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
-                            ${showFilters? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
-                          `}
-              >
-                {/* Filter Icon */}
-                <div className="relative">
-                  <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
+  {/* Right Side (Buttons and Search) */}
+  <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 w-full lg:w-auto">
+    {/* Filter Button */}
+    <button
+      onClick={() => setShowFilters(!showFilters)}
+      className={`relative flex items-center gap-2 px-3 py-2 h-[38px] border rounded-lg focus:outline-none transition-all
+        ${showFilters ? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
+        hover:shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+      `}
+    >
+      <div className="relative">
+        <Filter className="text-gray-500 text-xl hover:text-gray-700" />
+        {filterCount > 0 && (
+          <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+            {filterCount}
+          </span>
+        )}
+      </div>
+      <IoIosArrowUp
+        className={`text-gray-500 text-lg transition-transform duration-200 ${
+          showFilters ? "rotate-0" : "rotate-180"
+        }`}
+      />
+    </button>
 
-                  {/* Filter Count - Positioned Bottom Right */}
-                  {filterCount > 0 && (
-                    <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
-                      {filterCount}
-                    </span>
-                  )}
-                </div>
-                {/* Arrow Icon */}
-                <IoIosArrowUp
-                  className={`pl-[2px] -pr-[2px] text-gray-500 text-lg transition-transform duration-200 ${
-                    showFilters ? "rotate-0" : "rotate-180"
-                  }`}
-                />
-              </button>
+    {/* Selector Box */}
+    <div className="relative">
+      <select
+        name="SelectField"
+        className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-36 pr-10 truncate"
+        value={field}
+        onChange={(e) => setField(e.target.value || "")}
+      >
+        <option disabled>Select</option>
+        <option value="name">Name</option>
+        <option value="email">Email</option>
+        <option value="mobile">Mobile</option>
+        <option value="demoRequestDate">Demo Booked On</option>
+        <option value="demoResolveDate">Demo Completed On</option>
+        <option value="preferredDate">Preferred Date</option>
+      </select>
+    </div>
 
-                {/* Selector Box for field selection */}
-                <div className="flex flex-col relative">
-                  <div className="relative group">
-                    <select
-                    name="SelectField"
-                    className="border rounded-lg px-4 py-[8px] text-sm appearance-none w-28 pr-10 truncate"
-                    value={field}
-                    onChange={(e) => setField(e.target.value || "")}
-                    >
-                      <option disabled>Select</option>
-                      <option value="name">Name</option>
-                      <option value="email">Email</option>
-                      <option value="mobile">Mobile</option>
-                      <option value="demoRequestDate">Demo Booked On</option>
-                      <option value="demoResolveDate">Demo Completed On</option>
-                      <option value="preferredDate">Preferred Date</option>
-                      {/* <option value="preferredTimeSlot">Prefer Time-Slot</option>
-                      <option value="isResolved">Status</option>
-                      <option value="gender">Gender</option> */}
-                    </select>
-                  </div>
-                </div>
+    {/* Search Bar */}
 
-                {/* Search bar */}
-                <div className="relative">
-                  <div className="relative w-[226px]">
+{/* Search Bar */}
+<div className="relative w-full sm:w-[226px]">
+  {/* Conditional Icon */}
+  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[17px] pointer-events-none">
+    {["demoRequestDate", "demoResolveDate", "preferredDate"].includes(field) ? (
+      <FiCalendar />
+    ) : (
+      <FiSearch />
+    )}
+  </div>
 
-                    {/* Search/Calender Icon */}
-                    {field=='demoRequestDate' || field=='demoResolveDate' || field=='preferredDate'
-                      ?<img
-                        src="https://cdn-icons-png.flaticon.com/512/747/747310.png"
-                        alt="calendar"
-                        className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
-                      />
-                      :<img
-                        src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
-                        alt="search"
-                        className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
-                      />
-                    }
-                  
-                    {/* Search/Date Input */}
-                    {field=='demoRequestDate' || field=='demoResolveDate' || field=='preferredDate'
-                      ?<input
-                        type="date"
-                        placeholder="Date..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value || "")}
-                        className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black"
-                      />
-                      :<input
-                        type="text"
-                        placeholder="Search..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value || "")}
-                        className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black"
-                      />
-                    }
+  {/* Input Field */}
+  <input
+    type={
+      ["demoRequestDate", "demoResolveDate", "preferredDate"].includes(field)
+        ? "date"
+        : "text"
+    }
+    placeholder="Search..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value || "")}
+    className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black placeholder:text-sm placeholder:tracking-wide"
+  />
+</div>
 
-                  </div>
-                </div>
 
-                {/* Previous/ Recent Record Button */}
-                <button
-                  onClick={() => console.log("Hii")}
-                  className="mr-2 h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center"
-                >
-                  <span className="font-medium">Recent Bookings</span>
-                </button>
-              </div>
-            </div>
+
+    {/* Recent Bookings Button */}
+    <button
+      onClick={() => console.log("Hii")}
+      className="w-full sm:w-auto h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
+    >
+      <span className="font-medium">Recent Bookings</span>
+    </button>
+  </div>
+</div>
+
 
           {/* Filters Section (Visible only when showFilters is true) */}
           {!err && showFilters && (

@@ -72,7 +72,7 @@ const ShowGalleryImages = ({ sidebarExpanded }) => {
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value||"")}
-                className="border border-gray-400 pl-10 pr-2 py-2 rounded-lg w-full h-[39px] focus:outline-none focus:shadow-md focus:border-black"
+                className="border border-gray-400 pl-10 pr-0 py-2 rounded-lg w-full h-[39px] focus:outline-none focus:shadow-md focus:border-black"
               />
             </div>
     

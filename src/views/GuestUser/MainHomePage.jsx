@@ -562,7 +562,8 @@
 
 
 
-import React, { useEffect, useRef } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -600,6 +601,18 @@ const MainHomePage = () => {
   const [orgFeedbackRef, orgFeedbackInView] = useInView({ threshold: 0.8, triggerOnce: true });
 
   // Keeping original controls logic even if redundant with direct useInView animate prop
+
+
+  const [shouldRefetch, setShouldRefetch] = useState(false);
+  useEffect(() => {
+    if (partnersInView) {
+      setShouldRefetch(true);
+    } 
+    else {
+      setShouldRefetch(false);
+    }
+  }, [partnersInView]);
+
   const controls = useAnimation();
   useEffect(() => {
     if (heroInView) {
@@ -951,8 +964,10 @@ const MainHomePage = () => {
               </p>
             </motion.div>
             
-            <InfoCards />
-          </motion.div>
+              <div ref={partnersRef} tabIndex={0}>
+                <InfoCards shouldRefetch={shouldRefetch} />
+              </div>
+            </motion.div>
         </div>
       </section>
 
