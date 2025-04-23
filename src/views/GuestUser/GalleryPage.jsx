@@ -20,14 +20,14 @@ const GalleryPage = () => {
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
               <span className="block">Explore Our Visual Journey</span>
-              <motion.span 
+              {/* <motion.span 
                 className="block text-blue-200 mt-4 text-2xl md:text-3xl font-medium"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
               >
                 Where Every Image Tells a Story
-              </motion.span>
+              </motion.span> */}
             </h1>
             <motion.p 
               className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed"

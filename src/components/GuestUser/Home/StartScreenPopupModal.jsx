@@ -116,27 +116,28 @@ const StartScreenPopupModal = () => {
 
         {/* Header - Logo on left */}
         <div className="pt-6 pb-4 px-6 bg-white border-b border-gray-100">
-          <div className="flex items-center gap-4">
-            {/* Logo on the left */}
-            <div className="flex-shrink-0">
-              <img
-                src="https://media.licdn.com/dms/image/v2/C510BAQE1pPlwgZETKw/company-logo_200_200/company-logo_200_200/0/1630605647519/praedico_global_research_pvt_ltd_logo?e=2147483647&v=beta&t=8hAhEoZ7nj9gKxuh6iA-q10402A-rxdAP4GeUOAnFdQ"
-                alt="PGR Logo"
-                className="h-20 w-20 rounded-full bg-white p-1 shadow-sm border border-gray-200"
-              />
-            </div>
-            
-            {/* Text content on the right */}
-            <div className="flex flex-col">
-              <h1 className="text-2xl font-bold text-gray-800">
-                Praedico Global Research
-              </h1>
-              <h2 className="text-lg text-lightBlue-600 font-semibold">
-                PGR - Virtual Trading App
-              </h2>
+        <div className="flex justify-center">
+    <div className="flex items-center gap-4">
+      {/* Logo */}
+      <div className="flex-shrink-0">
+        <img
+          src="https://media.licdn.com/dms/image/v2/C510BAQE1pPlwgZETKw/company-logo_200_200/company-logo_200_200/0/1630605647519/praedico_global_research_pvt_ltd_logo?e=2147483647&v=beta&t=8hAhEoZ7nj9gKxuh6iA-q10402A-rxdAP4GeUOAnFdQ"
+          alt="PGR Logo"
+          className="h-20 w-20 rounded-full bg-white p-1 shadow-sm border border-gray-200"
+        />
+      </div>
 
-            </div>
-          </div>
+      {/* Text */}
+      <div className="flex flex-col text-center">
+        <h1 className="text-2xl font-bold text-gray-800">
+          Praedico Global Research
+        </h1>
+        <h2 className="text-lg text-lightBlue-600 font-semibold">
+          PGR - Virtual Trading App
+        </h2>
+      </div>
+    </div>
+  </div>
 
           {/* Warning banner below */}
           <div className="w-full bg-lightBlue-600 text-white p-3 rounded-lg text-center mt-4 shadow-sm">
