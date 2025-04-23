@@ -14,7 +14,7 @@ const OrgUserTable = ({ users, onEdit, onDelete, expandedRow, toggleRow }) => {
   const [hoveredTooltip, setHoveredTooltip] = useState(null);
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+    <div className="bg-white shadow-md rounded-lg overflow-x-auto max-h-[500px] overflow-y-auto">
       <table className="w-full">
         <thead className="bg-gray-50 border-b">
           <tr>
