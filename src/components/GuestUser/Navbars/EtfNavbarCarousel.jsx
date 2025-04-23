@@ -24,7 +24,7 @@ const EtfNavbarCarousel = () => {
         name: item.symbol,
         price: ` ${item.lastPrice.toFixed(2)}`,
         change: item.change > 0 ? `INR+${item.change.toFixed(2)}` : `INR${item.change.toFixed(2)}`,
-        changePer: ` (${item.pChange.toFixed(2)}%)`,
+        changePer: ` (${item.pChange.toFixed(2)}`,
         isPositive: item.change > 0
       }));
 
@@ -107,19 +107,24 @@ const EtfNavbarCarousel = () => {
               {stockData.map((stock, index) => (
                 <div key={index} className="h-full -px-1">
                   <div className="mt-2 h-full flex items-center space-x-1 px-0 hover:bg-gray-50 transition-colors">
-                    <span className="font-medium text-xs text-gray-800 truncate max-w-[100px]">
+                    <span className="font-medium text-xs text-gray-800 truncate max-w-[65px]">
                       {stock.name}
                     </span>
                     <span className="text-[13.5px] font-semibold text-gray-600">
                       {stock.price}
                     </span>
-                    <span className={`mt-1 text-[12px] truncate max-w-[95px] ${
+                    <span className={`mt-1 text-[12px] truncate max-w-[110px] ${
                       stock.isPositive 
                         ? "text-green-500" 
                         : "text-red-500"
                     }`}>
                       {stock.change}{stock.changePer}
                     </span>
+                    <span className={`mt-1 -ml-1 text-[12px] ${
+                      stock.isPositive 
+                        ? "text-green-500" 
+                        : "text-red-500"
+                    }`}>%)</span>
                   </div>
                 </div>
               ))}
