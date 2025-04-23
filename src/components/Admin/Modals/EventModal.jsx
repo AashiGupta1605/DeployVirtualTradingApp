@@ -251,7 +251,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
       <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-      <div className="relative w-full max-w-[60%] max-h-[80%] mx-2 my-4 bg-white rounded-2xl shadow-xl border !border-gray-200 overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-[80%] max-h-[80%] my-4 bg-white rounded-2xl shadow-xl border !border-gray-200 overflow-hidden flex flex-col">
         {/* Modal Header */}
         <div className="p-6 border !border-gray-200 flex justify-between items-center bg-white">
           <div className="flex items-center space-x-4">
