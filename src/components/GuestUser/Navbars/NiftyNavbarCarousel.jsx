@@ -27,7 +27,7 @@ const NiftyNavbarCarousel = () => {
       const formattedData = data.data[0].stocks.map((item) => ({
         name: item.symbol,
         price: ` ${item.lastPrice.toFixed(2)}`,
-        change: item.change > 0 ? `INR+${item.change.toFixed(2)}` : `INR-${item.change.toFixed(2)}`,
+        change: item.change > 0 ? `INR+${item.change.toFixed(2)}` : `INR${item.change.toFixed(2)}`,
         changePer: ` (${item.pChange.toFixed(2)}%)`,
         isPositive: item.change > 0
       }));
