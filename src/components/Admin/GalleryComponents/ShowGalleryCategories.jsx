@@ -299,79 +299,76 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
       `}>
         <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-100 p-4 mt-1">
           {/* Top Header */}
-          <div className="flex justify-between items-center">
-            {/* Left Side (Icon + Heading) */}
-            <div className="flex items-center gap-3">
-              <FontAwesomeIcon icon={faFolderOpen} className="text-gray-500 text-[21px]"/>
-              <h2 className="text-xl font-bold text-gray-800">
-                Gallery Categories
-              </h2>
-            </div>
+{/* Top Header */}
+<div className="flex sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+  {/* Left Side (Icon + Heading) */}
+  <div className="flex items-center gap-3">
+    <FontAwesomeIcon icon={faFolderOpen} className="text-gray-500 text-[21px]" />
+    <h2 className="text-xl font-bold text-gray-800">Gallery Categories</h2>
+  </div>
 
-            {/* Right Side (Total Feedbacks + Filter Icon + Close Button) */}
-            <div className="flex items-center gap-4">
-              <h6 className="text-base font-semibold text-gray-400">
-                Total Categories: {galleryCategories.length}
-              </h6>
+  {/* Right Side - All elements in a row on sm+ screens */}
+  <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4 gap-3 w-full lg:w-auto">
+  {/* Total Categories */}
+  <h6 className="text-base font-semibold text-gray-400">
+    Total Categories: {galleryCategories.length}
+  </h6>
 
-              {/* Filter Icon */}
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`relative flex items-center gap-8 px-2 py-2 h-[40px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
-                            ${showFilters? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
-                          `}
-              >
-                {/* Filter Icon */}
-                <div className="relative">
-                  <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
+  {/* Filter Button */}
+  <button
+    onClick={() => setShowFilters(!showFilters)}
+    className={`relative flex items-center justify-between gap-2 px-3 py-2 h-[40px] border rounded-lg focus:outline-none transition-all
+      ${showFilters ? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
+      hover:shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+    `}
+  >
+    {/* Filter Icon */}
+    <div className="relative">
+      <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
+      {filterCount > 0 && (
+        <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+          {filterCount}
+        </span>
+      )}
+    </div>
 
-                  {/* Filter Count - Positioned Bottom Right */}
-                  {filterCount > 0 && (
-                    //<span className="absolute -bottom-1 -right-6 bg-blue-500 text-white px-3 py-[2px] rounded-lg text-xs">
-                    <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
-                      {filterCount}
-                    </span>
-                  )}
-                </div>
-                {/* Arrow Icon */}
-                <IoIosArrowUp
-                  className={`pl-[2px] -pr-[2px] text-gray-500 text-lg transition-transform duration-200 ${
-                    showFilters ? "rotate-0" : "rotate-180"
-                  }`}
-                />
-              </button>
+    {/* Arrow Icon */}
+    <IoIosArrowUp
+      className={`text-gray-500 text-lg transition-transform duration-200 ${
+        showFilters ? "rotate-0" : "rotate-180"
+      }`}
+    />
+  </button>
 
-              {/* Search bar */}
-              <div className="relative">
-                <div className="relative w-[270px]">
-                  {/* Search Icon */}
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
-                    alt="search"
-                    className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
-                  />
-                  {/* Search Input */}
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value || "")}
-                    className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[36px] focus:outline-none focus:shadow-md focus:border-black"
-                  />
-                </div>
-              </div>
+  {/* Search Bar */}
+  <div className="relative w-full lg:w-[270px]">
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+      alt="search"
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
+    />
+    <input
+      type="text"
+      placeholder="Search..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value || "")}
+      className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[36px] focus:outline-none focus:shadow-md focus:border-black"
+    />
+  </div>
 
-              {/* Add Category Button */}
-              <button
-              onClick={openAddCategoryModal}
-              className="mr-2 h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center"
-              >
-                <PlusCircle size={18} className="mr-2" />
-                <span className="font-medium">Add Category</span>
-              </button>
+  {/* Add Category Button */}
+  <button
+    onClick={openAddCategoryModal}
+    className="w-full lg:w-auto h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
+  >
+    <PlusCircle size={18} className="mr-2" />
+    <span className="font-medium">Add Category</span>
+  </button>
+</div>
 
-            </div>
-          </div>
+</div>
+
+
 
           {/* Filters Section (Visible only when showFilters is true) */}
           {!err && showFilters && (
