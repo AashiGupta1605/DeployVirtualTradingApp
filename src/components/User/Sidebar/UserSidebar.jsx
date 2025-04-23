@@ -43,7 +43,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
       )}
 
 <div
-  className={`fixed top-0 left-0 bottom-0 z-30 w-64 bg-white shadow-xl transition-all duration-300 ease-in-out  // Changed from z-40 to z-30
+  className={`fixed top-0 left-0 bottom-0 z-30 w-64 bg-white shadow-xl transition-all duration-300 ease-in-out 
     ${sidebarExpanded ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-16"}`}
 >
         <div className="flex flex-col h-full">

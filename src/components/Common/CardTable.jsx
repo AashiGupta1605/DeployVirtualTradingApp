@@ -256,7 +256,7 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
       <div className="flex flex-wrap mx-4 -mt-0">
         <div className="w-full mb-12 px-4 -mt-8">
           <div className="bg-white rounded-lg shadow-lg">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
               <div className="min-w-full">
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b">

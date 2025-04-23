@@ -1,49 +1,60 @@
 import React from "react";
 import StockMarket from "../../assets/stock-market.jpg";
+import { motion } from "framer-motion";
 import { FaChartLine, FaBookOpen, FaTools, FaUsers, FaShieldAlt, FaRocket, FaCogs, FaHandHoldingUsd } from "react-icons/fa";
 
 const AboutPage = () => {
   return (
     <>
+       {/* Hero Section */}
+       <div className="relative overflow-hidden bg-lightBlue-600 !mt-10 py-16 z-10 mb-0 ">
+        <div className="absolute inset-0 opacity-20 z-0">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
+          >
+            <h1 className="text-4xl md:text-5xl pt-16 pb-0 font-extrabold text-white tracking-tight leading-snug">
+              <span className="block">Your Trusted Trading Companion</span>
+              <motion.span
+                className="block text-blue-200 mt-2 text-xl md:text-2xl font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+              >
+                Empowering Smarter Investment Decisions for Everyone
+              </motion.span>
+            </h1>
+           
+          </motion.div>
+        </div>
+      </div>
+      
       {/* About Us Section */}
-      <div className="mt-6 !py-20 !mb-2 flex flex-col md:flex-row items-center justify-center px-6">
-        {/* Left - Content */}
-        <div className="text-black md:w-1/2 px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
-            About Us
-          </h1>
-          <p className="text-lg leading-relaxed opacity-80">
-            This project was created to empower individuals to make informed
-            investment decisions and navigate the complexities of the stock
-            market with confidence.
+      <div className="mt-0 pt-0 py-16 mb-2 flex flex-col md:flex-row items-center justify-center px-6">
+  <div className="text-black md:w-1/2 px-6">
+    <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">About Us</h1>
+    <p className="text-lg leading-relaxed opacity-80">
+
+            This project was created to empower individuals to make informed investment decisions and navigate the complexities of the stock market with confidence.
           </p>
           <p className="text-lg leading-relaxed opacity-80 mt-4">
-            Our mission is to democratize access to financial information and
-            provide tools and resources that enable investors of all levels to
-            succeed in their financial goals.
+            Our mission is to democratize access to financial information and provide tools and resources that enable investors of all levels to succeed in their financial goals.
           </p>
           <p className="text-lg leading-relaxed opacity-80 mt-4">
             This project offers{" "}
-            <span className="text-blueGray-500 font-semibold">
-              Comprehensive Market Analysis
-            </span>
-            ,{" "}
-            <span className="text-blueGray-500 font-semibold">
-              Educational Resources
-            </span>
-            ,{" "}
-            <span className="text-blueGray-500 font-semibold">
-              Powerful Tools
-            </span>
-            , and{" "}
-            <span className="text-blueGray-500 font-semibold">
-              Community Support
-            </span>
-            .
+            <span className="text-blueGray-500 font-semibold">Comprehensive Market Analysis</span>,{" "}
+            <span className="text-blueGray-500 font-semibold">Educational Resources</span>,{" "}
+            <span className="text-blueGray-500 font-semibold">Powerful Tools</span>, and{" "}
+            <span className="text-blueGray-500 font-semibold">Community Support</span>.
           </p>
         </div>
 
-        {/* Right - Image */}
         <div className="md:w-1/2 px-6 !mt-20 md:mt-0">
           <img
             src={StockMarket}
@@ -86,18 +97,6 @@ const AboutPage = () => {
         </p>
         <p className="mt-4 font-semibold text-blueGray-600">— The StockSphere Team</p>
       </div>
-
-      {/* Call to Action */}
-      {/* <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-12 text-center px-6">
-        <h3 className="text-3xl font-bold mb-4">Ready to Start Investing Smarter?</h3>
-        <p className="mb-6 text-lg">Join thousands of users who trust StockSphere to guide their investment journey.</p>
-        <a
-          href="/signup"
-          className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition"
-        >
-          Get Started Now
-        </a>
-      </div> */}
     </>
   );
 };
@@ -110,5 +109,4 @@ const FeatureCard = ({ icon, title, color, description }) => (
     <p className="text-gray-600 text-sm">{description}</p>
   </div>
 );
-
 export default AboutPage;
