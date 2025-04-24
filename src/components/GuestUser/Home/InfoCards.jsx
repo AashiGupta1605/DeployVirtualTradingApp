@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import { motion } from "framer-motion";
-import { FiUsers, FiBriefcase, FiActivity, FiDatabase } from "react-icons/fi";
+import { FiUsers, FiBriefcase, FiActivity, FiDatabase, FiCheckCircle } from "react-icons/fi";
 import CountUp from 'react-countup';
 
 const InfoCards = ({shouldRefetch}) => {
   const [userData, setUserData] = useState([]);
   const [orgData, setOrgData] = useState([]);
+  const [approvedOrgs, setApprovedOrgs] = useState(0)
   const [activeUsers, setActiveUsers] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -15,8 +16,12 @@ const InfoCards = ({shouldRefetch}) => {
     try {
       const response = await axios.get(`${BASE_API_URL}/guestUser/getAllOrganizations`);
       setOrgData(response.data.data);
+      const approvedOrgCount = response.data.data.filter(orgs => orgs.approvalStatus === 'approved').length;
+      setApprovedOrgs(approvedOrgCount);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching organizations:", error);
+      setLoading(false);
     }
   };
   
@@ -34,7 +39,7 @@ const InfoCards = ({shouldRefetch}) => {
   };
 
   useEffect(() => {
-    if (shouldRefetch) {
+    if(shouldRefetch){
       fetchOrgData();
       fetchUserData();
     }
@@ -50,25 +55,32 @@ const InfoCards = ({shouldRefetch}) => {
     },
     { 
       id: 2, 
-      title: "Registered Users", 
-      value: userData.length,
-      icon: <FiUsers className="w-8 h-8" />,
+      title: "Verified Organizations", 
+      value: approvedOrgs,
+      icon: <FiCheckCircle className="w-8 h-8" />,
       color: "bg-green-100 text-green-600"
     },
     { 
       id: 3, 
-      title: "Active Users", 
-      value: activeUsers,
-      icon: <FiActivity className="w-8 h-8" />,
+      title: "Registered Users", 
+      value: userData.length,
+      icon: <FiUsers className="w-8 h-8" />,
       color: "bg-purple-100 text-purple-600"
     },
     { 
       id: 4, 
-      title: "Available Stocks", 
-      value: 100,
-      icon: <FiDatabase className="w-8 h-8" />,
-      color: "bg-orange-100 text-orange-600"
+      title: "Active Users", 
+      value: activeUsers,
+      icon: <FiActivity className="w-8 h-8" />,
+      color: "bg-green-100 text-green-600"
     },
+    // { 
+    //   id: 5, 
+    //   title: "Available Stocks", 
+    //   value: 100,
+    //   icon: <FiDatabase className="w-8 h-8" />,
+    //   color: "bg-orange-100 text-orange-600"
+    // },
   ];
 
   return (
