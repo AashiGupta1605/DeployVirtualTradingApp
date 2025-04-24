@@ -158,23 +158,18 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statItems: [
           { label: "Total", value: userStats?.total?.toString() || "0" },
           { label: "Active", value: userStats?.active?.toString() || "0" },
-          // { label: "Male", value: stats?.users?.male?.toString() || "0" },
-          // { label: "Female", value: stats?.users?.female?.toString() || "0" },
-          // { label: "Avg Age", value: stats?.users?.averageAge?.toString() || "0" }
         ],
         onClick: () => handleCardClick('users', 'User Statistics')
       },
       {
         statIconName: "fas fa-user-plus",
         statSubtitle: "FEEDBACK STATS",
-        // statTitle: userStats?.newUsersLastWeek?.toString() || "0",
         statTitle: pageType !== "dashboard" ? feedbackStats?.total?.toString() : "",
         statIconColor: "bg-orange-500",
         showDetails: true,
         statItems: [
           { label: "Total", value: feedbackStats?.total?.toString() || "0" },
           { label: "Rating", value: feedbackStats?.averageRating?.toString() || "0" },
-          // { label: "Recommend %", value: stats?.feedback?.recommendationRate?.toString() || "0" }
         ],
         statArrow: "up",
         statPercent: "3.48",
@@ -185,15 +180,12 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
       {
         statIconName: "fas fa-male",
         statSubtitle: "COMPLAINT STATS",
-        // statTitle: complaintStats?.total?.toString() || "0",
         statTitle: pageType!="dashboard" ?  complaintStats?.total?.toString() : "",
         statIconColor: "bg-blue-400",
         showDetails: true,
         statItems: [
           { label: "Total", value: complaintStats?.total?.toString() || "0" },
           { label: "Pending", value:  complaintStats?.pending?.toString() || "0" },
-          // { label: "Pending", value: orgStats.pending.toString() },
-          // { label: "Inactive", value: orgStats.inactive.toString() }
         ],
         statArrow: "up",
         statPercent: "2.10",
@@ -204,15 +196,12 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
       {
         statIconName: "fas fa-female",
         statSubtitle: "EVENT STATS",
-        // statTitle: eventStats?.total?.toString() || "0",
         statTitle: pageType!="dashboard" ?  eventStats?.total?.toString() : "",
         statIconColor: "bg-pink-500",
         showDetails: true,
         statItems: [
           { label: "Total", value: eventStats?.total?.toString() || "0" },
           { label: "Completed", value:  eventStats?.completed?.toString() || "0" },
-          // { label: "Pending", value: orgStats.pending.toString() },
-          // { label: "Inactive", value: orgStats.inactive.toString() }
         ],
         statArrow: "up",
         statPercent: "3.20",
@@ -223,15 +212,12 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
       {
         statIconName: "fas fa-user-check",
         statSubtitle: "USER FEEDBACKS",
-        // statTitle: organizationUserFeedbacksStats?.total?.toString() || "0",
         statTitle: pageType!="dashboard" ?  organizationUserFeedbacksStats?.total?.toString() : "",
         statIconColor: "bg-green-500",
         showDetails: true,
         statItems: [
           { label: "Total", value: organizationUserFeedbacksStats?.total?.toString() || "0" },
           { label: "Rating", value:  organizationUserFeedbacksStats?.averageRating?.toString() || "0" },
-          // { label: "Pending", value: orgStats.pending.toString() },
-          // { label: "Inactive", value: orgStats.inactive.toString() }
         ],
         statArrow: "up",
         statPercent: "4.10",
@@ -242,15 +228,12 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
       {
         statIconName: "fas fa-user-slash",
         statSubtitle: "USER QUERIES",
-        // statTitle: organizationUserQueriesStats?.total?.toString() || "0",
         statTitle: pageType!="dashboard" ?  organizationUserQueriesStats?.total?.toString() : "",
         statIconColor: "bg-gray-500",
         showDetails: true,
         statItems: [
           { label: "Total", value: organizationUserQueriesStats?.total?.toString() || "0" },
           { label: "Response", value:  organizationUserQueriesStats?.responseRate?.toString() || "0" },
-          // { label: "Pending", value: orgStats.pending.toString() },
-          // { label: "Inactive", value: orgStats.inactive.toString() }
         ],
         statArrow: "down",
         statPercent: "1.10",
@@ -283,11 +266,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconColor: "bg-green-500",
         showDetails: true,
         statItems: [
-          { label: "nifty50", value:stocksStats?.nifty50 - 1?.toString() || "0" },
-          { label: "nifty500", value: stocksStats?.nifty500 - 1?.toString() || "0" },
-          // { label: "nifty500", value: stats?.stocks?.nifty500?.toString() || "0" },
-          // { label: "Pending", value: orgStats.pending.toString() },
-          // { label: "Inactive", value: orgStats.inactive.toString() }
+          { label: "Nifty50", value:stocksStats?.nifty50 - 1?.toString() || "0" },
+          { label: "Nifty500", value: stocksStats?.nifty500 - 1?.toString() || "0" },
         ],
 onClick: () => handleCardClick('stocks', 'Stock Statistics')
 
@@ -301,8 +281,6 @@ onClick: () => handleCardClick('stocks', 'Stock Statistics')
         statItems: [
           { label: "Total", value: galleryStats?.totalPhotos?.toString() || "0" },
           { label: "Category", value: galleryStats?.totalCategories?.toString() || "0" },
-          // { label: "Pending", value: orgStats.pending.toString() },
-          // { label: "Inactive", value: orgStats.inactive.toString() }
         ],
 onClick: () => handleCardClick('gallery', 'Gallery Statistics')
       },
@@ -471,7 +449,6 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         ),
         statIconColor: "bg-yellow-400",
         showDetails: false,
-        // onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
         onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
       },
       {
@@ -480,7 +457,6 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: `${organizationUserFeedbacksStats?.recommendationRate || '0'}%`,
         statIconColor: "bg-green-400",
         showDetails: false,
-        // onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
         onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
       },
       {
@@ -489,7 +465,6 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: organizationUserFeedbacksStats?.recentFeedbacks?.length?.toString() || "0",
         statIconColor: "bg-purple-400",
         showDetails: false,
-        // onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
         onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
       }
     ],
