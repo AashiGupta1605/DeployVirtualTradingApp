@@ -533,7 +533,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
   const currentStats = statsConfig[pageType] || statsConfig.dashboard;
 
   return (
-    <div className="bg-lightBlue-600 md:pt-32 pb-16 pt-12">
+    <div className="bg-lightBlue-600 -mt-24 md:pt-32 pb-16 pt-12">
       <div className="px-4 mx-auto w-full">
         <div>
           <div className="flex flex-wrap">

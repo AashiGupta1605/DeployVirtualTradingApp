@@ -5,7 +5,7 @@ const SessionExpiredModal = ({ show, onHide }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto">
       {/* Overlay */}
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
 

@@ -136,14 +136,14 @@ const OrganizationFeedback = () => {
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-28">
           {/* Header with Search and Filters */}
-          <div className="bg-gray-50 mt-16 px-6 py-2 h-19 rounded-lg flex items-center z-0 justify-between border border-gray-200">
+          <div className="bg-gray-50 mt-16 px-6 py-2 h-19 rounded-lg lg:flex items-center z-0 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
             <MessageSquare className="mr-2 text-gray-600" size={24} />
               Manage Feedbacks
             </h2>
             <button
               onClick={() => setAddFeedbackModalOpen(true)}
-              className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
+              className="flex items-center bg-lightBlue-600 text-white sm:my-2 sm:w-full px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
             >
                 <PlusCircle size={18} className="mr-2" />
               Add Feedback

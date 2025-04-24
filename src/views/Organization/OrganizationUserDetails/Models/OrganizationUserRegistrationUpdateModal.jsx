@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -8,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../../../assets/styles/customDatePicker.css";
+
 // Validation schema
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -18,7 +18,6 @@ const validationSchema = Yup.object({
     return new Date().getFullYear() - new Date(value).getFullYear() >= 18;
   }),
   addedby: Yup.string().required("Added by is required"),
-  // status: Yup.boolean().default(true).required("Status is required"),
 });
 
 const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshStudents, refreshDashboard }) => {
@@ -34,31 +33,24 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
       gender: "",
       dob: "",
       addedby: "",
-      // status: true,
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
         if (initialValues) {
-          // Update existing user
           await dispatch(updateOrganizationUser({ id: initialValues._id, userData: values }));
-        onClose(); // Close the modal after successful submission
+          onClose();
         } else {
-          // Register new user
           await dispatch(registerOrganizationUser(values));
         }
-        // resetForm(); // Reset form values
-        // onClose(); // Close the modal after successful submission
         refreshStudents();
-        // refreshDashboard();
       } catch (error) {
         console.error("Error submitting form:", error);
       }
     },
-    enableReinitialize: true, // Reinitialize form values when initialValues change
+    enableReinitialize: true,
   });
 
-  // Reset state when the modal is closed
   React.useEffect(() => {
     if (!isOpen) {
       dispatch(resetUserState());
@@ -68,34 +60,35 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+    <div className="fixed inset-0 z-[1100] flex items-center justify-center overflow-y-auto">
       <Toaster />
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
 
-
-      <div style={{ width: "100%", maxWidth: "80%"}} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
-        {/* Modal Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+      <div className="relative w-full mx-4 sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col max-h-[80vh] max-w-[90%] z-50 sm:max-w-[80%]">
+        {/* Modal Header - Sticky */}
+        <div className="sticky top-0 z-10 bg-white flex justify-between items-center p-4 sm:p-6 border-b border-gray-100 rounded-t-2xl">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <i className="fas fa-building text-white"></i>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <i className="fas fa-building text-white text-sm sm:text-base"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">{initialValues ? "Edit User" : "Sign Up"}</h2>
+            <h2 className="text-lg sm:text-2xl font-semibold text-gray-800">
+              {initialValues ? "Edit User" : "Sign Up"}
+            </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+            className="p-1 sm:p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
           >
-            <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
+            <i className="fas fa-times text-gray-400 hover:text-gray-600 text-sm sm:text-base"></i>
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 overflow-y-auto max-h-[80vh]">
-          <form onSubmit={formik.handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Modal Body - Scrollable */}
+        <div className="overflow-y-auto flex-grow px-4 sm:px-6 py-4">
+          <form onSubmit={formik.handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Left Column */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -105,15 +98,15 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
+                      bg-white text-gray-900 
+                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:outline-none transition-all duration-200"
                     placeholder="Enter name"
                     required
                   />
                   {formik.touched.name && formik.errors.name ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                    <div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.name}</div>
                   ) : null}
                 </div>
 
@@ -126,15 +119,15 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
+                      bg-white text-gray-900 
+                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:outline-none transition-all duration-200"
                     placeholder="Enter email address"
                     required
                   />
                   {formik.touched.email && formik.errors.email ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
+                    <div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.email}</div>
                   ) : null}
                 </div>
 
@@ -147,21 +140,21 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.mobile}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                         bg-white text-gray-900 
-                        focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                          focus:outline-none transition-all duration-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
+                      bg-white text-gray-900 
+                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:outline-none transition-all duration-200"
                     placeholder="Enter mobile number"
                     required
                   />
                   {formik.touched.mobile && formik.errors.mobile ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.mobile}</div>
+                    <div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.mobile}</div>
                   ) : null}
                 </div>
               </div>
 
               {/* Right Column */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Gender */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
@@ -170,7 +163,9 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.gender}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 
+                      focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                      transition-all duration-200"
                     required
                   >
                     <option value="">Select Gender</option>
@@ -179,7 +174,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     <option value="Other">Other</option>
                   </select>
                   {formik.touched.gender && formik.errors.gender ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.gender}</div>
+                    <div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.gender}</div>
                   ) : null}
                 </div>
 
@@ -190,7 +185,9 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     selected={formik.values.dob ? new Date(formik.values.dob) : null}
                     onChange={(date) => formik.setFieldValue("dob", date)}
                     dateFormat="yyyy-MM-dd"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 
+                      focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                      transition-all duration-200"
                     placeholderText="Select date of birth"
                     showYearDropdown
                     scrollableYearDropdown
@@ -198,7 +195,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     required
                   />
                   {formik.touched.dob && formik.errors.dob ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.dob}</div>
+                    <div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.dob}</div>
                   ) : null}
                 </div>
 
@@ -211,41 +208,44 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     value={formik.values.addedby}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-             bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-             focus:outline-none transition-all duration-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
+                      bg-white text-gray-900 
+                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:outline-none transition-all duration-200"
                     placeholder="Enter added by"
                     required
                   />
                   {formik.touched.addedby && formik.errors.addedby ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.addedby}</div>
+                    <div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.addedby}</div>
                   ) : null}
                 </div>
               </div>
             </div>
-
-            {/* Submit and Cancel Buttons */}
-            <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => {
-                  formik.resetForm();
-                  onClose();
-                }}
-                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-              >
-                {loading ? "Processing..." : initialValues ? "Update User" : "Register User"}
-              </button>
-            </div>
           </form>
+        </div>
+
+        {/* Footer - Sticky */}
+        <div className="sticky bottom-0 z-10 bg-white flex justify-end items-center space-x-3 sm:space-x-4 p-4 sm:p-6 border-t border-gray-100 rounded-b-2xl">
+          <button
+            type="button"
+            onClick={() => {
+              formik.resetForm();
+              onClose();
+            }}
+            className="px-4 py-2 sm:px-6 sm:py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-sm sm:text-base"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            onClick={formik.handleSubmit}
+            className="px-4 py-2 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white 
+              hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all 
+              duration-200 text-sm sm:text-base"
+          >
+            {loading ? "Processing..." : initialValues ? "Update User" : "Register User"}
+          </button>
         </div>
       </div>
     </div>

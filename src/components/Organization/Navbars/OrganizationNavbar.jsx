@@ -35,7 +35,7 @@ export default function OrganizationNavbar({ sidebarExpanded, setSidebarExpanded
   return (
     <>
       <nav className={`sticky top-0 w-full -mb-18 h-auto min-h-[73px] z-30 bg-white shadow-lg transition-all duration-300 ease-in-out ${
-        sidebarExpanded ? "lg:pl-64" : "lg:pl-20"
+        sidebarExpanded ? "lg:pl-0" : "lg:pl-0"
       }`}>
         <div className="w-full mx-auto flex flex-wrap items-center justify-between px-4 py-3 md:px-10">
           {/* Logo and Brand */}
