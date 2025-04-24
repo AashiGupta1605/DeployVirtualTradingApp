@@ -196,7 +196,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
 
   return (
     <div className='flex flex-col'>
-      <div className="bg-white rounded shadow-lg overflow-y-auto w-full h-72 px-4">
+      <div className="bg-white rounded shadow-lg overflow-x-auto max-h-[500px] overflow-y-auto w-full h-72 px-4">
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>

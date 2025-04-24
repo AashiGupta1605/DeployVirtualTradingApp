@@ -405,7 +405,7 @@ const UpdateProfileForm = ({ isOpen, onClose, userData }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl p-6">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[90%] p-6">
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -516,10 +516,7 @@ const UpdateProfileForm = ({ isOpen, onClose, userData }) => {
                 <p className="text-red-500 text-sm mt-1">{formik.errors.dob}</p>
               )}
             </div>
-          </div>
-
-          {/* Profile Photo Upload at the End */}
-          <div className="mt-6">
+            <div >
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Profile Photo
             </label>
@@ -544,6 +541,10 @@ const UpdateProfileForm = ({ isOpen, onClose, userData }) => {
               )}
             </div>
           </div>
+          </div>
+
+          {/* Profile Photo Upload at the End */}
+         
 
           {/* Form Actions */}
           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-100">

@@ -206,7 +206,7 @@ const PricingPage = () => {
       {/* Main Content */}
       <div className="pt-16 md:pt-24 pb-12 px-0 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Hero Section - Full Width */}
-        <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] my-6 sm:my-8 overflow-hidden bg-lightBlue-600 py-12 z-0">
+        <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] my-6 sm:my-8 overflow-hidden bg-lightBlue-600 py-12  z-0">
           <div className="absolute inset-0 opacity-20">
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30"></div>
           </div>
@@ -218,16 +218,16 @@ const PricingPage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-4 sm:space-y-6"
             >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
+              <h1 className="text-4xl  md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight pt-2">
                 <span className="block">Choose Your Trading Journey</span>
               </h1>
               <motion.p 
-                className="text-base sm:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed"
+                className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed pb-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
               >
-                Unlock premium trading features, maximize your profits, and join our community of successful traders with our flexible subscription options.
+  “Unlock premium features, boost profits, and trade smarter with flexible plans.”
               </motion.p>
             </motion.div>
           </div>

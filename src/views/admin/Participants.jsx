@@ -528,7 +528,7 @@ const Participants = () => {
         />
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
             <table className="w-full">
             {/* // In Participants.js, update the table columns: */}
 <thead className="bg-gray-50 border-b">
