@@ -16,7 +16,6 @@ import EventsPage from '../views/GuestUser/GuestEventPage';
 import Footer from "../components/GuestUser/Footers/Footer";
 import StartScreenPopupModal from '../components/GuestUser/Home/StartScreenPopupModal';
 import ScrollToTopButton from '../components/Common/ScrollToTopButton';
-
 const GuestUser = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
@@ -47,6 +46,9 @@ const GuestUser = () => {
       {!isHomePage && <Footer className="mt-auto" />}
 
       <ScrollToTopButton/>
+
+      {/* <Footer/> */}
+
     </div>
   )
 }

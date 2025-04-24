@@ -1,10 +1,4 @@
 
-
-// deepseek
-
-
-// components/User/Cards/UserStatsSection.js
-
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CardStats from './CardStats';
@@ -217,7 +211,6 @@ const activeSubscription = userSubscriptions.find(sub =>
         statItems: [
           { label: "Total", value: stats?.feedback?.total?.toString() || "0" },
           { label: "Rating", value: stats?.feedback?.averageRating?.toString() || "0" },
-          // { label: "Recommend %", value: stats?.feedback?.recommendationRate?.toString() || "0" }
         ],
         onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
       },
@@ -231,8 +224,6 @@ const activeSubscription = userSubscriptions.find(sub =>
         statItems: [
           { label: "Total", value: stats?.events?.total?.toString() || "0" },
           { label: "Upcoming", value: stats?.events?.upcoming?.toString() || "0" },
-          // { label: "Ongoing", value: stats?.events?.ongoing?.toString() || "0" },
-          // { label: "Completed", value: stats?.events?.completed?.toString() || "0" }
         ],
         onClick: () => handleCardClick('events', 'Events Statistics')
 
@@ -260,9 +251,6 @@ const activeSubscription = userSubscriptions.find(sub =>
                 statItems: [
                   { label: "nifty50", value:nifty50Data.length - 1 || "0" },
                   { label: "etf", value: etfData.length - 1 || "0" },
-                  // { label: "nifty500", value: stats?.stocks?.nifty500?.toString() || "0" },
-                  // { label: "Pending", value: orgStats.pending.toString() },
-                  // { label: "Inactive", value: orgStats.inactive.toString() }
                 ],
         onClick: () => handleCardClick('stocks', 'Stock Statistics')
 
@@ -277,8 +265,6 @@ const activeSubscription = userSubscriptions.find(sub =>
                 statItems: [
                   { label: "Total", value: stats?.complaints?.total?.toString() || "0" },
                   { label: "Pending", value:  stats?.complaints?.pending?.toString() || "0" },
-                  // { label: "Pending", value: orgStats.pending.toString() },
-                  // { label: "Inactive", value: orgStats.inactive.toString() }
                 ],
         onClick: () => handleCardClick('complaints', 'Complaint Statistics')
               },
@@ -292,8 +278,6 @@ const activeSubscription = userSubscriptions.find(sub =>
                 statItems: [
                   { label: "plan", value: stats?.subscription?.plan?.toString() || "0" },
                   { label: "Time", value:  stats?.subscription?.duration?.toString() || "0" },
-                  // { label: "Pending", value: orgStats.pending.toString() },
-                  // { label: "Inactive", value: orgStats.inactive.toString() }
                 ],
                 onClick: () => handleCardClick('subscription', 'Your Subscription Details')
               },
@@ -307,8 +291,6 @@ const activeSubscription = userSubscriptions.find(sub =>
                 statItems: [
                   { label: "plan", value: "-".toString() || "0" },
                   { label: "Time", value: "-".toString() || "0" },
-                  // { label: "Pending", value: orgStats.pending.toString() },
-                  // { label: "Inactive", value: orgStats.inactive.toString() }
                 ],
                 onClick: () => handleCardClick('subscription', 'Your Subscription Details')
               },
@@ -323,8 +305,6 @@ const activeSubscription = userSubscriptions.find(sub =>
                 statItems: [
                   { label: "plan", value: "-".toString() || "0" },
                   { label: "Time", value: "-".toString() || "0" },
-                  // { label: "Pending", value: orgStats.pending.toString() },
-                  // { label: "Inactive", value: orgStats.inactive.toString() }
                 ],
                 onClick: () => handleCardClick('subscription', 'Your Subscription Details')
               }
@@ -521,42 +501,10 @@ const activeSubscription = userSubscriptions.find(sub =>
             {
               statIconName: "fas fa-smile-beam",
               statSubtitle: "RECOMMENDATION",
-              // statTitle: stats?.feedback?.recommendationRate?.toString() , // Replace with actual data
-              // statTitle: (
-              //   <div className="flex items-center mt-1">
-              //     {[1, 2, 3, 4, 5].map((star) => (
-              //       <i
-              //         key={star}
-              //         className={`${
-              //           star * 20 <= parseFloat(stats?.feedback?.recommendationRate || 0)
-              //             ? 'fas fa-star text-yellow-400'
-              //             : 'far fa-star text-gray-300'
-              //         }`}
-              //       ></i>
-              //     ))}
-              //     <span className="ml-2 text-sm font-semibold">
-              //       {stats?.feedback?.recommendationRate}%
-              //     </span>
-              //   </div>
-              // ),
+            
               statTitle: (
                 <div className="flex items-center">
-                  {/* {[1, 2, 3, 4, 5].map((star) => {
-                    const percentage = parseFloat(stats?.feedback?.recommendationRate || 0);
-                    const showFull = percentage >= (star * 20);
-                    const showPartial = percentage > ((star - 1) * 20) && !showFull;
-                    
-                    return (
-                      <i
-                        key={star}
-                        className={`
-                          ${showFull ? 'fas fa-star text-yellow-400' : ''}
-                          ${showPartial ? 'fas fa-star-half-alt text-yellow-400' : ''}
-                          ${!showFull && !showPartial ? 'far fa-star text-gray-300' : ''}
-                        `}
-                      ></i>
-                    );
-                  })} */}
+                
                   <span className="ml-2 text-lg font-semibold ">
                     {stats?.feedback?.recommendationRate}%
                   </span>
