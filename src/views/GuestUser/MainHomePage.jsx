@@ -582,6 +582,7 @@ import { FaWhatsapp } from "react-icons/fa"; // Kept as per original code
 
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
+import NumberOfStocksCards from "../../components/GuestUser/Home/NumberOfStocksCards";
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
@@ -595,7 +596,8 @@ const MainHomePage = () => {
   const [heroRef, heroInView] = useInView({ threshold: 0.8, triggerOnce: true });
   const [featuresRef, featuresInView] = useInView({ threshold: 0.8, triggerOnce: true });
   const [statsRef, statsInView] = useInView({ threshold: 0.8, triggerOnce: true });
-  const [partnersRef, partnersInView] = useInView({ threshold: 0.8, triggerOnce: true });
+  const [stocksRef, stocksInView] = useInView({ threshold: 0.8, triggerOnce: false });
+  const [partnersRef, partnersInView] = useInView({ threshold: 0.1, triggerOnce: false });
   const [testimonialsRef, testimonialsInView] = useInView({ threshold: 0.8, triggerOnce: true }); // Corresponds to Org Slider
   const [userFeedbackRef, userFeedbackInView] = useInView({ threshold: 0.8, triggerOnce: true }); // Added ref for user feedback section consistency
   const [orgFeedbackRef, orgFeedbackInView] = useInView({ threshold: 0.8, triggerOnce: true });
@@ -612,6 +614,16 @@ const MainHomePage = () => {
       setShouldRefetch(false);
     }
   }, [partnersInView]);
+
+  const [stockRefetch, setStockRefetch] = useState(false);
+  useEffect(() => {
+    if (stocksInView) {
+      setStockRefetch(true);
+    } 
+    else {
+      setStockRefetch(false);
+    }
+  }, [stocksInView]);
 
   const controls = useAnimation();
   useEffect(() => {
@@ -936,6 +948,38 @@ const MainHomePage = () => {
                   </Link>
               </motion.div>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* No of Stocks Cards Section */}
+      <section
+        ref={stocksRef}
+        className="snap-start h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-lightBlue-50"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <motion.div 
+            initial="hidden"
+            animate={stocksInView ? "visible" : "hidden"}
+            variants={containerVariants}
+          >
+          <motion.div 
+            variants={fadeInUp}
+            className="text-center"
+          >
+          <h2 className="text-3xl mt-28 md:text-4xl font-bold text-gray-900 mb-4">
+            Real-Time <span className="text-lightBlue-600">Stock Statistics</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <center>Stay informed with live data on the Nifty50, ETF and Nifty500.</center><br/>
+            <center className="-mt-3 -mb-4 text-xl font-bold">Total Available Stocks.</center>
+          </p>
+          </motion.div>
+  
+          <div ref={stocksRef}>
+            <NumberOfStocksCards shouldRefetch={stockRefetch} />
+          </div>
+          <p className="text-sm text-gray-500 mt-2">Last updated: </p>
           </motion.div>
         </div>
       </section>
