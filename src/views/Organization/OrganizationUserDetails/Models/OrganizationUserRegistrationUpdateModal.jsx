@@ -10,7 +10,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../../../../assets/styles/customDatePicker.css";
 // Validation schema
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required").min(5, "Name must be at least 5 characters")
+  .max(50, "Name must be less than 50 characters"),
   email: Yup.string().email("Invalid email format").required("Email is required"),
   mobile: Yup.string().matches(/^[9876]\d{9}$/, "Mobile number must start with 9, 8, 7, or 6 and contain 10 digits").required("Mobile number is required"),
   gender: Yup.string().required("Gender is required"),
