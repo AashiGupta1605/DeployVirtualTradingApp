@@ -1064,17 +1064,16 @@ const EventsPage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-4 sm:space-y-6"
             >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
+              <h1 className="text-4xl  md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight pt-2">
                 <span className="block">DreamNifty Trading Events</span>
               </h1>
               <motion.p
-                className="text-base sm:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed"
+                className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed pb-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
               >
-                Compete in thrilling trading challenges, master new strategies, and win life-changing rewards!
-                Our events cater to all skill levels with prizes worth over $250,000 annually.
+                “Join exciting trading challenges and win big—over $250,000 in annual prizes!”
               </motion.p>
             </motion.div>
           </div>
