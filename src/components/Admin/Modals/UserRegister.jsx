@@ -29,7 +29,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
     mobile: selectedUser?.mobile || "",
     gender: selectedUser?.gender || "",
     dob: selectedUser?.dob ? new Date(selectedUser.dob).toISOString().split('T')[0] : "",
-    orgtype: selectedUser?.orgtype || ""
+    // orgtype: selectedUser?.orgtype || ""
   };
 
   // Validation schema
@@ -50,9 +50,9 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
     dob: Yup.date()
       .required("Date of birth is required")
       .max(new Date(), "Date of birth cannot be in the future"),
-    orgtype: Yup.string()
-      .optional()
-      .min(2, "Organization type must be at least 2 characters"),
+    // orgtype: Yup.string()
+    //   .optional()
+    //   .min(2, "Organization type must be at least 2 characters"),
   });
 
   const formik = useFormik({
@@ -247,7 +247,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
             </div>
 
             {/* Organization Type Field */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Organization Type
               </label>
@@ -268,7 +268,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
               {formik.touched.orgtype && formik.errors.orgtype && (
                 <p className="mt-1 text-xs text-red-500">{formik.errors.orgtype}</p>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Error Message Display */}
@@ -456,7 +456,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
             </div>
 
             {/* Organization Type Field */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Organization Type
               </label>
@@ -477,7 +477,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
               {formik.touched.orgtype && formik.errors.orgtype && (
                 <p className="mt-1 text-sm text-red-500">{formik.errors.orgtype}</p>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Error Message Display */}
