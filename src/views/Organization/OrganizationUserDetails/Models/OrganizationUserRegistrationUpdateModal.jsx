@@ -48,7 +48,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
           await dispatch(registerOrganizationUser(values));
         }
         // resetForm(); // Reset form values
-        // onClose(); // Close the modal after successful submission
+        onClose(); // Close the modal after successful submission
         refreshStudents();
         // refreshDashboard();
       } catch (error) {
