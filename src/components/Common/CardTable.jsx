@@ -1,3 +1,4 @@
+import Loader from '../Common/Loader';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
@@ -158,15 +159,8 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
 
   if (loading) {
     return (
-      <div className="mt-12 flex items-center justify-center w-full h-64">
-        <div className="flex flex-col items-center gap-4">
-          <div className="border-blue-500 mt-72 inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]" role="status">
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              Loading...
-            </span>
-          </div>
-          <p className="text-gray-600 text-sm">Loading data...</p>
-        </div>
+      <div>
+        <Loader />
       </div>
     );
   }

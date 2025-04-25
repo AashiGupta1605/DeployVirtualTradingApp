@@ -29,8 +29,10 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
-  const toggleSidebar = () => {
-    setSidebarExpanded(!sidebarExpanded);
+  // Function to handle menu item clicks
+  const handleMenuItemClick = () => {
+    // Close sidebar in both mobile and desktop views when clicking sub-menu items
+    setSidebarExpanded(false);
   };
 
   return (
@@ -42,10 +44,10 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
         />
       )}
 
-<div
-  className={`fixed top-0 left-0 bottom-0 z-30 w-64 bg-white shadow-xl transition-all duration-300 ease-in-out 
-    ${sidebarExpanded ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-16"}`}
->
+      <div
+        className={`fixed top-0 left-0 bottom-0 z-30 w-64 bg-white shadow-xl transition-all duration-300 ease-in-out 
+          ${sidebarExpanded ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-16"}`}
+      >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between w-full h-[73px] px-4 border-b border-gray-200">
             {sidebarExpanded ? (
@@ -83,6 +85,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/dashboard" 
@@ -90,37 +93,42 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="Dashboard" 
                 isActive={location.pathname === "/user/dashboard"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
 
             <SidebarSection
               name="tables"
               icon="fas fa-table"
-              label="Tables"
+              label="Stocks"
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/niftytable" 
                 icon="fas fa-chart-line" 
-                label="Nifty 50 Table" 
+                label="Nifty 50" 
                 isActive={location.pathname === "/user/niftytable"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
               <MenuLink 
                 to="/user/etftable" 
                 icon="fas fa-table" 
-                label="ETF Table" 
+                label="ETF" 
                 isActive={location.pathname === "/user/etftable"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
               <MenuLink 
                 to="/user/nifty500table" 
                 icon="fas fa-chart-bar" 
-                label="Nifty 500 Table" 
+                label="Nifty 500" 
                 isActive={location.pathname === "/user/nifty500table"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
 
@@ -131,6 +139,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/tradingnifty" 
@@ -138,6 +147,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="Trading" 
                 isActive={location.pathname === "/user/tradingnifty"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
             
@@ -148,6 +158,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/my-certificates" 
@@ -155,6 +166,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="My Certificates" 
                 isActive={location.pathname === "/user/my-certificates"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
 
@@ -165,6 +177,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/feedback" 
@@ -172,6 +185,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="Submit Feedback" 
                 isActive={location.pathname === "/user/feedback"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
 
@@ -182,6 +196,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/complaint" 
@@ -189,6 +204,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="Submit Complaint" 
                 isActive={location.pathname === "/user/complaint"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
 
@@ -199,6 +215,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
               activeMenu={activeMenu}
               toggleMenu={toggleMenu}
               sidebarExpanded={sidebarExpanded}
+              onItemClick={handleMenuItemClick}
             >
               <MenuLink 
                 to="/user/eventspage" 
@@ -206,6 +223,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="View Events" 
                 isActive={location.pathname === "/user/eventspage"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
               <MenuLink 
                 to="/user/my-events" 
@@ -213,6 +231,7 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
                 label="My Events" 
                 isActive={location.pathname === "/user/my-events"} 
                 sidebarExpanded={sidebarExpanded}
+                onClick={handleMenuItemClick}
               />
             </SidebarSection>
           </div>
@@ -220,7 +239,10 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
           <div className="mt-auto">
             <div className="p-4">
               <button 
-                onClick={handleLogout}
+                onClick={() => {
+                  handleLogout();
+                  handleMenuItemClick();
+                }}
                 className={`w-full flex items-center justify-center text-red-500 hover:text-red-700 transition-colors rounded-lg p-3
                   ${sidebarExpanded ? "bg-red-50 hover:bg-red-100 space-x-2" : "hover:bg-red-50"}`}
                 title={!sidebarExpanded ? "Logout" : ""}
@@ -253,11 +275,15 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   );
 }
 
-const SidebarSection = ({ name, icon, label, activeMenu, toggleMenu, sidebarExpanded, children }) => {
+const SidebarSection = ({ name, icon, label, activeMenu, toggleMenu, sidebarExpanded, children, onItemClick }) => {
+  const handleClick = () => {
+    toggleMenu(name);
+  };
+
   return (
     <div className="space-y-1">
       <button
-        onClick={() => toggleMenu(name)}
+        onClick={handleClick}
         className={`w-full flex items-center ${sidebarExpanded ? "justify-between p-2" : "justify-center p-3"} rounded-lg transition-all duration-200 
           ${activeMenu === name ? "bg-lightBlue-600 text-white shadow-lg" : "text-gray-600 hover:bg-gray-100"}`}
         title={!sidebarExpanded ? label : ""}
@@ -279,17 +305,20 @@ const SidebarSection = ({ name, icon, label, activeMenu, toggleMenu, sidebarExpa
       </button>
       {sidebarExpanded && activeMenu === name && (
         <div className="pl-4 space-y-1">
-          {children}
+          {React.Children.map(children, child => 
+            React.cloneElement(child, { onClick: onItemClick })
+          )}
         </div>
       )}
     </div>
   );
 };
 
-const MenuLink = ({ to, icon, label, isActive, sidebarExpanded }) => {
+const MenuLink = ({ to, icon, label, isActive, sidebarExpanded, onClick }) => {
   return (
     <Link
       to={to}
+      onClick={onClick}
       className={`flex items-center ${sidebarExpanded ? "space-x-3 px-4 py-2" : "justify-center p-3"} rounded-lg transition-all duration-200 
         ${isActive ? "bg-blue-50 text-lightBlue-600" : "text-gray-600 hover:bg-gray-100"}`}
       title={!sidebarExpanded ? label : ""}

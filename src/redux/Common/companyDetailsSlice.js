@@ -23,13 +23,20 @@ const normalizeHistoricalData = (data, symbol) => {
 
   return dataArray.map(item => {
     // Handle different API response formats
-    const date = item.fetchTime || item.date || item.lastUpdateTime;
     const open = Number(item.open) || Number(item.dayOpen) || 0;
     const high = Number(item.high) || Number(item.dayHigh) || 0;
     const low = Number(item.low) || Number(item.dayLow) || 0;
     const close = Number(item.close) || Number(item.lastPrice) || 0;
     const volume = Number(item.volume) || Number(item.totalTradedVolume) || 0;
     
+    let date = item.fetchTime || item.date || item.lastUpdateTime;
+    
+    // Convert Indian date format (DD-MM-YYYY) to ISO format if needed
+    if (date && date.match(/^\d{2}-\d{2}-\d{4}$/)) {
+      const [day, month, year] = date.split('-');
+      date = `${year}-${month}-${day}T00:00:00`;
+    }
+
     // Calculate percentage change if not provided
     let pChange = Number(item.pChange) || Number(item.changePercent) || 0;
     if (pChange === 0 && open !== 0) {
@@ -192,40 +199,54 @@ export const fetchCompanyDetails = createAsyncThunk(
   'companyDetails/fetchCompanyDetails',
   async ({ symbol, type }, { rejectWithValue }) => {
     try {
-      const endpoints = [
-        `${BASE_API_URL}/admin/nifty/company/${symbol}`,
-        `${BASE_API_URL}/admin/nifty500/company/${symbol}`,
-        `${BASE_API_URL}/admin/etf/${symbol}`,
-        `${BASE_API_URL}/user/trading/stock/${symbol}`
-      ];
-
-      for (const endpoint of endpoints) {
-        try {
-          const response = await axios.get(endpoint);
-          if (response.data) {
-            const normalizedData = {
-              ...response.data,
-              lastPrice: response.data.lastPrice || response.data.currentPrice || 0,
-              currentPrice: response.data.currentPrice || response.data.lastPrice || 0,
-              lastUpdateTime: response.data.lastUpdateTime || new Date().toISOString(),
-              dayHigh: response.data.dayHigh || response.data.high || 0,
-              dayLow: response.data.dayLow || response.data.low || 0,
-              totalTradedVolume: response.data.totalTradedVolume || response.data.volume || 0,
-              changePercent: response.data.pChange || response.data.changePercent || 0
-            };
-            return normalizedData;
-          }
-        } catch (error) {
-          console.warn(`Failed to fetch from ${endpoint}:`, error.message);
-          continue;
-        }
+      // Try the endpoint matching the table type first
+      let endpoint;
+      switch (type) {
+        case 'nifty50':
+          endpoint = `${BASE_API_URL}/admin/nifty/company/${symbol}`;
+          break;
+        case 'nifty500':
+          endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
+          break;
+        case 'etf':
+          endpoint = `${BASE_API_URL}/admin/etf/${symbol}`;
+          break;
+        default:
+          endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
       }
-      throw new Error(`Could not find details for symbol: ${symbol}`);
+
+      const response = await axios.get(endpoint);
+      const normalizedData = {
+        ...response.data,
+        lastPrice: response.data.lastPrice || response.data.currentPrice || 0,
+        currentPrice: response.data.currentPrice || response.data.lastPrice || 0,
+        lastUpdateTime: formatDateForDisplay(response.data.lastUpdateTime) || new Date().toISOString(),
+        dayHigh: response.data.dayHigh || response.data.high || 0,
+        dayLow: response.data.dayLow || response.data.low || 0,
+        totalTradedVolume: response.data.totalTradedVolume || response.data.volume || 0,
+        changePercent: response.data.pChange || response.data.changePercent || 0
+      };
+      return normalizedData;
     } catch (error) {
-      return rejectWithValue(error.message || `Failed to fetch details for ${symbol}`);
+      return rejectWithValue(error.response?.data?.message || `Failed to fetch details for ${symbol}`);
     }
   }
 );
+
+// Helper function to format dates
+const formatDateForDisplay = (dateString) => {
+  if (!dateString) return null;
+  
+  // Handle different date formats
+  if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) { // DD-MM-YYYY format
+    const [day, month, year] = dateString.split('-');
+    return new Date(`${year}-${month}-${day}`).toISOString();
+  }
+  
+  // Try to parse as ISO string
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date.toISOString();
+};
 
 // Fetch historical data thunk
 export const fetchHistoricalData = createAsyncThunk(
@@ -244,19 +265,15 @@ export const fetchHistoricalData = createAsyncThunk(
           endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}`;
           break;
         default:
-          endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}`;
+          endpoint = `${BASE_API_URL}/admin/nifty500/company/history/${symbol}`;
       }
 
-      console.log(`Fetching historical data for ${symbol} from ${endpoint}`);
-      const response = await axios.get(endpoint);
-      console.log('Raw API response:', response.data);
+      const response = await axios.get(endpoint, {
+        params: { timeRange }
+      });
 
       const normalizedData = normalizeHistoricalData(response.data, symbol);
-      console.log(`Normalized ${normalizedData.length} records for ${symbol}`);
-
       const filteredData = filterDataByTimeRange(normalizedData, timeRange);
-      console.log(`Filtered to ${filteredData.length} records for ${timeRange}`);
-
       const technicalIndicators = calculateTechnicalIndicators(normalizedData);
       const priceAnalysis = analyzePriceData(filteredData);
 
@@ -268,8 +285,7 @@ export const fetchHistoricalData = createAsyncThunk(
         priceAnalysis
       };
     } catch (error) {
-      console.error('Error fetching historical data:', error);
-      return rejectWithValue(error.message || 'Failed to fetch historical data');
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );

@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import Loader from '../../../../Common/Loader';
 import {
   Info,
   Clock,
@@ -135,12 +136,9 @@ const TabNavigation = memo(({
   return (
     <div className="relative">
       {loading && (
-        <div className="absolute inset-0 bg-white/75 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
-          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-lg animate-pulse">
-            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm text-gray-600 font-medium">Loading...</span>
-          </div>
-        </div>
+      <div>
+        <Loader />
+      </div>
       )}
 
       {/* Large Screen Layout */}

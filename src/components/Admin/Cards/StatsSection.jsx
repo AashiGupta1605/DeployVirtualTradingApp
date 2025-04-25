@@ -11,7 +11,7 @@ import CardStats from './CardStats';
 import { fetchDashboardStats, selectDashboardStats, selectDashboardStatus } from '../../../redux/User/userSlice';
 import {UserStatsGraph} from "../Modals/graphs/UserStatsGraph";
 import {OrganizationStatsGraph} from "../Modals/graphs/OrganizationStatsGraph";
-
+import Loader from '../../Common/Loader';
 import StatsModal from '../Modals/stats/StatsModal';
 import { FeedbackStatsGraph } from '../Modals/graphs/feedbackStatsGraph';
 import { EventStatsGraph } from '../Modals/graphs/EventStatsGraph';
@@ -173,10 +173,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
 
   if (status === 'loading') {
     return (
-      <div className="bg-lightBlue-600 md:pt-32 pb-16 pt-12">
-        <div className="flex justify-center items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-        </div>
+      <div>
+        <Loader />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../../../assets/styles/table.css';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
-
+import Loader from '../../Common/Loader';
 const Table = () => {
   const [niftyData, setNiftyData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -91,9 +91,8 @@ const Table = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading data...</p>
+      <div>
+        <Loader />
       </div>
     );
   }

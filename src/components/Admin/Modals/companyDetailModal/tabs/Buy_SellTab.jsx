@@ -248,7 +248,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-3 sm:p-4 border border-blue-100">
         <h4 className="text-xs sm:text-sm text-gray-600 mb-1">Holdings</h4>
-        <p className="text-lg sm:text-xl font-bold text-blue-600">
+        <p className="text-lg sm:text-xl font-bold text-lightBlue-600">
           {currentHolding?.quantity || 0} shares
         </p>
       </div>
@@ -352,7 +352,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
           <span className="text-sm">{error}</span>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-lightBlue-600"
           >
             Retry
           </button>
@@ -374,7 +374,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
         </div>
         <button
           onClick={onOpenSubscriptionModal}
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
         >
           View Subscription Plans
         </button>
@@ -439,28 +439,28 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
 
       {/* Confirmation Modal */}
       {showConfirmation && (
-        <ConfirmationModal
-          isOpen={showConfirmation}
-          onClose={() => setShowConfirmation(false)}
-          onConfirm={() =>
-            handlePlaceOrder({
-              userId,
-              subscriptionPlanId: activeSubscription._id,
-              symbol,
-              type: activeTab,
-              numberOfShares: quantity,
-              price: orderType === 'market' ? currentMarketPrice : price,
-              orderType,
-              total: calculateOrderValue(),
-              currentMarketPrice,
-            })
-          }
-          title="Confirm Order"
-          message={`Are you sure you want to ${activeTab} ${quantity} shares at ${
-            formatCurrency(orderType === 'market' ? currentMarketPrice : price)
-          }?`}
-        />
-      )}
+  <ConfirmationModal
+    isOpen={showConfirmation}
+    onClose={() => setShowConfirmation(false)}
+    onConfirm={() =>
+      handlePlaceOrder({
+        userId,
+        subscriptionPlanId: activeSubscription._id,
+        symbol,
+        type: activeTab,
+        numberOfShares: quantity,
+        price: orderType === 'market' ? currentMarketPrice : price,
+        orderType,
+        total: calculateOrderValue(),
+        currentMarketPrice,
+      })
+    }
+    title="Confirm Order"
+    stockName={data?.companyName || symbol}
+    quantity={quantity}
+    pricePerStock={orderType === 'market' ? currentMarketPrice : price}
+  />
+)}
     </div>
   );
 };
