@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 
 const OrganizationComplaintModal = ({
@@ -9,53 +11,54 @@ const OrganizationComplaintModal = ({
   loading,
 }) => {
   const org = localStorage.getItem("org");
+  const today = new Date().toISOString().split("T")[0];
 
-  const [formData, setFormData] = useState({
-    category: "",
-    complaintMessage: "",
-    complaintDate: "",
+  const formik = useFormik({
+    initialValues: {
+      category: "",
+      complaintMessage: "",
+      complaintDate: today,
+    },
+    validationSchema: Yup.object({
+      category: Yup.string().required("Complaint type is required"),
+      complaintMessage: Yup.string()
+        .min(5, "Message must be at least 5 characters")
+        .required("Complaint message is required"),
+    }),
+    onSubmit: (values) => {
+      if (!org) {
+        toast.error("Organization not found. Please log in.");
+        return;
+      }
+
+      const payload = {
+        ...values,
+        orgName: localStorage.getItem("orgName"),
+        organizationId: JSON.parse(org)._id,
+      };
+
+      onSubmit(payload);
+      onClose();
+    },
   });
 
   useEffect(() => {
     if (isOpen) {
       if (complaintData) {
-        setFormData({
+        formik.setValues({
           category: complaintData.category || "",
           complaintMessage: complaintData.complaintMessage || "",
-          complaintDate: complaintData.complaintDate || "", // Set if editing
+          complaintDate: complaintData.complaintDate || today,
         });
       } else {
-        setFormData({
+        formik.setValues({
           category: "",
           complaintMessage: "",
-          complaintDate: new Date().toISOString().split("T")[0], // Auto-set current date
+          complaintDate: today,
         });
       }
     }
   }, [isOpen, complaintData]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!org) {
-      toast.error("Organization not found. Please log in.");
-      return;
-    }
-
-    const payload = {
-      ...formData,
-      orgName: localStorage.getItem("orgName"),
-      organizationId: JSON.parse(org)._id,
-    };
-
-    onSubmit(payload);
-    onClose();
-  };
 
   if (!isOpen) return null;
 
@@ -79,7 +82,7 @@ const OrganizationComplaintModal = ({
           </button>
         </div>
         <div className="p-6">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <div className="grid grid-cols-1 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -87,9 +90,9 @@ const OrganizationComplaintModal = ({
                 </label>
                 <select
                   name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 >
                   <option value="">Select Type</option>
@@ -99,6 +102,9 @@ const OrganizationComplaintModal = ({
                   <option value="Service Quality">Service Quality</option>
                   <option value="Other">Other</option>
                 </select>
+                {formik.touched.category && formik.errors.category && (
+                  <p className="text-sm text-red-600 mt-1">{formik.errors.category}</p>
+                )}
               </div>
 
               <div>
@@ -107,11 +113,15 @@ const OrganizationComplaintModal = ({
                 </label>
                 <textarea
                   name="complaintMessage"
-                  value={formData.complaintMessage}
-                  onChange={handleChange}
-                  required
+                  value={formik.values.complaintMessage}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Write your complaint here..."
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 ></textarea>
+                {formik.touched.complaintMessage && formik.errors.complaintMessage && (
+                  <p className="text-sm text-red-600 mt-1">{formik.errors.complaintMessage}</p>
+                )}
               </div>
             </div>
 

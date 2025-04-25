@@ -135,6 +135,7 @@ const OrganizationFeedbackModal = ({ isOpen, onClose, onSubmit, feedbackData }) 
                 </label>
                 <textarea
                   name="feedbackMessage"
+                  placeholder="Write your feedback here..."
                   value={formik.values.feedbackMessage}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}

@@ -82,7 +82,7 @@ const validationSchema = Yup.object().shape({
     .max(minDOB, "You must be at least 18 years old"),
 
   aboutHelp: Yup.string()
-    .max(160, "Max 160 characters")
+    .max(200, "Max 200 characters")
     .required("Required, write your query"),
 
   // partOfOrganization: Yup.boolean(),
@@ -203,7 +203,7 @@ const UserBookDemoForm = ({ closeModal }) => {
                     required
                     label="How can we help you?"
                     name="aboutHelp"
-                    placeholder="Describe your Query briefly, within 160 words"
+                    placeholder="Describe your query briefly"
                     as="textarea"
                   />
 
@@ -218,7 +218,7 @@ const UserBookDemoForm = ({ closeModal }) => {
                     type="email"
                     label="Email"
                     name="email"
-                    placeholder="user@gmail.com"
+                    placeholder="Enter your email"
                   />
                 
                   {/* Mobile */}
@@ -226,7 +226,7 @@ const UserBookDemoForm = ({ closeModal }) => {
                     required
                     label="Mobile"
                     name="mobile"
-                    placeholder="e.g., 9876543210"
+                    placeholder="Enter your mobile number"
                   />
 
                   {/* Part of Organization */}
