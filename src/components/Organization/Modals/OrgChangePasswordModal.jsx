@@ -86,6 +86,7 @@ const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
               <input
                 type="password"
                 name="oldPassword"
+                placeholder="Enter old password"
                 value={formik.values.oldPassword}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -101,6 +102,7 @@ const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
               <input
                 type="password"
                 name="newPassword"
+                placeholder="Enter new password"
                 value={formik.values.newPassword}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -116,6 +118,7 @@ const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
               <input
                 type="password"
                 name="confirmPassword"
+                 placeholder="Enter confirm password"
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}

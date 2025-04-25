@@ -21,9 +21,11 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .required("Name is required")
-      .min(5, "Name must be at least 5 characters")
-      .max(50, "Name must be less than 50 characters"),
+
+  .required("Name is required")
+  .min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
@@ -144,112 +146,115 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
   });
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={formik.handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input
-                type="text"
-                name="name"
-                {...formik.getFieldProps("name")}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-              />
-              {formik.touched.name && formik.errors.name && (
-                <p className="text-red-500 text-xs">{formik.errors.name}</p>
-              )}
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                {...formik.getFieldProps("email")}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-              />
-              {formik.touched.email && formik.errors.email && (
-                <p className="text-red-500 text-xs">{formik.errors.email}</p>
-              )}
-            </div>
+    <div className="flex flex-col h-full ">
+    
+      <form onSubmit={formik.handleSubmit} className="flex flex-col h-full">
+      <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input
+            type="text"
+            name="name"
+             placeholder="Enter your name"
+            {...formik.getFieldProps("name")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          />
+          {formik.touched.name && formik.errors.name && (
+            <p className="text-red-500 text-xs">{formik.errors.name}</p>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+             placeholder="Enter your email"
+            {...formik.getFieldProps("email")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          />
+          {formik.touched.email && formik.errors.email && (
+            <p className="text-red-500 text-xs">{formik.errors.email}</p>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input
+            type="password"
+            name="password"
+             placeholder="Create a password"
+            {...formik.getFieldProps("password")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          />
+          {formik.touched.password && formik.errors.password && (
+            <p className="text-red-500 text-xs">{formik.errors.password}</p>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            {...formik.getFieldProps("confirmPassword")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+            <p className="text-red-500 text-xs">{formik.errors.confirmPassword}</p>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+          <input
+            type="text"
+            name="mobile"
+            placeholder="Enter mobile number"
+            {...formik.getFieldProps("mobile")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          />
+          {formik.touched.mobile && formik.errors.mobile && (
+            <p className="text-red-500 text-xs">{formik.errors.mobile}</p>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+          <select
+            name="gender"
+            {...formik.getFieldProps("gender")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          >
+            <option value="">Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          {formik.touched.gender && formik.errors.gender && (
+            <p className="text-red-500 text-xs">{formik.errors.gender}</p>
+          )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
-              <input
-                type="text"
-                name="mobile"
-                {...formik.getFieldProps("mobile")}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-              />
-              {formik.touched.mobile && formik.errors.mobile && (
-                <p className="text-red-500 text-xs">{formik.errors.mobile}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                name="password"
-                {...formik.getFieldProps("password")}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-              />
-              {formik.touched.password && formik.errors.password && (
-                <p className="text-red-500 text-xs">{formik.errors.password}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                {...formik.getFieldProps("confirmPassword")}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-              />
-              {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-                <p className="text-red-500 text-xs">{formik.errors.confirmPassword}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-              <select
-                name="gender"
-                {...formik.getFieldProps("gender")}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                 bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-                 focus:outline-none transition-all duration-200"
-              >
-                <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-              {formik.touched.gender && formik.errors.gender && (
-                <p className="text-red-500 text-xs">{formik.errors.gender}</p>
-              )}
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1">
@@ -270,7 +275,64 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-100">
+        </div>
+
+          {/* Fixed Button Section */}
+    <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-center px-2">
+        <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
+          Already have an account?{" "}
+          <button
+            type="button"
+            className="text-lightBlue-600 hover:underline font-medium"
+            onClick={() => {
+              onClose();
+              onOpenLogin();
+            }}
+          >
+            Login here
+          </button>
+        </div>
+        <div className="flex space-x-3">
+          <button
+            type="button"
+            onClick={() => {
+              formik.resetForm();
+              onClose();
+            }}
+            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all text-sm"
+          >
+            {initialValues ? "Update" : "Register"}
+          </button>
+        </div>
+      </div>
+      </div>
+        </form>
+       
+        {/* <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Organization Type</label>
+          <input
+            type="text"
+            name="orgtype"
+            {...formik.getFieldProps("orgtype")}
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
+          />
+          {formik.touched.orgtype && formik.errors.orgtype && (
+            <p className="text-red-500 text-xs">{formik.errors.orgtype}</p>
+          )}
+        </div> */}
+{/* <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row justify-between items-center px-2">
+
           <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
             Already have an account?{" "}
             <button
@@ -303,7 +365,8 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             </button>
           </div>
         </div>
-      </form>
+        </div> */}
+     
 
       {showOtpModal && (
         <OTPModal
@@ -319,6 +382,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           }}
         />
       )}
+    
     </div>
   );
 };

@@ -36,7 +36,8 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required("Name is required")
-      .min(2, "Name must be at least 2 characters")
+      .min(3, "Name must be at least 3 characters")
+      .max(50, "Name must be less than 50 characters")
       .matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
     email: Yup.string()
       .email("Invalid email format")

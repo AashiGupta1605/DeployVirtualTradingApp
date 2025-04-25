@@ -221,7 +221,7 @@ const ContactModal = ({ onClose }) => {
   const contactValidationSchema = Yup.object().shape({
     name: Yup.string()
   .required("Name is required")
-  .min(5, "Name must be at least 5 characters")
+  .min(3, "Name must be at least 3 characters")
   .max(50, "Name must be less than 50 characters"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     mobile: Yup.string()
@@ -295,6 +295,7 @@ const ContactModal = ({ onClose }) => {
               <input
                 type="text"
                 name="name"
+                placeholder="Enter your name"
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -313,6 +314,7 @@ const ContactModal = ({ onClose }) => {
               <input
                 type="email"
                 name="email"
+                placeholder="Enter your email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -331,6 +333,7 @@ const ContactModal = ({ onClose }) => {
               <input
                 type="tel"
                 name="mobile"
+                placeholder="Enter your mobile number"
                 value={formik.values.mobile}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -367,6 +370,7 @@ const ContactModal = ({ onClose }) => {
               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
               <textarea
                 name="desc"
+                placeholder="Write your query"
                 value={formik.values.desc}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}

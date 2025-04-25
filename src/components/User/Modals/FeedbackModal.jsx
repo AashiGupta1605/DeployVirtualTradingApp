@@ -329,6 +329,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                   name="feedbackMessage"
                   value={formik.values.feedbackMessage}
                   onChange={formik.handleChange}
+                  placeholder="Write your feedback here..."
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 ></textarea>
                 {formik.touched.feedbackMessage && formik.errors.feedbackMessage && (
@@ -342,6 +343,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                   name="suggestions"
                   value={formik.values.suggestions}
                   onChange={formik.handleChange}
+                  placeholder="Write your suggestions here..."
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 ></textarea>
               </div>

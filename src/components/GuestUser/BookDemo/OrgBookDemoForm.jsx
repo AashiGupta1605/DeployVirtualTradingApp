@@ -63,7 +63,7 @@ const validationSchema = Yup.object().shape({
     .notRequired(),
 
   aboutHelp: Yup.string()
-    .max(160, 'Must be 160 characters or less')
+    .max(160, 'Must be 200 characters or less')
     .required('Write your Query. This field is required'),
 
   // preferredDate: Yup.date()
@@ -152,7 +152,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="Organization Name"
                     name="name"
-                    placeholder="Enter Organization Name"
+                    placeholder="Enter organization name"
                   />
 
                   {/* Website */}
@@ -160,14 +160,14 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="Website URL"
                     name="website"
-                    placeholder="Enter your website URL"
+                    placeholder="Enter website URL"
                   />
                   
                   {/* Contact Person */}
                   <FormField
                     label="Contact Person (Optional)"
                     name="contactPerson"
-                    placeholder="Contact Person Name"
+                    placeholder="Enter contact person name"
                   />
 
                   {/* Preferred Day */}
@@ -224,7 +224,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     type="email"
                     label="Organization Email"
                     name="email"
-                    placeholder="organization@.abc.com"
+                    placeholder="Enter email address"
                   />
 
                   {/* Mobile */}
@@ -232,7 +232,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="Official Contact Number"
                     name="mobile"
-                    placeholder="e.g., 9876543210"
+                    placeholder="Enter mobile number "
                   />
 
                   {/* About Help */}
@@ -240,7 +240,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="How can we help your Organization?"
                     name="aboutHelp"
-                    placeholder="Describe your Query briefly, within 160 words"
+                    placeholder="Describe your query briefly"
                     as="textarea"
                   />
 

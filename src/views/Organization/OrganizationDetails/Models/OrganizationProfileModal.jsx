@@ -1006,7 +1006,8 @@ import toast, { Toaster } from "react-hot-toast";
 
 // Validation schema (removed password field)
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string().required("Name is required").min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters"),
   address: Yup.string().required("Address is required"),
   website: Yup.string().url("Invalid URL format"),
   contactPerson: Yup.string(),

@@ -22,7 +22,7 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
     validationSchema: Yup.object({
       category: Yup.string().required("Complaint type is required"),
       complaintMessage: Yup.string()
-        .min(10, "Message must be at least 10 characters")
+        .min(5, "Message must be at least 5 characters")
         .required("Complaint message is required"),
     }),
     onSubmit: async (values) => {
@@ -112,6 +112,7 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
                   value={formik.values.complaintMessage}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  placeholder="Write your complaint here..."
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 ></textarea>
                 {formik.touched.complaintMessage && formik.errors.complaintMessage && (
