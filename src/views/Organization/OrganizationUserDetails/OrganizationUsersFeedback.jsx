@@ -41,10 +41,8 @@ import StatsSection from "../../../components/Organization/Cards/StatsSection";
 import { useOrganizationDashboard } from "../../../hooks/useOrganizationDashbaord";
 
 const OrganizationUsersFeedbacks = () => {
-  // useOrganizationDashboard();
-  
-  const [refreshDependency, setRefreshDependency] = useState(0); // New state for refresh dependency
-  useOrganizationDashboard(refreshDependency); //
+  const [refreshDependency, setRefreshDependency] = useState(0);
+  useOrganizationDashboard(refreshDependency);
   const dispatch = useDispatch();
   const {
     feedbacks,
@@ -66,8 +64,6 @@ const OrganizationUsersFeedbacks = () => {
   const [localEndDate, setLocalEndDate] = useState(endDate ? new Date(endDate) : null);
   const orgName = localStorage.getItem("orgName");
   const userId = localStorage.getItem("user");
-  console.log(userId);
-  
 
   useEffect(() => {
     dispatch(
@@ -86,7 +82,7 @@ const OrganizationUsersFeedbacks = () => {
     try {
       await dispatch(deleteOrganizationUsersFeedback(id)).unwrap();
       toast.success("Feedback deleted successfully");
-      setRefreshDependency((prev) => prev + 1); // T
+      setRefreshDependency((prev) => prev + 1);
     } catch (error) {
       console.error("Failed to delete feedback:", error);
     } finally {
@@ -120,9 +116,6 @@ const OrganizationUsersFeedbacks = () => {
         setFeedbackFormModalOpen(false);
         setFeedbackToEdit(null);
       }
-    } else {
-      // Implement the create feedback logic here
-      setRefreshDependency((prev) => prev + 1); // by me 
     }
   };
 
@@ -170,109 +163,152 @@ const OrganizationUsersFeedbacks = () => {
 
   return (
     <div className="relative">
-      {/* <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} /> */}
       <div className="mt-18">
-      <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
+        <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
       </div>
-      <div className="mx-auto w-[95%] z-50">
+      <div className="mx-auto w-full md:w-[95%] px-2 md:px-0 z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
-          <div className="bg-gray-50 mt-0 px-6 py-2 h-19 rounded-lg flex items-center z-30 justify-between border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
-            <MessageSquare className="mr-2 text-gray-600" size={24} />
-              Manage Feedbacks
-            </h2>
-
-            <div className="flex items-center space-x-4">
-              <div>
+          {/* Header Section - Optimized for both mobile and desktop */}
+          <div className="bg-gray-50 mt-0 px-4 py-4 md:px-6 md:py-3 rounded-lg border border-gray-200">
+            {/* Mobile Layout - Stacked */}
+            <div className="md:hidden flex flex-col space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-800 flex items-center">
+                  <MessageSquare className="mr-2 text-gray-600" size={20} />
+                  Manage Feedbacks
+                </h2>
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="h-10 px-4 rounded-lg mr-4 border border-gray-400 
-                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600  transition-colors flex items-center space-x-2"
+                  className="h-10 px-3 rounded-lg border border-gray-400 
+                    hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                    transition-colors flex items-center space-x-1"
                 >
                   <Filter size={16} />
                   {appliedFiltersCount > 0 && (
-                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
                       {appliedFiltersCount}
                     </span>
                   )}
-                   {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
               </div>
+              
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <SearchIcon size={16} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="w-full h-10 !pl-8 pr-8 rounded-lg border border-gray-300 
+                    focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                    text-sm placeholder-gray-500"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => dispatch(setSearchTerm(""))}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
 
-              <div className="flex-grow max-w-xl ">
-                <div className="relative w-[300px] border border-gray-50 rounded-lg 
-                  focus-within:border-gray-300 focus-within:ring-1 
-                  focus-within:ring-lightBlue-500 transition-colors ">
+            {/* Desktop Layout - Single Line */}
+            <div className="hidden md:flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-800 flex items-center">
+                <MessageSquare className="mr-2 text-gray-600" size={20} />
+                Manage Feedbacks
+              </h2>
+              
+              <div className="flex items-center space-x-4">
+                <div className="relative w-48">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon size={18} className="text-gray-400" />
+                    <SearchIcon size={16} className="text-gray-400" />
                   </div>
                   <input
                     type="text"
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-                 text-sm placeholder-gray-500"
+                    className="w-full h-9 !pl-8 pr-7 rounded-lg border border-gray-300 
+                      focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                      text-sm placeholder-gray-500"
                   />
                   {searchTerm && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center ">
-                      <button
-                        onClick={() => dispatch(setSearchTerm(""))}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => dispatch(setSearchTerm(""))}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      <X size={14} />
+                    </button>
                   )}
                 </div>
+
+                <button
+                  onClick={() => setFilterOpen(!isFilterOpen)}
+                  className="h-9 px-3 rounded-lg border border-gray-400 
+                    hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                    transition-colors flex items-center space-x-1"
+                >
+                  <Filter size={16} />
+                  {appliedFiltersCount > 0 && (
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
+                      {appliedFiltersCount}
+                    </span>
+                  )}
+                  {isFilterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
               </div>
             </div>
           </div>
 
+          {/* Filter Section */}
           {isFilterOpen && (
-            <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-6 z-50">
-              <div className="flex justify-between items-end w-full">
-                {/* Left side - Date Range filter */}
-                <div>
+            <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-4 md:p-6 z-50">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full space-y-4 md:space-y-0">
+                {/* Date Range filter */}
+                <div className="w-full md:w-auto">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Date Range
                   </label>
-                <div className="flex space-x-2">
-                  <DatePicker
-                    selected={localStartDate}
-                    onChange={handleStartDateChange}
-                    selectsStart
-                    startDate={localStartDate}
-                    endDate={localEndDate}
-                    placeholderText="Start Date"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[42px]"
-                  />
-                  <DatePicker
-                    selected={localEndDate}
-                    onChange={handleEndDateChange}
-                    selectsEnd
-                    startDate={localStartDate}
-                    endDate={localEndDate}
-                    minDate={localStartDate}
-                    placeholderText="End Date"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[42px]"
-                  />
-                </div>
+                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                    <DatePicker
+                      selected={localStartDate}
+                      onChange={handleStartDateChange}
+                      selectsStart
+                      startDate={localStartDate}
+                      endDate={localEndDate}
+                      placeholderText="Start Date"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
+                    />
+                    <DatePicker
+                      selected={localEndDate}
+                      onChange={handleEndDateChange}
+                      selectsEnd
+                      startDate={localStartDate}
+                      endDate={localEndDate}
+                      minDate={localStartDate}
+                      placeholderText="End Date"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
+                    />
+                  </div>
                 </div>
 
-                {/* Right side - Clear & Apply buttons */}
-                <div className="flex gap-x-4">
+                {/* Clear & Apply buttons */}
+                <div className="flex gap-x-2 w-full md:w-auto">
                   <button
                     onClick={clearAllFilters}
-                    className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
+                    className="flex items-center justify-center px-3 py-2 h-[38px] w-full md:w-auto rounded-lg border border-gray-300 hover:bg-gray-50 text-sm"
                   >
-                    <X size={16} className="mr-1" />
+                    <X size={14} className="mr-1" />
                     Clear
                   </button>
                   <button
                     onClick={handleApplyFilters}
-                    className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
+                    className="px-3 py-2 h-[38px] w-full md:w-auto rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm"
                   >
                     Apply
                   </button>
@@ -281,9 +317,10 @@ const OrganizationUsersFeedbacks = () => {
             </div>
           )}
 
+          {/* Applied Filters */}
           {appliedFiltersCount > 0 && (
-            <div className="bg-gray-50 px-6 py-2 mt-2 rounded-lg flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+            <div className="bg-gray-50 px-4 py-2 mt-2 rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="flex items-center space-x-2 mb-2 md:mb-0">
                 <span className="text-sm text-gray-600">Active Filters:</span>
                 <div className="flex flex-wrap gap-2">
                   {appliedFiltersText && (
@@ -296,7 +333,7 @@ const OrganizationUsersFeedbacks = () => {
 
               <button
                 onClick={clearAllFilters}
-                className="text-sm text-gray-600 hover:text-gray-800 flex items-center"
+                className="text-sm text-gray-600 hover:text-gray-800 flex items-center self-end md:self-auto"
               >
                 <X size={14} className="mr-1" />
                 Clear All
@@ -304,25 +341,29 @@ const OrganizationUsersFeedbacks = () => {
             </div>
           )}
 
+          {/* Content */}
           {loading ? (
             <Loader />
           ) : (
-            <div className="pt-16 -mt-17">
+            <div className="pt-4 md:pt-12 -mt-4 md:-mt-12 overflow-x-auto">
               <OrgUserFeedbackTable
                 feedbacks={feedbacks}
                 onDelete={handleDeleteClick}
                 onEdit={handleEditClick}
               />
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                itemsPerPage={itemsPerPage}
-                onPageChange={handlePageChange}
-                onItemsPerPageChange={handleItemsPerPageChange}
-              />
+              <div className="px-2 md:px-0">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handlePageChange}
+                  onItemsPerPageChange={handleItemsPerPageChange}
+                />
+              </div>
             </div>
           )}
 
+          {/* Modals */}
           <OrganizationFeedbackFormModal
             isOpen={isFeedbackFormModalOpen}
             onClose={() => setFeedbackFormModalOpen(false)}
@@ -341,33 +382,7 @@ const OrganizationUsersFeedbacks = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
 export default OrganizationUsersFeedbacks;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

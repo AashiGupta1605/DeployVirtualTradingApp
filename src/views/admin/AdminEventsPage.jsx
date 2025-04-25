@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
+import Loader from '../../components/Common/Loader';
 import {
   fetchEvents,
   createEvent,
@@ -207,11 +208,12 @@ const AdminEventsPage = () => {
   // Loading state
   if (isLoading && !filteredEvents?.length) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+      <div>
+        <Loader />
       </div>
     );
   }
+
 
   // Error state
   if (error) {

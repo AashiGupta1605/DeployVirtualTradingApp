@@ -60,7 +60,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-4">
       <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-      <div className="relative w-full max-w-full sm:max-w-[90%] md:max-w-[80%] lg:max-w-[60%] max-h-[90vh] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-[95vw] sm:max-w-[80vw] sm:mr-4 md:max-w-[80vw] lg:max-w-[70vw] xl:max-w-[60vw] max-h-[90vh] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
         {/* Modal Header */}
         <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center bg-white">
           <div className="flex items-center space-x-2 sm:space-x-4">
@@ -277,6 +277,7 @@ const EventDetailsModal = ({ isOpen, onClose, event, onJoin, user }) => {
     </div>
   );
 };
+
 
 // Main Events Page Component
 const EventsPage = () => {
@@ -526,14 +527,14 @@ const EventsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Main Content */}
-      <div className="pt-16 sm:pt-24 pb-8 sm:pb-12 px-3 sm:px-4 md:px-6 max-w-7xl mx-auto">
+      <div className="lg:pt-16 pb-8 sm:pb-12 sm:-mt-24 px-3 sm:px-4 md:px-6 max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center -mt-4 sm:-mt-24 mb-8 sm:mb-12 relative">
           <div className="absolute -top-8 -left-8 w-24 h-24 sm:w-32 sm:h-32 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
           <div className="absolute -bottom-8 sm:-bottom-12 -right-8 w-24 h-24 sm:w-32 sm:h-32 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
           <div className="absolute top-0 right-8 sm:right-20 w-24 h-24 sm:w-32 sm:h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
 
-          <div className="relative mt-6 pt-10 sm:mt-10">
+          <div className="relative mt-6 pt-10">
             <h1 className="text-2xl mt-4 sm:text-3xl md:text-4xl font-extrabold text-gray-900">
               DreamNifty Trading Events
             </h1>

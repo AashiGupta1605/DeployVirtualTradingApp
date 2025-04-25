@@ -157,20 +157,85 @@ const OrganizationUsers = () => {
         <StatsSection isDashboard={false} pageType="users" />
       </div>
 
-      <div className="mx-auto w-full md:w-[95%] z-30 px-4 md:px-0">
+      <div className="mx-auto w-full md:w-[95%] px-4 md:px-0">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
-          {/* Header Section */}
-          <div className="bg-gray-50 mt-3 px-4 md:px-6 py-4 rounded-lg border border-gray-200">
-            {/* Title */}
-            <h2 className="text-xl font-bold text-gray-800 flex items-center mb-4">
-              <Users className="mr-2 text-gray-600" size={24} />
-              Manage Users
-            </h2>
+          {/* Header Section - Updated to match OrganizationUsersFeedbacks */}
+          <div className="bg-gray-50 mt-0 px-4 md:px-6 py-4 rounded-lg border border-gray-200">
+            {/* Desktop Layout - Single Row */}
+            <div className="hidden md:flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-800 flex items-center">
+                <Users className="mr-2 text-gray-600" size={24} />
+                Manage Users
+              </h2>
+              
+              <div className="flex items-center gap-4 w-2/3">
+                {/* Search Bar */}
+                <div className="flex-grow">
+                  <div className="relative w-full border border-gray-200 rounded-lg 
+                      focus-within:border-gray-300 focus-within:ring-1 
+                      focus-within:ring-lightBlue-500 transition-colors">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <SearchIcon size={18} className="text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search users..."
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                   focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                   text-sm placeholder-gray-500"
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={() => dispatch(setSearchTerm(""))}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
+                  </div>
+                </div>
 
-            {/* Search and Actions - Stacked on mobile */}
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Search Bar - Full width on mobile */}
-              <div className="flex-grow">
+                {/* Filter Button */}
+                <button
+                  onClick={() => setFilterOpen(!isFilterOpen)}
+                  className="flex items-center justify-center h-10 px-4 rounded-lg border border-gray-300 
+                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
+                >
+                  <Filter size={16} className="mr-2" />
+                  Filters
+                  {appliedFiltersCount > 0 && (
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
+                      {appliedFiltersCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Add User Button */}
+                <button
+                  onClick={() => {
+                    setSelectedStudent(null);
+                    setModalOpen(true);
+                  }}
+                  className="flex items-center justify-center h-10 px-4 rounded-lg bg-lightBlue-600 text-white 
+                     hover:bg-lightBlue-700 focus:outline-none focus:ring-2 focus:ring-lightBlue-800 transition-colors"
+                >
+                  <PlusCircle size={16} className="mr-2" />
+                  Add User
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Layout - Stacked */}
+            <div className="md:hidden">
+              <h2 className="text-xl font-bold text-gray-800 flex items-center mb-4">
+                <Users className="mr-2 text-gray-600" size={24} />
+                Manage Users
+              </h2>
+              
+              {/* Search Bar */}
+              <div className="mb-4">
                 <div className="relative w-full border border-gray-200 rounded-lg 
                     focus-within:border-gray-300 focus-within:ring-1 
                     focus-within:ring-lightBlue-500 transition-colors">
@@ -182,29 +247,30 @@ const OrganizationUsers = () => {
                     placeholder="Search users..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="w-full h-10 pl-10 pr-10 rounded-lg bg-transparent text-sm 
-                               placeholder-gray-500 focus:outline-none"
+                    className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                 text-sm placeholder-gray-500"
                   />
                   {searchTerm && (
                     <button
                       onClick={() => dispatch(setSearchTerm(""))}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      <X size={18} />
+                      <X size={16} />
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Action Buttons - Row on mobile */}
+              {/* Action Buttons */}
               <div className="flex gap-2">
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
                   className="flex items-center justify-center h-10 px-4 rounded-lg border border-gray-300 
                      hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
                 >
-                  <Filter size={18} className="mr-2" />
-                  <span className="hidden sm:inline">Filters</span>
+                  <Filter size={16} className="mr-2" />
+                  Filters
                   {appliedFiltersCount > 0 && (
                     <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
                       {appliedFiltersCount}
@@ -220,9 +286,8 @@ const OrganizationUsers = () => {
                   className="flex items-center justify-center h-10 px-4 rounded-lg bg-lightBlue-600 text-white 
                      hover:bg-lightBlue-700 focus:outline-none focus:ring-2 focus:ring-lightBlue-800 transition-colors"
                 >
-                  <PlusCircle size={18} className="mr-2" />
-                  <span className="hidden sm:inline">Add User</span>
-                  <span className="sm:hidden">Add</span>
+                  <PlusCircle size={16} className="mr-2" />
+                  Add User
                 </button>
               </div>
             </div>

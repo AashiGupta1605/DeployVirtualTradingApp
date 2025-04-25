@@ -123,7 +123,7 @@ const OrganizationComplaint = () => {
       <div className="mx-auto w-[95%] z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg -mt-28">
           {/* Header */}
-          <div className="bg-gray-50 mt-16 px-6 py-2 h-19 rounded-lg flex items-center z-0 justify-between border border-gray-200">
+          <div className="bg-gray-50 mt-16 px-6 py-2 h-19 rounded-lg lg:flex sm:my-1 sm:mb-2 items-center z-0 justify-between border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 flex items-center flex-grow">
             <AlertCircle className="mr-2 text-red-600" size={24} />
               Manage Complaints

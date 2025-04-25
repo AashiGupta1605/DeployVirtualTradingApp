@@ -859,52 +859,151 @@ const TableFilters = ({
 
   return (
     <div className="space-y-4">
-      {/* Header Bar */}
-      <div className="bg-white mb-0 rounded-lg shadow-sm px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between border border-gray-200 gap-4 md:gap-0">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center">
-          {getTitleIcon()}
-          {pageTitle}
-        </h2>
+       {/* Header Bar - Responsive with separate mobile/desktop layouts */}
+<div className="bg-white mb-0 rounded-lg shadow-sm px-4 md:px-6 py-4 border border-gray-200">
+  {/* Mobile View (stacked layout) */}
+  <div className="md:hidden flex flex-col gap-3">
+    {/* Top row - Title and Filter button */}
+    <div className="flex items-center justify-between">
+      <h2 className="text-xl font-bold text-gray-800 flex items-center">
+        {getTitleIcon()}
+        <span className="whitespace-nowrap">{pageTitle}</span>
+      </h2>
+      <button
+        onClick={() => setIsFilterOpen(!isFilterOpen)}
+        className="h-10 px-3 rounded-lg border border-gray-400 
+                   hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                   transition-colors flex items-center space-x-1"
+      >
+        <Filter size={18} />
+        {activeFiltersCount > 0 && (
+          <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
+            {activeFiltersCount}
+          </span>
+        )}
+      </button>
+    </div>
 
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full md:w-auto">
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            {/* Filter Button */}
-            <button
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="h-10 px-4 rounded-lg border border-gray-400 
-                       hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
-                       transition-colors flex items-center space-x-2"
-            >
-              <Filter size={18} />
-              {activeFiltersCount > 0 && (
-                <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
-                  {activeFiltersCount}
-                </span>
-              )}
-              {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-            </button>
+    {/* Middle row - Search bar */}
+    <div className="relative w-full">
+      <SearchIcon 
+        size={18} 
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" 
+      />
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={(e) => {
+          setSearchQuery(e.target.value);
+          setActiveFilters(prev => ({ ...prev, search: e.target.value !== '' }));
+        }}
+        className="w-full h-10 pl-9 pr-8 rounded-lg border border-gray-300 
+                   focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                   text-sm placeholder-gray-500"
+      />
+      {searchQuery && (
+        <button
+          onClick={() => {
+            setSearchQuery("");
+            setActiveFilters(prev => ({ ...prev, search: false }));
+          }}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+        >
+          <X size={16} />
+        </button>
+      )}
+    </div>
 
-            {/* Search Bar */}
-            <SearchBar
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              setActiveFilters={setActiveFilters}
-            />
-          </div>
+    {/* Bottom row - Add button if needed */}
+    {showAddButton && onAddNew && (
+      <button
+        onClick={onAddNew}
+        className="h-10 w-full px-4 bg-lightBlue-600 text-white rounded-lg 
+                   hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
+      >
+        <PlusCircle size={18} className="mr-2" />
+        <span className="font-medium text-sm">{addButtonText}</span>
+      </button>
+    )}
+  </div>
 
-          {/* Add Button */}
-          {showAddButton && onAddNew && (
-            <button
-              onClick={onAddNew}
-              className="h-10 px-4 bg-lightBlue-600 text-white rounded-lg 
-                       hover:bg-lightBlue-700 transition-colors flex items-center justify-center md:justify-start"
-            >
-              <PlusCircle size={18} className="mr-2" />
-              <span className="font-medium">{addButtonText}</span>
-            </button>
-          )}
-        </div>
+  {/* Desktop View (inline layout) */}
+  <div className="hidden md:flex items-center justify-between gap-6">
+    {/* Title section - takes available space */}
+    <div className="flex-1 min-w-[200px]">
+      <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+        {getTitleIcon()}
+        <span className="whitespace-nowrap">{pageTitle}</span>
+      </h2>
+    </div>
+
+    {/* Controls section - aligned to right */}
+    <div className="flex items-center gap-4">
+      {/* Filter Button */}
+      <button
+        onClick={() => setIsFilterOpen(!isFilterOpen)}
+        className="h-11 px-4 rounded-lg border border-gray-400 
+                   hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                   transition-colors flex items-center space-x-2"
+      >
+        <Filter size={20} />
+        {activeFiltersCount > 0 && (
+          <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
+            {activeFiltersCount}
+          </span>
+        )}
+        {isFilterOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      </button>
+
+      {/* Search Bar */}
+      <div className="relative w-[320px]">
+        <SearchIcon 
+          size={20} 
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" 
+        />
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setActiveFilters(prev => ({ ...prev, search: e.target.value !== '' }));
+          }}
+          className="w-full h-11 pl-10 pr-10 rounded-lg border border-gray-300 
+                     focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                     text-sm placeholder-gray-500"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setActiveFilters(prev => ({ ...prev, search: false }));
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            <X size={18} />
+          </button>
+        )}
       </div>
+
+      {/* Add Button */}
+      {showAddButton && onAddNew && (
+        <button
+          onClick={onAddNew}
+          className="h-11 px-6 bg-lightBlue-600 text-white rounded-lg 
+                     hover:bg-lightBlue-700 transition-colors flex items-center justify-center
+                     shadow-sm hover:shadow-md"
+        >
+          <PlusCircle size={20} className="mr-2" />
+          <span className="font-medium text-base">{addButtonText}</span>
+        </button>
+      )}
+    </div>
+  </div>
+</div>
+
+
 
       {/* Filter Panel */}
       {isFilterOpen && (

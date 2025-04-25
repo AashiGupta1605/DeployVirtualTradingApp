@@ -319,7 +319,7 @@ const MyEventsPage = () => {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-2 sm:p-4">
         <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={onClose} />
-        <div className="relative w-full max-w-full sm:max-w-[90%] md:max-w-[80%] lg:max-w-[60%] max-h-[90vh] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
+        <div className="relative w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] xl:max-w-[60vw] max-h-[90vh] mx-2 my-4 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden flex flex-col">
           <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center bg-white">
             <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="p-2 sm:p-3 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100">
