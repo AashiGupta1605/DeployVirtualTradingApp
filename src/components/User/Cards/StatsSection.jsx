@@ -249,8 +249,8 @@ const activeSubscription = userSubscriptions.find(sub =>
                 statIconColor: "bg-green-500",
                 showDetails: true,
                 statItems: [
-                  { label: "nifty50", value:nifty50Data.length - 1 || "0" },
-                  { label: "etf", value: etfData.length - 1 || "0" },
+                  { label: "Nifty50", value:nifty50Data.length - 1 || "0" },
+                  { label: "Etf", value: etfData.length - 1 || "0" },
                 ],
         onClick: () => handleCardClick('stocks', 'Stock Statistics')
 
