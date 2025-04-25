@@ -21,9 +21,11 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
   const validationSchema = Yup.object({
     name: Yup.string()
+
   .required("Name is required")
   .min(3, "Name must be at least 3 characters")
   .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
@@ -63,7 +65,6 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
       mobile: "",
       gender: "",
       dob: "",
-      
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -145,6 +146,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
   });
 
   return (
+
     <div className="flex flex-col h-full ">
     
       <form onSubmit={formik.handleSubmit} className="flex flex-col h-full">
@@ -252,23 +254,27 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           {formik.touched.gender && formik.errors.gender && (
             <p className="text-red-500 text-xs">{formik.errors.gender}</p>
           )}
+
         </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-          <input
-            type="date"
-            name="dob"
-            {...formik.getFieldProps("dob")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+
+        <div className="grid grid-cols-1">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+            <input
+              type="date"
+              name="dob"
+              {...formik.getFieldProps("dob")}
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
                focus:outline-none transition-all duration-200"
-          />
-          {formik.touched.dob && formik.errors.dob && (
-            <p className="text-red-500 text-xs">{formik.errors.dob}</p>
-          )}
+            />
+            {formik.touched.dob && formik.errors.dob && (
+              <p className="text-red-500 text-xs">{formik.errors.dob}</p>
+            )}
+          </div>
         </div>
+
         </div>
 
           {/* Fixed Button Section */}
@@ -326,6 +332,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div> */}
 {/* <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
         <div className="flex flex-col sm:flex-row justify-between items-center px-2">
+
           <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
             Already have an account?{" "}
             <button

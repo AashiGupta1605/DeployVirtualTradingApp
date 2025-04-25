@@ -7,7 +7,7 @@ import QueriesTable from "../../components/Admin/Tables/QueryTable/QueriesTable"
 import Pagination from '../../components/Common/TableItems/Pagination';
 import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
-
+import Loader from '../../components/Common/Loader';
 // Actions
 import { 
   fetchContacts,
@@ -166,8 +166,8 @@ const QueriesPage = () => {
   // Loading state
   if (isLoading && !filteredContacts.length) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      <div>
+        <Loader />
       </div>
     );
   }

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
-
+import Loader from '../../components/Common/Loader';
 // Import actions
 import {
   fetchOrganizations,
@@ -176,8 +176,8 @@ const OrganizationList = () => {
   // Loading state
   if (isLoading && !filteredOrganizations?.length) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+      <div>
+        <Loader />
       </div>
     );
   }
