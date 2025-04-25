@@ -1,70 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { submitComplaint, updateComplaint } from "../../../redux/User/complaintSlice";
 import toast from "react-hot-toast";
-// import { useUserStats } from "../../../hooks/userUserStats";
+
 const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.user.complaint);
 
-  const [formData, setFormData] = useState({
-    userId: "",
-    category: "",
-    complaintMessage: "",
-    complaintDate: "",
+  const today = new Date().toISOString().split("T")[0];
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const formik = useFormik({
+    initialValues: {
+      userId: user?._id || "",
+      category: "",
+      complaintMessage: "",
+      complaintDate: today,
+    },
+    validationSchema: Yup.object({
+      category: Yup.string().required("Complaint type is required"),
+      complaintMessage: Yup.string()
+        .min(10, "Message must be at least 10 characters")
+        .required("Complaint message is required"),
+    }),
+    onSubmit: async (values) => {
+      if (!values.userId) {
+        toast.error("User not found. Please log in.");
+        return;
+      }
+
+      const formData = {
+        ...values,
+        complaintDate: today,
+      };
+
+      if (complaintData) {
+        dispatch(updateComplaint({ complaintId: complaintData._id, formData }))
+          .unwrap()
+          .then(() => {
+            toast.success("Complaint updated successfully!");
+            onComplaintSubmit?.();
+            onClose();
+          })
+          .catch((err) => toast.error(err || "Failed to update complaint"));
+      } else {
+        dispatch(submitComplaint(formData))
+          .unwrap()
+          .then(() => {
+            toast.success("Complaint submitted successfully!");
+            onComplaintSubmit?.();
+            onClose();
+          })
+          .catch((err) => toast.error(err || "Failed to submit complaint"));
+      }
+    },
   });
 
   useEffect(() => {
     if (complaintData) {
-      setFormData({
-        userId: complaintData.userId || "",
-        complaintType: complaintData.category || "",
+      formik.setValues({
+        userId: complaintData.userId || user?._id || "",
+        category: complaintData.category || "",
         complaintMessage: complaintData.complaintMessage || "",
-        complaintDate: complaintData.complaintDate || "",
+        complaintDate: complaintData.complaintDate || today,
       });
-    } else {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const today = new Date().toISOString().split("T")[0];
-      setFormData((prev) => ({
-        ...prev,
-        userId: user?._id || "",
-        complaintDate: today,
-      }));
     }
   }, [complaintData]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.userId) {
-      toast.error("User not found. Please log in.");
-      return;
-    }
-
-    if (complaintData) {
-      dispatch(updateComplaint({ complaintId: complaintData._id, formData }))
-        .unwrap()
-        .then(() => {
-          toast.success("Complaint updated successfully!");
-          onComplaintSubmit?.();
-          onClose();
-        })
-        .catch((err) => toast.error(err || "Failed to update complaint"));
-    } else {
-      dispatch(submitComplaint(formData))
-        .unwrap()
-        .then(() => {
-          toast.success("Complaint submitted successfully!");
-          onComplaintSubmit?.();
-          onClose();
-        })
-        .catch((err) => toast.error(err || "Failed to submit complaint"));
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray">
@@ -79,15 +82,15 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
           </button>
         </div>
         <div className="p-6">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <div className="grid grid-cols-1 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Complaint Type</label>
                 <select
                   name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 >
                   <option value="">Select Type</option>
@@ -97,17 +100,23 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
                   <option value="Service Quality">Service Quality</option>
                   <option value="Other">Other</option>
                 </select>
+                {formik.touched.category && formik.errors.category && (
+                  <p className="text-sm text-red-600 mt-1">{formik.errors.category}</p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Complaint Message</label>
                 <textarea
                   name="complaintMessage"
-                  value={formData.complaintMessage}
-                  onChange={handleChange}
-                  required
+                  value={formik.values.complaintMessage}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 ></textarea>
+                {formik.touched.complaintMessage && formik.errors.complaintMessage && (
+                  <p className="text-sm text-red-600 mt-1">{formik.errors.complaintMessage}</p>
+                )}
               </div>
             </div>
 

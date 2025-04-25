@@ -15,7 +15,7 @@ const ContactPage = () => {
   return (
     <>
      {/* Hero Section */}
-     <div className="relative overflow-hidden bg-lightBlue-600 !mt-10 py-16 z-10 mb-0 ">
+     {/* <div className="relative overflow-hidden bg-lightBlue-600 !mt-10 py-16 z-10 mb-0 ">
         <div className="absolute inset-0 opacity-20 z-0">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30"></div>
         </div>
@@ -41,55 +41,126 @@ const ContactPage = () => {
            
           </motion.div>
         </div>
-      </div>
+      </div> */}
+       <div className="relative overflow-hidden bg-lightBlue-600 py-12 mt-32 z-10"> 
+                  {/* Background noise texture */}
+                  <div className="absolute inset-0 opacity-20 z-0">
+                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30"></div>
+                  </div>
+                  
+                  {/* Content Container */}
+                  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8 }}
+                      className="space-y-6"
+                    >
+                      <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight flex justify-center items-center">
+                        <span>We're Here to Help</span>
+                      </h1>
+                      <motion.p 
+                        className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed "
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5, duration: 0.8 }}
+                      >
+                        "We'd love to hear from you! Get in touch with our team today."
+                      </motion.p>
+                    </motion.div>
+                  </div>
+                
+                  {/* Floating bubbles decoration */}
+                  <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-hidden">
+                    {[...Array(15)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute rounded-full bg-white opacity-10 z-10"
+                        style={{
+                          width: Math.random() * 120 + 30,
+                          height: Math.random() * 120 + 30,
+                          top: `${Math.random() * 100}%`,
+                          left: `${Math.random() * 100}%`,
+                        }}
+                        animate={{
+                          y: [0, Math.random() * 60 - 30],
+                          x: [0, Math.random() * 60 - 30],
+                          opacity: [0.05, 0.2, 0.05],
+                        }}
+                        transition={{
+                          duration: Math.random() * 15 + 15,
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          ease: "easeInOut"
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
       {/* Contact Section */}
-      <div className="mt-0 pt-0 py-16 mb-2  flex flex-col md:flex-row items-center justify-center px-6">
-        {/* Left - Content */}
-        <div className="text-black md:w-1/2 px-6 ">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
-            Get in Touch with StockSphere
-          </h1>
-          <p className="text-lg leading-relaxed opacity-80">
-            Have questions or need support? Contact us today, and we’ll be happy
-            to help!
-          </p>
-          <p className="text-lg leading-relaxed opacity-80 mt-4">
-            Email us at:
-            <Link
-              to="mailto:support@stocksphere.com"
-              className="text-blueGray-500 font-semibold"
-            >
-              {" "}
-              support@stocksphere.com{" "}
-            </Link>
-          </p>
-          <p className="text-lg leading-relaxed opacity-80 mt-2">
-            Call us at:{" "}
-            <span className="text-blueGray-500 font-semibold">
-              +1 (800) 123-4567
-            </span>
-          </p>
+      
+<div className="mt-0 pt-0 py-16 mb-2 flex flex-col md:flex-row items-center justify-center px-6">
+  {/* Left - Content */}
+  <motion.div
+    className="text-black md:w-1/2 px-6 "
+    initial={{ opacity: 0, x: -50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+  >
+    <h1 className="text-4xl md:text-5xl font-bold mb-6 text-blueGray-800">
+      Get in Touch with StockSphere
+    </h1>
+    <p className="text-lg leading-relaxed opacity-80">
+      Have questions or need support? Contact us today, and we’ll be happy to help!
+    </p>
+    <p className="text-lg leading-relaxed opacity-80 mt-4">
+      Email us at:
+      <Link
+        to="mailto:support@stocksphere.com"
+        className="text-blueGray-500 font-semibold"
+      >
+        {" "}support@stocksphere.com{" "}
+      </Link>
+    </p>
+    <p className="text-lg leading-relaxed opacity-80 mt-2">
+      Call us at:{" "}
+      <span className="text-blueGray-500 font-semibold">
+        +1 (800) 123-4567
+      </span>
+    </p>
 
-          {/* Contact Us Button */}
-          <div className="flex gap-4 mt-6">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700  px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
-            >
-              CONTACT US
-            </button>
-          </div>
-        </div>
+    <motion.div
+      className="flex gap-4 mt-6"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700 px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
+      >
+        CONTACT US
+      </button>
+    </motion.div>
+  </motion.div>
 
-        {/* Right - Image */}
-        <div className="md:w-1/2 px-6 !mt-20 md:mt-0">
-          <img
-            src={StockP}
-            alt="Stock Market"
-            className="w-full h-auto object-cover rounded-lg shadow-lg"
-          />
-        </div>
-      </div>
+  {/* Right - Image */}
+  <motion.div
+    className="md:w-1/2 px-6 !mt-20 md:mt-0"
+    initial={{ opacity: 0, x: 50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+  >
+    <img
+      src={StockP}
+      alt="Stock Market"
+      className="w-full h-auto object-cover rounded-lg shadow-lg"
+    />
+  </motion.div>
+</div>
+
 
       {/* Contact Info Cards */}
 

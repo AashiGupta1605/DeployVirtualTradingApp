@@ -23,12 +23,12 @@ const Show_ETFData_Page = () => {
         <span>ETF Market Data</span>
       </h1>
       <motion.p 
-        className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed"
+        className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed pb-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.8 }}
       >
-        Real-time stock market information with advanced analytics.
+        "Real-time stock market information with advanced analytics."
       </motion.p>
     </motion.div>
   </div>
@@ -67,14 +67,14 @@ const Show_ETFData_Page = () => {
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.5 }}
-    className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl -mt-8"
+    className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl -mt-17"
   >
     {/* Card Table Section */}
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.5 }}
-      className="bg-white pt-50 rounded-xl shadow-lg overflow-hidden border border-gray-100"
+      className="bg-white pt-50 rounded-xl shadow-lg overflow-hidden border border-gray-100 relative z-10"
     >
       <StockTable />
     </motion.div>

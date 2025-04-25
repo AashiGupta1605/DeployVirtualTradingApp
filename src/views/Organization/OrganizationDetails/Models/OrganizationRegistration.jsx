@@ -6,7 +6,8 @@ import { registerOrganization, resetAuthState } from '../../../../redux/Organiza
 import toast from 'react-hot-toast';
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('Name is required'),
+  name: Yup.string().required('Name is required').min(5, "Name must be at least 5 characters")
+  .max(50, "Name must be less than 50 characters"),
   address: Yup.string().required('Address is required'),
   website: Yup.string().url('Invalid URL format').nullable(),
   contactPerson: Yup.string().nullable(),
@@ -21,7 +22,7 @@ const validationSchema = Yup.object({
     .min(8, "Password must be at least 8 characters")
     .max(15, "Password cannot be more than 20 characters")
     .matches(
-      /^(?=.*[A-Za-z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[A-Za-z])(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/,
       "Password must contain at least one letter and one special character"
     )
     .required("Password is required"),

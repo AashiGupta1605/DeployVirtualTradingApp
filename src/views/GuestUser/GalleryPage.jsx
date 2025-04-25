@@ -35,7 +35,7 @@ const GalleryPage = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              Immerse yourself in our vibrant collection of moments, achievements, and memories captured through the lens.
+             “Explore our vibrant moments and memories captured through the lens.”
             </motion.p>
           </motion.div>
         </div>

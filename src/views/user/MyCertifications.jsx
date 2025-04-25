@@ -455,11 +455,11 @@ const MyCertifications = () => {
       />
 
       {/* Main Page Content */}
-      <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="pt-8 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900">My Certificates</h1>
-          <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+          <h1 className="text-2xl mt-4 sm:text-3xl md:text-4xl font-extrabold text-gray-900">My Certificates</h1>
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             View and download your trading competition certificates
           </p>
         </div>

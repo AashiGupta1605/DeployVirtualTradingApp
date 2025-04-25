@@ -274,7 +274,7 @@ export default function ComplaintTable() {
 
       <div className="flex flex-wrap mx-4">
         <div className="w-full mb-12 px-4">
-          <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
+          <div className="bg-white rounded-lg shadow-lg overflow-x-auto max-h-[500px] overflow-y-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>

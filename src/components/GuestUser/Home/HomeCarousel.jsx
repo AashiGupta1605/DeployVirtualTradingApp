@@ -63,7 +63,7 @@ const HomeCarousel = () => {
                   fontSize: "20px",
                   fontWeight: "bold",
                   color: "white", // Changed font color to white
-                  paddingBottom: "20px", // Adds some spacing from the bottom
+                  paddingBottom: "20px", // Add some spacing from the bottom
                 }}
               >
                 {slide.title}

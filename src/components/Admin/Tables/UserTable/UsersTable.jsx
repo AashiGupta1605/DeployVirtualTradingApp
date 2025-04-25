@@ -21,7 +21,7 @@ const UsersTable = ({
 
   return (
     <div className="bg-white rounded-lg shadow-lg">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
