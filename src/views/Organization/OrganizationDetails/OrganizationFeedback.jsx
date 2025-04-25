@@ -143,7 +143,7 @@ const OrganizationFeedback = () => {
             </h2>
             <button
               onClick={() => setAddFeedbackModalOpen(true)}
-              className="flex items-center bg-lightBlue-600 text-white sm:my-2 sm:w-full px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
+              className="flex items-center bg-lightBlue-600 text-white sm:my-2 px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
             >
                 <PlusCircle size={18} className="mr-2" />
               Add Feedback

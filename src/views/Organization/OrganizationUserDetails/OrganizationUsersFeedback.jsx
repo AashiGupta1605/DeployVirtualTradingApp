@@ -4,15 +4,21 @@ import {
   ChevronDown,
   ChevronUp,
   PlusCircle,
+  Star,
+  ThumbsUp,
+  Clock,
+  ThumbsDown,
+  UserCheck,
+  Building2,
   MessageSquare,
-  Filter,
-  X,
-  SearchIcon
+  Calendar,
+  Users
 } from 'lucide-react';
 import {
   fetchOrganizationUsersFeedbacks,
   deleteOrganizationUsersFeedback,
   updateOrganizationUsersFeedback,
+  updateOrganizationUsersFeedbackStatus,
   setCurrentPage,
   setItemsPerPage,
   setSearchTerm,
@@ -25,17 +31,18 @@ import OrgUserFeedbackTable from "../../../components/Organization/Tables/Feedba
 import OrganizationFeedbackFormModal from "../../../components/Organization/Modals/OrganizationFeedbackFormModal";
 import ConfirmationModal from "../../../components/Organization/Modals/ConfirmationModal";
 import Loader from "../../../components/Common/Loader";
+import { Filter, X, SearchIcon } from "lucide-react";
 import { getAppliedFiltersCount, getAppliedFiltersText } from "../../../utils/filterFunctions";
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Dashboard from "../../../components/Organization/Dashboards/Dashboard";
 import StatsSection from "../../../components/Organization/Cards/StatsSection";
 import { useOrganizationDashboard } from "../../../hooks/useOrganizationDashbaord";
 
 const OrganizationUsersFeedbacks = () => {
   const [refreshDependency, setRefreshDependency] = useState(0);
   useOrganizationDashboard(refreshDependency);
-  
   const dispatch = useDispatch();
   const {
     feedbacks,
@@ -56,6 +63,7 @@ const OrganizationUsersFeedbacks = () => {
   const [localStartDate, setLocalStartDate] = useState(startDate ? new Date(startDate) : null);
   const [localEndDate, setLocalEndDate] = useState(endDate ? new Date(endDate) : null);
   const orgName = localStorage.getItem("orgName");
+  const userId = localStorage.getItem("user");
 
   useEffect(() => {
     dispatch(
@@ -108,8 +116,6 @@ const OrganizationUsersFeedbacks = () => {
         setFeedbackFormModalOpen(false);
         setFeedbackToEdit(null);
       }
-    } else {
-      setRefreshDependency((prev) => prev + 1);
     }
   };
 
@@ -146,7 +152,6 @@ const OrganizationUsersFeedbacks = () => {
     dispatch(setStartDate(localStartDate));
     dispatch(setEndDate(localEndDate));
     dispatch(setCurrentPage(1));
-    setFilterOpen(false); // Close filter panel after applying
   };
 
   const appliedFiltersCount = getAppliedFiltersCount({ startDate, endDate });
@@ -161,126 +166,115 @@ const OrganizationUsersFeedbacks = () => {
       <div className="mt-18">
         <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
       </div>
-      
-      <div className="mx-auto w-full md:w-[95%] px-4 md:px-0">
+      <div className="mx-auto w-full md:w-[95%] px-2 md:px-0 z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
-          {/* Header Section */}
-          <div className="bg-gray-50 mt-0 px-4 md:px-6 py-4 rounded-lg border border-gray-200">
-            {/* Desktop Layout - Single Row */}
-            <div className="hidden md:flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                <MessageSquare className="mr-2 text-gray-600" size={24} />
-                Manage Feedbacks
-              </h2>
-              
-              <div className="flex items-center gap-4 w-2/3">
-                {/* Search Bar */}
-                <div className="flex-grow">
-                  <div className="relative w-full border border-gray-200 rounded-lg 
-                      focus-within:border-gray-300 focus-within:ring-1 
-                      focus-within:ring-lightBlue-500 transition-colors">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <SearchIcon size={18} className="text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search feedbacks..."
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                      className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-                   focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-                   text-sm placeholder-gray-500"
-                    />
-                    {searchTerm && (
-                      <button
-                        onClick={() => dispatch(setSearchTerm(""))}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        <X size={16} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Filter Button */}
+          {/* Header Section - Optimized for both mobile and desktop */}
+          <div className="bg-gray-50 mt-0 px-4 py-4 md:px-6 md:py-3 rounded-lg border border-gray-200">
+            {/* Mobile Layout - Stacked */}
+            <div className="md:hidden flex flex-col space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-800 flex items-center">
+                  <MessageSquare className="mr-2 text-gray-600" size={20} />
+                  Manage Feedbacks
+                </h2>
                 <button
                   onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="flex items-center justify-center h-10 px-4 rounded-lg border border-gray-300 
-                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
+                  className="h-10 px-3 rounded-lg border border-gray-400 
+                    hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                    transition-colors flex items-center space-x-1"
                 >
-                  <Filter size={16} className="mr-2" />
-                  Filters
+                  <Filter size={16} />
                   {appliedFiltersCount > 0 && (
-                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
                       {appliedFiltersCount}
                     </span>
                   )}
                 </button>
               </div>
+              
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <SearchIcon size={16} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="w-full h-10 !pl-8 pr-8 rounded-lg border border-gray-300 
+                    focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                    text-sm placeholder-gray-500"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => dispatch(setSearchTerm(""))}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Mobile Layout - Stacked */}
-            <div className="md:hidden">
-              <h2 className="text-xl font-bold text-gray-800 flex items-center mb-4">
-                <MessageSquare className="mr-2 text-gray-600" size={24} />
+            {/* Desktop Layout - Single Line */}
+            <div className="hidden md:flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-800 flex items-center">
+                <MessageSquare className="mr-2 text-gray-600" size={20} />
                 Manage Feedbacks
               </h2>
               
-              {/* Search Bar */}
-              <div className="mb-4">
-                <div className="relative w-full border border-gray-200 rounded-lg 
-                    focus-within:border-gray-300 focus-within:ring-1 
-                    focus-within:ring-lightBlue-500 transition-colors">
+              <div className="flex items-center space-x-4">
+                <div className="relative w-48">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon size={18} className="text-gray-400" />
+                    <SearchIcon size={16} className="text-gray-400" />
                   </div>
                   <input
                     type="text"
-                    placeholder="Search feedbacks..."
+                    placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-                 focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-                 text-sm placeholder-gray-500"
+                    className="w-full h-9 !pl-8 pr-7 rounded-lg border border-gray-300 
+                      focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+                      text-sm placeholder-gray-500"
                   />
                   {searchTerm && (
                     <button
                       onClick={() => dispatch(setSearchTerm(""))}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      <X size={16} />
+                      <X size={14} />
                     </button>
                   )}
                 </div>
-              </div>
 
-              {/* Filter Button */}
-              <button
-                onClick={() => setFilterOpen(!isFilterOpen)}
-                className="flex items-center justify-center h-10 px-4 rounded-lg border border-gray-300 
-                   hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
-              >
-                <Filter size={16} className="mr-2" />
-                Filters
-                {appliedFiltersCount > 0 && (
-                  <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
-                    {appliedFiltersCount}
-                  </span>
-                )}
-              </button>
+                <button
+                  onClick={() => setFilterOpen(!isFilterOpen)}
+                  className="h-9 px-3 rounded-lg border border-gray-400 
+                    hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                    transition-colors flex items-center space-x-1"
+                >
+                  <Filter size={16} />
+                  {appliedFiltersCount > 0 && (
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
+                      {appliedFiltersCount}
+                    </span>
+                  )}
+                  {isFilterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Filter Panel */}
+          {/* Filter Section */}
           {isFilterOpen && (
-            <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-4 md:p-6">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 w-full">
+            <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-4 md:p-6 z-50">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full space-y-4 md:space-y-0">
                 {/* Date Range filter */}
-                <div className="w-full">
+                <div className="w-full md:w-auto">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Date Range
                   </label>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
                     <DatePicker
                       selected={localStartDate}
                       onChange={handleStartDateChange}
@@ -288,7 +282,7 @@ const OrganizationUsersFeedbacks = () => {
                       startDate={localStartDate}
                       endDate={localEndDate}
                       placeholderText="Start Date"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[42px]"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
                     />
                     <DatePicker
                       selected={localEndDate}
@@ -298,23 +292,23 @@ const OrganizationUsersFeedbacks = () => {
                       endDate={localEndDate}
                       minDate={localStartDate}
                       placeholderText="End Date"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[42px]"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
                     />
                   </div>
                 </div>
 
                 {/* Clear & Apply buttons */}
-                <div className="flex gap-2">
+                <div className="flex gap-x-2 w-full md:w-auto">
                   <button
                     onClick={clearAllFilters}
-                    className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
+                    className="flex items-center justify-center px-3 py-2 h-[38px] w-full md:w-auto rounded-lg border border-gray-300 hover:bg-gray-50 text-sm"
                   >
-                    <X size={16} className="mr-1" />
+                    <X size={14} className="mr-1" />
                     Clear
                   </button>
                   <button
                     onClick={handleApplyFilters}
-                    className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
+                    className="px-3 py-2 h-[38px] w-full md:w-auto rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm"
                   >
                     Apply
                   </button>
@@ -323,11 +317,11 @@ const OrganizationUsersFeedbacks = () => {
             </div>
           )}
 
-          {/* Active Filters Display */}
+          {/* Applied Filters */}
           {appliedFiltersCount > 0 && (
-            <div className="bg-gray-50 px-4 md:px-6 py-2 mt-2 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
-              <div className="flex items-center flex-wrap gap-2">
-                <span className="text-sm text-gray-600">Active filters:</span>
+            <div className="bg-gray-50 px-4 py-2 mt-2 rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between">
+              <div className="flex items-center space-x-2 mb-2 md:mb-0">
+                <span className="text-sm text-gray-600">Active Filters:</span>
                 <div className="flex flex-wrap gap-2">
                   {appliedFiltersText && (
                     <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -339,31 +333,33 @@ const OrganizationUsersFeedbacks = () => {
 
               <button
                 onClick={clearAllFilters}
-                className="text-sm text-gray-600 hover:text-gray-800 flex items-center mt-2 sm:mt-0"
+                className="text-sm text-gray-600 hover:text-gray-800 flex items-center self-end md:self-auto"
               >
                 <X size={14} className="mr-1" />
-                Clear all
+                Clear All
               </button>
             </div>
           )}
 
-          {/* Table Section */}
+          {/* Content */}
           {loading ? (
             <Loader />
           ) : (
-            <div className="pt-16 -mt-17 overflow-x-auto">
+            <div className="pt-4 md:pt-12 -mt-4 md:-mt-12 overflow-x-auto">
               <OrgUserFeedbackTable
                 feedbacks={feedbacks}
                 onDelete={handleDeleteClick}
                 onEdit={handleEditClick}
               />
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                itemsPerPage={itemsPerPage}
-                onPageChange={handlePageChange}
-                onItemsPerPageChange={handleItemsPerPageChange}
-              />
+              <div className="px-2 md:px-0">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handlePageChange}
+                  onItemsPerPageChange={handleItemsPerPageChange}
+                />
+              </div>
             </div>
           )}
 
