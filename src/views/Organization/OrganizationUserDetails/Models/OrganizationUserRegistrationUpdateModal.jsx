@@ -44,6 +44,9 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
         } else {
           await dispatch(registerOrganizationUser(values));
         }
+
+        // resetForm(); // Reset form values
+        onClose(); // Close the modal after successful submission
         refreshStudents();
       } catch (error) {
         console.error("Error submitting form:", error);
