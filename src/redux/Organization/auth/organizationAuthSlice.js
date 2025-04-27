@@ -1,3 +1,5 @@
+// oldest----
+
 // import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // import axios from 'axios';
 // import { BASE_API_URL } from '../../../utils/BaseUrl';
@@ -296,6 +298,7 @@
 // export default organizationAuthSlice.reducer;
 
 
+// current working--
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -388,6 +391,31 @@ export const registerOrganization = createAsyncThunk(
       } else {
         return rejectWithValue({ message: 'Registration failed due to an unexpected error.' });
       }
+    }
+  }
+);
+
+export const verifyOrganizationOtp = createAsyncThunk(
+  'organizationAuth/verifyOtp',
+  async ({ email, otp }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_API_URL}/organization/verify-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -688,6 +716,17 @@ const organizationAuthSlice = createSlice({
         state.loading = false;
         state.authError = typeof action.payload === 'string' ? action.payload : "Failed to change password";
         state.successMessage = null;
+      }).addCase(verifyOrganizationOtp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyOrganizationOtp.fulfilled, (state) => {
+        state.loading = false;
+        state.isVerified = true;
+      })
+      .addCase(verifyOrganizationOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'OTP verification failed';
       });
   },
 });
@@ -722,3 +761,9 @@ export const selectOrgId = (state) => state.organization.auth.orgId;
 
 // --- Reducer Export ---
 export default organizationAuthSlice.reducer;
+
+
+
+
+
+

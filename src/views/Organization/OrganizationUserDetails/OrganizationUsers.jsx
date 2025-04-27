@@ -153,9 +153,10 @@ const OrganizationUsers = () => {
 
   return (
     <div className="relative">
-      <div className="mt-18">
+      <div className="-mt-7">
         <StatsSection isDashboard={false} pageType="users" />
       </div>
+
 
       <div className="mx-auto w-full md:w-[95%] px-4 md:px-0">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
@@ -226,6 +227,7 @@ const OrganizationUsers = () => {
                 </button>
               </div>
             </div>
+
 
             {/* Mobile Layout - Stacked */}
             <div className="md:hidden">

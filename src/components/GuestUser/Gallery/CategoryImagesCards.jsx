@@ -386,9 +386,9 @@ const ImageModal = ({
               </h3>
             )}
             
-            {currentImage?.description && (
+            {currentImage?.desc && (
               <p className="text-gray-600 mb-4">
-                {currentImage.description}
+                {currentImage.desc}
               </p>
             )}
             

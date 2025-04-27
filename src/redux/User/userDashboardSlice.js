@@ -21,6 +21,8 @@ export const fetchUserStats = createAsyncThunk(
         'complaints',
         'queries',
         'subscription',
+        'certificates',
+        'participation'
       ];
 
       const requests = endpoints.map(endpoint => 
@@ -37,7 +39,9 @@ export const fetchUserStats = createAsyncThunk(
         feedback: responses[2].data.stats,
         complaints: responses[3].data.stats,
         queries: responses[4].data.stats,
-        subscription:responses[5].data.stats
+        subscription:responses[5].data.stats,
+        certificates:responses[6].data.stats,
+        participation:responses[7].data.stats,
       };
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to fetch user stats');
@@ -90,6 +94,19 @@ const initialState = {
       status: '',
       paymentStatus: ''
     },
+
+    // certificates: {
+    //   totalCertificates:0,
+    //   recentCertificates:0,
+    //   certificatesWithRewards:0,
+    //   certificatesByType:0,
+    // },
+
+    // participation: {
+    //   totalParticipations:0, completedEvents:0, upcomingEvents:0, ongoingEvents:0, wonEvents:0
+    // },
+    
+
 
     // stocks: {
     //   all: totalStocks,

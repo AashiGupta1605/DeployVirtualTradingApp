@@ -163,8 +163,11 @@ const OrganizationUsersFeedbacks = () => {
 
   return (
     <div className="relative">
-      <div className="mt-18">
-        <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
+
+      {/* <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} /> */}
+      <div className="-mt-7">
+      <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
+
       </div>
       <div className="mx-auto w-full md:w-[95%] px-2 md:px-0 z-50">
         <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
