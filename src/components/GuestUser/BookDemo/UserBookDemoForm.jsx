@@ -43,12 +43,13 @@ const today = new Date();
 const validationSchema = Yup.object().shape({
 
   name: Yup.string()
-    .max(25, "Max 25 characters")
-    .required("Required, enter your name."),
+  .min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces")
+    .required("Name is required."),
 
   email: Yup.string()
-    .required("Required, enter your mail ID")
-    .email("Invalid Email (e.g., example@domain.com)")
+    .required("Email is required")
+    .email("Invalid email")
     .test(
       "no-spaces",
       "Email should not contain spaces",
@@ -75,14 +76,15 @@ const validationSchema = Yup.object().shape({
 
   gender: Yup.string()
     .oneOf(["Male", "Female", "Other"], "Invalid gender")
-    .required("Select gender is Required"),
+    .required("Select gender is required"),
 
   dob: Yup.date()
-    .required("Your Date of Birth is Required")
+    .required("Your date of birth is required")
     .max(minDOB, "You must be at least 18 years old"),
 
   aboutHelp: Yup.string()
-    .max(200, "Max 200 characters")
+  .min(5, "Message must be at least 5 characters")
+  .max(200, "Message must be less than 200 characters")
     .required("Required, write your query"),
 
   // partOfOrganization: Yup.boolean(),
@@ -100,7 +102,7 @@ const validationSchema = Yup.object().shape({
   //   .required("Required, select any day."),
 
   preferredDate: Yup.date()
-    .required("Select any date to get a Demo is Required.")
+    .required("Select any date to get a demo is required.")
     .min(minPreferredDate, "Date must be today or later.")
     .max(maxPreferredDate, "You must select a date within the next 7 days."),
 

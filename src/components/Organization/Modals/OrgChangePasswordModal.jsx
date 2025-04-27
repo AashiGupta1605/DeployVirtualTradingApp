@@ -69,7 +69,7 @@ const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-lock text-white"></i>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Change Organization Password</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Change Password</h2>
           </div>
           <button
             onClick={onClose}
