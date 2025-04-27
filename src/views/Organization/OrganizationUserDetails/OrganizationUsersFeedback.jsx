@@ -165,7 +165,7 @@ const OrganizationUsersFeedbacks = () => {
     <div className="relative">
 
       {/* <Dashboard type="organization-user-feedback" showAllCards={false} showCardsTable={false} /> */}
-      <div className="-mt-7">
+      <div className="mt-18">
       <StatsSection isDashboard={false} pageType="userFeedbacks" stats={feedbacks} />
 
       </div>

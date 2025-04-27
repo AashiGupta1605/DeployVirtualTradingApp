@@ -66,7 +66,7 @@ const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
       >
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-lock text-white"></i>
             </div>
             <h2 className="text-2xl font-semibold text-gray-800">Change Password</h2>
@@ -139,7 +139,7 @@ const OrgChangePasswordModal = ({ isOpen, onClose, orgId }) => {
               </button>
               <button
                 type="submit"
-                className="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 ml-4"
+                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 ml-4"
               >
                 Change Password
               </button>

@@ -181,7 +181,7 @@ export default function OrganizationDashboard({ type, showAllCards, showCardsTab
   }
 
   return (
-    <div className='-mt-7'>
+    <div className='mt-18'>
       {/* Stats Section with its own loader */}
       <div>
         {loadingState.statsLoading ? (

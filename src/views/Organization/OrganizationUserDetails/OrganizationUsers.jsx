@@ -153,7 +153,7 @@ const OrganizationUsers = () => {
 
   return (
     <div className="relative">
-      <div className="-mt-7">
+      <div className="mt-18">
         <StatsSection isDashboard={false} pageType="users" />
       </div>
 
