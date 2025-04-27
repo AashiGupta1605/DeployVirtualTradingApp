@@ -116,7 +116,7 @@ const OrganizationComplaint = () => {
   return (
     <div className="relative">
       {/* <Dashboard type="organization-complaint" showAllCards={false} showCardsTable={false} /> */}
-      <div className="mt-18">
+      <div className="-mt-7">
       <StatsSection isDashboard={false} pageType="complaints" />
       </div>
 

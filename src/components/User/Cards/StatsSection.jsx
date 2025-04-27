@@ -14,6 +14,13 @@ import {
   selectFilteredTransactions
 } from '../../../redux/User/trading/tradingSlice';
 
+import {
+  fetchUserCertificates, // Keep this
+  selectAllCertificates,
+  selectCertificatesStatus,
+  selectCertificatesError,
+} from '../../../redux/User/events/eventsSlice';
+
 const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
 const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
   const statistics = useSelector(selectStatistics);
@@ -23,6 +30,9 @@ const activeSubscription = userSubscriptions.find(sub =>
 );
   const stats = useSelector(selectUserStats);
   const status = useSelector(selectUserStatsStatus);
+  const certificate = useSelector(selectAllCertificates);
+  console.log(certificate);
+  
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -284,12 +294,12 @@ const activeSubscription = userSubscriptions.find(sub =>
 
               {
                 statIconName: "fas fa-crown",
-                statSubtitle: "----",
+                statSubtitle: "CERTIFICATE STATS",
                 statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
                 showDetails: true,
                 statIconColor: "bg-yellow-500",
                 statItems: [
-                  { label: "plan", value: "-".toString() || "0" },
+                  { label: "Total", value:certificate.length || "0" },
                   { label: "Time", value: "-".toString() || "0" },
                 ],
                 onClick: () => handleCardClick('subscription', 'Your Subscription Details')

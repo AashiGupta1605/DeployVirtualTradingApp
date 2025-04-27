@@ -64,7 +64,7 @@ export const fetchEventSpecificTransactions = createAsyncThunk(
 // Add these async thunks to your eventsSlice
 export const fetchUserCertificates = createAsyncThunk(
   'events/fetchUserCertificates',
-  async (_, { rejectWithValue }) => {
+  async (userId, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `${BASE_API_URL}/user/certificates/${userId}/my-certificate`,

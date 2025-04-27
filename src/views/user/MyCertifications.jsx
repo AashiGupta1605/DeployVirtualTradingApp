@@ -301,8 +301,13 @@ import CertificatePreviewModal from '../../components/User/Modals/CertificatePre
 
 // --- MyCertifications Component ---
 const MyCertifications = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+const userId = user?._id;
+  console.log(userId);
   const dispatch = useDispatch();
   const certificates = useSelector(selectAllCertificates);
+  console.log(certificates.length);
+  
   const status = useSelector(selectCertificatesStatus);
   const error = useSelector(selectCertificatesError);
   // Get logged-in user info directly from Redux state
@@ -359,9 +364,9 @@ const MyCertifications = () => {
   // --- Fetch Certificates Effect (Unchanged) ---
   useEffect(() => {
     if (isAuthenticated) { // Only fetch if authenticated
-      dispatch(fetchUserCertificates());
+      dispatch(fetchUserCertificates(userId));
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, userId]);
 
   // --- Loading, Error, Auth Check, Empty States (Unchanged) ---
   if (!isAuthenticated) { // Check auth status first

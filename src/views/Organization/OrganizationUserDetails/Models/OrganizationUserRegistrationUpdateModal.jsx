@@ -35,7 +35,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
       gender: "",
       dob: "",
       addedby: "",
-      // status: true,
+      // status: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {

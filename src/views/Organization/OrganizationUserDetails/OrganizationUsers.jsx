@@ -153,12 +153,12 @@ const OrganizationUsers = () => {
 
   return (
     <div className="relative">
-      <div className="mt-18">
+      <div className="-mt-7">
         <StatsSection isDashboard={false} pageType="users" />
       </div>
 
       <div className="mx-auto w-full md:w-[95%] z-30 px-4 md:px-0">
-        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-12">
+        <div className="relative flex flex-col min-w-0 break-words w-full rounded-lg z-0 -mt-16 px-4">
           {/* Header Section */}
           <div className="bg-gray-50 mt-3 px-4 md:px-6 py-4 rounded-lg border border-gray-200">
             {/* Title */}
