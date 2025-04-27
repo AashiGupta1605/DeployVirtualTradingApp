@@ -222,13 +222,14 @@ const ContactModal = ({ onClose }) => {
     name: Yup.string()
   .required("Name is required")
   .min(3, "Name must be at least 3 characters")
-  .max(50, "Name must be less than 50 characters"),
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile must be 10 digits")
       .required("Mobile is required"),
     type: Yup.string().required("Type is required"),
-    desc: Yup.string().min(5, "Too short").required("Description is required"),
+    desc: Yup.string().required("Description is required").min(5, "Description must be at least 5 characters")
+    .max(200, "Description must be less than 200 characters"),
   });
 
   const formik = useFormik({
@@ -266,30 +267,34 @@ const ContactModal = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-      <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-      <div
-        style={{ width: "100%", maxWidth: "90%" }}
-        className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
-      >
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <i className="fas fa-envelope text-white"></i>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Contact Us</h2>
+    <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
+    <div
+      style={{ width: "100%", maxWidth: "90%" }}
+      className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center p-6 border-b border-gray-100">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+            <i className="fas fa-envelope text-white"></i>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-          >
-            <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
-          </button>
+          <h2 className="text-2xl font-semibold text-gray-800">Contact Us</h2>
         </div>
-        <div className="p-6 overflow-y-auto max-h-[80vh]">
-          <form
-            onSubmit={formik.handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
+        <button
+          onClick={onClose}
+          className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+        >
+          <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
+        </button>
+      </div>
+  
+      {/* Form starts */}
+      <form onSubmit={formik.handleSubmit} className="relative max-h-[80vh] flex flex-col">
+  
+        {/* Scrollable fields */}
+        <div className="p-6 overflow-y-auto flex-grow">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input
@@ -308,7 +313,8 @@ const ContactModal = ({ onClose }) => {
                 <p className="text-red-500 text-sm">{formik.errors.name}</p>
               )}
             </div>
-
+  
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
@@ -327,7 +333,8 @@ const ContactModal = ({ onClose }) => {
                 <p className="text-red-500 text-sm">{formik.errors.email}</p>
               )}
             </div>
-
+  
+            {/* Mobile */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
               <input
@@ -337,16 +344,14 @@ const ContactModal = ({ onClose }) => {
                 value={formik.values.mobile}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
-               bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
-               focus:outline-none transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
               />
               {formik.touched.mobile && formik.errors.mobile && (
                 <p className="text-red-500 text-sm">{formik.errors.mobile}</p>
               )}
             </div>
-
+  
+            {/* Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
               <select
@@ -365,7 +370,9 @@ const ContactModal = ({ onClose }) => {
                 <p className="text-red-500 text-sm">{formik.errors.type}</p>
               )}
             </div>
-
+            
+  
+            {/* Description */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
               <textarea
@@ -381,26 +388,29 @@ const ContactModal = ({ onClose }) => {
                 <p className="text-red-500 text-sm">{formik.errors.desc}</p>
               )}
             </div>
-
-            <div className="col-span-2 flex justify-end items-center space-x-4 pt-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
-      </div>
+  
+        {/* Fixed Footer Buttons */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 flex justify-end items-center space-x-4 rounded-xl">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
+  
   );
 };
 

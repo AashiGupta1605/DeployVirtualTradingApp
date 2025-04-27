@@ -109,7 +109,7 @@ const AddGalleryCategory = ({ closeModal, refreshCategories }) => {
           >
           {({ isSubmitting, isValid }) => (
               <Form className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-5">
+                <div className="flex flex-col md:flex-row gap-5 max-h-[300px]  overflow-y-auto  ">
                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
                     <div className="space-y-6">
                       <FormField
@@ -124,7 +124,7 @@ const AddGalleryCategory = ({ closeModal, refreshCategories }) => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+                <div className="sticky flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
                   <button
                     type="button"
                     disabled={isSubmitting}

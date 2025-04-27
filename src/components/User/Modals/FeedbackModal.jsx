@@ -207,7 +207,8 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
 
   const validationSchema = Yup.object({
     feedbackCategory: Yup.string().required("Category is required"),
-    feedbackMessage: Yup.string().min(5, "Too short").required("Feedback message is required"),
+    feedbackMessage: Yup.string().min(5, "Message must be at least 5 characters")
+    .max(200, "Message must be less than 200 characters").required("Feedback message is required"),
     suggestions: Yup.string(),
     recommend: Yup.boolean().required("Recommendation is required"),
     rating: Yup.number().min(1, "Please give at least 1 star").required("Rating is required"),
@@ -282,7 +283,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
         </div>
         <div className="p-6">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="max-h-[300px] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Feedback Category</label>
                 <select
@@ -347,9 +348,7 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 ></textarea>
               </div>
-            </div>
-
-            <div className="flex items-center">
+              <div className="flex items-center">
               <label className="text-sm font-medium text-gray-700 mr-2">Would you recommend us?</label>
               <div className="flex space-x-4">
                 <label className="flex items-center">
@@ -379,8 +378,11 @@ const FeedbackModal = ({ onClose, onFeedbackSubmit, feedbackData }) => {
                 <p className="text-red-500 text-sm ml-4">{formik.errors.recommend}</p>
               )}
             </div>
+            </div>
 
-            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-100">
+           
+
+            <div className="sticky flex justify-end space-x-4 pt-6 border-t border-gray-100">
               <button type="button" onClick={onClose} className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100">
                 Cancel
               </button>

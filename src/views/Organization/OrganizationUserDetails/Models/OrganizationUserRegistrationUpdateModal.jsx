@@ -11,7 +11,7 @@ import "../../../../assets/styles/customDatePicker.css";
 // Validation schema
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required").min(3, "Name must be at least 3 characters")
-  .max(50, "Name must be less than 50 characters"),
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
   email: Yup.string().email("Invalid email format").required("Email is required"),
   mobile: Yup.string().matches(/^[9876]\d{9}$/, "Mobile number must start with 9, 8, 7, or 6 and contain 10 digits").required("Mobile number is required"),
   gender: Yup.string().required("Gender is required"),

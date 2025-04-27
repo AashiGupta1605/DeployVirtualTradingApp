@@ -153,7 +153,7 @@ const OrganizationsSlider = () => {
   <img
     src={client.photo || "https://via.placeholder.com/150?text=Client+Logo"}
     alt={client.name}
-    className="h-24 w-24 rounded-full object-cover filter grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all"
+    className="h-32 w-32 rounded-full object-cover filter grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all"
     onError={(e) => {
       e.target.src = "https://via.placeholder.com/150?text=Client+Logo";
       e.target.className = "h-24 w-24 rounded-full object-cover opacity-70";

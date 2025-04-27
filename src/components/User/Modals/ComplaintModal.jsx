@@ -23,6 +23,7 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
       category: Yup.string().required("Complaint type is required"),
       complaintMessage: Yup.string()
         .min(5, "Message must be at least 5 characters")
+        .max(200, "Message must be less than 200 characters")
         .required("Complaint message is required"),
     }),
     onSubmit: async (values) => {
@@ -83,7 +84,7 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
         </div>
         <div className="p-6">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="max-h-[300px] overflow-y-auto grid grid-cols-1 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Complaint Type</label>
                 <select
@@ -121,7 +122,7 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
               </div>
             </div>
 
-            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-100">
+            <div className="sticky flex justify-end space-x-4 pt-6 border-t border-gray-100">
               <button type="button" onClick={onClose} className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100">
                 Cancel
               </button>

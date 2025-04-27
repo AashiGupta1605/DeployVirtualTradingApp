@@ -83,7 +83,7 @@ const ShowGalleryImages = () => {
           </span>
         </Listbox.Button>
 
-        <Listbox.Options className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Listbox.Options className="absolute z-50 mt-1 w-full max-h-60 overflow-auto bg-white py-1 text-sm  border-gray-200 rounded-xl  overflow-y-auto shadow-lg focus:outline-none">
           {categories.map((cat, index) => (
             <Listbox.Option
               key={index}

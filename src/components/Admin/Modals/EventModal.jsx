@@ -132,6 +132,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       ...event,
       startDate: event.startDate ? new Date(event.startDate).toISOString().split('T')[0] : '',
       endDate: event.endDate ? new Date(event.endDate).toISOString().split('T')[0] : '',
+      description: event.description || '',
       prizeBreakdown: event.prizeBreakdown || [],
       rewardTiers: event.rewardTiers || defaultRewardTiers,
       rewards: event.rewards || [''],
@@ -165,31 +166,136 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       progressText: '',
       icon: 'Trophy',
     },
+    // validate: (values) => {
+    //   const errors = {};
+      
+    //   if (!values.title) errors.title = 'Required';
+    //   if (!values.type) errors.type = 'Required';
+    //   if (!values.prize) errors.prize = 'Required';
+    //   if (!values.startDate) errors.startDate = 'Required';
+    //   if (!values.endDate) errors.endDate = 'Required';
+    //   if (!values.entryFee && values.entryFee !== 0) errors.entryFee = 'Required'
+    //   if (!values.participants && values.participants !== 0) errors.participants = 'Required';
+      
+    //   if (values.startDate && values.endDate) {
+    //     const start = new Date(values.startDate);
+    //     const end = new Date(values.endDate);
+    //     if (end < start) errors.endDate = 'End date must be after start date';
+    //   }
+      
+    //   if (values.entryFee && isNaN(values.entryFee)) errors.entryFee = 'Must be a number';
+    //   if (values.participants && isNaN(values.participants)) errors.participants = 'Must be a number';
+    //   if (values.cashbackPercentage && (isNaN(values.cashbackPercentage) || values.cashbackPercentage < 0 || values.cashbackPercentage > 100)) {
+    //     errors.cashbackPercentage = 'Must be between 0 and 100';
+    //   }
+      
+    //   return errors;
+    // },
     validate: (values) => {
       const errors = {};
-      
-      if (!values.title) errors.title = 'Required';
-      if (!values.type) errors.type = 'Required';
-      if (!values.prize) errors.prize = 'Required';
-      if (!values.startDate) errors.startDate = 'Required';
-      if (!values.endDate) errors.endDate = 'Required';
-      if (!values.entryFee && values.entryFee !== 0) errors.entryFee = 'Required';
-      if (!values.participants && values.participants !== 0) errors.participants = 'Required';
-      
+    
+      // Title validation
+      if (!values.title) {
+        errors.title = 'Event title is required.';
+      } else if (values.title.length < 3) {
+        errors.title = 'Title must be at least 3 characters.';
+      } else if (values.title.length > 50) {
+        errors.title = 'Title must not exceed 50 characters.';
+      }
+      if (!values.prize) errors.prize = 'Prize is Required';
+    
+      // Type validation
+      if (!values.type) {
+        errors.type = 'Event type is required.';
+      } else if (!['ongoing', 'upcoming', 'completed'].includes(values.type)) {
+        errors.type = 'Type must be one of ongoing, upcoming, or completed.';
+      }
+    
+      // Description validation
+      if (!values.description) {
+        errors.description = 'Event description is required.';
+      } else if (values.description.length < 10) {
+        errors.description = 'Description must be at least 10 characters.';
+      } else if (values.description.length > 200) {
+        errors.description = 'Description must not exceed 200 characters.';
+      }
+    
+      // Start Date validation
+      if (!values.startDate) {
+        errors.startDate = 'Start date is required.';
+      } else if (isNaN(new Date(values.startDate).getTime())) {
+        errors.startDate = 'Start date must be a valid date.';
+      }
+    
+      // End Date validation
+      if (!values.endDate) {
+        errors.endDate = 'End date is required.';
+      } else if (isNaN(new Date(values.endDate).getTime())) {
+        errors.endDate = 'End date must be a valid date.';
+      }
+    
+      // Check startDate and endDate logical order
       if (values.startDate && values.endDate) {
         const start = new Date(values.startDate);
         const end = new Date(values.endDate);
-        if (end < start) errors.endDate = 'End date must be after start date';
+        if (start && end && end < start) {
+          errors.endDate = 'End date must be after start date.';
+        }
       }
-      
-      if (values.entryFee && isNaN(values.entryFee)) errors.entryFee = 'Must be a number';
-      if (values.participants && isNaN(values.participants)) errors.participants = 'Must be a number';
-      if (values.cashbackPercentage && (isNaN(values.cashbackPercentage) || values.cashbackPercentage < 0 || values.cashbackPercentage > 100)) {
-        errors.cashbackPercentage = 'Must be between 0 and 100';
+    
+      // Prize - optional, no validation needed
+    
+      // Difficulty - optional, no validation needed
+    
+      // RewardTiers - optional, no validation needed
+    
+      // Participants - optional, but if filled must be number
+      if (values.participants !== undefined && values.participants !== '' && values.participants !== null) {
+
+        if (isNaN(values.participants)) {
+          errors.participants = 'Participants must be a number.';
+        }
       }
-      
+    
+      // Entry Fee - optional, but if filled must be number
+      if (values.entryFee !== undefined && values.entryFee !== '' && values.entryFee !== null) {
+        errors.entryFee = 'Entry fee is Required';
+        if (isNaN(values.entryFee)) {
+          errors.entryFee = 'Entry fee must be a number.';
+        }
+      }
+    
+      // Cashback Percentage - optional, but if filled must be number
+      if (values.cashbackPercentage !== undefined && values.cashbackPercentage !== '' && values.cashbackPercentage !== null) {
+        if (isNaN(values.cashbackPercentage)) {
+          errors.cashbackPercentage = 'Cashback percentage must be a number.';
+        }
+      }
+    
+      // Rewards - optional, no strict validation needed
+    
+      // PrizeBreakdown - optional, no strict validation needed
+    
+      // Requirements - optional, no validation needed
+    
+      // Progress - optional, but if filled must be number
+      if (values.progress !== undefined && values.progress !== '' && values.progress !== null) {
+        if (isNaN(values.progress)) {
+          errors.progress = 'Progress must be a number.';
+        }
+      }
+    
+      // Progress Text - optional, no validation needed
+    
+      // Icon - optional, no validation needed
+    
+      // Background Color - optional, no validation needed
+    
+      // Highlight - optional, no validation needed
+    
       return errors;
     },
+    
     onSubmit: (values) => {
       const calculated = calculateDistribution(values);
       const finalValues = {
@@ -271,9 +377,9 @@ const EventModal = ({ event, onClose, onSubmit }) => {
         </div>
 
         {/* Scrollable Content */}
-        <div className="overflow-y-auto flex-1 p-6">
+        <div className="flex-1 p-6">
           <form onSubmit={formik.handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid md:grid-cols-2 gap-6 ">
               {/* Basic Event Details */}
               <div className="space-y-4">
                 <div>
@@ -285,7 +391,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     placeholder="Event Title"
-                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.title && formik.touched.title && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.title}</p>
@@ -299,7 +408,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.type}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.type && formik.touched.type ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.type && formik.touched.type ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                   >
                     <option value="ongoing">Ongoing</option>
                     <option value="upcoming">Upcoming</option>
@@ -318,7 +430,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.startDate}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.startDate && formik.touched.startDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.startDate && formik.touched.startDate ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.startDate && formik.touched.startDate && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.startDate}</p>
@@ -333,7 +448,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.endDate}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.endDate && formik.touched.endDate ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.endDate && formik.touched.endDate ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.endDate && formik.touched.endDate && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.endDate}</p>
@@ -346,7 +464,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     name="difficulty"
                     value={formik.values.difficulty}
                     onChange={formik.handleChange}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   >
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
@@ -367,7 +488,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     placeholder="Total Prize Pool (e.g., $10,000)"
-                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.prize && formik.touched.prize ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.prize && formik.touched.prize ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.prize && formik.touched.prize && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.prize}</p>
@@ -387,7 +511,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                       placeholder="0.00"
                       min="0"
                       step="0.01"
-                      className={`w-full px-4 py-3 pl-10 !rounded-xl border ${formik.errors.entryFee && formik.touched.entryFee ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                      className={`w-full px-4 py-3 pl-10 !rounded-xl border ${formik.errors.entryFee && formik.touched.entryFee ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                     />
                   </div>
                   {formik.errors.entryFee && formik.touched.entryFee && (
@@ -407,7 +534,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                       placeholder="0"
                       min="0"
                       max="100"
-                      className={`w-full px-4 py-3 pr-10 !rounded-xl border ${formik.errors.cashbackPercentage && formik.touched.cashbackPercentage ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                      className={`w-full px-4 py-3 pr-10 !rounded-xl border ${formik.errors.cashbackPercentage && formik.touched.cashbackPercentage ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                     />
                     <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
                   </div>
@@ -425,7 +555,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     min="0"
-                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.participants && formik.touched.participants ? 'border-red-500' : 'border-gray-200'} bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+                    className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.participants && formik.touched.participants ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.participants && formik.touched.participants && (
                     <p className="mt-1 text-sm text-red-600">{formik.errors.participants}</p>
@@ -438,7 +571,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     name="icon"
                     value={formik.values.icon}
                     onChange={formik.handleChange}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   >
                     {iconOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -469,7 +605,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     name="backgroundColor"
                     value={formik.values.backgroundColor}
                     onChange={formik.handleChange}
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   >
                     {backgroundOptions.map(option => (
                       <option key={option.value} value={option.value}>{option.label}</option>
@@ -485,7 +624,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.requirements}
                     onChange={formik.handleChange}
                     placeholder="Event requirements"
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   />
                 </div>
 
@@ -497,7 +639,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     value={formik.values.highlight}
                     onChange={formik.handleChange}
                     placeholder="Event highlight"
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   />
                 </div>
               </div>
@@ -533,7 +678,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                             value={tier.tier}
                             onChange={(e) => handleRewardTierChange(index, 'tier', e.target.value)}
                             placeholder="e.g. 5%+ Gain"
-                            className="w-full px-3 py-2 rounded-lg border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                            className="w-full px-3 py-2 rounded-lg border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                           />
                         </div>
                         <div>
@@ -543,7 +691,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                             value={tier.description}
                             onChange={(e) => handleRewardTierChange(index, 'description', e.target.value)}
                             placeholder="e.g. 50% of entry fee returned"
-                            className="w-full px-3 py-2 rounded-lg border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                            className="w-full px-3 py-2 rounded-lg border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                           />
                         </div>
                       </div>
@@ -578,7 +729,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                         placeholder="Reward description"
                         value={reward}
                         onChange={(e) => handleRewardsChange(index, e.target.value)}
-                        className="flex-1 px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                        className="flex-1 px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                       />
                       <button
                         type="button"
@@ -612,7 +766,10 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     placeholder="0"
                     min="0"
                     max="100"
-                    className="w-full px-4 py-3 pr-10 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 pr-10 !rounded-xl border !border-gray-200 !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200"
                   />
                   <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
                 </div>
@@ -632,7 +789,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
             </div>
 
             {/* Footer Buttons */}
-            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+            <div className="sticky flex justify-end space-x-4 pt-6 border-t border-gray-200">
               <button 
                 type="button"
                 onClick={onClose}

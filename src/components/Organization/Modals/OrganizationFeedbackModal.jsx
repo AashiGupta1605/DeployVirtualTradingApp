@@ -6,10 +6,11 @@ import toast, { Toaster } from "react-hot-toast";
 
 const validationSchema = Yup.object({
   feedbackCategory: Yup.string().required("Feedback category is required"),
-  feedbackMessage: Yup.string().required("Feedback message is required"),
+  feedbackMessage: Yup.string().min(5, "Message must be at least 5 characters")
+  .max(200, "Message must be less than 200 characters").required("Feedback message is required"),
   rating: Yup.number().min(1, "Rating is required").required("Rating is required"),
   recommend: Yup.boolean().required("Recommendation is required"),
-  suggestions: Yup.string().required("Suggestions are required"),
+  suggestions: Yup.string(),
 });
 
 const OrganizationFeedbackModal = ({ isOpen, onClose, onSubmit, feedbackData }) => {

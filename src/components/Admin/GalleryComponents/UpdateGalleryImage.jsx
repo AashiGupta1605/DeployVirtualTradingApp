@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Listbox } from '@headlessui/react';
 import * as Yup from "yup";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
@@ -59,14 +60,14 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
     title: Yup.string()
       .nullable()
       .notRequired()
-      .min(8, "Title must be at least 8 characters")
-      .max(80, "Title must be at most 80 characters"),
+      .min(5, "Title must be at least 5 characters")
+      .max(50, "Title must be at most 50 characters"),
   
     desc: Yup.string()
       .nullable()
       .notRequired()
-      .min(15, "Description must be at least 15 characters")
-      .max(600, "Description must be at most 600 characters"),
+      .min(5, "Description must be at least 5 characters")
+      .max(200, "Description must be at most 200 characters"),
     
     photo: Yup.string()
     .required("Photo is required")
@@ -235,7 +236,7 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
                     <div className="space-y-6">
 
-                      <FormField
+                      {/* <FormField
                         required
                         label="Category Name"
                         // type="text"
@@ -244,7 +245,16 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
                         options={categories}
                         className="max-h-[150px] overflow-y-auto"
                         placeholder="Select Category"
-                      />
+                      /> */}
+                                        <FormField
+                    required
+                    label="Category Name"
+                    type="select"
+                    name="categoryName"
+                    options={categories}  // Make sure you pass the categories array
+                    className="max-h-[150px] overflow-y-auto"
+                    placeholder="Select Category"
+                  />
 
                       <FormField
                         required
@@ -269,14 +279,21 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
                         placeholder="Enter Title"
                       />
 
-                      <FormField
+                      {/* <FormField
                         label="Description(Optional)"
                         // as="textarea"
                         type="text"
                         name="desc"
                         placeholder="Enter description"
                         className=" h-auto min-h-40 max-h-50 overflow-y-auto break-words text-base block"
-                      />
+                      /> */}
+                      <FormField
+                    label="Description (Optional)"
+                    type="textarea"  // Change the type to "textarea"
+                    name="desc"
+                    placeholder="Enter description"
+                    className="resize-none h-32"
+                  />
                     
                     </div>
                   </div>
@@ -309,12 +326,70 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
   );
 };
 
-const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [], onChange }) => (
+// const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [], onChange }) => (
+//   <div>
+//     <label className="block text-sm font-medium text-gray-700 mb-2">
+//       {label} {required && <span className="text-red-500">*</span>}
+//     </label>
+    
+//     {type === "file" ? (
+//       <input
+//         type="file"
+//         name={name}
+//         accept="image/*"
+//         onChange={(e) => {
+//           e.persist();
+//           onChange(e);  // Use the passed onChange prop
+//         }}
+//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
+//                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//       />
+//     ) : type === "select" ? (
+//       <Field 
+//         as="select" 
+//         name={name} 
+//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
+//                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//       >
+//         <option value="" disabled>Select Category</option>
+//         {options.map((option, index) => (
+//           <option key={index} value={option.name}>
+//             {option.name}
+//           </option>
+//         ))}
+//       </Field>
+//     ) : (
+//       <Field
+//         type={type}
+//         name={name}
+//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
+//                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
+//                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//         placeholder={placeholder}
+//       />
+//     )}
+
+//     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
+//   </div>
+// );
+const FormField = ({
+  name,
+  label,
+  required = false,
+  type = "text",
+  placeholder,
+  className = "",
+  options = [],
+  onChange, // For file input
+}) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-2">
       {label} {required && <span className="text-red-500">*</span>}
     </label>
-    
+
+    {/* File Input */}
     {type === "file" ? (
       <input
         type="file"
@@ -322,27 +397,52 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
         accept="image/*"
         onChange={(e) => {
           e.persist();
-          onChange(e);  // Use the passed onChange prop
+          onChange(e); // Use the passed onChange prop
         }}
         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
       />
     ) : type === "select" ? (
-      <Field 
-        as="select" 
-        name={name} 
-        className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
+      <Field name={name}>
+        {({ field, form }) => (
+          <div className="relative">
+            <Listbox
+              value={options.find((option) => option.name === field.value) || null}
+              onChange={(selected) => form.setFieldValue(name, selected.name)}
+            >
+              <Listbox.Button className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {field.value ? field.value : "Select Category"}
+              </Listbox.Button>
+
+              <Listbox.Options className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl max-h-[150px] overflow-y-auto shadow-lg">
+                {options.map((option, index) => (
+                  <Listbox.Option key={index} value={option} disabled={!option}>
+                    {({ active }) => (
+                      <div
+                        className={`cursor-pointer px-4 py-1 ${
+                          active ? "bg-blue-500 text-white" : "text-black"
+                        }`}
+                      >
+                        {option.name}
+                      </div>
+                    )}
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Listbox>
+          </div>
+        )}
+      </Field>
+    ) : type === "textarea" ? (
+      <Field
+        as="textarea"
+        name={name}
+        className={`${className} shadow-sm w-full px-4 py-3 h-[120px] resize-none !rounded-xl border !border-gray-200 
                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
-      >
-        <option value="" disabled>Select Category</option>
-        {options.map((option, index) => (
-          <option key={index} value={option.name}>
-            {option.name}
-          </option>
-        ))}
-      </Field>
+        placeholder={placeholder}
+      />
     ) : (
       <Field
         type={type}
