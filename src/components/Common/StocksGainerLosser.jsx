@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchNiftyData } from "../../redux/Common/nifty50Slice";
 import { fetchNifty500Data } from "../../redux/Common/nifty500Slice";
 import { fetchStockData } from "../../redux/Common/etfSlice";
+import Loader from '../Common/Loader';
 // import CardSocialTraffic from "../Admin/Cards/CardSocialTraffic";
 import CardSocialTraffic from "./CardSocialTraffic";
 
@@ -71,7 +72,7 @@ const StocksGainerLosser = ({ showHeader = true }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64 mx-auto">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <Loader />
       </div>
     );
   }

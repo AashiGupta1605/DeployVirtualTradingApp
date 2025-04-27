@@ -21,9 +21,11 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
   const validationSchema = Yup.object({
     name: Yup.string()
+
   .required("Name is required")
-  .min(5, "Name must be at least 5 characters")
-  .max(50, "Name must be less than 50 characters"),
+  .min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
@@ -63,7 +65,6 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
       mobile: "",
       gender: "",
       dob: "",
-      
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -145,13 +146,17 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
   });
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div className="flex flex-col h-full ">
+    
+      <form onSubmit={formik.handleSubmit} className="flex flex-col h-full">
+      <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
           <input
             type="text"
             name="name"
+             placeholder="Enter your name"
             {...formik.getFieldProps("name")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -168,6 +173,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="email"
             name="email"
+             placeholder="Enter your email"
             {...formik.getFieldProps("email")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -184,6 +190,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="password"
             name="password"
+             placeholder="Create a password"
             {...formik.getFieldProps("password")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -200,6 +207,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="password"
             name="confirmPassword"
+            placeholder="Confirm your password"
             {...formik.getFieldProps("confirmPassword")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -216,6 +224,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <input
             type="text"
             name="mobile"
+            placeholder="Enter mobile number"
             {...formik.getFieldProps("mobile")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -245,24 +254,67 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           {formik.touched.gender && formik.errors.gender && (
             <p className="text-red-500 text-xs">{formik.errors.gender}</p>
           )}
+
         </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-          <input
-            type="date"
-            name="dob"
-            {...formik.getFieldProps("dob")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+
+        <div className="grid grid-cols-1">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+            <input
+              type="date"
+              name="dob"
+              {...formik.getFieldProps("dob")}
+              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
                focus:outline-none transition-all duration-200"
-          />
-          {formik.touched.dob && formik.errors.dob && (
-            <p className="text-red-500 text-xs">{formik.errors.dob}</p>
-          )}
+            />
+            {formik.touched.dob && formik.errors.dob && (
+              <p className="text-red-500 text-xs">{formik.errors.dob}</p>
+            )}
+          </div>
         </div>
-        
+
+        </div>
+
+          {/* Fixed Button Section */}
+    <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-center px-2">
+        <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
+          Already have an account?{" "}
+          <button
+            type="button"
+            className="text-lightBlue-600 hover:underline font-medium"
+            onClick={() => {
+              onClose();
+              onOpenLogin();
+            }}
+          >
+            Login here
+          </button>
+        </div>
+        <div className="flex space-x-3">
+          <button
+            type="button"
+            onClick={() => {
+              formik.resetForm();
+              onClose();
+            }}
+            className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all text-sm"
+          >
+            {initialValues ? "Update" : "Register"}
+          </button>
+        </div>
+      </div>
+      </div>
+        </form>
+       
         {/* <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Organization Type</label>
           <input
@@ -278,8 +330,9 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             <p className="text-red-500 text-xs">{formik.errors.orgtype}</p>
           )}
         </div> */}
+{/* <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row justify-between items-center px-2">
 
-        <div className="col-span-2 flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-100">
           <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-0">
             Already have an account?{" "}
             <button
@@ -312,7 +365,8 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             </button>
           </div>
         </div>
-      </form>
+        </div> */}
+     
 
       {showOtpModal && (
         <OTPModal
@@ -328,6 +382,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           }}
         />
       )}
+    
     </div>
   );
 };

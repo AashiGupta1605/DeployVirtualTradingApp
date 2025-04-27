@@ -36,7 +36,8 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required("Name is required")
-      .min(2, "Name must be at least 2 characters")
+      .min(3, "Name must be at least 3 characters")
+      .max(50, "Name must be less than 50 characters")
       .matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
     email: Yup.string()
       .email("Invalid email format")
@@ -126,8 +127,8 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
         </div>
 
         {/* Form Content */}
-        <form onSubmit={formik.handleSubmit} className="p-4 overflow-y-auto max-h-[70vh]">
-          <div className="grid grid-cols-1 gap-4">
+        <form onSubmit={formik.handleSubmit} className="p-4">
+          <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -246,6 +247,48 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
               )}
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date of Birth <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                name="dob"
+                {...formik.getFieldProps('dob')}
+                className={`w-full px-3 py-2 rounded-xl border ${
+                  formik.touched.dob && formik.errors.dob
+                    ? 'border-red-500'
+                    : 'border-gray-200'
+                }  border-gray-200 
+                   focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                   focus:outline-none transition-all duration-200`}
+              />
+              {formik.touched.dob && formik.errors.dob && (
+                <p className="mt-1 text-xs text-red-500">{formik.errors.dob}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date of Birth <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                name="dob"
+                {...formik.getFieldProps('dob')}
+                className={`w-full px-3 py-2 rounded-xl border ${
+                  formik.touched.dob && formik.errors.dob
+                    ? 'border-red-500'
+                    : 'border-gray-200'
+                }  border-gray-200 
+                   focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                   focus:outline-none transition-all duration-200`}
+              />
+              {formik.touched.dob && formik.errors.dob && (
+                <p className="mt-1 text-xs text-red-500">{formik.errors.dob}</p>
+              )}
+            </div>
+
             {/* Organization Type Field */}
             {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -279,7 +322,8 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
           )}
 
           {/* Form Actions */}
-          <div className="flex justify-end items-center space-x-3 mt-4 pt-4 border-t border-gray-100">
+          <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+          <div className="flex justify-end items-center space-x-3  pt-4">
             <button
               type="button"
               onClick={onClose}
@@ -310,6 +354,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
               )}
             </button>
           </div>
+          </div>
         </form>
       </div>
 
@@ -335,8 +380,8 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
         </div>
 
         {/* Form Content */}
-        <form onSubmit={formik.handleSubmit} className="p-6 overflow-y-auto max-h-[80vh]">
-          <div className="grid grid-cols-2 gap-6">
+        <form onSubmit={formik.handleSubmit} className="p-6 ">
+          <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -488,7 +533,8 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
           )}
 
           {/* Form Actions */}
-          <div className="flex justify-end items-center space-x-4 mt-6 pt-6 border-t border-gray-100">
+          <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+          <div className="flex justify-end items-center space-x-4  pt-4">
             <button
               type="button"
               onClick={onClose}
@@ -518,6 +564,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                 'Register User'
               )}
             </button>
+          </div>
           </div>
         </form>
       </div>

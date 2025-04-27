@@ -4,6 +4,7 @@ import FeedbackTable from "../../components/Admin/Tables/FeedbackTable/FeedbackT
 import Pagination from '../../components/Common/TableItems/Pagination';
 import TableFilters from '../../components/Common/TableItems/TableFilters';
 import StatsSection from "../../components/Admin/Cards/StatsSection";
+import Loader from '../../components/Common/Loader';
 import {
   fetchFeedbacks,
   setFilters,
@@ -206,8 +207,8 @@ const FeedbackList = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      <div>
+        <Loader />
       </div>
     );
   }

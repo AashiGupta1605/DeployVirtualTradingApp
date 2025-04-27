@@ -34,7 +34,8 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required("Organization Name is required")
-      .min(2, "Name must be at least 2 characters")
+      .min(3, "Name must be at least 3 characters")
+      .max(50, "Name must be less than 50 characters")
       .max(100, "Name must not exceed 100 characters"),
     address: Yup.string()
       .required("Address is required")
@@ -185,7 +186,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
     >
       {({ isSubmitting }) => (
         <Form className="space-y-4">
-          <div className="space-y-4">
+          <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               name="name"
               label="Organization Name"
@@ -225,8 +226,8 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
           </div>
 
           {/* Action Buttons - Sticky at bottom */}
-          <div className="sticky bottom-0 bg-white pt-4 border-t border-gray-100">
-            <div className="flex justify-end items-center space-x-3">
+          <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+            <div className="flex justify-end items-center space-x-3  pt-4 ">
               <button
                 type="button"
                 onClick={onClose}
@@ -302,7 +303,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
           >
             {({ isSubmitting }) => (
               <Form className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Organization Details Section */}
                   <div className="p-6 rounded-xl flex-1">
                     <div className="space-y-6">
@@ -351,9 +352,11 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
                     </div>
                   </div>
                 </div>
+                
 
                 {/* Action Buttons */}
-                <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+                <div className="sticky bottom-0 bg-white pt-4 pb-2 mt-4 border-t border-gray-100">
+                <div className="flex justify-end items-center space-x-4 pt-4 ">
                   <button
                     type="button"
                     onClick={onClose}
@@ -379,6 +382,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
                       selectedOrg ? "Update Organization" : "Register Organization"
                     )}
                   </button>
+                </div>
                 </div>
               </Form>
             )}

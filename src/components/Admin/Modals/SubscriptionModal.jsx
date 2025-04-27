@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Loader from '../../Common/Loader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -367,8 +368,8 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      <div>
+        <Loader />
       </div>
     );
   }

@@ -24,16 +24,17 @@ const today = new Date();
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
-    .max(45, 'Name must be at most 45 characters')
-    .required('Organization Name is required'),
+  .min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces")
+    .required('Organization name is required'),
 
   website: Yup.string()
     .url('Enter a valid website URL')
     .required('Website is required'),
 
   email: Yup.string()
-    .required("Required, enter your mail ID")
-    .email("Invalid Email (e.g., example@domain.com)")
+    .required("Email is required")
+    .email("Invalid email")
     .test(
       "no-spaces",
       "Email should not contain spaces",
@@ -41,7 +42,7 @@ const validationSchema = Yup.object().shape({
     ),
 
   mobile: Yup.string()
-    .required("Phone number is Required")
+    .required("Phone number is required")
     .test(
       "only-digits",
       "Phone number must contain only digits (0-9)",
@@ -59,12 +60,14 @@ const validationSchema = Yup.object().shape({
     ),
 
   contactPerson: Yup.string()
-    .max(25, 'Name must be at most 25 characters')
+  .min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces")
     .notRequired(),
 
   aboutHelp: Yup.string()
-    .max(160, 'Must be 160 characters or less')
-    .required('Write your Query. This field is required'),
+  .min(5, "Message must be at least 5 characters")
+    .max(200, "Message must be less than 200 characters")
+    .required('Required, write your query'),
 
   // preferredDate: Yup.date()
   //   .nullable()
@@ -75,7 +78,7 @@ const validationSchema = Yup.object().shape({
   //   .required('Select any Preferred Day is Required'),
 
   preferredDate: Yup.date()
-    .required("Select any date to get a Demo is Required.")
+    .required("Select any date to get a demo is Required.")
     .min(minPreferredDate, "Date must be today or later.")
     .max(maxPreferredDate, "You must select a date within the next 7 days."),
 
@@ -152,7 +155,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="Organization Name"
                     name="name"
-                    placeholder="Enter Organization Name"
+                    placeholder="Enter organization name"
                   />
 
                   {/* Website */}
@@ -160,14 +163,14 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="Website URL"
                     name="website"
-                    placeholder="Enter your website URL"
+                    placeholder="Enter website URL"
                   />
                   
                   {/* Contact Person */}
                   <FormField
                     label="Contact Person (Optional)"
                     name="contactPerson"
-                    placeholder="Contact Person Name"
+                    placeholder="Enter contact person name"
                   />
 
                   {/* Preferred Day */}
@@ -224,7 +227,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     type="email"
                     label="Organization Email"
                     name="email"
-                    placeholder="organization@.abc.com"
+                    placeholder="Enter email address"
                   />
 
                   {/* Mobile */}
@@ -232,7 +235,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="Official Contact Number"
                     name="mobile"
-                    placeholder="e.g., 9876543210"
+                    placeholder="Enter mobile number "
                   />
 
                   {/* About Help */}
@@ -240,7 +243,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
                     required
                     label="How can we help your Organization?"
                     name="aboutHelp"
-                    placeholder="Describe your Query briefly, within 160 words"
+                    placeholder="Describe your query briefly"
                     as="textarea"
                   />
 

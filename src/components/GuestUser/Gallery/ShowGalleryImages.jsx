@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { FolderOpen, Images, Search } from "lucide-react";
 import axios from "axios";
+import { Listbox } from "@headlessui/react";
+import { ChevronDown } from "lucide-react";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import CategoryImagesCards from "./CategoryImagesCards";
 import { motion } from "framer-motion";
+
+const capitalizeWords = (str) => {
+  return str.split(" ").map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(" ");
+};
+
 
 const ShowGalleryImages = () => {
   const [galleryCategories, setGalleryCategories] = useState([]);
   const [err, setErr] = useState("");
   const [search, setSearch] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
+  const categories = [
+    { name: 'All Categories', value: 'all' },
+    ...galleryCategories.map(c => ({ name: capitalizeWords(c.name), value: c.name }))
+  ]
+  const selectedCategory = categories.find(cat => cat.value === search)
+  
 
   const fetchGalleryCategories = async () => {
     try {
@@ -30,11 +45,7 @@ const ShowGalleryImages = () => {
     fetchGalleryCategories();
   }, []);
 
-  const capitalizeWords = (str) => {
-    return str.split(" ").map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    ).join(" ");
-  };
+  
 
   return (
     <div className="space-y-10 relative z-30">
@@ -43,7 +54,7 @@ const ShowGalleryImages = () => {
   initial={{ opacity: 0, y: -20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
-  className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-gray-100 relative z-30"
+  className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-gray-100 relative z-30 "
 >
   <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
 
@@ -63,18 +74,32 @@ const ShowGalleryImages = () => {
   {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
     <Search className="text-gray-400" size={18} />
   </div> */}
-  <select
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="w-full pl-6 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none bg-white text-gray-700 text-sm shadow-sm"
-  >
-    <option value="all">All Categories</option>
-    {galleryCategories.map((category, index) => (
-      <option key={index} value={category.name}>
-        {capitalizeWords(category.name)}
-      </option>
-    ))}
-  </select>
+   <Listbox value={search} onChange={setSearch}>
+      <div className="relative w-full md:w-64">
+        <Listbox.Button className="w-full pl-6 pr-10 py-2.5 border border-gray-200 rounded-lg bg-white text-gray-700 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all relative text-left">
+          {selectedCategory?.name || 'Select'}
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          </span>
+        </Listbox.Button>
+
+        <Listbox.Options className="absolute z-50 mt-1 w-full max-h-60 overflow-auto bg-white py-1 text-sm  border-gray-200 rounded-xl  overflow-y-auto shadow-lg focus:outline-none">
+          {categories.map((cat, index) => (
+            <Listbox.Option
+              key={index}
+              value={cat.value}
+              className={({ active }) =>
+                `cursor-pointer select-none px-4 py-1  ${
+                  active ? 'bg-blue-600 text-white' : 'text-gray-700'
+                }`
+              }
+            >
+              {cat.name}
+            </Listbox.Option>
+          ))}
+        </Listbox.Options>
+      </div>
+    </Listbox>
 </div>
 
 

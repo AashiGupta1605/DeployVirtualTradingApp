@@ -123,6 +123,48 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
     return activeSubscription.vertualAmount - totalHoldingsValue;
   };
 
+  const formatLastUpdatedDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    
+    try {
+      // Handle different date formats
+      let dateToFormat = dateString;
+      
+      // If it's already a valid date string (ISO format)
+      if (typeof dateString === 'string' && dateString.includes('T')) {
+        return new Date(dateString).toLocaleString();
+      }
+      
+      // Handle Unix timestamps (if any)
+      if (/^\d+$/.test(dateString)) {
+        dateToFormat = parseInt(dateString, 10);
+      }
+      
+      // Handle other string formats
+      const date = new Date(dateToFormat);
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        // Try parsing as Indian date format if standard parsing fails
+        const indianDateParts = dateString.split(/[-/]/);
+        if (indianDateParts.length === 3) {
+          const indianDate = new Date(
+            `${indianDateParts[2]}-${indianDateParts[1]}-${indianDateParts[0]}`
+          );
+          if (!isNaN(indianDate.getTime())) {
+            return indianDate.toLocaleString();
+          }
+        }
+        return 'N/A';
+      }
+      
+      return date.toLocaleString();
+    } catch (error) {
+      console.error('Date formatting error:', error);
+      return 'N/A';
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
@@ -159,20 +201,27 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
 
 useEffect(() => {
   if (isOpen && symbol) {
-    console.log('Fetching data for symbol:', symbol);
-    dispatch(fetchCompanyDetails({ symbol, type }))
-      .then(() => {
-        console.log('Successfully fetched company details');
-        return dispatch(fetchHistoricalData({ symbol, type, timeRange: '1D' }));
-      })
-      .then(() => {
-        console.log('Successfully fetched historical data');
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    const loadData = async () => {
+      try {
+        // First load company details
+        await dispatch(fetchCompanyDetails({ symbol, type })).unwrap();
+        
+        // Then load historical data
+        await dispatch(fetchHistoricalData({ symbol, type, timeRange: '1D' })).unwrap();
+        
+        // Only load holdings if we have the required IDs
+        if (userId && subscriptionPlanId) {
+          await dispatch(fetchHoldings({ userId, subscriptionPlanId })).unwrap();
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast.error(`Failed to load data for ${symbol}`);
+      }
+    };
+
+    loadData();
   }
-}, [isOpen, symbol, type, dispatch]);
+}, [isOpen, symbol, type, dispatch, userId, subscriptionPlanId]);
 
   useEffect(() => {
     if (isOpen && userId && subscriptionPlanId) {
@@ -196,16 +245,19 @@ useEffect(() => {
 
   const handleRefresh = async () => {
     if (isRefreshing || loading) return;
-
+  
     dispatch(setIsRefreshing(true));
     try {
-      await Promise.all([
-        dispatch(fetchCompanyDetails({ symbol, type })),
-        dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter })),
-        dispatch(fetchHoldings(userId)),
-      ]);
+      await dispatch(fetchCompanyDetails({ symbol, type })).unwrap();
+      await dispatch(fetchHistoricalData({ symbol, type, timeRange: activeFilter })).unwrap();
+      
+      // Only fetch holdings if we have valid IDs
+      if (userId && subscriptionPlanId) {
+        await dispatch(fetchHoldings({ userId, subscriptionPlanId })).unwrap();
+      }
     } catch (error) {
       console.error('Error refreshing data:', error);
+      toast.error(`Error refreshing data: ${error.message || 'Unknown error'}`);
     } finally {
       dispatch(setIsRefreshing(false));
     }
@@ -275,7 +327,11 @@ case 'trading':
 
   if (error) {
     return (
-      <ErrorDisplay error={error} onRetry={handleRefresh} onClose={onClose} />
+      <ErrorDisplay 
+        error={error.message || error.toString()} 
+        onRetry={handleRefresh} 
+        onClose={onClose} 
+      />
     );
   }
 
@@ -332,17 +388,17 @@ case 'trading':
           </div>
 
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-            <div className="flex flex-row items-center justify-between text-sm text-gray-500">
-              <p className="text-gray-400">Data provided by NSE India</p>
-              <p className="flex items-center">
-                <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-                Last updated:{' '}
-                {data?.lastUpdateTime
-                  ? new Date(data.lastUpdateTime).toLocaleString()
-                  : 'N/A'}
-              </p>
-            </div>
-          </div>
+  <div className="flex flex-row items-center justify-between text-sm text-gray-500">
+    <p className="text-gray-400">Data provided by NSE India</p>
+    <p className="flex items-center">
+      <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+      Last updated:{' '}
+      {data?.lastUpdateTime
+        ? formatLastUpdatedDate(data.lastUpdateTime)
+        : 'N/A'}
+    </p>
+  </div>
+</div>
         </div>
       </div>
 

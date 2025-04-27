@@ -66,14 +66,7 @@ const OrganizationsSlider = () => {
         pauseOnHover: true,
         nextArrow: <CustomNextArrow />,
         prevArrow: <CustomPrevArrow />,
-        appendDots: dots => (
-            <div className="bg-transparent !pb-8">
-                <ul className="!m-0 !p-0"> {dots} </ul>
-            </div>
-        ),
-        customPaging: () => (
-            <div className="w-2 h-2 rounded-full bg-gray-300 hover:bg-lightBlue-600 transition-all"></div>
-        ),
+        dotsClass: "slick-dots slick-dots-custom",
         responsive: [
             {
                 breakpoint: 1280,
@@ -156,17 +149,19 @@ const OrganizationsSlider = () => {
                                         whileHover={{ scale: 1.05 }}
                                         className="px-2 outline-none"
                                     >
-                                        <div className="bg-white rounded-lg p-4 h-32 flex items-center justify-center border border-gray-100 hover:border-lightBlue-200 transition-all">
-                                            <img
-                                                src={client.photo || "https://via.placeholder.com/150?text=Client+Logo"}
-                                                alt={client.name}
-                                                className="max-h-16 max-w-full object-contain filter grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all"
-                                                onError={(e) => { 
-                                                    e.target.src = "https://via.placeholder.com/150?text=Client+Logo";
-                                                    e.target.className = "max-h-16 max-w-full object-contain opacity-70";
-                                                }}
-                                            />
-                                        </div>
+                                <div className="bg-white rounded-lg p-4 h-40 flex items-center justify-center border border-gray-100 hover:border-lightBlue-200 transition-all">
+  <img
+    src={client.photo || "https://via.placeholder.com/150?text=Client+Logo"}
+    alt={client.name}
+    className="h-32 w-32 rounded-full object-cover filter grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all"
+    onError={(e) => {
+      e.target.src = "https://via.placeholder.com/150?text=Client+Logo";
+      e.target.className = "h-24 w-24 rounded-full object-cover opacity-70";
+    }}
+  />
+</div>
+
+
                                     </motion.div>
                                 ))}
                             </Slider>
@@ -187,29 +182,43 @@ const OrganizationsSlider = () => {
             {showModal && <ShowAllClientsModal closeModal={closeModal} clients={clientsData} />}
 
             {/* Custom styles for slider */}
-            <style>{`
-                .slick-dots-custom {
-                    bottom: -30px;
-                    display: flex !important;
-                    justify-content: center;
-                    align-items: center;
-                }
-                
-                .slick-dots-custom li button {
-                    width: 10px;
-                    height: 10px;
-                    background-color: #d1d5db;
-                    border-radius: 50%;
-                }
-
-                .slick-dots-custom li.slick-active button {
-                    background-color: #3b82f6;
-                }
-
-                .slick-slide > div {
-                    margin-right: 15px;
-                }
-            `}</style>
+            <style >{`
+        .slick-dots-custom {
+          bottom: -25px;
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+        }
+        
+        .slick-dots-custom li {
+          margin: 0 4px;
+        }
+        
+        .slick-dots-custom li button {
+          width: 8px;
+          height: 8px;
+          padding: 0;
+          border-radius: 50%;
+          background: #d1d5db;
+          border: none;
+          text-indent: -9999px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+        
+        .slick-dots-custom li.slick-active button {
+          background: #3b82f6;
+          width: 20px;
+          border-radius: 10px;
+        }
+        
+        .slick-dots-custom li button:before {
+          display: none;
+        }
+      `}</style>
         </section>
     );
 };

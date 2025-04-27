@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import '../../assets/styles/companypage.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpCircle, ArrowDownCircle, TrendingUp, BarChart3, Clock, Award, PieChart } from 'lucide-react';
-
+import Loader from '../../components/Common/Loader';
 import AdminNavbar from "../../components/Admin/Navbars/AdminNavbar";
 import Sidebar from "../../components/Admin/Sidebar/Sidebar";
 // import HeaderStats from "../../components/Admin/Headers/HeaderStats.js";
@@ -67,9 +67,8 @@ const CompanyDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p className="loading-text">Loading Company Details...</p>
+      <div>
+        <Loader />
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
-
+import Loader from '../../../../Common/Loader';
 const TradingViewTab = ({ symbol, loading }) => {
   const containerRef = useRef(null);
   const scriptRef = useRef(null);
@@ -124,9 +124,11 @@ const TradingViewTab = ({ symbol, loading }) => {
       </div>
       <div className="relative w-full h-[80vh] bg-white rounded-md overflow-hidden">
         {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-white z-50">
-            <div className="h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
+    
+      <div>
+        <Loader />
+      </div>
+    
         ) : (
           <div ref={containerRef} className="tradingview-widget-container w-full h-full" />
         )}
