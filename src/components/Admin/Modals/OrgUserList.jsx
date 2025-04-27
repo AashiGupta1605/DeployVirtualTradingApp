@@ -1,3 +1,5 @@
+
+import Loader from '../../Common/Loader';
 import React from "react";
 import {
 ChevronDown,
@@ -44,9 +46,10 @@ Collapse
     {/* Modal Body */}
     <div className="p-6 overflow-y-auto max-h-[80vh]">
       {loading ? (
-        <div className="flex justify-center items-center">
-          <p>Loading...</p>
-        </div>
+      <div>
+        <Loader />
+      </div>
+    
       ) : students.length === 0 ? (
         <p>No students found for this organization.</p>
       ) : (

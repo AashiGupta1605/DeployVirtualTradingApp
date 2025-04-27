@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import Loader from '../../../../Common/Loader';
 import { 
   DollarSign, 
   Activity,
@@ -135,18 +136,11 @@ const TransactionHistory = ({ currentPrice, symbol }) => {
   
     // Loading state
     if (loading) {
-      return (
-        <div className="w-full space-y-6">
-          <div className="animate-pulse">
-            <div className="grid grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
-              ))}
-            </div>
-            <div className="mt-6 h-64 bg-gray-200 rounded-xl"></div>
-          </div>
-        </div>
-      );
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
     }
     return (
       <div className="w-full space-y-6">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
+import Loader from '../../../../Common/Loader';
 import { 
   Calendar,
   Clock,
@@ -295,12 +296,10 @@ const ChartTab = ({
       {/* Chart */}
       <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
         {loading ? (
-          <div className="flex items-center justify-center h-[400px]">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 border-4 border-lightBlue-500 border-t-transparent rounded-full animate-spin"></div>
-              <p className="mt-4 text-gray-500">Loading chart data...</p>
-            </div>
-          </div>
+  <div>
+        <Loader />
+      </div>
+    
         ) : (
           <ReactApexChart
             options={chartOptions}

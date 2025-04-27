@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Loader from '../../../../Common/Loader';
 import { 
   TrendingUp,
   BarChart2, 
@@ -133,13 +134,10 @@ const OverviewTab = ({ data, loading, error }) => {
 
       {/* Loading Overlay */}
       {loading && (
-        <div className="absolute inset-0 bg-white/75 flex items-center justify-center rounded-xl">
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" />
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100" />
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200" />
-          </div>
-        </div>
+      <div>
+        <Loader />
+      </div>
+    
       )}
     </div>
   );
