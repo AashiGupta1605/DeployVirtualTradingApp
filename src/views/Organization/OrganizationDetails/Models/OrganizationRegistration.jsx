@@ -85,6 +85,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             <input
               type="text"
               name="name"
+              placeholder="Enter organization name"
               {...formik.getFieldProps("name")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -102,6 +103,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             <input
               type="text"
               name="address"
+              placeholder="Enter organization address"
               {...formik.getFieldProps("address")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -118,6 +120,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             <input
               type="text"
               name="website"
+              placeholder="Enter website URL"
               {...formik.getFieldProps("website")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -136,6 +139,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             <input
               type="text"
               name="contactPerson"
+              placeholder="Enter contact person name"
               {...formik.getFieldProps("contactPerson")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -152,6 +156,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             <input
               type="email"
               name="email"
+              placeholder="Enter email address"
               {...formik.getFieldProps("email")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -169,6 +174,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             <input
               type="text"
               name="mobile"
+               placeholder="Enter mobile number"
               {...formik.getFieldProps("mobile")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -186,6 +192,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
           <input
             type="password"
             name="password"
+             placeholder="Create a password"
             {...formik.getFieldProps("password")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
@@ -203,6 +210,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
           <input
             type="password"
             name="confirmPassword"
+             placeholder="Confirm your password"
             {...formik.getFieldProps("confirmPassword")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
