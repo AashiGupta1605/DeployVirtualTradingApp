@@ -129,7 +129,7 @@ const OrganizationFeedback = () => {
   return (
     <div className="relative">
       {/* <Dashboard type="organization-feedback" showAllCards={false} showCardsTable={false} /> */}
-      <div className="-mt-7">
+      <div className="mt-18">
       <StatsSection isDashboard={false} pageType="feedbacks" />
       </div>
 

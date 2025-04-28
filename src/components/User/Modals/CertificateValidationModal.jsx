@@ -1537,7 +1537,7 @@ const CertificateValidationModal = ({ isOpen, onClose }) => {
         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200">
            {/* ... header content unchanged ... */}
             <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <i className="fas fa-certificate text-white text-xl"></i>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
@@ -1656,8 +1656,8 @@ const CertificateValidationModal = ({ isOpen, onClose }) => {
                     disabled={formik.isSubmitting}
                     className={`px-5 py-2.5 rounded-lg text-white font-medium transition-all duration-200 flex items-center justify-center ${
                     formik.isSubmitting
-                        ? "bg-blue-400 cursor-not-allowed"
-                        : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/30"
+                        ? "bg-lightBlue-400 cursor-not-allowed"
+                        : "bg-lightBlue-600 hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/30"
                     }`}
                 >
                     {formik.isSubmitting ? (
