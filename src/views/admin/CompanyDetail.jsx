@@ -77,7 +77,7 @@ const CompanyDetailsPage = () => {
     return (
       <div className="error-container">
         <div className="error-message">
-          <p className="error-text">Unable to Fetch Company Data</p>
+          <p className="error-text">Unable too Fetch Company Data</p>
           <p className="error-details">{error}</p>
         </div>
       </div>
