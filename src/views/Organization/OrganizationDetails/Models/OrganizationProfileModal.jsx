@@ -1087,9 +1087,9 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
       <Toaster />
 
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-      <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl p-6 mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50">
+      <div  className="relative w-full max-w-4xl max-h-[90vh] mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 flex flex-col">
         {/* Modal Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+        <div className="flex justify-between items-center p-4 md:p-6 border-b border-gray-100 rounded-xl sticky top-0 bg-white z-10">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
               <i className="fas fa-building text-white"></i>
@@ -1105,8 +1105,9 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto max-h-[80vh] z-50">
-          <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <div className="px-4 md:px-6 py-4 md:py-6 flex-1 overflow-hidden">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col h-full">
+          <div className="overflow-y-auto pr-2 max-h-[calc(90vh-136px)] px-4 md:px-6 py-4 md:py-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-4">
@@ -1277,9 +1278,10 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                 </div>
               </div>
             </div>
+            </div>
 
             {/* Modal Footer */}
-            <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+            <div className="flex justify-end items-center space-x-4 px-4 md:px-6 py-4 border-t border-gray-100 sticky bottom-0 bg-white z-10">
               <button
                 type="button"
                 onClick={() => {

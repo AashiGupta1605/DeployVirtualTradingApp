@@ -85,13 +85,40 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
         const data = await response.json();
     
+        // if (!response.ok) {
+        //   if (data?.status === "not_verified") {
+        //     toast.success("You are already registered but not verified. Sending OTP...");
+        //     setUserEmail(userData.email);
+        //     setAlreadyRegistered(true);
+        //     setShowOtpModal(true);
+    
+        //     try {
+        //       const otpRes = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ email: userData.email }),
+        //       });
+        //       const otpData = await otpRes.json();
+        //       if (otpRes.ok) {
+        //         toast.success("OTP resent to your email");
+        //       } else {
+        //         toast.error(otpData.message || "Failed to resend OTP");
+        //       }
+        //     } catch (otpErr) {
+        //       toast.error("Failed to resend OTP");
+        //     }
+        //     return;
+        //   }
+        //   toast.error(data.message || "Something went wrong");
+        //   return;
+        // }
         if (!response.ok) {
-          if (data?.status === "not_verified") {
+          if (data?.status === "not_verified" && data?.emailAlreadyExists) {
             toast.success("You are already registered but not verified. Sending OTP...");
             setUserEmail(userData.email);
             setAlreadyRegistered(true);
             setShowOtpModal(true);
-    
+        
             try {
               const otpRes = await fetch(`${BASE_API_URL}/user/auth/send-otp`, {
                 method: "POST",
@@ -109,9 +136,11 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             }
             return;
           }
+        
           toast.error(data.message || "Something went wrong");
           return;
         }
+             
 
         toast.success(`${initialValues ? "User updated" : "Registration successful!"}`);
     
