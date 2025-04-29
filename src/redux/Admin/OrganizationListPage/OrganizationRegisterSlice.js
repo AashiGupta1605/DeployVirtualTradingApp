@@ -22,7 +22,7 @@ export const registerOrganization = createAsyncThunk(
   async (organizationData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BASE_API_URL}/organization/register`,
+        `${BASE_API_URL}/admin/OrgRegister`,
         organizationData,
         {
           headers: {
