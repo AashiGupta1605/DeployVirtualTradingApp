@@ -6,19 +6,28 @@ import { Edit, Trash2 } from "lucide-react";
 import { toast } from 'react-hot-toast';
 
 import ConfirmationModal from "../Modals/ConformationModal";
+import UpdateGalleryImage from "./UpdateGalleryImage";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import CategoryImagesTable from "./CategoryImagesTable";
 
+
 const Card = ({ refreshCategories, id, image, title, description, postDate }) => {
 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const handleDeleteCategory = (id) => {
       setDeleteId(id);  
       setIsModalOpen(true); 
     };
+
+    const handleEditCategory = () => {
+      setIsUpdateModalOpen(true); // Open update modal
+    };
+
     const confirmDelete = async () => {
       if (!deleteId) return;
       try {
@@ -105,7 +114,7 @@ const Card = ({ refreshCategories, id, image, title, description, postDate }) =>
         </div>
   
         <div className="mb-1 absolute bottom-2 right-6 flex space-x-2">
-          <button className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-lg focus:outline-none">
+          <button className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-lg focus:outline-none"  onClick={handleEditCategory} >
             <Edit size={18} />
           </button>
           <button className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg focus:outline-none" onClick={() => handleDeleteCategory(id)}>
@@ -120,6 +129,21 @@ const Card = ({ refreshCategories, id, image, title, description, postDate }) =>
         title="Confirm Deletion"
         message={`Are you sure you want to delete`}
       />
+
+       {/* Update Modal */}
+       {isUpdateModalOpen && (
+        <UpdateGalleryImage
+          closeModal={() => setIsUpdateModalOpen(false)}
+          refreshCategoryImages={refreshCategories}
+          updateImageId={id}
+          updateImageData={{
+            photo: image,
+            title: title,
+            desc: description,
+            // you may add other fields like categoryName here if needed
+          }}
+        />
+      )}
       </>
     );
 };

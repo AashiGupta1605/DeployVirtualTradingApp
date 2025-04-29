@@ -371,17 +371,16 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
   </div>
 
   {/* Right Side (Buttons and Search) */}
-  <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 w-full lg:w-auto">
+  <div className="flex items-center gap-3 -mr-2">
     {/* Filter Button */}
     <button
       onClick={() => setShowFilters(!showFilters)}
-      className={`relative flex items-center gap-2 px-3 py-2 h-[38px] border rounded-lg focus:outline-none transition-all
-        ${showFilters ? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
-        hover:shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+      className={`relative flex items-center gap-5 px-2 py-2 h-[38px] border rounded-lg focus:outline-none hover:shadow-shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
+        ${showFilters? "shadow-[0_0_7px_1px_rgba(59,130,246,0.5)] border-blue-300" : "shadow-md border-gray-300"}
       `}
     >
       <div className="relative">
-        <Filter className="text-gray-500 text-xl hover:text-gray-700" />
+        <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
         {filterCount > 0 && (
           <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
             {filterCount}
@@ -389,8 +388,8 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
         )}
       </div>
       <IoIosArrowUp
-        className={`text-gray-500 text-lg transition-transform duration-200 ${
-          showFilters ? "rotate-0" : "rotate-180"
+        className={`pl-[2px] -pr-[2px] text-gray-500 text-lg transition-transform duration-200 ${
+                    showFilters ? "rotate-0" : "rotate-180"
         }`}
       />
     </button>
@@ -416,15 +415,29 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
     {/* Search Bar */}
 
 {/* Search Bar */}
-<div className="relative w-full sm:w-[226px]">
+<div className="relative ">
+<div className="relative w-[220px]">
   {/* Conditional Icon */}
-  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[17px] pointer-events-none">
+  {/* <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[17px] pointer-events-none">
     {["demoRequestDate", "demoResolveDate", "preferredDate"].includes(field) ? (
       <FiCalendar />
     ) : (
       <FiSearch />
     )}
-  </div>
+  </div> */}
+   {/* Search/Calender Icon */}
+   {field=='demoRequestDate' || field=='demoResolveDate' || field=='preferredDate'
+                      ?<img
+                        src="https://cdn-icons-png.flaticon.com/512/747/747310.png"
+                        alt="calendar"
+                        className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
+                      />
+                      :<img
+                        src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+                        alt="search"
+                        className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
+                      />
+                    }
 
   {/* Input Field */}
   <input
@@ -439,16 +452,18 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
     className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full h-[38px] focus:outline-none focus:shadow-md focus:border-black placeholder:text-sm placeholder:tracking-wide"
   />
 </div>
+</div>
 
 
 
     {/* Recent Bookings Button */}
     <button
-      onClick={() => console.log("Hii")}
-      className="w-full sm:w-auto h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
-    >
-      <span className="font-medium">Recent Bookings</span>
-    </button>
+  onClick={() => console.log("Hii")}
+  className="mr-2 h-10 px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
+>
+  <span className="font-medium text-sm">Recent Bookings</span>
+</button>
+
   </div>
 </div>
 
