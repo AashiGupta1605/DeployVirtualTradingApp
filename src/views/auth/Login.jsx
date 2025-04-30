@@ -74,7 +74,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
   return (
     <div className="space-y-4">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-xl z-50">
+        <div className="absolute inset-0 flex h-full items-center justify-center rounded-xl z-50">
           <div className="absolute inset-0 bg-gray-900/50 rounded-xl z-40"></div>
           <div className="z-50 flex flex-col items-center gap-4">
             <div
@@ -85,8 +85,8 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
         </div>
       )}
 
-      <form onSubmit={formik.handleSubmit} className="space-y-4">
-        <div className="space-y-3">
+      <form onSubmit={formik.handleSubmit} className="space-y-4 h-full flex flex-col ">
+        <div className="flex-1  overflow-y-auto pr-2 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email or Mobile
@@ -128,8 +128,9 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
             )}
           </div>
         </div>
-
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-4 border-t border-gray-100">
+   
+        <div className="sticky pt-4 border-t border-gray-100 space-y-4">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <button
             type="button"
             className="text-lightBlue-600 hover:underline focus:outline-none text-xs font-medium"
@@ -167,6 +168,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
           >
             {formik.isSubmitting ? "Logging in..." : "Login"}
           </button>
+        </div>
         </div>
       </form>
     </div>

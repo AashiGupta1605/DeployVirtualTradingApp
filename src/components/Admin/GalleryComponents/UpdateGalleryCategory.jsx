@@ -15,7 +15,7 @@ const initialValues = {
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-  name: Yup.string().trim().required("Category name is required").max(25, "Category must not be of more than 25 characters"),
+  name: Yup.string().trim().required("Category name is required").min(3,"Category must not be of more than 3 characters").max(50, "Category must not be of more than 50 characters"),
 });
 
   const updateCategoryName = async (values, {resetForm}) => {

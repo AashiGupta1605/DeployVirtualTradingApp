@@ -653,6 +653,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                </fieldset>
 
                 {/* Forgot Password Link */}
+                
                 <div className="text-right text-sm">
                   <button
                     type="button"

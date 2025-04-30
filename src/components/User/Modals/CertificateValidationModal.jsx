@@ -1624,7 +1624,10 @@ const CertificateValidationModal = ({ isOpen, onClose }) => {
                         formik.touched.userName && formik.errors.userName
                         ? "border-red-500"
                         : "border-gray-300"
-                    } bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+                    } w-full px-4 py-3 !rounded-xl border !border-gray-200 
+               bg-white text-gray-900 
+               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:outline-none transition-all duration-200`}
                     placeholder="Enter user name as registered"
                     aria-describedby="userName-error"
                     />

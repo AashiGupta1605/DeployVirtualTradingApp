@@ -306,11 +306,10 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
     <FontAwesomeIcon icon={faFolderOpen} className="text-gray-500 text-[21px]" />
     <h2 className="text-xl font-bold text-gray-800">Gallery Categories</h2>
   </div>
-
-  {/* Right Side - All elements in a row on sm+ screens */}
-  <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4 gap-3 w-full lg:w-auto">
+{/* Right Side - All in one row */}
+<div className="flex items-center gap-4 w-full lg:w-auto">
   {/* Total Categories */}
-  <h6 className="text-base font-semibold text-gray-400">
+  <h6 className="text-base font-semibold text-gray-400 whitespace-nowrap">
     Total Categories: {galleryCategories.length}
   </h6>
 
@@ -322,17 +321,14 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
       hover:shadow-[0_0_7px_1px_rgba(59,130,246,0.7)] hover:border-blue-400
     `}
   >
-    {/* Filter Icon */}
     <div className="relative">
-      <Filter className="text-gray-500 text-xl hover:text-gray-700 focus:outline-none" />
+      <Filter className="text-gray-500 text-xl hover:text-gray-700" />
       {filterCount > 0 && (
-        <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+        <span className="absolute -top-1 -right-3 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
           {filterCount}
         </span>
       )}
     </div>
-
-    {/* Arrow Icon */}
     <IoIosArrowUp
       className={`text-gray-500 text-lg transition-transform duration-200 ${
         showFilters ? "rotate-0" : "rotate-180"
@@ -341,11 +337,11 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
   </button>
 
   {/* Search Bar */}
-  <div className="relative w-full lg:w-[270px]">
+  <div className="relative w-[230px]">
     <img
       src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
       alt="search"
-      className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
+      className="absolute left-3 top-1/4 transform -translate-y-1/2 w-4 h-4"
     />
     <input
       type="text"
@@ -359,12 +355,14 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
   {/* Add Category Button */}
   <button
     onClick={openAddCategoryModal}
-    className="w-full lg:w-auto h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
+    className="h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center whitespace-nowrap"
   >
     <PlusCircle size={18} className="mr-2" />
     <span className="font-medium">Add Category</span>
   </button>
 </div>
+
+
 
 </div>
 

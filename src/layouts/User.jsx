@@ -27,7 +27,7 @@ import MyCertifications from "../views/user/MyCertifications";
 import { logout } from "../redux/User/authSlice";
 
 export default function User() {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
   const userData = useSelector((state) => state.user.auth.user);
   const navigate = useNavigate();
@@ -38,9 +38,9 @@ export default function User() {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
         setSidebarExpanded(false);
-      } else {
-        setSidebarExpanded(true);
-      }
+      } //else {
+      //   setSidebarExpanded(true);
+      // }
     };
 
     // Set initial state based on screen size

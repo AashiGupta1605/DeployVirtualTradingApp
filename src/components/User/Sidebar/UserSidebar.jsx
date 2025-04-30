@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { X, ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
+  
   const [activeMenu, setActiveMenu] = React.useState(null);
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user.profile);
@@ -17,6 +18,13 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   }, [dispatch]);
   
   const userName = userData ? userData.name : "User";
+  
+
+  
+  const handleSidebarToggle = () => {
+    setSidebarExpanded(!sidebarExpanded);
+    setActiveMenu(null);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -26,6 +34,9 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   };
 
   const toggleMenu = (menuName) => {
+    if (!sidebarExpanded) {
+      setSidebarExpanded(true);
+    }
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
 
