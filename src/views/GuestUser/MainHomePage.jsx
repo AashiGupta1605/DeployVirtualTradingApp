@@ -1312,11 +1312,9 @@ const MainHomePage = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="snap-y snap-mandatory overflow-y-scroll relative w-full" // Removed h-screen
+      className="snap-y snap-mandatary overflow-y-scroll h-screen relative w-full" // Removed h-screen
     >
      
-
-
             {/* Hero Section - RESTORED STRUCTURE */}
             <section ref={heroRef} className="snap-start w-full relative bg-gradient-to-b from-blue-50 to-white">
          {/* Content Container - Restored classes */}
@@ -1730,7 +1728,8 @@ const MainHomePage = () => {
           </div>
         </div>
       </footer> */}
-      <Footer/>
+      <Footer/> 
+
       {/* --- END OF MOVED FOOTER --- */}
 
 

@@ -34,3 +34,7 @@ html, body {
   /* .z{
     z-index: 11;
   } */
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }

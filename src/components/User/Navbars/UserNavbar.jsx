@@ -13,6 +13,7 @@ import {
   setActiveEvent
 } from "../../../redux/User/events/eventsSlice";
 import { toast } from 'react-hot-toast';
+import { Link } from "react-router-dom";
 
 export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
 }`}>
       <div className="w-full mx-auto flex flex-wrap items-center justify-between px-4 py-3 md:px-10">
         {/* Logo and Brand */}
-        <div className="flex items-center">
+        <Link className="flex items-center"  to="/">
           <button 
             className="lg:hidden p-2 mr-2 rounded-lg hover:bg-gray-100"
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
@@ -89,7 +90,7 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
             className="h-10 w-10 object-contain rounded-full"
           />
           <span className="hidden lg:block text-xl ml-4 font-bold">PGR - Virtual Trading App</span>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className="flex items-center space-x-4">

@@ -38,7 +38,7 @@ const ScrollToTopButton = () => {
         scrollTarget.removeEventListener('scroll', handleScroll);
       }
     };
-  }, [isHomePage]);
+  }, [isHomePage, location.pathname]);
 
   const scrollToTop = () => {
     if (isHomePage) {

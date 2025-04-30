@@ -4,6 +4,7 @@ import logoImage from "../../../assets/img/PGR_logo.jpeg";
 import { fetchOrgById } from "../../../redux/Organization/auth/organizationAuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Menu, X } from 'lucide-react';
+import {Link} from "react-router-dom"
 
 export default function OrganizationNavbar({ sidebarExpanded, setSidebarExpanded }) {
   const dispatch = useDispatch();
@@ -40,10 +41,10 @@ export default function OrganizationNavbar({ sidebarExpanded, setSidebarExpanded
           </button>
           
           {/* Logo - Always visible on mobile */}
-          <a
+          <Link
             className="flex items-center space-x-4 font-bold hover:text-gray-900 transition-colors"
-            href="#pablo"
-            onClick={(e) => e.preventDefault()}
+            to="/"
+            // onClick={(e) => e.preventDefault()}
           >
             <img 
               src={logoImage} 
@@ -53,7 +54,7 @@ export default function OrganizationNavbar({ sidebarExpanded, setSidebarExpanded
             <span className="hidden lg:block text-xl font-bold text-gray-900">
               PGR - Virtual Trading App
             </span>
-          </a>
+          </Link>
         </div>
 
         {/* Search Bar - Hidden on mobile */}
