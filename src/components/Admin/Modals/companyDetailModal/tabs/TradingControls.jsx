@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Clock, DollarSign, AlertCircle, Plus, Minus } from 'lucide-react';
+const PORTAL_FEE = 25;
 
 const TradingControls = ({
   activeTab,
@@ -42,6 +43,13 @@ const TradingControls = ({
   const handleQuantityChange = (value) => {
     const newValue = Math.max(0, parseInt(value) || 0);
     setQuantity(newValue);
+  };
+
+  const calculateTotalWithFee = () => {
+    const stockTotal = calculateTotal();
+    return activeTab === "buy" 
+      ? stockTotal + PORTAL_FEE 
+      : stockTotal - PORTAL_FEE;
   };
 
   const incrementQuantity = () => handleQuantityChange(quantity + 1);
@@ -160,36 +168,32 @@ const TradingControls = ({
 
         {/* Right Column: Order Summary */}
         <div className="bg-white p-4 rounded-lg">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">Order Summary</h4>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Market Price</span>
-              <span className="font-medium">₹{currentMarketPrice.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Quantity</span>
-              <span className="font-medium">{quantity}</span>
-            </div>
-            {orderType !== "market" && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">
-                  {orderType === "limit" ? "Limit Price" : "Stop Price"}
-                </span>
-                <span className="font-medium">
-                  ₹{(orderType === "limit" ? price : stopPrice).toFixed(2)}
-                </span>
-              </div>
-            )}
-            <div className="pt-3 border-t">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total Amount</span>
-                <span className="font-semibold text-blue-600">
-                  ₹{calculateTotal().toFixed(2)}
-                </span>
-              </div>
+        <h3 className="text-lg font-semibold mb-3">Order Summary</h3>
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span>Stock Price:</span>
+            <span>₹{currentMarketPrice.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Quantity:</span>
+            <span>{quantity}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Stock Total:</span>
+            <span>₹{calculateTotal().toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-orange-600">
+            <span>Portal Fee:</span>
+            <span>₹{PORTAL_FEE.toFixed(2)}</span>
+          </div>
+          <div className="border-t pt-2 mt-2">
+            <div className="flex justify-between font-bold">
+              <span>{activeTab === "buy" ? "Total Cost:" : "Net Proceeds:"}</span>
+              <span>₹{calculateTotalWithFee().toFixed(2)}</span>
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Place Order Button */}

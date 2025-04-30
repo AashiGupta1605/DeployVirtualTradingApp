@@ -217,50 +217,6 @@ const {refetch} = useUserStats();
 
   return (
     <div>
-      {/* <div className="bg-lightBlue-600 md:pt-8 pb-16 pt-12"> */}
-        {/* <div className="px-4 w-full mx-1"> */}
-          {/* <div className="flex flex-wrap">
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="VIRTUAL BALANCE"
-                value={activeSubscription?.vertualAmount ? `₹${activeSubscription.vertualAmount.toFixed(2)}` : "₹0.00"}
-                icon={<DollarSign className="w-5 h-5" />}
-                description="Available Virtual Balance"
-                change={statistics.balanceChange !== undefined ? `${statistics.balanceChange >= 0 ? '+' : ''}${statistics.balanceChange}%` : null}
-                changeColor={statistics.balanceChange >= 0 ? "text-emerald-500" : "text-red-500"}
-              />
-            </div>
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="TOTAL INVESTMENT"
-                value={`₹${statistics.totalInvestment?.toFixed(2) || '0.00'}`}
-                icon={<TrendingUp className="w-5 h-5" />}
-                description="Total Amount Invested"
-                change={statistics.investmentChange !== undefined ? `${statistics.investmentChange >= 0 ? '+' : ''}${statistics.investmentChange}%` : null}
-                changeColor={statistics.investmentChange >= 0 ? "text-emerald-500" : "text-red-500"}
-              />
-            </div>
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="TRADING PERFORMANCE"
-                value={`${statistics.successRate?.toFixed(2) || '0.00'}%`}
-                icon={<BarChart2 className="w-5 h-5" />}
-                description="Overall Success Rate"
-                change={statistics.totalTrades ? `${statistics.winningTrades}/${statistics.totalTrades} trades` : null}
-                changeColor="text-gray-700"
-              />
-            </div>
-            <div className="w-full lg:w-6/12 xl:w-3/12 px-4 mb-4">
-              <StatsCard
-                title="PROFIT & LOSS"
-                value={`₹${statistics.realizedPL?.toFixed(2) || '0.00'}`}
-                icon={<Award className="w-5 h-5" />}
-                description="Overall P&L"
-                change={statistics.realizedPLPercentage !== undefined ? `${statistics.realizedPLPercentage >= 0 ? '+' : ''}${statistics.realizedPLPercentage?.toFixed(2)}%` : null}
-                changeColor={statistics.realizedPLPercentage >= 0 ? "text-emerald-500" : "text-red-500"}
-              />
-            </div>
-          </div> */}
           <div className="-mt-24">
         <StatsSection isDashboard={false} pageType="trading" />
           </div>

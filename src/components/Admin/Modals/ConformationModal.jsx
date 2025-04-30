@@ -1,5 +1,7 @@
 import React from "react";
 
+const PORTAL_FEE = 25;
+
 const ConfirmationModal = ({ 
   isOpen, 
   onClose, 
@@ -8,14 +10,50 @@ const ConfirmationModal = ({
   message,
   stockName,
   quantity,
-  pricePerStock 
+  pricePerStock,
+  type // 'buy' or 'sell'
 }) => {
-  // Calculate total amount
-  const totalAmount = (quantity * pricePerStock).toFixed(2);
+  // Calculate amounts
+  const stockTotal = (quantity * pricePerStock).toFixed(2);
+  const totalWithFee = type === 'buy' 
+    ? (quantity * pricePerStock + PORTAL_FEE).toFixed(2)
+    : (quantity * pricePerStock - PORTAL_FEE).toFixed(2);
   
-  // Format the confirmation message
+  // Format the confirmation message with matching layout from TradingControls
   const formattedMessage = stockName && quantity && pricePerStock
-    ? `Are you sure you want to buy ${quantity} stocks of ${stockName} for a total of ₹${totalAmount}?`
+    ? (
+      <div className="space-y-2">
+        <p className="mb-4">
+          Are you sure you want to {type} {quantity} {quantity === 1 ? 'stock' : 'stocks'} of {stockName}?
+        </p>
+        <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+          <div className="flex justify-between">
+            <span>Stock Price:</span>
+            <span>₹{pricePerStock.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Quantity:</span>
+            <span>{quantity}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Stock Total:</span>
+            <span>₹{stockTotal}</span>
+          </div>
+          <div className="flex justify-between text-orange-600">
+            <span>Portal Fee:</span>
+            <span>₹{PORTAL_FEE.toFixed(2)}</span>
+          </div>
+          <div className="border-t pt-2 mt-2">
+            <div className="flex justify-between font-bold">
+              <span>{type === 'buy' ? 'Total Cost:' : 'Net Proceeds:'}</span>
+              <span className={type === 'buy' ? 'text-red-600' : 'text-green-600'}>
+                ₹{totalWithFee}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
     : message;
 
   return (
@@ -23,8 +61,10 @@ const ConfirmationModal = ({
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
       <div className={`relative w-full max-w-md mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100 transform transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
         <div className="p-6">
-          <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>
-          <p className="mt-4 text-gray-600">{formattedMessage}</p>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Confirm {type === 'buy' ? 'Purchase' : 'Sale'}
+          </h2>
+          <div className="mt-4 text-gray-600">{formattedMessage}</div>
           <div className="mt-6 flex justify-end space-x-4">
             <button 
               onClick={onClose} 
@@ -34,9 +74,13 @@ const ConfirmationModal = ({
             </button>
             <button 
               onClick={onConfirm} 
-              className="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200"
+              className={`px-6 py-3 rounded-xl text-white transition-colors duration-200 ${
+                type === 'buy' 
+                  ? 'bg-green-600 hover:bg-green-700' 
+                  : 'bg-red-600 hover:bg-red-700'
+              }`}
             >
-              Confirm
+              {type === 'buy' ? 'Confirm Buy' : 'Confirm Sell'}
             </button>
           </div>
         </div>
