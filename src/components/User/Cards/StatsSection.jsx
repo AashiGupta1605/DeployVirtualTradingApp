@@ -21,18 +21,22 @@ import {
   selectCertificatesError,
 } from '../../../redux/User/events/eventsSlice';
 
-const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
-const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
+const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = null }) => {
+  const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
   const statistics = useSelector(selectStatistics);
+  // Use the selector with the eventId parameter
+  const transactions = useSelector(state => selectFilteredTransactions(state, eventId));
+  
+  const activeSubscription = userSubscriptions.find(sub => 
+    sub.status === 'Active' && !sub.isDeleted
+  );
 
-const activeSubscription = userSubscriptions.find(sub => 
-  sub.status === 'Active' && !sub.isDeleted
-);
   const stats = useSelector(selectUserStats);
   const status = useSelector(selectUserStatsStatus);
   const certificate = useSelector(selectAllCertificates);
   console.log(certificate);
-  
+  const holdings = useSelector(selectHoldings);
+
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -674,30 +678,178 @@ const activeSubscription = userSubscriptions.find(sub =>
             {
               statIconName: "fas fa-inbox",
               statSubtitle: "VIRTUAL AMOUNT",
-              statTitle:  activeSubscription?.vertualAmount?.toFixed(2).toString() || "0",
+              statTitle: `₹${activeSubscription?.vertualAmount?.toFixed(2).toString() || "0"}`,
               statIconColor: "bg-purple-500",
-              showDetails: false
+              showDetails: true,
+              // statItems: [
+              //   { 
+              //     label: "Initial Balance", 
+              //     value: `₹${activeSubscription?.initialAmount?.toFixed(2) || "0"}` 
+              //   },
+              //   { 
+              //     label: "Current Balance", 
+              //     value: `₹${activeSubscription?.vertualAmount?.toFixed(2) || "0"}` 
+              //   },
+              // ]
             },
             {
-              statIconName: "fas fa-clock",
-              statSubtitle: "TOTAL INVESTMENT",
-              statTitle: "₹" + statistics.totalInvestment?.toFixed(2).toString() || "0", // Replace with actual data
+              statIconName: "fas fa-money-bill",
+              statSubtitle: "TOTAL FEES",
+              statTitle: `₹${((transactions?.length || 0) * 25).toFixed(2)}`,
               statIconColor: "bg-blue-400",
-              showDetails: false
+              showDetails: true,
+              // statItems: [
+              //   { 
+              //     label: "Transactions", 
+              //     value: transactions?.length || 0 
+              //   },
+              //   { 
+              //     label: "Fee per Trade", 
+              //     value: "₹25.00" 
+              //   },
+              // ]
             },
             {
               statIconName: "fas fa-chart-line",
               statSubtitle: "PERFORMANCE",
-              statTitle: statistics.successRate?.toFixed(2).toString() + "%" || "0%",// Replace with actual data
+              statTitle: (() => {
+                // Get all buy and sell trades
+                const buyTrades = transactions?.filter(t => t.type === 'buy');
+                const sellTrades = transactions?.filter(t => t.type === 'sell');
+          
+                // Count profitable trades
+                const profitableTrades = sellTrades?.filter(sellTrade => {
+                  // Find the matching buy trade for this stock
+                  const buyTrade = buyTrades?.find(bt => 
+                    bt.companySymbol === sellTrade.companySymbol
+                  );
+          
+                  if (buyTrade) {
+                    // Calculate total sell value and buy value
+                    const sellValue = sellTrade.price * sellTrade.numberOfShares;
+                    const buyValue = buyTrade.price * sellTrade.numberOfShares;
+                    
+                    // A trade is profitable if sell value > buy value + portal fee
+                    return (sellValue - buyValue - 25) > 0;
+                  }
+                  return false;
+                }).length;
+          
+                // Calculate success rate
+                const totalSellTrades = sellTrades?.length || 0;
+                const successRate = totalSellTrades > 0 
+                  ? ((profitableTrades / totalSellTrades) * 100).toFixed(2) 
+                  : "0.00";
+          
+                // Return with color coding
+                return (
+                  <span className={Number(successRate) > 0 ? 'text-green-500' : 'text-red-500'}>
+                    {successRate}%
+                  </span>
+                );
+              })(),
               statIconColor: "bg-green-400",
-              showDetails: false
+              showDetails: true,
+              // statItems: [
+              //   { 
+              //     label: "Buy Trades", 
+              //     value: transactions?.filter(t => t.type === 'buy')?.length || 0 
+              //   },
+              //   { 
+              //     label: "Sell Trades", 
+              //     value: transactions?.filter(t => t.type === 'sell')?.length || 0 
+              //   },
+              //   { 
+              //     label: "Profitable Trades",
+              //     value: (() => {
+              //       const buyTrades = transactions?.filter(t => t.type === 'buy');
+              //       const sellTrades = transactions?.filter(t => t.type === 'sell');
+                    
+              //       return sellTrades?.filter(sellTrade => {
+              //         const buyTrade = buyTrades?.find(bt => 
+              //           bt.companySymbol === sellTrade.companySymbol
+              //         );
+              //         if (buyTrade) {
+              //           const sellValue = sellTrade.price * sellTrade.numberOfShares;
+              //           const buyValue = buyTrade.price * sellTrade.numberOfShares;
+              //           return (sellValue - buyValue - 25) > 0;
+              //         }
+              //         return false;
+              //       }).length || 0;
+              //     })()
+              //   }
+              // ]
             },
             {
               statIconName: "fas fa-tags",
               statSubtitle: "PROFIT & LOSS",
-              statTitle: statistics.realizedPL?.toFixed(2).toString() || "0" , // Replace with actual data
+              statTitle: (() => {
+                // Calculate total P&L
+                const totalPL = transactions?.reduce((acc, transaction) => {
+                  if (transaction.type === 'sell') {
+                    const buyTrade = transactions.find(bt => 
+                      bt.type === 'buy' && bt.companySymbol === transaction.companySymbol
+                    );
+                    if (buyTrade) {
+                      const profitLoss = (
+                        (transaction.price - buyTrade.price) * transaction.numberOfShares
+                      ) - 25; // Subtract portal fee
+                      return acc + profitLoss;
+                    }
+                  }
+                  return acc;
+                }, 0) || 0;
+          
+                // Add color based on profit/loss
+                const color = totalPL >= 0 ? 'text-green-500' : 'text-red-500';
+                return (
+                  <span className={color}>
+                    ₹{totalPL.toFixed(2)}
+                  </span>
+                );
+              })(),
               statIconColor: "bg-gray-400",
-              showDetails: false
+              showDetails: true,
+              // statItems: [
+              //   { 
+              //     label: "Realized P&L", 
+              //     value: (() => {
+              //       const realizedPL = transactions?.reduce((acc, transaction) => {
+              //         if (transaction.type === 'sell') {
+              //           const buyTrade = transactions.find(bt => 
+              //             bt.type === 'buy' && bt.companySymbol === transaction.companySymbol
+              //           );
+              //           if (buyTrade) {
+              //             const profitLoss = (
+              //               (transaction.price - buyTrade.price) * transaction.numberOfShares
+              //             ) - 25;
+              //             return acc + profitLoss;
+              //           }
+              //         }
+              //         return acc;
+              //       }, 0) || 0;
+              //       return `₹${realizedPL.toFixed(2)}`;
+              //     })()
+              //   },
+              //   { 
+              //     label: "Unrealized P&L", 
+              //     value: (() => {
+              //       // Calculate unrealized P&L from current holdings
+              //       const unrealizedPL = holdings.reduce((acc, holding) => {
+              //         const buyTrade = transactions.find(t => 
+              //           t.type === 'buy' && t.companySymbol === holding.companySymbol
+              //         );
+              //         if (buyTrade) {
+              //           const currentValue = holding.quantity * holding.averageBuyPrice;
+              //           const costBasis = holding.quantity * buyTrade.price;
+              //           return acc + (currentValue - costBasis);
+              //         }
+              //         return acc;
+              //       }, 0);
+              //       return `₹${unrealizedPL.toFixed(2)}`;
+              //     })()
+              //   },
+              // ]
             }
           ],
   };

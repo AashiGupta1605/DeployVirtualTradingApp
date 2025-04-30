@@ -98,14 +98,26 @@ const initialState = {
   }
 };
 
+// In tradingSlice.js, update fetchHoldings:
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
   async ({ userId, subscriptionPlanId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`);
+      // Validate IDs
+      if (!mongoose.Types.ObjectId.isValid(userId) || 
+          !mongoose.Types.ObjectId.isValid(subscriptionPlanId)) {
+        throw new Error('Invalid user ID or subscription plan ID');
+      }
+
+      const response = await axios.get(
+        `${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`
+      );
       return response.data || [];
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch holdings');
+      return rejectWithValue(
+        error.response?.data?.message || 
+        'Failed to fetch holdings'
+      );
     }
   }
 );
@@ -319,6 +331,7 @@ const tradingSlice = createSlice({
 });
 
 // Selectors
+// In your tradingSlice.js
 export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
 
 export const selectFilteredTransactions = createSelector(
@@ -355,7 +368,9 @@ export const selectLoadingState = (state) => {
 export const selectError = (state) => state.user.tradingModal.error;
 export const selectHoldingBySymbol = createSelector(
   [(state) => state.user.tradingModal.holdings || [], (state, symbol) => symbol],
-  (holdings, symbol) => holdings.find(h => h.companySymbol === symbol)
+  (holdings, symbol) => holdings.find(h => 
+    h.companySymbol.toLowerCase() === symbol?.toLowerCase()
+  )
 );
 export const selectTotalHoldingsValue = (state) => 
   (state.user.tradingModal.holdings || []).reduce((total, holding) => 

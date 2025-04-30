@@ -42,7 +42,7 @@ const formatCurrency = (amount) => {
 
 // Helper function to validate order
 const validateOrder = (orderDetails, holdings, remainingBalance) => {
-  const { type, numberOfShares, price, currentMarketPrice } = orderDetails;
+  const { type, numberOfShares, price, currentMarketPrice, symbol } = orderDetails;
   const orderValue = numberOfShares * (price || currentMarketPrice);
 
   if (!numberOfShares || numberOfShares <= 0) {
@@ -54,9 +54,17 @@ const validateOrder = (orderDetails, holdings, remainingBalance) => {
       throw new Error('Insufficient balance for this order');
     }
   } else if (type === 'sell') {
-    const currentHolding = holdings.find(h => h.symbol === orderDetails.symbol);
-    if (!currentHolding || currentHolding.quantity < numberOfShares) {
-      throw new Error('Insufficient shares for this order');
+    // Case-insensitive symbol matching and proper quantity check
+    const currentHolding = holdings.find(h => 
+      h.companySymbol.toLowerCase() === symbol.toLowerCase()
+    );
+    
+    if (!currentHolding) {
+      throw new Error(`No holdings found for ${symbol}`);
+    }
+    
+    if (currentHolding.quantity < numberOfShares) {
+      throw new Error(`Insufficient shares to sell. You only have ${currentHolding.quantity} shares`);
     }
   }
 
@@ -199,7 +207,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
     try {
       // Validate order before proceeding
       validateOrder(orderDetails, holdings, calculateRemainingBalance);
-
+  
       // Add additional order metadata
       const enrichedOrderDetails = {
         ...orderDetails,
@@ -207,19 +215,52 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
         currentMarketPrice,
         eventId: activeEvent?._id,
         orderValue: calculateOrderValue(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        subscriptionPlanId: activeSubscription._id // Make sure this is included
       };
-
+  
       // Dispatch order placement
       await dispatch(placeOrder(enrichedOrderDetails)).unwrap();
 
       // Show success message
-      toast.success(
-        `Successfully placed ${orderDetails.type.toUpperCase()} order for ${
-          orderDetails.numberOfShares
-        } shares at ${formatCurrency(orderDetails.price)}`,
-        { position: 'top-right' }
-      );
+      const PORTAL_FEE = 25;
+      const orderTotal = orderDetails.total;
+      const totalWithFee = orderDetails.type === 'buy' 
+        ? orderTotal + PORTAL_FEE 
+        : orderTotal - PORTAL_FEE;
+  
+      // Show success message with correct variables
+// Show success message with center position
+toast.success(
+  `Successfully ${orderDetails.type}${orderDetails.type === 'sell' ? 'sold' : 'bought'} ${orderDetails.numberOfShares} shares of ${symbol} for ₹${totalWithFee.toFixed(2)} (including ₹${PORTAL_FEE} portal fee)`,
+  {
+    position: 'top-center', // Changed from 'top-right' to 'top-center'
+    duration: 3000,
+    style: {
+      backgroundColor: '#fff',
+      padding: '16px',
+      color: '#333',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    }
+  }
+);
+
+// Also update the error toast to match
+// toast.error(
+//   error.message || 'Failed to place order. Please try again.',
+//   {
+//     position: 'top-center', // Changed from 'top-right' to 'top-center'
+//     duration: 3000,
+//     style: {
+//       backgroundColor: '#fff',
+//       padding: '16px',
+//       color: '#333',
+//       borderRadius: '8px',
+//       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+//     }
+//   }
+// );
 
       // Reset form and close confirmation
       setShowConfirmation(false);
@@ -237,7 +278,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
       }
     } catch (error) {
       toast.error(error.message || 'Failed to place order. Please try again.', {
-        position: 'top-right',
+        position: 'top-center',
       });
       setShowConfirmation(false);
     }
@@ -459,6 +500,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
     stockName={data?.companyName || symbol}
     quantity={quantity}
     pricePerStock={orderType === 'market' ? currentMarketPrice : price}
+    type={activeTab}
   />
 )}
     </div>
