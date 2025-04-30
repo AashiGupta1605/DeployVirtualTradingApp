@@ -93,6 +93,8 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
 
         {/* Desktop Navigation */}
         <div className="flex items-center space-x-4">
+       
+              
           {/* Event Selection - Desktop */}
           {events && events.length > 0 && (
             <div className="relative hidden md:block" ref={eventDropdownRef}>
@@ -136,6 +138,9 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
               )}
             </div>
           )}
+          < div className="bg-lightBlue-600 text-white px-4 py-1 rounded-lg hover:bg-lightBlue-400 hover:text-gray-100 transition-all">
+                <p className="text-lg">{userName}</p>
+              </div>
 
           {/* User Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>

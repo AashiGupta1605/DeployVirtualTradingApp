@@ -402,27 +402,32 @@ const UpdateProfileForm = ({ isOpen, onClose, userData }) => {
   });
 
   if (!isOpen) return null;
+return(
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 bg-opacity-50 overflow-auto">
+  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[80vh] flex flex-col p-0 overflow-hidden">
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[90%] p-6">
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <i className="fas fa-user-edit text-white"></i>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-800">Update Profile</h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-          >
-            <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
-          </button>
+    {/* Header (Fixed) */}
+    <div className="sticky top-0 z-10 bg-white p-6 border-b border-gray-100 flex justify-between items-center">
+      <div className="flex items-center space-x-3">
+        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+          <i className="fas fa-user-edit text-white"></i>
         </div>
+        <h2 className="text-2xl font-semibold text-gray-800">Update Profile</h2>
+      </div>
+      <button
+        onClick={onClose}
+        className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+      >
+        <i className="fas fa-times text-gray-400 hover:text-gray-600"></i>
+      </button>
+    </div>
 
-        <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Form */}
+    <form onSubmit={formik.handleSubmit} className="flex-1 flex flex-col overflow-hidden">
+
+      {/* Scrollable Fields */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -542,12 +547,13 @@ const UpdateProfileForm = ({ isOpen, onClose, userData }) => {
             </div>
           </div>
           </div>
+          </div>
 
           {/* Profile Photo Upload at the End */}
          
 
           {/* Form Actions */}
-          <div className="flex justify-end space-x-4 pt-6 border-t border-gray-100">
+          <div className="sticky bottom-0 z-10 bg-white p-6 border-t border-gray-100 flex justify-end space-x-4">
             <button
               type="button"
               onClick={onClose}

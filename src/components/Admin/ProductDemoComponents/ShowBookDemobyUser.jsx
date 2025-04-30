@@ -459,7 +459,7 @@ const ShowBookDemobyUser = ({ sidebarExpanded }) => {
     {/* Recent Bookings Button */}
     <button
   onClick={() => console.log("Hii")}
-  className="mr-2 h-10 px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center justify-center"
+  className="mr-2 h-[2.35rem] px-5 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-700 transition-colors flex items-center"
 >
   <span className="font-medium text-sm">Recent Bookings</span>
 </button>
