@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown } from 'lucide-react';
 import logoImage from "../../../assets/img/PGR_logo.jpeg";
+import { Link } from "react-router-dom";
 
 export default function AdminNavbar({ sidebarExpanded, setSidebarExpanded }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -27,7 +28,7 @@ export default function AdminNavbar({ sidebarExpanded, setSidebarExpanded }) {
     }`}>
       <div className="w-full mx-auto flex flex-wrap items-center justify-between px-4 py-3 md:px-10">
         {/* Logo and Brand */}
-        <div className="flex items-center">
+        <Link className="flex items-center" to="/">
           <button 
             className="lg:hidden p-2 mr-2 rounded-lg hover:bg-gray-100"
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
@@ -40,7 +41,7 @@ export default function AdminNavbar({ sidebarExpanded, setSidebarExpanded }) {
             className="h-10 w-10 object-contain rounded-full"
           />
           <span className="hidden lg:block text-xl ml-4 font-bold">PGR - Admin Panel</span>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className="flex items-center space-x-4">

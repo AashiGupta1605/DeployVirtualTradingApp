@@ -4,6 +4,7 @@ import { fetchUserData } from "../../../redux/User/userprofileSlice";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { X, ChevronDown, ChevronRight } from 'lucide-react';
+import { logout } from '../../../redux/User/authSlice'; //
 
 export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [activeMenu, setActiveMenu] = React.useState(null);
@@ -18,12 +19,25 @@ export default function UserSidebar({ sidebarExpanded, setSidebarExpanded }) {
   
   const userName = userData ? userData.name : "User";
 
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("user");
+  //   toast.success("Logout Successfully");
+  //   navigate("/");
+  // };
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // Dispatch the main user logout action
+    dispatch(logout()); // <--- DISPATCH THIS
+
+    // The logout action should handle removing localStorage items.
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("user");
+
     toast.success("Logout Successfully");
     navigate("/");
   };
+
 
   const toggleMenu = (menuName) => {
     setActiveMenu(activeMenu === menuName ? null : menuName);

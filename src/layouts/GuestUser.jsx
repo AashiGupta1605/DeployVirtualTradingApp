@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route, useLocation } from "react-router-dom";
 import MainHomeNavbar from "../components/GuestUser/Navbars/MainHomeNavbar";
 import NiftyNavbarCarousel from "../components/GuestUser/Navbars/NiftyNavbarCarousel";
@@ -19,6 +19,7 @@ import ScrollToTopButton from '../components/Common/ScrollToTopButton';
 const GuestUser = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -42,12 +43,10 @@ const GuestUser = () => {
         </Routes>
       </main>
       
-      {/* Show footer on all pages except the home page */}
-      {!isHomePage && <Footer className="mt-auto" />}
 
       <ScrollToTopButton/>
 
-      {/* <Footer/> */}
+      {<Footer className="mx-auto" />}
 
     </div>
   )

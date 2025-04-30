@@ -11,11 +11,30 @@ import UnifiedLoginModal from "../../../views/auth/UnifiedLoginModal";
 import UnifiedRegisterModal from "../../../views/auth/UnifiedRegistrationModal";
 import CertificateValidationModal from "../../User/Modals/CertificateValidationModal";
 import { FaWhatsapp } from "react-icons/fa";
+import { logout as logoutUser, selectCurrentUser } from "../../../redux/User/authSlice"
+import toast from "react-hot-toast";
 
 const MobileMenu = ({
+  // isOpen,
+  // isAuthenticated,
+  // orgName,
+  // handleNavigation,
+  // handleOpenLogin,
+  // handleOpenRegister,
+  // openCertificateModal,
+  // isActive,
+  // isActivePrefix,
+  // toggleMenu,
+  // openBookDemoModal
+
   isOpen,
+  // Receive both Org and User states
   isAuthenticated,
   orgName,
+  isUserAuthenticated,
+  userName,
+  userRole,
+  // Receive handlers
   handleNavigation,
   handleOpenLogin,
   handleOpenRegister,
@@ -23,7 +42,8 @@ const MobileMenu = ({
   isActive,
   isActivePrefix,
   toggleMenu,
-  openBookDemoModal
+  openBookDemoModal,
+  handleLogout 
 }) => {
   const navItems = [
     { path: "/", name: "Home", icon: <Home className="h-5 w-5" /> },
@@ -99,8 +119,10 @@ const MobileMenu = ({
             </button>
           </div>
 
+
+{/* working  */}
           {/* Authentication/Profile Section */}
-          <div className="mt-auto pt-4 border-t border-gray-100">
+          {/* <div className="mt-auto pt-4 border-t border-gray-100">
             {isAuthenticated ? (
               <div className="space-y-3">
                 <button
@@ -136,6 +158,61 @@ const MobileMenu = ({
                 </button>
               </div>
             )}
+          </div> */}
+
+<div className="mt-auto pt-4 border-t border-gray-100">
+            {isAuthenticated || isUserAuthenticated ? (
+              // If EITHER Org or User is logged in
+              <div className="space-y-3">
+                <button
+                  onClick={() => {
+                    // Navigate to correct dashboard
+                    if (isAuthenticated) {
+                        handleNavigation("/organization");
+                    } else if (isUserAuthenticated) {
+                        handleNavigation(userRole === 'admin' ? '/admin/dashboard' : '/user/dashboard'); // Adjust paths if needed
+                    }
+                    toggleMenu();
+                  }}
+                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-lightBlue-600 hover:bg-blue-700"
+                >
+                  <LogIn className="mr-2 h-5 w-5" />
+                  {isAuthenticated ? orgName : userName} {/* Show correct name */}
+                </button>
+                {/* <button
+                   onClick={() => {
+                      handleLogout(); 
+                      toggleMenu(); 
+                   }}
+                   className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-red-600 bg-red-50 hover:bg-red-100"
+                >
+                  <LogIn className="mr-2 h-5 w-5 transform rotate-180" />
+                   Logout
+                </button> */}
+              </div>
+            ) : (
+              // If NO ONE is logged in
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    handleOpenLogin();
+                    toggleMenu();
+                  }}
+                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-lightBlue-600 hover:bg-blue-700"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => {
+                    handleOpenRegister();
+                    toggleMenu();
+                  }}
+                  className="w-full flex items-center justify-center px-4 py-3 rounded-lg text-base font-medium text-white bg-green-600 hover:bg-green-700"
+                >
+                  Register
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -158,6 +235,11 @@ const MainHomeNavbar = () => {
 
   const { orgName } = useSelector((state) => state.organization.auth);
   const isAuthenticated = !!orgName;
+
+  const currentUser = useSelector(selectCurrentUser);
+  const isUserAuthenticated = !!currentUser; // Check if currentUser object exists
+  const userName = currentUser?.name; // Get user name if available
+  const userRole = currentUser?.role; // Get u
 
   const navItems = [
     { path: "/", name: "Home" },
@@ -196,10 +278,26 @@ const MainHomeNavbar = () => {
     };
   }, [scrolled]);
 
-  const handleLogout = () => {
+  // const handleLogout = () => {
+  //   dispatch(logoutOrganization());
+  //   navigate("/");
+  // };
+
+  // Inside MainHomeNavbar component:
+
+const handleLogout = () => {
+  if (isAuthenticated) {
     dispatch(logoutOrganization());
-    navigate("/");
-  };
+  } else if (isUserAuthenticated) {
+    dispatch(logoutUser()); // Dispatch the user logout action
+  }
+  // Navigate home after any logout
+  toast.success("logout successfully");
+
+  navigate("/");
+  setNavbarOpen(false); // Close mobile menu if open
+  setStockDataOpen(false); // Close dropdown if open
+};
 
   const handleNavigation = (path) => {
     setNavbarOpen(false);
@@ -366,7 +464,9 @@ const MainHomeNavbar = () => {
                   </button>
                 </div>
 
-                {isAuthenticated ? (
+                {/* working */}
+
+                {/* {isAuthenticated ? (
                   <button
                     onClick={() => navigate("/organization")}
                     className="inline-flex items-center px-4 py-2 mx-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
@@ -383,7 +483,49 @@ const MainHomeNavbar = () => {
                       Login/Register
                     </button>
                   </div>
-                )}
+                )} */}
+
+                
+   {/* --- UPDATED Login/Profile/Logout Section --- */}
+   {isAuthenticated || isUserAuthenticated ? (
+     // Show Profile Button and Logout Button if EITHER Org or User is logged in
+     <div className="flex items-center ml-2">
+       <button
+         onClick={() => {
+           // Navigate to the correct dashboard based on who is logged in
+           if (isAuthenticated) {
+             navigate("/organization");
+           } else if (isUserAuthenticated) {
+             navigate(userRole === 'admin' ? '/admin/dashboard' : '/user/dashboard'); // Adjust paths if needed
+           }
+         }}
+         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
+       >
+         <LogIn className="mr-1.5 h-4 w-4" />
+         {isAuthenticated ? orgName : userName} {/* Show Org name or User name */}
+       </button>
+       {/* <button
+          onClick={handleLogout}
+          className="ml-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
+          title="Logout"
+       >
+         <span className="sr-only">Logout</span>
+          <LogIn className="h-4 w-4 transform rotate-180" /> 
+       </button> */}
+     </div>
+   ) : (
+     // Show Login/Register button if NO ONE is logged in
+     <div className="flex items-center space-x-2 ml-2">
+       <button
+         onClick={handleOpenLogin}
+         className="inline-flex mr-2 items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 whitespace-nowrap transition-colors"
+       >
+         Login/Register
+       </button>
+     </div>
+   )}
+   {/* --- END UPDATED Section --- */}
+
 
                 <a
                   href="https://chat.whatsapp.com/GCNCQb6Ul4l5FRwlT5y3Tb"
@@ -428,7 +570,7 @@ const MainHomeNavbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        <MobileMenu
+        {/* <MobileMenu
           isOpen={navbarOpen}
           isAuthenticated={isAuthenticated}
           orgName={orgName}
@@ -440,7 +582,29 @@ const MainHomeNavbar = () => {
           isActive={isActive}
           isActivePrefix={isActivePrefix}
           toggleMenu={toggleMenu}
-        />
+        /> */}
+
+
+<MobileMenu
+  isOpen={navbarOpen}
+  // Pass both Org and User states
+  isAuthenticated={isAuthenticated}
+  orgName={orgName}
+  isUserAuthenticated={isUserAuthenticated}
+  userName={userName}
+  userRole={userRole}
+  // Pass handlers
+  handleNavigation={handleNavigation}
+  handleOpenLogin={handleOpenLogin}
+  handleOpenRegister={handleOpenRegister}
+  openCertificateModal={openCertificateModal}
+  openBookDemoModal={openBookDemoModal}
+  handleLogout={handleLogout} // Pass the updated logout handler
+  // Pass helpers
+  isActive={isActive}
+  isActivePrefix={isActivePrefix}
+  toggleMenu={toggleMenu}
+/>
       </nav>
 
       {/* Modals */}

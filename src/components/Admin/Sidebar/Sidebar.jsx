@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { resetAdminState } from '../../../redux/Admin/AdminSlice';
 import toast from "react-hot-toast";
 import { X, ChevronDown, ChevronRight } from 'lucide-react';
-
+import { logout } from '../../../redux/User/authSlice'; //
 export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
@@ -18,9 +18,10 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded }) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    dispatch(resetAdminState());
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('user');
+    // dispatch(resetAdminState());
+    dispatch(logout()); 
     toast.success("Logout Successfully");
     navigate('/');
   };
