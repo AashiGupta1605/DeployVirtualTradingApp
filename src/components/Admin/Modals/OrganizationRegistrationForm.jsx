@@ -486,7 +486,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
       .email("Invalid email format")
       .required("Email is required"),
     mobile: Yup.string()
-      .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits")
+      .matches(/^[9876]\d{9}$/, "Mobile number must be exactly 10 digits")
       .required("Mobile number is required"),
   });
 
