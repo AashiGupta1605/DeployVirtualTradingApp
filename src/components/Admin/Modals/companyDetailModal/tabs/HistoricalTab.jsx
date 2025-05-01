@@ -60,7 +60,7 @@ const TimeRangeButton = ({ label, active, onClick, icon: Icon }) => (
       flex items-center px-4 py-2 rounded-lg text-sm font-medium 
       transition-all duration-200 
       ${active 
-        ? 'bg-blue-500 text-white shadow-sm' 
+        ? 'bg-lightBlue-600 text-white shadow-sm' 
         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
       }
     `}
@@ -86,11 +86,11 @@ const TableHeader = ({ column, sortColumn, sortDirection, onSort }) => {
         <div className="flex flex-col">
           <ChevronUp
             size={12}
-            className={`${isSorted && sortDirection === 'asc' ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`${isSorted && sortDirection === 'asc' ? 'text-lightBlue-600' : 'text-gray-400'}`}
           />
           <ChevronDown
             size={12}
-            className={`${isSorted && sortDirection === 'desc' ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`${isSorted && sortDirection === 'desc' ? 'text-lightBlue-600' : 'text-gray-400'}`}
           />
         </div>
       </div>
@@ -325,7 +325,7 @@ const HistoricalTab = ({ symbol, type }) => {
                 value={searchTerm}
                 onChange={handleSearch}
                 className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500"
+                         focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
               />
             </div>
             <button

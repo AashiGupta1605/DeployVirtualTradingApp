@@ -107,7 +107,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
                       bg-white text-gray-900 
-                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                       focus:outline-none transition-all duration-200"
                     placeholder="Enter name"
                     required
@@ -128,7 +128,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
                       bg-white text-gray-900 
-                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                       focus:outline-none transition-all duration-200"
                     placeholder="Enter email address"
                     required
@@ -149,7 +149,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
                       bg-white text-gray-900 
-                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                       focus:outline-none transition-all duration-200"
                     placeholder="Enter mobile number"
                     required
@@ -171,7 +171,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 
-                      focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                      focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
                       transition-all duration-200"
                     required
                   >
@@ -193,7 +193,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     onChange={(date) => formik.setFieldValue("dob", date)}
                     dateFormat="yyyy-MM-dd"
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 
-                      focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                      focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
                       transition-all duration-200"
                     placeholderText="Select date of birth"
                     showYearDropdown
@@ -217,7 +217,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                     onBlur={formik.handleBlur}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 !rounded-xl border !border-gray-200 
                       bg-white text-gray-900 
-                      focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                      focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                       focus:outline-none transition-all duration-200"
                     placeholder="Enter added by"
                     required
@@ -248,7 +248,7 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
             disabled={loading}
             onClick={formik.handleSubmit}
             className="px-4 py-2 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white 
-              hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all 
+              hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all 
               duration-200 text-sm sm:text-base"
           >
             {loading ? "Processing..." : initialValues ? "Update User" : "Register User"}

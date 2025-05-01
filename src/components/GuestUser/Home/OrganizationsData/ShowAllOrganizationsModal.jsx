@@ -61,7 +61,7 @@ const Dummy = ({ closeModal }) => {
 
               <button
                 onClick={() => setIsRecent(!isRecent)}
-                className="px-2 py-[6px] bg-blue-500 text-white text-sm text-semibold shadow-md rounded-md focus:outline-none hover:bg-blue-700"
+                className="px-2 py-[6px] bg-lightBlue-600 text-white text-sm text-semibold shadow-md rounded-md focus:outline-none hover:bg-blue-700"
               >
               {isRecent ? "Recently Associated" : "Previously Associated"}
               </button>
@@ -185,7 +185,7 @@ const Dummy = ({ closeModal }) => {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <span className="underline text-blue-600">
+                              <span className="underline text-lightBlue-600">
                                 {org.website}
                               </span>
                             </a>

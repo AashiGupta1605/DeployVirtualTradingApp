@@ -186,7 +186,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statIconName: "fas fa-users",
         statSubtitle: "USER STATS",
         statTitle: pageType !== "dashboard" ? stats?.users?.total?.toString() : "",
-        statIconColor: "bg-blue-500",
+        statIconColor: "bg-lightBlue-600",
         showDetails: true,
         statItems: [
           { label: "Total", value: stats?.users?.total?.toString() || "0" },
@@ -294,7 +294,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
               statIconName: "fas fa-users",
               statSubtitle: "TOTAL USERS",
               statTitle: stats?.users?.total.toString(),
-              statIconColor: "bg-blue-500",
+              statIconColor: "bg-lightBlue-600",
               showDetails: false,
               onClick: () => handleCardClick('users', 'User Statistics')
             },

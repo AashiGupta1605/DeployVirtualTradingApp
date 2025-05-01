@@ -139,7 +139,7 @@ const StockTable = ({ userData }) => {
             limit: itemsPerPage, 
             search: searchTerm 
           }))}
-          className="flex items-center gap-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          className="flex items-center gap-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600 transition-colors"
         >
           <RefreshCw size={16} />
           Retry
@@ -158,7 +158,7 @@ const StockTable = ({ userData }) => {
             limit: itemsPerPage, 
             search: searchTerm 
           }))}
-          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+          className="flex items-center gap-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600 transition-colors"
         >
           <RefreshCw size={16} />
           Refresh Data
@@ -179,7 +179,7 @@ const StockTable = ({ userData }) => {
     <>
       <div className="px-8 mx-8 -mt-42 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">   
         <h2 className="text-xl font-bold text-gray-800 flex items-center">
-          <BarChart2 className="mr-2 text-blue-600" size={24} />
+          <BarChart2 className="mr-2 text-lightBlue-600" size={24} />
           ETF Market Data
         </h2>
         
@@ -259,7 +259,7 @@ const StockTable = ({ userData }) => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <button
                             onClick={(e) => handleSymbolClick(row.symbol, e)}
-                            className="text-blue-600 hover:text-blue-800 font-medium"
+                            className="text-lightBlue-600 hover:text-blue-800 font-medium"
                           >
                             {row.symbol}
                           </button>

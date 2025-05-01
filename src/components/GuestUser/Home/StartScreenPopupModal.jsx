@@ -206,7 +206,7 @@ const StartScreenPopupModal = () => {
                 id="acceptTerms"
                 checked={acceptedTerms}
                 onChange={() => setAcceptedTerms(!acceptedTerms)}
-                className="h-4 w-4 text-lightBlue-600 rounded focus:ring-blue-500 border-gray-300"
+                className="h-4 w-4 text-lightBlue-600 rounded focus:ring-lightBlue-600 border-gray-300"
               />
               <label htmlFor="acceptTerms" className="ml-2 text-sm text-gray-700">
                 I have read, understood, and agree to all the terms and conditions above

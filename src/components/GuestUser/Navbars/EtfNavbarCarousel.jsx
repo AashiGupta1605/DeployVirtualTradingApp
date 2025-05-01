@@ -85,7 +85,7 @@
 //       <div className="max-w-screen-2xl mx-auto px-2 h-full flex items-center">
 //         {/* ETF Label - Perfectly centered */}
 //         <div className="flex-shrink-0 h-full flex items-center pr-3">
-//           <span className="font-bold text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
+//           <span className="font-bold text-xs bg-blue-50 text-lightBlue-600 px-2 py-0.5 rounded">
 //             ETF STOCKS
 //           </span>
 //         </div>
@@ -135,7 +135,7 @@
 //         {/* Refresh Button - Centered */}
 //         <button 
 //           onClick={fetchStockData}
-//           className="flex-shrink-0 h-full flex items-center px-1.5 text-gray-500 hover:text-blue-600 transition-colors"
+//           className="flex-shrink-0 h-full flex items-center px-1.5 text-gray-500 hover:text-lightBlue-600 transition-colors"
 //           title={`Last updated: ${lastUpdated}`}
 //         >
 //           <FiRefreshCw className={`text-xs ${loading ? "animate-spin" : ""}`} />
@@ -222,7 +222,7 @@ const EtfNavbarCarousel = () => {
       <div className="max-w-screen-2xl mx-auto px-2 h-full flex items-center">
         {/* ETF Label */}
         <div className="flex-shrink-0 h-full flex items-center pr-3">
-          <span className="font-bold text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
+          <span className="font-bold text-xs bg-blue-50 text-lightBlue-600 px-2 py-0.5 rounded">
             ETF STOCKS
           </span>
         </div>
@@ -268,7 +268,7 @@ const EtfNavbarCarousel = () => {
         <button
           onClick={fetchStockData}
           disabled={loading}
-          className="flex-shrink-0 h-full flex items-center px-1.5 text-gray-500 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-shrink-0 h-full flex items-center px-1.5 text-gray-500 hover:text-lightBlue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           title={`Last updated: ${lastUpdated}`}
         >
           <FiRefreshCw className={`text-sm ${loading ? "animate-spin" : ""}`} /> {/* Adjusted size */}

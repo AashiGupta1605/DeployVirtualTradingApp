@@ -280,7 +280,7 @@ const AdminEventsPage = () => {
                           <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-white shadow-xs flex items-center justify-center mr-3">
                             {(() => {
                               switch(event.icon) {
-                                case 'Trophy': return <Trophy className="text-blue-600" size={20} />;
+                                case 'Trophy': return <Trophy className="text-lightBlue-600" size={20} />;
                                 case 'Medal': return <Medal className="text-yellow-500" size={20} />;
                                 case 'Gift': return <Gift className="text-purple-500" size={20} />;
                                 case 'Award': return <Award className="text-green-500" size={20} />;
@@ -289,7 +289,7 @@ const AdminEventsPage = () => {
                                 case 'Users': return <Users className="text-green-500" size={20} />;
                                 case 'BarChart2': return <BarChart2 className="text-red-500" size={20} />;
                                 case 'Coins': return <Coins className="text-amber-500" size={20} />;
-                                default: return <Trophy className="text-blue-600" size={20} />;
+                                default: return <Trophy className="text-lightBlue-600" size={20} />;
                               }
                             })()}
                           </div>
@@ -322,7 +322,7 @@ const AdminEventsPage = () => {
                         <div className="flex items-center space-x-4">
                           <button
                             onClick={() => openDetailsModal(event)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-lightBlue-600 hover:text-blue-900"
                           >
                             <Info size={18} />
                           </button>

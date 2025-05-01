@@ -97,7 +97,7 @@ const PricingPage = () => {
                 ))}
               </ul>
               <Link to="/login">
-                <button className="w-full mt-4 py-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300">
+                <button className="w-full mt-4 py-2 rounded text-white bg-lightBlue-600 hover:bg-blue-700 transition-colors duration-300">
                   Subscribe Now
                   <FiArrowRight className="inline ml-2" />
                 </button>

@@ -17,7 +17,7 @@
 //         <div className="flex justify-end">
 //           <Link to="/"
 //             onClick={onHide}
-//             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+//             className="bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600"
 //           >
 //             Log In Again
 //           </Link>
@@ -78,7 +78,7 @@ const SessionExpiredModal = ({ show, onHide }) => {
             <Link
               to="/" // Adjust the login route as needed
               onClick={onHide}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
             >
               Log In Again
             </Link>

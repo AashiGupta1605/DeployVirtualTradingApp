@@ -137,7 +137,7 @@ const Table = () => {
                   return (
                     <tr key={index} className="ag-header-cell">
                       <td className="ag-row">
-                        <Link to={`/company/${row.symbol}`} className="text-blue-500 hover:text-blue-800">
+                        <Link to={`/company/${row.symbol}`} className="text-lightBlue-600 hover:text-blue-800">
                           {row.symbol}
                         </Link>
                       </td>

@@ -115,7 +115,7 @@ const StockDetailsModal = ({ stock, onClose }) => {
           {/* Primary Stats */}
           <div className="grid grid-cols-4 gap-4 mb-6">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-100">
-              <h4 className="text-sm text-blue-600 mb-2">Total Shares</h4>
+              <h4 className="text-sm text-lightBlue-600 mb-2">Total Shares</h4>
               <p className="text-2xl font-bold text-blue-800">
                 {stockStats.totalShares} shares
               </p>
@@ -232,7 +232,7 @@ const StockDetailsModal = ({ stock, onClose }) => {
           <div className="mt-6 flex justify-end">
             <button
               onClick={handleOpenCompanyDetails}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
             >
               View Company Details
             </button>

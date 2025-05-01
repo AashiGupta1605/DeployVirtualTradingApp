@@ -54,7 +54,7 @@
 //                 </p>
 //                 <button
 //                   onClick={() => onViewUserEvents(participant.userId._id, participant.userId.name)}
-//                   className="text-blue-600 hover:text-blue-800 text-sm flex items-center mt-2"
+//                   className="text-lightBlue-600 hover:text-blue-800 text-sm flex items-center mt-2"
 //                 >
 //                   View all events for this user <ChevronRight size={16} className="ml-1" />
 //                 </button>
@@ -200,7 +200,7 @@ const ParticipantDetailsModal = ({
         <div style={{ width: '100%', maxWidth: '60%' }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
           <div className="flex justify-between items-center p-6 border-b border-gray-100">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-br bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <User className="text-white" size={20} />
               </div>
               <h2 className="text-2xl font-semibold text-gray-800">Participant Details</h2>
@@ -230,7 +230,7 @@ const ParticipantDetailsModal = ({
                   </p>
                   <button
                     onClick={() => onViewUserEvents(participant.userId._id, participant.userId.name)}
-                    className="text-blue-600 hover:text-blue-800 text-sm flex items-center mt-3"
+                    className="text-lightBlue-600 hover:text-blue-800 text-sm flex items-center mt-3"
                   >
                     View all events for this user <ChevronRight size={16} className="ml-1" />
                   </button>
@@ -313,7 +313,7 @@ const ParticipantDetailsModal = ({
                     disabled={participant.status === status}
                     className={`px-4 py-2 text-sm rounded-xl flex items-center transition-all duration-200 ${
                       participant.status === status 
-                        ? 'bg-blue-600 text-white cursor-default'
+                        ? 'bg-lightBlue-600 text-white cursor-default'
                         : `${statusColors[status]} hover:opacity-80`
                     }`}
                   >

@@ -138,7 +138,7 @@ const ContactPage = () => {
     >
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700 px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
+        className="bg-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-indigo-700 px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
       >
         CONTACT US
       </button>
@@ -179,11 +179,11 @@ const ContactPage = () => {
       </div>
       <h3 className="text-xl font-semibold mb-2">Email & Call</h3>
       <p className="text-gray-600">support@stocksphere.com</p>
-      <Link to="mailto:support@stocksphere.com" className="text-blue-500 underline text-sm block mb-2">
+      <Link to="mailto:support@stocksphere.com" className="text-lightBlue-600 underline text-sm block mb-2">
         Send a Message
       </Link>
       <p className="text-gray-600">+1 (800) 123-4567</p>
-      <a href="tel:+18001234567" className="text-blue-500 underline text-sm">
+      <a href="tel:+18001234567" className="text-lightBlue-600 underline text-sm">
         Call Now
       </a>
     </div>
@@ -306,7 +306,7 @@ const ContactModal = ({ onClose }) => {
                 onBlur={formik.handleBlur}
                 className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               />
               {formik.touched.name && formik.errors.name && (
@@ -326,7 +326,7 @@ const ContactModal = ({ onClose }) => {
                 onBlur={formik.handleBlur}
                 className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               />
               {formik.touched.email && formik.errors.email && (
@@ -344,7 +344,7 @@ const ContactModal = ({ onClose }) => {
                 value={formik.values.mobile}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
               />
               {formik.touched.mobile && formik.errors.mobile && (
                 <p className="text-red-500 text-sm">{formik.errors.mobile}</p>
@@ -359,7 +359,7 @@ const ContactModal = ({ onClose }) => {
                 value={formik.values.type}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
               >
                 <option>General Inquiry</option>
                 <option>Technical Support</option>
@@ -381,7 +381,7 @@ const ContactModal = ({ onClose }) => {
                 value={formik.values.desc}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
                 rows="3"
               />
               {formik.touched.desc && formik.errors.desc && (
@@ -402,7 +402,7 @@ const ContactModal = ({ onClose }) => {
           </button>
           <button
             type="submit"
-            className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
           >
             Submit
           </button>

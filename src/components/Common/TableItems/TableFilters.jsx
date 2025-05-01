@@ -713,7 +713,7 @@ const ActiveFiltersDisplay = ({
                 className="bg-blue-50 text-blue-700 text-sm font-medium px-3 py-1 
                          rounded-full flex items-center gap-2 border border-blue-100"
               >
-                {config?.icon && <span className="text-blue-500">{config.icon}</span>}
+                {config?.icon && <span className="text-lightBlue-600">{config.icon}</span>}
                 <span className="font-semibold">{label}:</span>
                 <span className="flex items-center gap-1">
                   {renderFilterValue(key, value, config)}

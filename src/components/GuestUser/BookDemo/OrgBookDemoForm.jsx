@@ -272,7 +272,7 @@ const OrgBookDemoForm = ({ closeModal }) => {
               <button
                 type="submit"
                 disabled={isSubmitting || !isValid}
-                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
               >
                 {isSubmitting ? "Saving..." : "Book A Demo"}
               </button>
@@ -296,7 +296,7 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
         {...inputProps}
         as={as}
         rows={as === "textarea" ? 4 : undefined}
-        className={`w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200 ${
+        className={`w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200 ${
           as === "textarea" ? "resize-none" : ""
         }`}
         placeholder={placeholder}

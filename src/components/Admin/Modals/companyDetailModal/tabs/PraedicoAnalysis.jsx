@@ -245,7 +245,7 @@ const PraedicoAnalysis = ({ data, timeframe = '1D' }) => {
     const recommendation = getRecommendation();
     switch (recommendation) {
       case 'STRONG BUY': return 'text-green-600';
-      case 'BUY': return 'text-blue-600';
+      case 'BUY': return 'text-lightBlue-600';
       case 'HOLD': return 'text-yellow-600';
       case 'SELL': return 'text-orange-600';
       case 'STRONG SELL': return 'text-red-600';
@@ -316,7 +316,7 @@ const PraedicoAnalysis = ({ data, timeframe = '1D' }) => {
               onClick={() => setSelectedTime(time.value)}
               className={`px-2 py-1 text-xs rounded transition-all duration-200 ${
                 selectedTime === time.value
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-lightBlue-600 text-white shadow-sm'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -378,7 +378,7 @@ const PraedicoAnalysis = ({ data, timeframe = '1D' }) => {
               indicator.type === 'bearish' || indicator.type === 'below' ? 'text-red-600' :
               indicator.type === 'overbought' ? 'text-red-500' :
               indicator.type === 'oversold' ? 'text-green-500' :
-              'text-blue-600'
+              'text-lightBlue-600'
             }`}>
               {indicator.value}
             </p>

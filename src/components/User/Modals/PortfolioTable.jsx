@@ -157,7 +157,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
               userId: localStorage.getItem('userId') 
             }));
           }}
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-6 py-3 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
         >
           Retry Loading
         </button>
@@ -185,7 +185,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
         {/* {onStockClick && transactions.length === 0 && (
           <button
             onClick={() => onStockClick('start-trading')}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="px-6 py-3 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
           >
             Start Trading
           </button>

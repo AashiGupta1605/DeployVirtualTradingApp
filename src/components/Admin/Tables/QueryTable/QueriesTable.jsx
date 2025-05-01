@@ -80,7 +80,7 @@ const QueriesTable = ({ contacts, tempFilters, searchQuery }) => {
           {contact.desc?.length > 50 && (
             <button
               onClick={() => toggleRow(contact._id)}
-              className="ml-2 text-blue-500 hover:text-lightBlue-700"
+              className="ml-2 text-lightBlue-600 hover:text-lightBlue-700"
             >
               {state.expandedRow === contact._id ? "Show less" : "Show more"}
             </button>

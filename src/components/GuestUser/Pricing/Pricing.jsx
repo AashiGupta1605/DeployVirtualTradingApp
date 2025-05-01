@@ -46,7 +46,7 @@ const PricingPage = () => {
       ],
       color: "bg-blue-100",
       textColor: "text-blue-800",
-      buttonColor: "bg-blue-600 hover:bg-blue-700",
+      buttonColor: "bg-lightBlue-600 hover:bg-blue-700",
       highlight: true
     },
     {

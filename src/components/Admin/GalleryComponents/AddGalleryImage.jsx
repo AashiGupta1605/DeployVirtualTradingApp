@@ -295,7 +295,7 @@ import './Gallery.css'
 //                   <button
 //                     type="submit"
 //                     disabled={isSubmitting || !isValid}
-//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
 //                   >
 //                     {isSubmitting ? "Saving...." : "Register Image"}
 //                   </button>
@@ -599,7 +599,7 @@ const AddGalleryImage = ({ closeModal }) => {
     //               <button
     //                 type="submit"
     //                 disabled={isSubmitting || !isValid}
-    //                 className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+    //                 className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
     //               >
     //                 {isSubmitting ? "Saving...." : "Register Image"}
     //               </button>
@@ -696,7 +696,7 @@ const AddGalleryImage = ({ closeModal }) => {
               <button
                 type="submit"
                 disabled={isSubmitting || !isValid}
-                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
               >
                 {isSubmitting ? "Saving...." : "Register Image"}
               </button>
@@ -736,16 +736,16 @@ const AddGalleryImage = ({ closeModal }) => {
 //           onChange(e);  // Use the passed onChange prop
 //         }}
 //         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //       />
 //     ) : type === "select" ? (
 //       <Field 
 //         as="select" 
 //         name={name} 
 //         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //       >
 //         <option value="" disabled>Select Category</option>
 //         {options.map((option, index) => (
@@ -759,8 +759,8 @@ const AddGalleryImage = ({ closeModal }) => {
 //         type={type}
 //         name={name}
 //         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                     focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //         placeholder={placeholder}
 //       />
 //     )}
@@ -794,8 +794,8 @@ const FormField = ({
           onChange(e); // Use the passed onChange prop
         }}
         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-                    focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
       />
     ) : type === "select" ? (
       <Field name={name}>
@@ -805,7 +805,7 @@ const FormField = ({
               value={options.find((option) => option.name === field.value) || null}
               onChange={(selected) => form.setFieldValue(name, selected.name)}
             >
-              <Listbox.Button className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <Listbox.Button className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-lightBlue-600">
                 {field.value ? field.value : "Select Category"}
               </Listbox.Button>
 
@@ -815,7 +815,7 @@ const FormField = ({
                     {({ active }) => (
                       <div
                         className={`cursor-pointer px-4 py-1 ${
-                          active ? "bg-blue-500 text-white" : "text-black"
+                          active ? "bg-lightBlue-600 text-white" : "text-black"
                         }`}
                       >
                         {option.name}
@@ -833,8 +833,8 @@ const FormField = ({
         as="textarea"
         name={name}
         className={`${className} shadow-sm w-full px-4 py-3 h-[120px] resize-none !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-                    focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
         placeholder={placeholder}
       />
     ) : (
@@ -842,8 +842,8 @@ const FormField = ({
         type={type}
         name={name}
         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-                    focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
         placeholder={placeholder}
       />
     )}
@@ -859,8 +859,8 @@ const FormField = ({
     
 //     {type === "select" ? (
 //       <Field as="select" name={name} className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                         focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}>
+//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}>
 
 //         <option value="" disabled>Select Category</option>
 //         {options.map((option, index) => (
@@ -875,8 +875,8 @@ const FormField = ({
 //         type={type}
 //         name={name}
 //         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                         focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //         placeholder={placeholder}
 //       />
 //     )}
@@ -1178,7 +1178,7 @@ export default AddGalleryImage;
 //                   <button
 //                     type="submit"
 //                     disabled={isSubmitting || !isValid}
-//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
 //                   >
 //                     {isSubmitting ? "Saving...." : "Register Image"}
 //                   </button>
@@ -1200,8 +1200,8 @@ export default AddGalleryImage;
     
 //     {type === "select" ? (
 //       <Field as="select" name={name} className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                         focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}>
+//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}>
 
 //         <option value="" disabled>Select Category</option>
 //         {options.map((option, index) => (
@@ -1216,8 +1216,8 @@ export default AddGalleryImage;
 //         type={type}
 //         name={name}
 //         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 
-//                         focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
+//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //         placeholder={placeholder}
 //       />
 //     )}

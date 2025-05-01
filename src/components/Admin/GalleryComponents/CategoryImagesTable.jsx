@@ -27,7 +27,7 @@ const TitleCell = ({ title }) => {
       {shouldTruncate && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-blue-500 text-xs hover:underline mt-1 self-start focus:outline-none"
+          className="text-lightBlue-600 text-xs hover:underline mt-1 self-start focus:outline-none"
         >
           {isExpanded ? "Show less" : "Show more"}
         </button>
@@ -324,7 +324,7 @@ const CategoryImagesTable = ({ closeModal, tableCategoryName }) => {
                                 <>
                                 {data.desc.slice(0, 50)}...
                                 <button
-                                className="text-blue-600 ml-1 hover:underline focus:outline-none"
+                                className="text-lightBlue-600 ml-1 hover:underline focus:outline-none"
                                 onClick={() => setPreviewData({ type: "text", content: data.desc })}
                                 >
                                   Show more

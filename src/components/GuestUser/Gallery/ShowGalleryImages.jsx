@@ -76,7 +76,7 @@ const ShowGalleryImages = () => {
   </div> */}
    <Listbox value={search} onChange={setSearch}>
       <div className="relative w-full md:w-64">
-        <Listbox.Button className="w-full pl-6 pr-10 py-2.5 border border-gray-200 rounded-lg bg-white text-gray-700 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all relative text-left">
+        <Listbox.Button className="w-full pl-6 pr-10 py-2.5 border border-gray-200 rounded-lg bg-white text-gray-700 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-lightBlue-600 focus:border-lightBlue-600 transition-all relative text-left">
           {selectedCategory?.name || 'Select'}
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -90,7 +90,7 @@ const ShowGalleryImages = () => {
               value={cat.value}
               className={({ active }) =>
                 `cursor-pointer select-none px-4 py-1  ${
-                  active ? 'bg-blue-600 text-white' : 'text-gray-700'
+                  active ? 'bg-lightBlue-600 text-white' : 'text-gray-700'
                 }`
               }
             >

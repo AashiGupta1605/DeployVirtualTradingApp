@@ -114,7 +114,7 @@ const Card = ({ refreshCategories, id, image, title, description, postDate }) =>
         </div>
   
         <div className="mb-1 absolute bottom-2 right-6 flex space-x-2">
-          <button className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-lg focus:outline-none"  onClick={handleEditCategory} >
+          <button className="p-2 text-lightBlue-600 hover:text-blue-700 hover:bg-blue-100 rounded-lg focus:outline-none"  onClick={handleEditCategory} >
             <Edit size={18} />
           </button>
           <button className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg focus:outline-none" onClick={() => handleDeleteCategory(id)}>

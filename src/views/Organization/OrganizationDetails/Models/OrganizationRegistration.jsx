@@ -89,7 +89,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               {...formik.getFieldProps("name")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               required
             />
@@ -107,7 +107,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               {...formik.getFieldProps("address")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               required
             />
@@ -124,7 +124,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               {...formik.getFieldProps("website")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             />
             {formik.touched.website && formik.errors.website && (
@@ -143,7 +143,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               {...formik.getFieldProps("contactPerson")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             />
             {formik.touched.contactPerson && formik.errors.contactPerson && (
@@ -160,7 +160,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               {...formik.getFieldProps("email")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               required
             />
@@ -178,7 +178,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
               {...formik.getFieldProps("mobile")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             />
             {formik.touched.mobile && formik.errors.mobile && (
@@ -196,7 +196,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             {...formik.getFieldProps("password")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             required
           />
@@ -214,7 +214,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
             {...formik.getFieldProps("confirmPassword")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             required
           />

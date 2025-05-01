@@ -126,7 +126,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization name"
 //                     required
@@ -147,7 +147,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization address"
 //                     required
@@ -168,7 +168,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization website"
 //                   />
@@ -188,7 +188,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter contact person name"
 //                   />
@@ -211,7 +211,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization email"
 //                     required
@@ -232,7 +232,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization mobile number"
 //                   />
@@ -252,7 +252,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter new password (leave blank to keep current)"
 //                   />
@@ -318,7 +318,7 @@
 //               <button
 //                 type="submit"
 //                 disabled={loading}
-//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
 //               >
 //                 {loading ? "Updating..." : "Update Profile"}
 //               </button>
@@ -456,7 +456,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization name"
 //                     required
@@ -477,7 +477,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization address"
 //                     required
@@ -498,7 +498,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization website"
 //                   />
@@ -518,7 +518,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter contact person name"
 //                   />
@@ -541,7 +541,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization email"
 //                     required
@@ -562,7 +562,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization mobile number"
 //                   />
@@ -628,7 +628,7 @@
 //               <button
 //                 type="submit"
 //                 disabled={loading}
-//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
 //               >
 //                 {loading ? "Updating..." : "Update Profile"}
 //               </button>
@@ -781,7 +781,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization name"
 //                     required
@@ -802,7 +802,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization address"
 //                     required
@@ -823,7 +823,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization website"
 //                   />
@@ -843,7 +843,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter contact person name"
 //                   />
@@ -866,7 +866,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization email"
 //                     required
@@ -887,7 +887,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter organization mobile number"
 //                   />
@@ -907,7 +907,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter new password (leave blank to keep current)"
 //                   />
@@ -973,7 +973,7 @@
 //               <button
 //                 type="submit"
 //                 disabled={loading}
-//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+//                 className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
 //               >
 //                 {loading ? "Updating..." : "Update Profile"}
 //               </button>
@@ -1122,7 +1122,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
              focus:outline-none transition-all duration-200"
                     placeholder="Enter organization name"
                     required
@@ -1143,7 +1143,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
              focus:outline-none transition-all duration-200"
                     placeholder="Enter organization address"
                     required
@@ -1164,7 +1164,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
              focus:outline-none transition-all duration-200"
                     placeholder="Enter organization website"
                   />
@@ -1184,7 +1184,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
              focus:outline-none transition-all duration-200"
                     placeholder="Enter contact person name"
                   />
@@ -1207,7 +1207,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
              focus:outline-none transition-all duration-200"
                     placeholder="Enter organization email"
                     required
@@ -1228,7 +1228,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
              bg-white text-gray-900 
-             focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+             focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
              focus:outline-none transition-all duration-200"
                     placeholder="Enter organization mobile number"
                   />
@@ -1295,7 +1295,7 @@ const OrganizationProfileModal = ({ isOpen, onClose, initialValues, refreshData 
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
               >
                 {loading ? "Updating..." : "Update Profile"}
               </button>

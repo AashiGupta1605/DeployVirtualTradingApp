@@ -51,7 +51,7 @@ const InfoCards = ({shouldRefetch}) => {
       title: "Partnered Organizations", 
       value: orgData.length,
       icon: <FiBriefcase className="w-8 h-8" />,
-      color: "bg-blue-100 text-blue-600"
+      color: "bg-blue-100 text-lightBlue-600"
     },
     { 
       id: 2, 

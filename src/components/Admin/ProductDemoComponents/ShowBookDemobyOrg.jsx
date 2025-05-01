@@ -38,7 +38,7 @@ const TitleCell = ({ query }) => {
       {shouldTruncate && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-blue-500 text-xs hover:underline mt-1 self-start focus:outline-none"
+          className="text-lightBlue-600 text-xs hover:underline mt-1 self-start focus:outline-none"
         >
           {isExpanded ? "Show less" : "Show more"}
         </button>
@@ -303,7 +303,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
 
                   {/* Filter Count - Positioned Bottom Right */}
                   {filterCount > 0 && (
-                    <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                    <span className="absolute mt-[4px] bottom-1 -right-5.5 bg-lightBlue-600 text-white px-2 py-[2px] rounded-full text-xs">
                       {filterCount}
                     </span>
                   )}
@@ -585,7 +585,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                             </td>
 
                             <td className="px-12 py-4 whitespace-nowrap text-sm">
-                              <a href={`mailto:${data.email}`} className="text-blue-500 hover:underline">
+                              <a href={`mailto:${data.email}`} className="text-lightBlue-600 hover:underline">
                                 <i className="fas fa-envelope mt-2"/>&nbsp;
                                 {data.email}
                               </a>
@@ -593,7 +593,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${data.email}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline"
+                              className="text-lightBlue-600 hover:underline"
                               >
                                 <i className="fas fa-envelope mt-2"/>&nbsp;
                                 {data.email}
@@ -607,7 +607,7 @@ const ShowBookDemobyOrg = ({ sidebarExpanded }) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 >
-                                  <span className="underline text-blue-600">
+                                  <span className="underline text-lightBlue-600">
                                     {data.website}
                                   </span>
                                 </a>

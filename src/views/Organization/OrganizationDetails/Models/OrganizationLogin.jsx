@@ -109,7 +109,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter email or mobile number"
 //                     required
@@ -128,7 +128,7 @@
 //                     onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200"
 //                     placeholder="Enter password"
 //                     required
@@ -143,7 +143,7 @@
 //                <div className="text-left">
 //               <button
 //                 type="button"
-//                 className="text-blue-600 hover:underline focus:outline-none"
+//                 className="text-lightBlue-600 hover:underline focus:outline-none"
 //                 onClick={() => setForgotPasswordOpen(true)}
 //               >
 //                 Forgot Password?
@@ -165,7 +165,7 @@
 //                 <button
 //                   type="submit"
 //                   disabled={loading}
-//                   className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+//                   className="px-6 py-3 rounded-xl bg-gradient-to-r bg-lightBlue-600 text-white hover:bg-lightBlue-500 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
 //                 >
 //                   {loading ? 'Logging in...' : 'Organization Login'}
 //                 </button>
@@ -308,7 +308,7 @@
 //             {/* Header */}
 //             <div className="flex justify-between items-center p-5 border-b border-gray-200 rounded-t-2xl">
 //                <div className="flex items-center space-x-3">
-//                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+//                  <div className="w-10 h-10 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //                    <i className="fas fa-building text-white"></i>
 //                  </div>
 //                  <h2 className="text-xl font-semibold text-gray-800">Organization Login</h2>
@@ -351,7 +351,7 @@
 //                       onBlur={formik.handleBlur}
 //                       className={`w-full pl-10 pr-4 py-2.5 !rounded-lg border ${formik.touched.emailOrMobile && formik.errors.emailOrMobile ? '!border-red-500 ring-1 ring-red-500' : '!border-gray-300'}
 //                                bg-white text-gray-900
-//                                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20
+//                                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20
 //                                focus:outline-none transition-all duration-200`}
 //                       placeholder="Enter email or mobile number"
 //                       aria-invalid={formik.touched.emailOrMobile && !!formik.errors.emailOrMobile}
@@ -380,7 +380,7 @@
 //                       onBlur={formik.handleBlur}
 //                       className={`w-full pl-10 pr-4 py-2.5 !rounded-lg border ${formik.touched.password && formik.errors.password ? '!border-red-500 ring-1 ring-red-500' : '!border-gray-300'}
 //                                bg-white text-gray-900
-//                                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20
+//                                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20
 //                                focus:outline-none transition-all duration-200`}
 //                       placeholder="Enter password"
 //                       aria-invalid={formik.touched.password && !!formik.errors.password}
@@ -398,7 +398,7 @@
 //                 <div className="text-right text-sm">
 //                   <button
 //                     type="button"
-//                     className="font-medium text-blue-600 hover:text-blue-700 hover:underline focus:outline-none disabled:text-gray-400 disabled:no-underline"
+//                     className="font-medium text-lightBlue-600 hover:text-blue-700 hover:underline focus:outline-none disabled:text-gray-400 disabled:no-underline"
 //                     onClick={() => setForgotPasswordOpen(true)}
 //                     disabled={loading} // Disable if login is in progress
 //                   >
@@ -419,7 +419,7 @@
 //                   <button
 //                     type="submit"
 //                     disabled={loading || !formik.isValid || !formik.dirty}
-//                     className="px-5 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-blue-500 to-lightBlue-600 text-white hover:from-blue-600 hover:to-lightBlue-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]" // Added min-width
+//                     className="px-5 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/30 focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]" // Added min-width
 //                   >
 //                     {loading ? (
 //                         <>
@@ -566,7 +566,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
              {/* Header */}
              <div className="flex justify-between items-center p-5 border-b border-gray-200 rounded-t-2xl">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-10 h-10 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
                     <i className="fas fa-building text-white"></i>
                   </div>
                   <h2 className="text-xl font-semibold text-gray-800">Organization Login</h2>
@@ -610,7 +610,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                        onBlur={formik.handleBlur}
                        className={`w-full pl-10 pr-4 py-2.5 !rounded-lg border ${formik.touched.emailOrMobile && formik.errors.emailOrMobile ? '!border-red-500 ring-1 ring-red-500' : '!border-gray-300'}
                                 bg-white text-gray-900
-                                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20
+                                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20
                                 focus:outline-none transition-all duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed`}
                        placeholder="Enter email or mobile number"
                        aria-invalid={formik.touched.emailOrMobile && !!formik.errors.emailOrMobile}
@@ -638,7 +638,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                        onBlur={formik.handleBlur}
                        className={`w-full pl-10 pr-4 py-2.5 !rounded-lg border ${formik.touched.password && formik.errors.password ? '!border-red-500 ring-1 ring-red-500' : '!border-gray-300'}
                                 bg-white text-gray-900
-                                focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20
+                                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20
                                 focus:outline-none transition-all duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed`}
                        placeholder="Enter password"
                        aria-invalid={formik.touched.password && !!formik.errors.password}
@@ -657,7 +657,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                 <div className="text-right text-sm">
                   <button
                     type="button"
-                    className="font-medium text-blue-600 hover:text-blue-700 hover:underline focus:outline-none disabled:text-gray-400 disabled:no-underline"
+                    className="font-medium text-lightBlue-600 hover:text-blue-700 hover:underline focus:outline-none disabled:text-gray-400 disabled:no-underline"
                     onClick={() => setForgotPasswordOpen(true)}
                     disabled={loading}
                   >
@@ -678,7 +678,7 @@ const OrganizationLogin = ({ isOpen, onClose }) => {
                   <button
                     type="submit"
                     disabled={loading || !formik.isValid || !formik.dirty}
-                    className="px-5 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-blue-500 to-lightBlue-600 text-white hover:from-blue-600 hover:to-lightBlue-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]"
+                    className="px-5 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/30 focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]"
                   >
                     {loading ? (
                         <>

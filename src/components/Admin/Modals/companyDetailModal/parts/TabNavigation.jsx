@@ -81,7 +81,7 @@ const TabButton = memo(({
         rounded-lg transition-all duration-300 
         font-medium text-sm focus:outline-none
         ${active 
-          ? 'text-blue-600 bg-blue-50 shadow-sm' 
+          ? 'text-lightBlue-600 bg-blue-50 shadow-sm' 
           : disabled 
             ? 'text-gray-400 cursor-not-allowed' 
             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -91,13 +91,13 @@ const TabButton = memo(({
       <Icon 
         size={16} 
         className={`transition-colors duration-200 ${
-          active ? 'text-blue-600' : 'text-gray-500'
+          active ? 'text-lightBlue-600' : 'text-gray-500'
         }`} 
       />
       <span className="relative">
         {label}
         {active && (
-          <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-blue-600 rounded-full" />
+          <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-lightBlue-600 rounded-full" />
         )}
       </span>
       {badge && (
@@ -106,7 +106,7 @@ const TabButton = memo(({
           px-1.5 py-0.5 text-[10px] font-bold 
           rounded-full shadow-sm
           ${active 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-lightBlue-600 text-white' 
             : 'bg-gray-100 text-gray-600'
           }
         `}>

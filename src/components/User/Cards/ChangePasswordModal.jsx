@@ -91,7 +91,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     //             value={formik.values.oldPassword}
     //             onChange={formik.handleChange}
     //             onBlur={formik.handleBlur}
-    //             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+    //             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
     //           />
     //           {formik.touched.oldPassword && formik.errors.oldPassword && (
     //             <p className="text-red-500 text-sm mt-1">{formik.errors.oldPassword}</p>
@@ -108,7 +108,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     //             value={formik.values.newPassword}
     //             onChange={formik.handleChange}
     //             onBlur={formik.handleBlur}
-    //             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+    //             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
     //           />
     //           {formik.touched.newPassword && formik.errors.newPassword && (
     //             <p className="text-red-500 text-sm mt-1">{formik.errors.newPassword}</p>
@@ -125,7 +125,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     //             value={formik.values.confirmPassword}
     //             onChange={formik.handleChange}
     //             onBlur={formik.handleBlur}
-    //             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+    //             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
     //           />
     //           {formik.touched.confirmPassword && formik.errors.confirmPassword && (
     //             <p className="text-red-500 text-sm mt-1">{formik.errors.confirmPassword}</p>
@@ -143,7 +143,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     //           </button>
     //           <button
     //             type="submit"
-    //             className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 ml-4"
+    //             className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 ml-4"
     //           >
     //             Change Password
     //           </button>
@@ -185,7 +185,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             value={formik.values.oldPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
           />
           {formik.touched.oldPassword && formik.errors.oldPassword && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.oldPassword}</p>
@@ -202,7 +202,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             value={formik.values.newPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
           />
           {formik.touched.newPassword && formik.errors.newPassword && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.newPassword}</p>
@@ -219,7 +219,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
           />
           {formik.touched.confirmPassword && formik.errors.confirmPassword && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.confirmPassword}</p>

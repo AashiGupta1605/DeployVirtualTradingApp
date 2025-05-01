@@ -35,7 +35,7 @@
 //       <div className="relative">
 //         <button
 //           onClick={toggleMenu}
-//           className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500"
+//           className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
 //         >
 //           <img
 //             src={currentOrg?.photo || "https://via.placeholder.com/150"}
@@ -123,7 +123,7 @@ const UserDropdown = () => {
       <div className="relative">
         <button
           onClick={toggleMenu}
-          className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
         >
           <img
             src={currentOrg?.photo || "https://via.placeholder.com/150"}

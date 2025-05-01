@@ -85,7 +85,7 @@
 //               onChange={(e) => setOtp(e.target.value)}
 //               className="w-full px-4 py-3 rounded-xl border border-gray-200 
 //                 bg-white text-gray-900 
-//                 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+//                 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
 //                 focus:outline-none transition-all duration-200"
 //               placeholder="Enter 6-digit OTP"
 //               maxLength="6"
@@ -97,7 +97,7 @@
 //             <button
 //               type="button"
 //               onClick={handleResendOtp}
-//               className="text-blue-600 hover:underline text-sm"
+//               className="text-lightBlue-600 hover:underline text-sm"
 //             >
 //               Resend OTP
 //             </button>
@@ -113,7 +113,7 @@
 //               <button
 //                 type="submit"
 //                 disabled={isLoading}
-//                 className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm"
+//                 className="px-4 py-2 rounded-lg bg-lightBlue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all text-sm"
 //               >
 //                 {isLoading ? 'Verifying...' : 'Verify'}
 //               </button>
@@ -287,7 +287,7 @@ const OTPModal = ({
         {/* Header */}
         <div className="flex justify-between items-center pb-4 border-b border-gray-100">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-8 h-8 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-full flex items-center justify-center shadow-lg">
               <i className="fas fa-shield-alt text-white text-sm"></i> {/* Org Icon */}
             </div>
             <h2 className="text-xl font-semibold text-gray-800">Organization OTP</h2>
@@ -319,7 +319,7 @@ const OTPModal = ({
               pattern="\d{6}"
               className="w-full px-4 py-3 !rounded-xl border !border-gray-300
                bg-white text-gray-900 tracking-widest text-center text-lg font-medium
-               focus:!border-blue-500 focus:ring-1 focus:!ring-blue-500
+               focus:!border-lightBlue-600 focus:ring-1 focus:!ring-lightBlue-600
                focus:outline-none transition-all duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
@@ -336,7 +336,7 @@ const OTPModal = ({
             type="submit"
             // Disable if verifying, resending, expired, or OTP length is not 6
             disabled={isLoadingVerify || isResending || otpExpired || otp.length !== 6}
-            className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium hover:from-blue-500 hover:to-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white font-medium hover:from-lightBlue-600 hover:to-blue-400 focus:outline-none focus:ring-2 focus:ring-lightBlue-600/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {/* Show appropriate loading text */}
             {isLoadingVerify ? "Verifying..." : "Verify OTP"}
@@ -352,7 +352,7 @@ const OTPModal = ({
               onClick={handleResendOtp}
               // Disable if verifying OR resending
               disabled={isLoadingVerify || isResending}
-              className="text-blue-600 underline hover:text-blue-800 transition-colors focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+              className="text-lightBlue-600 underline hover:text-blue-800 transition-colors focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
             >
               {isResending ? "Sending..." : "Click here to resend."}
             </button>
@@ -367,7 +367,7 @@ const OTPModal = ({
               type="button"
               onClick={handleResendOtp}
               disabled={isLoadingVerify || isResending}
-              className="text-blue-600 underline hover:text-blue-800 transition-colors focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+              className="text-lightBlue-600 underline hover:text-blue-800 transition-colors focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
               >
               {isResending ? "Sending..." : "Resend OTP"}
               </button>

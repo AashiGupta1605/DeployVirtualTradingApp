@@ -393,7 +393,7 @@ toast.success(
           <span className="text-sm">{error}</span>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-lightBlue-600"
+            className="mt-4 px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600"
           >
             Retry
           </button>
@@ -415,7 +415,7 @@ toast.success(
         </div>
         <button
           onClick={onOpenSubscriptionModal}
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
+          className="px-6 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
         >
           View Subscription Plans
         </button>

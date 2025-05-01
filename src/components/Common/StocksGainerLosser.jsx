@@ -83,7 +83,7 @@ const StocksGainerLosser = ({ showHeader = true }) => {
         {error}
         <button 
           onClick={() => window.location.reload()} 
-          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="ml-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600"
         >
           Retry
         </button>
@@ -248,7 +248,7 @@ export default StocksGainerLosser;
 //   if (loading) {
 //     return (
 //       <div className="flex justify-center items-center h-64 mx-auto">
-//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500">Loading...</div>
+//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lightBlue-600">Loading...</div>
 //       </div>
 //     );
 //   }
@@ -259,7 +259,7 @@ export default StocksGainerLosser;
 //         {error}
 //         <button 
 //           onClick={() => window.location.reload()} 
-//           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+//           className="ml-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600"
 //         >
 //           Retry
 //         </button>

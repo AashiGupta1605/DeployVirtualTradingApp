@@ -236,7 +236,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
 
                   {/* Filter Count - Positioned Bottom Right */}
                   {filterCount > 0 && (
-                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-lightBlue-600 text-white px-2 py-[2px] rounded-full text-xs">
                       {filterCount}
                     </span>
                   )}
@@ -299,7 +299,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                       bg-white transition-colors duration-200 
                       ${
                         showDropdown
-                          ? "border-blue-500 bg-blue-100"
+                          ? "border-lightBlue-600 bg-blue-100"
                           : "border-gray-300 hover:border-blue-400"
                       }`}
                     >
@@ -594,7 +594,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                             {`${feedbackData.feedbackMessage.substring(0, 50)}...`}
                             <button
                             onClick={() => togglePopover1(feedbackData._id)}
-                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                            className="ml-2 text-lightBlue-600 hover:text-blue-700 focus:outline-none"
                             > Show more </button>
                             {popoverRow1 === feedbackData._id && (
                               <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef1}>
@@ -652,7 +652,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
                             {`${feedbackData.suggestions.substring(0, 50)}...`}
                             <button
                             onClick={() => togglePopover2(feedbackData._id)}
-                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                            className="ml-2 text-lightBlue-600 hover:text-blue-700 focus:outline-none"
                             > Show more </button>
                             {popoverRow2 === feedbackData._id && (
                               <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef2}>
@@ -935,7 +935,7 @@ export default UserAllFeedbacksTable;
 
 //                   {/* Filter Count - Positioned Bottom Right */}
 //                   {filterCount > 0 && (
-//                     <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+//                     <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-lightBlue-600 text-white px-2 py-[2px] rounded-full text-xs">
 //                       {filterCount}
 //                     </span>
 //                   )}
@@ -997,7 +997,7 @@ export default UserAllFeedbacksTable;
 //                       bg-white transition-colors duration-200 
 //                       ${
 //                         showDropdown
-//                           ? "border-blue-500 bg-blue-100"
+//                           ? "border-lightBlue-600 bg-blue-100"
 //                           : "border-gray-300 hover:border-blue-400"
 //                       }`}
 //                     >
@@ -1307,7 +1307,7 @@ export default UserAllFeedbacksTable;
 //                               {feedbackData.feedbackMessage}
 //                               <button
 //                                 onClick={() => toggleRow(feedbackData._id)}
-//                                 className="ml-2 text-blue-500 hover:text-blue-700"
+//                                 className="ml-2 text-lightBlue-600 hover:text-blue-700"
 //                               >
 //                                 Show less
 //                               </button>
@@ -1324,7 +1324,7 @@ export default UserAllFeedbacksTable;
 //                               {feedbackData.feedbackMessage?.length > 50 && (
 //                                 <button
 //                                   onClick={() => toggleRow(feedbackData._id)}
-//                                   className="ml-2 text-blue-500 hover:text-blue-700"
+//                                   className="ml-2 text-lightBlue-600 hover:text-blue-700"
 //                                 >
 //                                   Show more
 //                                 </button>
@@ -1369,7 +1369,7 @@ export default UserAllFeedbacksTable;
 //                                 onClick={() =>
 //                                   toggleRow(`suggestion-${feedbackData._id}`)
 //                                 }
-//                                 className="ml-2 text-blue-500 hover:text-blue-700"
+//                                 className="ml-2 text-lightBlue-600 hover:text-blue-700"
 //                               >
 //                                 Show less
 //                               </button>
@@ -1388,7 +1388,7 @@ export default UserAllFeedbacksTable;
 //                                   onClick={() =>
 //                                     toggleRow(`suggestion-${feedbackData._id}`)
 //                                   }
-//                                   className="ml-2 text-blue-500 hover:text-blue-700"
+//                                   className="ml-2 text-lightBlue-600 hover:text-blue-700"
 //                                 >
 //                                   Show more
 //                                 </button>

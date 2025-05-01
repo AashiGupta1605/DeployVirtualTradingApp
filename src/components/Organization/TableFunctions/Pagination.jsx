@@ -42,7 +42,7 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, onPageChange, onIte
               onClick={() => onPageChange(page)}
               className={`px-3 py-1 rounded-md ${
                 currentPage === page
-                  ? "bg-blue-500 text-white"
+                  ? "bg-lightBlue-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -103,7 +103,7 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, onPageChange, onIte
                 onClick={() => onPageChange(page)}
                 className={`px-3 py-1 rounded-md mx-1 ${
                   currentPage === page
-                    ? "bg-blue-500 text-white"
+                    ? "bg-lightBlue-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >

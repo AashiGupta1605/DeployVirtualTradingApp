@@ -11,14 +11,14 @@
 
 //   const getEventIcon = (iconName) => {
 //     switch(iconName) {
-//       case 'Trophy': return <Trophy className="text-blue-600" size={18} />;
+//       case 'Trophy': return <Trophy className="text-lightBlue-600" size={18} />;
 //       case 'Medal': return <Medal className="text-yellow-500" size={18} />;
 //       case 'Gift': return <Gift className="text-purple-500" size={18} />;
 //       case 'Award': return <Award className="text-green-500" size={18} />;
 //       case 'Star': return <Star className="text-orange-500" size={18} />;
 //       case 'Zap': return <Zap className="text-red-500" size={18} />;
 //       case 'Coins': return <Coins className="text-amber-500" size={18} />;
-//       default: return <Award className="text-blue-600" size={18} />;
+//       default: return <Award className="text-lightBlue-600" size={18} />;
 //     }
 //   };
 
@@ -39,7 +39,7 @@
 //         <div style={{ width: '100%', maxWidth: '60%' }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
 //           <div className="flex justify-between items-center p-6 border-b border-gray-100">
 //             <div className="flex items-center space-x-3">
-//               <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+//               <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //                 <User className="text-white" size={20} />
 //               </div>
 //               <div>
@@ -152,14 +152,14 @@
 
 //   const getEventIcon = (iconName) => {
 //     switch(iconName) {
-//       case 'Trophy': return <Trophy className="text-blue-600" size={18} />;
+//       case 'Trophy': return <Trophy className="text-lightBlue-600" size={18} />;
 //       case 'Medal': return <Medal className="text-yellow-500" size={18} />;
 //       case 'Gift': return <Gift className="text-purple-500" size={18} />;
 //       case 'Award': return <Award className="text-green-500" size={18} />;
 //       case 'Star': return <Star className="text-orange-500" size={18} />;
 //       case 'Zap': return <Zap className="text-red-500" size={18} />;
 //       case 'Coins': return <Coins className="text-amber-500" size={18} />;
-//       default: return <Award className="text-blue-600" size={18} />;
+//       default: return <Award className="text-lightBlue-600" size={18} />;
 //     }
 //   };
 
@@ -180,7 +180,7 @@
 //         <div style={{ width: '100%', maxWidth: '60%' }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
 //           <div className="flex justify-between items-center p-6 border-b border-gray-100">
 //             <div className="flex items-center space-x-3">
-//               <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+//               <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //                 <User className="text-white" size={20} />
 //               </div>
 //               <div>
@@ -293,14 +293,14 @@ const UserEventsModal = ({ isOpen, onClose, user, events }) => {
 
   const getEventIcon = (iconName) => {
     switch(iconName) {
-      case 'Trophy': return <Trophy className="text-blue-600" size={18} />;
+      case 'Trophy': return <Trophy className="text-lightBlue-600" size={18} />;
       case 'Medal': return <Medal className="text-yellow-500" size={18} />;
       case 'Gift': return <Gift className="text-purple-500" size={18} />;
       case 'Award': return <Award className="text-green-500" size={18} />;
       case 'Star': return <Star className="text-orange-500" size={18} />;
       case 'Zap': return <Zap className="text-red-500" size={18} />;
       case 'Coins': return <Coins className="text-amber-500" size={18} />;
-      default: return <Award className="text-blue-600" size={18} />;
+      default: return <Award className="text-lightBlue-600" size={18} />;
     }
   };
 
@@ -341,7 +341,7 @@ const UserEventsModal = ({ isOpen, onClose, user, events }) => {
         <div style={{ width: '100%', maxWidth: '60%' }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
           <div className="flex justify-between items-center p-6 border-b border-gray-100">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <User className="text-white" size={20} />
               </div>
               <div>

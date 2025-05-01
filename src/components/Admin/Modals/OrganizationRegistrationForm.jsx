@@ -239,7 +239,7 @@
 //               <button
 //                 type="submit"
 //                 disabled={isLoading || isSubmitting}
-//                 className="px-4 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center text-sm"
+//                 className="px-4 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center text-sm"
 //               >
 //                 {isLoading || isSubmitting ? (
 //                   <>
@@ -368,7 +368,7 @@
 //                   <button
 //                     type="submit"
 //                     disabled={isLoading || isSubmitting}
-//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center text-base"
+//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center text-base"
 //                   >
 //                     {isLoading || isSubmitting ? (
 //                       <>
@@ -404,7 +404,7 @@
 //       name={name}
 //       className={`w-full px-3 py-2 md:px-4 md:py-3 !rounded-xl border !border-gray-200 
 //                   bg-white text-gray-900 
-//                   focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//                   focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //                   focus:outline-none transition-all duration-200`}
 //       placeholder={placeholder}
 //     />
@@ -710,7 +710,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
                     <button
                       type="submit"
                       disabled={isLoading || isSubmitting}
-                      className="px-4 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center text-sm"
+                      className="px-4 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center text-sm"
                     >
                       {isLoading || isSubmitting ? (
                         <>
@@ -839,7 +839,7 @@ const OrganizationRegistrationForm = ({ isOpen, onClose, selectedOrg, onSuccess 
                     <button
                       type="submit"
                       disabled={isLoading || isSubmitting}
-                      className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50 flex items-center text-base"
+                      className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center text-base"
                     >
                       {isLoading || isSubmitting ? (
                         <>
@@ -875,7 +875,7 @@ const FormField = ({ name, label, required = false, type = "text", placeholder, 
       name={name}
       className={`w-full px-3 py-2 md:px-4 md:py-3 !rounded-xl border !border-gray-200 
                   bg-white text-gray-900 
-                  focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                  focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                   focus:outline-none transition-all duration-200`}
       placeholder={placeholder}
     />
