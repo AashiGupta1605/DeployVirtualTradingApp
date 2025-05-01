@@ -235,7 +235,7 @@ const FeedbackTable = ({ feedbacks }) => {
               {feedback.feedbackMessage}
               <button
                 onClick={() => handlers.toggleRow(feedback._id)}
-                className="ml-2 text-blue-500 hover:text-blue-700"
+                className="ml-2 text-lightBlue-600 hover:text-blue-700"
               >
                 Show less
               </button>
@@ -248,7 +248,7 @@ const FeedbackTable = ({ feedbacks }) => {
               {feedback.feedbackMessage?.length > 50 && (
                 <button
                   onClick={() => handlers.toggleRow(feedback._id)}
-                  className="ml-2 text-blue-500 hover:text-blue-700"
+                  className="ml-2 text-lightBlue-600 hover:text-blue-700"
                 >
                   Show more
                 </button>

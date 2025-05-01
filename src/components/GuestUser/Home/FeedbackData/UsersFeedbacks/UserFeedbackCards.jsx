@@ -59,7 +59,7 @@ const UserFeedbackCards = () => {
       aria-label="Previous"
       style={{ boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}
     >
-      <BiChevronLeft className="text-2xl text-gray-700 hover:text-blue-600" />
+      <BiChevronLeft className="text-2xl text-gray-700 hover:text-lightBlue-600" />
     </button>
   );
 
@@ -70,7 +70,7 @@ const UserFeedbackCards = () => {
       aria-label="Next"
       style={{ boxShadow: '-2px 0 5px rgba(0,0,0,0.1)' }}
     >
-      <BiChevronRight className="text-2xl text-gray-700 hover:text-blue-600" />
+      <BiChevronRight className="text-2xl text-gray-700 hover:text-lightBlue-600" />
     </button>
   );
 
@@ -154,7 +154,7 @@ const UserFeedbackCards = () => {
             </p>
             <button
               onClick={fetchUserFeedbacks}
-              className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+              className="px-5 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
             >
               Retry
             </button>

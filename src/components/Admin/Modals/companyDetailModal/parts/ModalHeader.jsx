@@ -67,7 +67,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
           <div className="hidden lg:flex items-center justify-between gap-4">
             {/* Left Side - Symbol and Basic Info */}
             <div className="flex items-center gap-4 min-w-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
+              <div className="w-10 h-10 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
                 <span className="text-xl font-bold text-white">{symbol.charAt(0)}</span>
               </div>
               
@@ -75,7 +75,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
                 <h2 className="text-xl font-bold text-gray-900 truncate min-w-[120px]">{symbol}</h2>
                 <span className={`text-xl font-bold tabular-nums ${
                   data.pChange > 0 ? 'text-green-600' : 
-                  data.pChange < 0 ? 'text-red-600' : 'text-blue-600'
+                  data.pChange < 0 ? 'text-red-600' : 'text-lightBlue-600'
                 }`}>
                   {formatValue(data.lastPrice, 'currency')}
                 </span>
@@ -84,7 +84,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
                     ? 'bg-green-50 text-green-600 border border-green-100' 
                     : data.pChange < 0
                     ? 'bg-red-50 text-red-600 border border-red-100'
-                    : 'bg-blue-50 text-blue-600 border border-blue-100'
+                    : 'bg-blue-50 text-lightBlue-600 border border-blue-100'
                 }`}>
                   {data.pChange > 0 ? (
                     <ArrowUpRight size={14} className="mr-1" />
@@ -93,7 +93,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
                   ) : null}
                   <span>{formatValue(data.pChange, 'percentage')}</span>
                 </div>
-                <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">
+                <span className="px-2 py-0.5 bg-blue-50 text-lightBlue-600 rounded-full text-xs font-medium">
                   {type === 'etf' ? 'ETF' : 'EQUITY'}
                 </span>
                 <span className="text-xs text-gray-500">NSE • {data.lastUpdateTime ? new Date(data.lastUpdateTime).toLocaleTimeString() : 'Live'}</span>
@@ -166,7 +166,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
           <div className="lg:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
             {/* Left Side - Symbol and Price */}
             <div className="flex items-center gap-4 min-w-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
                 <span className="text-xl font-bold text-white">{symbol.charAt(0)}</span>
               </div>
               
@@ -176,7 +176,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
                   <div className="flex items-center gap-2">
                     <span className={`text-lg sm:text-xl font-bold tabular-nums ${
                       data.pChange > 0 ? 'text-green-600' : 
-                      data.pChange < 0 ? 'text-red-600' : 'text-blue-600'
+                      data.pChange < 0 ? 'text-red-600' : 'text-lightBlue-600'
                     }`}>
                       {formatValue(data.lastPrice, 'currency')}
                     </span>
@@ -185,7 +185,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
                         ? 'bg-green-50 text-green-600 border border-green-100' 
                         : data.pChange < 0
                         ? 'bg-red-50 text-red-600 border border-red-100'
-                        : 'bg-blue-50 text-blue-600 border border-blue-100'
+                        : 'bg-blue-50 text-lightBlue-600 border border-blue-100'
                     }`}>
                       {data.pChange > 0 ? (
                         <ArrowUpRight size={14} className="mr-1" />
@@ -197,7 +197,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">
+                  <span className="px-2 py-0.5 bg-blue-50 text-lightBlue-600 rounded-full text-xs font-medium">
                     {type === 'etf' ? 'ETF' : 'EQUITY'}
                   </span>
                   <span className="text-xs text-gray-500">NSE • {data.lastUpdateTime ? new Date(data.lastUpdateTime).toLocaleTimeString() : 'Live'}</span>

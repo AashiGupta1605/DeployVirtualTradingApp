@@ -34,7 +34,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
 
   const getIconComponent = (iconName, size = 24, className = "") => {
     const icons = {
-      Trophy: <Trophy className={`text-blue-500 ${className}`} size={size} />,
+      Trophy: <Trophy className={`text-lightBlue-600 ${className}`} size={size} />,
       Medal: <Medal className={`text-yellow-500 ${className}`} size={size} />,
       Gift: <Gift className={`text-purple-500 ${className}`} size={size} />,
       Award: <Award className={`text-green-500 ${className}`} size={size} />,
@@ -43,9 +43,9 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
       Users: <Users className={`text-green-500 ${className}`} size={size} />,
       BarChart2: <BarChart2 className={`text-red-500 ${className}`} size={size} />,
       Coins: <Coins className={`text-amber-500 ${className}`} size={size} />,
-      Info: <Info className={`text-blue-500 ${className}`} size={size} />,
+      Info: <Info className={`text-lightBlue-600 ${className}`} size={size} />,
     };
-    return icons[iconName] || <Trophy className={`text-blue-500 ${className}`} size={size} />;
+    return icons[iconName] || <Trophy className={`text-lightBlue-600 ${className}`} size={size} />;
   };
 
   return (
@@ -56,7 +56,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
         <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center bg-white">
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="p-1 sm:p-2 bg-blue-100 rounded-lg sm:rounded-xl">
-              {getIconComponent(event.icon, 20, "text-blue-600")}
+              {getIconComponent(event.icon, 20, "text-lightBlue-600")}
             </div>
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">{event.title}</h2>
           </div>
@@ -76,7 +76,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Description */}
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1 sm:mb-2 flex items-center">
-                  <Info className="mr-2 text-blue-500" size={16} />
+                  <Info className="mr-2 text-lightBlue-600" size={16} />
                   Description
                 </h3>
                 <p className="text-sm sm:text-base text-gray-700">{event.description}</p>
@@ -85,7 +85,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Date & Time */}
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-                  <Calendar className="mr-2 text-blue-500" size={16} />
+                  <Calendar className="mr-2 text-lightBlue-600" size={16} />
                   Event Schedule
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
@@ -113,7 +113,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Requirements */}
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1 sm:mb-2 flex items-center">
-                  <Shield className="mr-2 text-blue-500" size={16} />
+                  <Shield className="mr-2 text-lightBlue-600" size={16} />
                   Participation Requirements
                 </h3>
                 <p className="text-sm sm:text-base text-gray-700">{event.requirements}</p>
@@ -125,7 +125,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Prize Information */}
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-                  <Medal className="mr-2 text-blue-500" size={16} />
+                  <Medal className="mr-2 text-lightBlue-600" size={16} />
                   Prize Information
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
@@ -133,7 +133,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
                     <DollarSign className="mr-2 text-gray-500" size={14} />
                     <div>
                       <p className="text-xs text-gray-500">Total Prize</p>
-                      <p className="text-sm sm:text-base font-medium text-blue-600">{event.prize}</p>
+                      <p className="text-sm sm:text-base font-medium text-lightBlue-600">{event.prize}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
@@ -165,7 +165,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Participation */}
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-                  <Users className="mr-2 text-blue-500" size={16} />
+                  <Users className="mr-2 text-lightBlue-600" size={16} />
                   Participation Stats
                 </h3>
                 <div className="flex justify-between mb-1 sm:mb-2">
@@ -174,7 +174,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2 sm:h-2.5 mb-1">
                   <div
-                    className="bg-blue-600 h-2 sm:h-2.5 rounded-full"
+                    className="bg-lightBlue-600 h-2 sm:h-2.5 rounded-full"
                     style={{ width: `${event.progress}%` }}
                   ></div>
                 </div>
@@ -186,7 +186,7 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
               {/* Prize Breakdown */}
               <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-                  <Award className="mr-2 text-blue-500" size={16} />
+                  <Award className="mr-2 text-lightBlue-600" size={16} />
                   Prize Breakdown
                 </h3>
                 <ul className="space-y-1 sm:space-y-2">
@@ -205,13 +205,13 @@ const EventDetailsModal = ({ event, onClose, onJoin }) => {
           <div className="mt-4 sm:mt-6"> {/* Added margin-top */}
             <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
               <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-                <Zap className="mr-2 text-blue-500" size={16} />
+                <Zap className="mr-2 text-lightBlue-600" size={16} />
                 Event Rewards
               </h3>
               <ul className="space-y-1 sm:space-y-2">
                 {event.rewards.map((reward, index) => (
                   <li key={index} className="flex items-start">
-                    <div className="mt-1 sm:mt-1.5 mr-2 w-2 h-2 rounded-full bg-blue-600 flex-shrink-0"></div> {/* Added flex-shrink-0 */}
+                    <div className="mt-1 sm:mt-1.5 mr-2 w-2 h-2 rounded-full bg-lightBlue-600 flex-shrink-0"></div> {/* Added flex-shrink-0 */}
                     <span className="text-xs sm:text-sm text-gray-700">{reward}</span>
                   </li>
                 ))}
@@ -361,7 +361,7 @@ const EventsPage = () => {
 
   const getIconComponent = (iconName) => {
     const icons = {
-      Trophy: <Trophy className="text-blue-500" size={20} />,
+      Trophy: <Trophy className="text-lightBlue-600" size={20} />,
       Medal: <Medal className="text-yellow-500" size={20} />,
       Gift: <Gift className="text-purple-500" size={20} />,
       Award: <Award className="text-green-500" size={20} />,
@@ -371,7 +371,7 @@ const EventsPage = () => {
       BarChart2: <BarChart2 className="text-red-500" size={20} />,
       Coins: <Coins className="text-amber-500" size={20} />,
     };
-    return icons[iconName] || <Trophy className="text-blue-500" size={20} />;
+    return icons[iconName] || <Trophy className="text-lightBlue-600" size={20} />;
   };
 
   const filteredEvents = Array.isArray(events) ? events.filter(event => {
@@ -496,7 +496,7 @@ const EventsPage = () => {
           {/* Upcoming Events Stat */}
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-blue-50 rounded-lg">
-              <Calendar className="text-blue-600" size={18} /> {/* Changed Icon */}
+              <Calendar className="text-lightBlue-600" size={18} /> {/* Changed Icon */}
             </div>
             <div>
               <p className="text-xs text-gray-500">Upcoming Events</p>
@@ -597,7 +597,7 @@ const EventsPage = () => {
                       <DollarSign className="mr-1 sm:mr-2 text-gray-500 flex-shrink-0" size={14} /> {/* flex-shrink-0 */}
                       <div>
                         <p className="text-xs text-gray-500">Prize Pool</p>
-                        <p className="text-xs sm:text-sm font-medium text-blue-600">{event.prize}</p> {/* Colored prize */}
+                        <p className="text-xs sm:text-sm font-medium text-lightBlue-600">{event.prize}</p> {/* Colored prize */}
                       </div>
                     </div>
                   </div>
@@ -606,7 +606,7 @@ const EventsPage = () => {
                   <div className="flex justify-between items-center border-t border-gray-100 pt-3"> {/* Added border-top */}
                     <button
                       onClick={() => setSelectedEvent(event)}
-                      className="flex items-center text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium transition-colors"
+                      className="flex items-center text-lightBlue-600 hover:text-blue-800 text-xs sm:text-sm font-medium transition-colors"
                     >
                       <Info className="mr-1" size={12} />
                       View Details
@@ -649,7 +649,7 @@ const EventsPage = () => {
                {activeTab !== 'completed' && (
                  <button
                     onClick={() => setActiveTab('upcoming')} // Example action
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+                    className="px-4 sm:px-6 py-2 sm:py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base"
                  >
                    View Upcoming Events
                  </button>
@@ -663,7 +663,7 @@ const EventsPage = () => {
              <div className="bg-white rounded-lg sm:rounded-xl shadow-sm overflow-hidden border border-gray-200 max-w-4xl mx-auto"> {/* Centered FAQs */}
                <div className="p-4 sm:p-6 border-b border-gray-200">
                  <h3 className="font-medium flex items-center text-sm sm:text-base">
-                   <Info className="text-blue-500 mr-2 sm:mr-3 flex-shrink-0" size={16} />
+                   <Info className="text-lightBlue-600 mr-2 sm:mr-3 flex-shrink-0" size={16} />
                    How do I participate in an event?
                  </h3>
                  <p className="mt-1 sm:mt-2 text-gray-600 pl-6 sm:pl-8 text-xs sm:text-sm">
@@ -672,7 +672,7 @@ const EventsPage = () => {
                </div>
                <div className="p-4 sm:p-6 border-b border-gray-200">
                  <h3 className="font-medium flex items-center text-sm sm:text-base">
-                   <Info className="text-blue-500 mr-2 sm:mr-3 flex-shrink-0" size={16} />
+                   <Info className="text-lightBlue-600 mr-2 sm:mr-3 flex-shrink-0" size={16} />
                    Are there any requirements to join?
                  </h3>
                  <p className="mt-1 sm:mt-2 text-gray-600 pl-6 sm:pl-8 text-xs sm:text-sm">
@@ -681,7 +681,7 @@ const EventsPage = () => {
                </div>
                <div className="p-4 sm:p-6">
                  <h3 className="font-medium flex items-center text-sm sm:text-base">
-                   <Info className="text-blue-500 mr-2 sm:mr-3 flex-shrink-0" size={16} />
+                   <Info className="text-lightBlue-600 mr-2 sm:mr-3 flex-shrink-0" size={16} />
                    How are winners determined and paid?
                  </h3>
                  <p className="mt-1 sm:mt-2 text-gray-600 pl-6 sm:pl-8 text-xs sm:text-sm">

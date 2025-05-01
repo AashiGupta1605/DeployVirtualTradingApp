@@ -92,7 +92,7 @@ const OrganizationFeedbackModal = ({ isOpen, onClose, onSubmit, feedbackData }) 
     //               value={formik.values.feedbackCategory}
     //               onChange={formik.handleChange}
     //               onBlur={formik.handleBlur}
-    //               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+    //               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
     //             >
     //               <option value="">Select Category</option>
     //               <option value="Website UI/UX">Website UI/UX</option>
@@ -141,7 +141,7 @@ const OrganizationFeedbackModal = ({ isOpen, onClose, onSubmit, feedbackData }) 
     //               onChange={formik.handleChange}
     //               onBlur={formik.handleBlur}
     //               rows="3"
-    //               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+    //               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
     //             ></textarea>
     //             {formik.touched.feedbackMessage && formik.errors.feedbackMessage && (
     //               <div className="text-red-500 text-sm mt-1">{formik.errors.feedbackMessage}</div>
@@ -159,7 +159,7 @@ const OrganizationFeedbackModal = ({ isOpen, onClose, onSubmit, feedbackData }) 
     //               onChange={formik.handleChange}
     //               onBlur={formik.handleBlur}
     //               rows="3"
-    //               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+    //               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20"
     //               placeholder="Enter your suggestions"
     //             ></textarea>
     //             {formik.touched.suggestions && formik.errors.suggestions && (

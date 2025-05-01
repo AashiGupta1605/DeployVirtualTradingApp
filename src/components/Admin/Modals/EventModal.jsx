@@ -393,7 +393,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     placeholder="Event Title"
                     className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.title && formik.touched.title && (
@@ -410,7 +410,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onBlur={formik.handleBlur}
                     className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.type && formik.touched.type ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                   >
                     <option value="ongoing">Ongoing</option>
@@ -432,7 +432,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onBlur={formik.handleBlur}
                     className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.startDate && formik.touched.startDate ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.startDate && formik.touched.startDate && (
@@ -450,7 +450,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onBlur={formik.handleBlur}
                     className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.endDate && formik.touched.endDate ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.endDate && formik.touched.endDate && (
@@ -466,7 +466,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                   >
                     <option value="Beginner">Beginner</option>
@@ -490,7 +490,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     placeholder="Total Prize Pool (e.g., $10,000)"
                     className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.prize && formik.touched.prize ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.prize && formik.touched.prize && (
@@ -513,7 +513,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                       step="0.01"
                       className={`w-full px-4 py-3 pl-10 !rounded-xl border ${formik.errors.entryFee && formik.touched.entryFee ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                     />
                   </div>
@@ -536,7 +536,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                       max="100"
                       className={`w-full px-4 py-3 pr-10 !rounded-xl border ${formik.errors.cashbackPercentage && formik.touched.cashbackPercentage ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                     />
                     <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>
@@ -557,7 +557,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     min="0"
                     className={`w-full px-4 py-3 !rounded-xl border ${formik.errors.participants && formik.touched.participants ? 'border-red-500' : 'border-gray-200'} !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                   />
                   {formik.errors.participants && formik.touched.participants && (
@@ -573,7 +573,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                   >
                     {iconOptions.map(option => (
@@ -607,7 +607,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     onChange={formik.handleChange}
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                   >
                     {backgroundOptions.map(option => (
@@ -626,7 +626,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     placeholder="Event requirements"
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                   />
                 </div>
@@ -641,7 +641,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     placeholder="Event highlight"
                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                   />
                 </div>
@@ -680,7 +680,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                             placeholder="e.g. 5%+ Gain"
                             className="w-full px-3 py-2 rounded-lg border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                           />
                         </div>
@@ -693,7 +693,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                             placeholder="e.g. 50% of entry fee returned"
                             className="w-full px-3 py-2 rounded-lg border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                           />
                         </div>
@@ -731,7 +731,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                         onChange={(e) => handleRewardsChange(index, e.target.value)}
                         className="flex-1 px-4 py-3 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                       />
                       <button
@@ -768,7 +768,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
                     max="100"
                     className="w-full px-4 py-3 pr-10 !rounded-xl border !border-gray-200 !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
                   />
                   <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">%</span>

@@ -784,7 +784,7 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                   <button
                     type="button"
                     onClick={handlePayment}
-                    className="w-full px-6 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg"
+                    className="w-full px-6 py-4 bg-lightBlue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg"
                   >
                     <i className="fas fa-lock mr-2"></i>
                     Pay ₹{formik.values.planPrice} with Razorpay

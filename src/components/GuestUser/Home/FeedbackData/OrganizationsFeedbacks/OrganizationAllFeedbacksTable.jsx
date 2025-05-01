@@ -214,8 +214,8 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
 
                   {/* Filter Count - Positioned Bottom Right */}
                   {filterCount > 0 && (
-                    //<span className="absolute -bottom-1 -right-6 bg-blue-500 text-white px-3 py-[2px] rounded-lg text-xs">
-                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+                    //<span className="absolute -bottom-1 -right-6 bg-lightBlue-600 text-white px-3 py-[2px] rounded-lg text-xs">
+                    <span className="absolute mt-[4px] bottom-1 -right-7.5 bg-lightBlue-600 text-white px-2 py-[2px] rounded-full text-xs">
                       {filterCount}
                     </span>
                   )}
@@ -499,7 +499,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             {`${feedbackData.feedbackMessage.substring(0, 50)}...`}
                             <button
                             onClick={() => togglePopover1(feedbackData._id)}
-                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                            className="ml-2 text-lightBlue-600 hover:text-blue-700 focus:outline-none"
                             > Show more </button>
                             {popoverRow1 === feedbackData._id && (
                               <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef1}>
@@ -561,7 +561,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                             {`${feedbackData.suggestions.substring(0, 50)}...`}
                             <button
                             onClick={() => togglePopover2(feedbackData._id)}
-                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                            className="ml-2 text-lightBlue-600 hover:text-blue-700 focus:outline-none"
                             > Show more </button>
                             {popoverRow2 === feedbackData._id && (
                               <div className="absolute left-100 top-42 w-100 bg-white shadow-lg border border-gray-300 rounded-lg z-10" ref={popoverRef2}>
@@ -588,7 +588,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                                 onClick={() =>
                                   toggleRow(`suggestion-${feedbackData._id}`)
                                 }
-                                className="ml-2 text-blue-500 hover:text-blue-700"
+                                className="ml-2 text-lightBlue-600 hover:text-blue-700"
                               >
                                 Show less
                               </button>
@@ -607,7 +607,7 @@ const OrganizationAllFeedbacksTable = ({ closeModal }) => {
                                   onClick={() =>
                                     toggleRow(`suggestion-${feedbackData._id}`)
                                   }
-                                  className="ml-2 text-blue-500 hover:text-blue-700"
+                                  className="ml-2 text-lightBlue-600 hover:text-blue-700"
                                 >
                                   Show more
                                 </button>

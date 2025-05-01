@@ -96,7 +96,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
               name="identifier"
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               placeholder="Enter email or mobile"
               {...formik.getFieldProps("identifier")}
@@ -116,7 +116,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
               name="password"
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
               placeholder="Enter your password"
               {...formik.getFieldProps("password")}

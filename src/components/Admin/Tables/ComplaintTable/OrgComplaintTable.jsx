@@ -144,7 +144,7 @@ const OrgComplaintTable = ({ complaints }) => {
         {state.expandedRow === complaint._id ? (
           <>
             {complaint.complaintMessage}
-            <button onClick={() => handlers.toggleRow(complaint._id)} className="ml-2 text-blue-500 hover:text-blue-700">
+            <button onClick={() => handlers.toggleRow(complaint._id)} className="ml-2 text-lightBlue-600 hover:text-blue-700">
               Show less
             </button>
           </>
@@ -154,7 +154,7 @@ const OrgComplaintTable = ({ complaints }) => {
               ? `${complaint.complaintMessage.substring(0, 50)}...`
               : complaint.complaintMessage}
             {complaint.complaintMessage?.length > 50 && (
-              <button onClick={() => handlers.toggleRow(complaint._id)} className="ml-2 text-blue-500 hover:text-blue-700">
+              <button onClick={() => handlers.toggleRow(complaint._id)} className="ml-2 text-lightBlue-600 hover:text-blue-700">
                 Show more
               </button>
             )}

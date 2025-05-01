@@ -32,7 +32,7 @@ export default function Footer() {
                 <a
                   href="https://x.com/GlobalPraedico/status/1654331946049339393"
                   target="blank"
-                  className="bg-gray-800 hover:bg-blue-500 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
+                  className="bg-gray-800 hover:bg-lightBlue-600 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
                 >
                   <i className="fab fa-twitter"></i>
                 </a>
@@ -56,7 +56,7 @@ export default function Footer() {
                   href="https://www.linkedin.com/company/praedico-global-research-pvt-ltd/posts/?feedView=all"
                   target="blank"
                   aria-label="LinkedIn"
-                  className="bg-gray-800 hover:bg-blue-600 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
+                  className="bg-gray-800 hover:bg-lightBlue-600 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
                 >
                   <i className="fab fa-linkedin-in"></i>
                 </a>
@@ -227,9 +227,9 @@ export default function Footer() {
               <input 
                 type="email" 
                 placeholder="Your email address" 
-                className="px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 w-full"
+                className="px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 text-gray-900 w-full"
               />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-r-lg transition-colors duration-300">
+              <button className="bg-lightBlue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-r-lg transition-colors duration-300">
                 Subscribe
               </button>
             </div>

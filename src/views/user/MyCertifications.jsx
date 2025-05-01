@@ -87,7 +87,7 @@
 //   if (status === 'loading') {
 //     return (
 //       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lightBlue-600"></div>
 //       </div>
 //     );
 //   }
@@ -100,7 +100,7 @@
 //           <p className="mb-6 text-red-500">{error || 'Failed to fetch certificates'}</p>
 //           <button
 //             onClick={() => dispatch(fetchUserCertificates())}
-//             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+//             className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
 //           >
 //             Retry
 //           </button>
@@ -117,7 +117,7 @@
 //           <p className="mb-6 text-gray-600">You need to be logged in to view your certificates</p>
 //           <Link
 //             to="/login" // Adjust login path if needed
-//             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
+//             className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
 //           >
 //             Go to Login
 //           </Link>
@@ -149,7 +149,7 @@
 //             </p>
 //             <Link
 //               to="/user/eventspage" // Adjust path if needed
-//               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
+//               className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
 //             >
 //               Browse Events
 //             </Link>
@@ -200,7 +200,7 @@
 //                  <div className="flex justify-between items-start mb-4">
 //                    <div className="flex items-center overflow-hidden">
 //                      <div className="p-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-xs mr-3 flex-shrink-0">
-//                        <Award className="text-blue-600" size={20} />
+//                        <Award className="text-lightBlue-600" size={20} />
 //                      </div>
 //                      <div className="flex-grow min-w-0">
 //                        <h3 className="text-lg font-bold text-gray-800 truncate">
@@ -259,7 +259,7 @@
 //                       // Updated onClick handler
 //                       onClick={() => handlePreviewAndDownload(certificate.certificateId)}
 //                       // Removed disabled state related to direct generation
-//                       className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center text-sm font-medium"
+//                       className="w-full py-2.5 px-4 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center text-sm font-medium"
 //                   >
 //                       <Download className="mr-2" size={16} />
 //                       Preview & Download
@@ -377,7 +377,7 @@ const userId = user?._id;
           <p className="mb-6 text-gray-600">You need to be logged in to view your certificates</p>
           <Link
             to="/login" // Adjust login path if needed
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
+            className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
           >
             Go to Login
           </Link>
@@ -389,7 +389,7 @@ const userId = user?._id;
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lightBlue-600"></div>
       </div>
     );
   }
@@ -402,7 +402,7 @@ const userId = user?._id;
           <p className="mb-6 text-red-500">{error || 'Failed to fetch certificates'}</p>
           <button
             onClick={() => dispatch(fetchUserCertificates())} // Retry fetching certificates
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
           >
             Retry
           </button>
@@ -433,7 +433,7 @@ const userId = user?._id;
             </p>
             <Link
               to="/user/eventspage" // Adjust path if needed
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
+              className="px-6 py-3 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-block"
             >
               Browse Events
             </Link>
@@ -483,7 +483,7 @@ const userId = user?._id;
                  <div className="flex justify-between items-start mb-4">
                    <div className="flex items-center overflow-hidden">
                      <div className="p-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-xs mr-3 flex-shrink-0">
-                       <Award className="text-blue-600" size={20} />
+                       <Award className="text-lightBlue-600" size={20} />
                      </div>
                      <div className="flex-grow min-w-0">
                        <h3 className="text-lg font-bold text-gray-800 truncate">
@@ -545,7 +545,7 @@ const userId = user?._id;
                   <button
                       // Updated onClick to call the revised handler
                       onClick={() => handlePreviewAndDownload(certificate.certificateId)}
-                      className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center text-sm font-medium"
+                      className="w-full py-2.5 px-4 bg-lightBlue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center text-sm font-medium"
                   >
                       <Download className="mr-2" size={16} />
                       Preview & Download

@@ -110,7 +110,7 @@ const OTPModal = ({ isOpen, onClose, email, onVerified }) => {
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-100 z-50 p-6">
         <div className="flex justify-between items-center pb-4 border-b border-gray-100">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-8 h-8 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-full flex items-center justify-center shadow-lg">
               <i className="fas fa-lock text-white"></i>
             </div>
             <h2 className="text-xl font-semibold text-gray-800">OTP Verification</h2>
@@ -134,7 +134,7 @@ const OTPModal = ({ isOpen, onClose, email, onVerified }) => {
               disabled={otpExpired}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             />
           </div>
@@ -144,7 +144,7 @@ const OTPModal = ({ isOpen, onClose, email, onVerified }) => {
           <button
             type="submit"
             disabled={status === "verifying" || otpExpired}
-            className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 disabled:opacity-50"
+            className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-blue-400 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
           >
             {status === "verifying" ? "Verifying..." : "Verify OTP"}
           </button>
@@ -163,7 +163,7 @@ const OTPModal = ({ isOpen, onClose, email, onVerified }) => {
 
         {/* 🔁 OTP Expired + Resend Link */}
         {otpExpired && (
-          <div className="mt-3 text-sm text-blue-600">
+          <div className="mt-3 text-sm text-lightBlue-600">
             Didn't receive OTP?{" "}
             <button
               onClick={handleResendOtp}

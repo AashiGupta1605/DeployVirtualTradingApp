@@ -224,7 +224,7 @@ const Participants = () => {
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="flex items-center">
             <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-              <User className="text-blue-600" size={18} />
+              <User className="text-lightBlue-600" size={18} />
             </div>
             <div>
               <div className="text-sm font-medium text-gray-900">{participant.userId.name}</div>
@@ -242,7 +242,7 @@ const Participants = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => openUserEventsModal(participant.userId._id, participant.userId.name)}
-              className="text-blue-600 hover:text-blue-900"
+              className="text-lightBlue-600 hover:text-blue-900"
             >
               View Events
             </button>

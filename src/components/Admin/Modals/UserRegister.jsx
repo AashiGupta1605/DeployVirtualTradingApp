@@ -144,7 +144,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter full name"
               />
@@ -168,7 +168,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter email address"
               />
@@ -192,7 +192,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter mobile number"
               />
@@ -213,7 +213,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                   formik.touched.gender && formik.errors.gender
                     ? 'border-red-500'
                     : 'border-gray-200'
-                } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+                } focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200`}
               >
                 <option value="">Select gender</option>
                 <option value="Male">Male</option>
@@ -239,7 +239,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     ? 'border-red-500'
                     : 'border-gray-200'
                 }  border-gray-200 
-                   focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                   focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
                    focus:outline-none transition-all duration-200`}
               />
               {formik.touched.dob && formik.errors.dob && (
@@ -260,7 +260,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     ? 'border-red-500'
                     : 'border-gray-200'
                 }  border-gray-200 
-                   focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                   focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
                    focus:outline-none transition-all duration-200`}
               />
               {formik.touched.dob && formik.errors.dob && (
@@ -281,7 +281,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     ? 'border-red-500'
                     : 'border-gray-200'
                 }  border-gray-200 
-                   focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                   focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
                    focus:outline-none transition-all duration-200`}
               />
               {formik.touched.dob && formik.errors.dob && (
@@ -304,7 +304,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter organization type"
               />
@@ -335,7 +335,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
             <button
               type="submit"
               disabled={formik.isSubmitting || !formik.isValid}
-              className={`px-4 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm ${
+              className={`px-4 py-2 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 text-sm ${
                 (formik.isSubmitting || !formik.isValid) && 'opacity-50 cursor-not-allowed'
               }`}
             >
@@ -397,7 +397,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter full name"
               />
@@ -421,7 +421,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter email address"
               />
@@ -445,7 +445,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter mobile number"
               />
@@ -466,7 +466,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                   formik.touched.gender && formik.errors.gender
                     ? 'border-red-500'
                     : 'border-gray-200'
-                } focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200`}
+                } focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200`}
               >
                 <option value="">Select gender</option>
                 <option value="Male">Male</option>
@@ -492,7 +492,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     ? 'border-red-500'
                     : 'border-gray-200'
                 }  border-gray-200 
-                   focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
+                   focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 
                    focus:outline-none transition-all duration-200`}
               />
               {formik.touched.dob && formik.errors.dob && (
@@ -515,7 +515,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
                     : 'border-gray-200'
                 } !border-gray-200 
                  bg-white text-gray-900 
-                 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+                 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                  focus:outline-none transition-all duration-200`}
                 placeholder="Enter organization type"
               />
@@ -546,7 +546,7 @@ const UserRegisterModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
             <button
               type="submit"
               disabled={formik.isSubmitting || !formik.isValid}
-              className={`px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-base ${
+              className={`px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 text-base ${
                 (formik.isSubmitting || !formik.isValid) && 'opacity-50 cursor-not-allowed'
               }`}
             >

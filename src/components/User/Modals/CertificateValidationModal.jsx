@@ -396,7 +396,7 @@
 //         {/* Modal header (Unchanged) */}
 //         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200">
 //            <div className="flex items-center space-x-3">
-//             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+//             <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //               <i className="fas fa-certificate text-white text-xl"></i>
 //             </div>
 //             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
@@ -441,7 +441,7 @@
 //                       formik.errors.certificateCode
 //                         ? "border-red-500"
 //                         : "border-gray-300"
-//                     } bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                     } bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //                     placeholder="Enter certificate code"
 //                     aria-describedby="certificateCode-error"
 //                   />
@@ -473,7 +473,7 @@
 //                       formik.touched.userName && formik.errors.userName
 //                         ? "border-red-500"
 //                         : "border-gray-300"
-//                     } bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                     } bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //                     placeholder="Enter user name as registered"
 //                     aria-describedby="userName-error"
 //                   />
@@ -505,7 +505,7 @@
 //                   className={`px-5 py-2.5 rounded-lg text-white font-medium transition-all duration-200 flex items-center justify-center ${
 //                     formik.isSubmitting
 //                       ? "bg-blue-400 cursor-not-allowed"
-//                       : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/30"
+//                       : "bg-lightBlue-600 hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/30"
 //                   }`}
 //                 >
 //                   {formik.isSubmitting ? (
@@ -947,7 +947,7 @@
 //         {/* Modal header (Unchanged) */}
 //         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200">
 //            <div className="flex items-center space-x-3">
-//             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+//             <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //               <i className="fas fa-certificate text-white text-xl"></i>
 //             </div>
 //             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
@@ -984,7 +984,7 @@
 //                   <div className={`flex items-center border rounded-lg overflow-hidden transition-all duration-200 ${
 //                       formik.touched.certificateNumber && formik.errors.certificateNumber
 //                         ? "border-red-500"
-//                         : "border-gray-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20"
+//                         : "border-gray-300 focus-within:border-lightBlue-600 focus-within:ring-2 focus-within:ring-lightBlue-600/20"
 //                     } `}>
 //                     {/* Fixed Prefix */}
 //                     <span className="px-3 py-2.5 text-gray-500 bg-gray-100 border-r border-gray-300 font-medium">
@@ -1036,7 +1036,7 @@
 //                       formik.touched.userName && formik.errors.userName
 //                         ? "border-red-500"
 //                         : "border-gray-300"
-//                     } bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200`}
+//                     } bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
 //                     placeholder="Enter user name as registered"
 //                     aria-describedby="userName-error"
 //                   />
@@ -1069,7 +1069,7 @@
 //                   className={`px-5 py-2.5 rounded-lg text-white font-medium transition-all duration-200 flex items-center justify-center ${
 //                     formik.isSubmitting
 //                       ? "bg-blue-400 cursor-not-allowed"
-//                       : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/30"
+//                       : "bg-lightBlue-600 hover:bg-blue-700 focus:ring-2 focus:ring-lightBlue-600/30"
 //                   }`}
 //                 >
 //                   {formik.isSubmitting ? (
@@ -1575,7 +1575,7 @@ const CertificateValidationModal = ({ isOpen, onClose }) => {
                     <div className={`flex items-center border rounded-lg overflow-hidden transition-all duration-200 ${
                         formik.touched.certificateNumber && formik.errors.certificateNumber
                         ? "border-red-500"
-                        : "border-gray-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20"
+                        : "border-gray-300 focus-within:border-lightBlue-600 focus-within:ring-2 focus-within:ring-lightBlue-600/20"
                     } `}>
                     <span className="px-3 py-2.5 text-gray-500 bg-gray-100 border-r border-gray-300 font-medium">
                         CERT-
@@ -1626,7 +1626,7 @@ const CertificateValidationModal = ({ isOpen, onClose }) => {
                         : "border-gray-300"
                     } w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200`}
                     placeholder="Enter user name as registered"
                     aria-describedby="userName-error"
@@ -1660,7 +1660,7 @@ const CertificateValidationModal = ({ isOpen, onClose }) => {
                     className={`px-5 py-2.5 rounded-lg text-white font-medium transition-all duration-200 flex items-center justify-center ${
                     formik.isSubmitting
                         ? "bg-lightBlue-400 cursor-not-allowed"
-                        : "bg-lightBlue-600 hover:bg-lightBlue-700 focus:ring-2 focus:ring-blue-500/30"
+                        : "bg-lightBlue-600 hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/30"
                     }`}
                 >
                     {formik.isSubmitting ? (

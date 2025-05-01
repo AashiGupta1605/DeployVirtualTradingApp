@@ -144,7 +144,7 @@ const MyEventsPage = () => {
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-lightBlue-600"></div>
       </div>
     );
   }
@@ -705,7 +705,7 @@ const MyEventsPage = () => {
             <select
               value={filters.sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="appearance-none bg-white border border-gray-200 rounded-lg px-3 py-1 sm:px-4 sm:py-2 pr-6 sm:pr-8 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="appearance-none bg-white border border-gray-200 rounded-lg px-3 py-1 sm:px-4 sm:py-2 pr-6 sm:pr-8 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-lightBlue-600/20"
             >
               <option value="startDate">Sort by Date</option>
               <option value="entryFee">Sort by Entry Fee</option>

@@ -189,7 +189,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("name")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           />
           {formik.touched.name && formik.errors.name && (
@@ -206,7 +206,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("email")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           />
           {formik.touched.email && formik.errors.email && (
@@ -223,7 +223,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("password")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           />
           {formik.touched.password && formik.errors.password && (
@@ -240,7 +240,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("confirmPassword")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           />
           {formik.touched.confirmPassword && formik.errors.confirmPassword && (
@@ -257,7 +257,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("mobile")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           />
           {formik.touched.mobile && formik.errors.mobile && (
@@ -272,7 +272,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("gender")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           >
             <option value="">Select gender</option>
@@ -295,7 +295,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
               {...formik.getFieldProps("dob")}
               className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
             />
             {formik.touched.dob && formik.errors.dob && (
@@ -352,7 +352,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             {...formik.getFieldProps("orgtype")}
             className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
-               focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+               focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
           />
           {formik.touched.orgtype && formik.errors.orgtype && (

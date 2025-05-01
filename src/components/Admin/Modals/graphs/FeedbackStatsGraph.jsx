@@ -290,25 +290,25 @@ export const FeedbackStatsGraph = ({ stats }) => {
 //       {/* Tab Navigation */}
 //       <div className="flex border-b border-gray-200">
 //         <button
-//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'overview' ? 'border-b-2 border-lightBlue-600 text-lightBlue-600' : 'text-gray-500 hover:text-gray-700'}`}
 //           onClick={() => setActiveTab('overview')}
 //         >
 //           Overview
 //         </button>
 //         <button
-//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'categories' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'categories' ? 'border-b-2 border-lightBlue-600 text-lightBlue-600' : 'text-gray-500 hover:text-gray-700'}`}
 //           onClick={() => setActiveTab('categories')}
 //         >
 //           Categories
 //         </button>
 //         <button
-//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'ratings' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'ratings' ? 'border-b-2 border-lightBlue-600 text-lightBlue-600' : 'text-gray-500 hover:text-gray-700'}`}
 //           onClick={() => setActiveTab('ratings')}
 //         >
 //           Ratings
 //         </button>
 //         <button
-//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'trends' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+//           className={`py-2 px-4 font-medium text-sm ${activeTab === 'trends' ? 'border-b-2 border-lightBlue-600 text-lightBlue-600' : 'text-gray-500 hover:text-gray-700'}`}
 //           onClick={() => setActiveTab('trends')}
 //         >
 //           Trends
@@ -500,7 +500,7 @@ export const FeedbackStatsGraph = ({ stats }) => {
 //                   <div className="flex-1">
 //                     <div className="flex items-center">
 //                       <div 
-//                         className="bg-blue-500 h-6 rounded" 
+//                         className="bg-lightBlue-600 h-6 rounded" 
 //                         style={{ width: `${(count / stats?.total) * 100}%` }}
 //                       ></div>
 //                       <span className="ml-2 text-sm">{count} ({Math.round((count / stats?.total) * 100)}%)</span>
@@ -637,7 +637,7 @@ export const FeedbackStatsGraph = ({ stats }) => {
 //                     <div className="mt-2">
 //                       <div className="h-2 bg-gray-200 rounded-full">
 //                         <div 
-//                           className="h-2 bg-blue-500 rounded-full" 
+//                           className="h-2 bg-lightBlue-600 rounded-full" 
 //                           style={{ width: `${(type.count / stats?.total) * 100}%` }}
 //                         ></div>
 //                       </div>

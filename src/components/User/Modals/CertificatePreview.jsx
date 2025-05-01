@@ -129,10 +129,10 @@
 //       }}
 //     >
 //       {/* Certificate Header */}
-//       <div className="bg-blue-600 py-6 px-8 text-center" style={{ backgroundColor: '#1e40af' }}>
+//       <div className="bg-lightBlue-600 py-6 px-8 text-center" style={{ backgroundColor: '#1e40af' }}>
 //         <div className="flex justify-center mb-4">
 //           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md">
-//             <Trophy className="text-blue-600" size={36} style={{ color: '#1e40af' }} />
+//             <Trophy className="text-lightBlue-600" size={36} style={{ color: '#1e40af' }} />
 //           </div>
 //         </div>
 //         <h1 className="text-3xl font-bold text-white">Certificate of Completion</h1>
@@ -203,7 +203,7 @@
 //               </div>
 //               <div className="flex justify-center">
 //                 <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center" style={{ backgroundColor: '#dbeafe' }}>
-//                   <CheckCircle className="text-blue-600" size={48} style={{ color: '#1e40af' }} />
+//                   <CheckCircle className="text-lightBlue-600" size={48} style={{ color: '#1e40af' }} />
 //                 </div>
 //               </div>
 //               <p className="text-sm text-gray-600 mt-2" style={{ color: '#4b5563' }}>Verified Certificate</p>
@@ -247,10 +247,10 @@ const CertificatePreview = ({ certificate }) => {
         }}
       >
         {/* Certificate Header */}
-        <div className="bg-blue-600 py-6 px-8 text-center">
+        <div className="bg-lightBlue-600 py-6 px-8 text-center">
           <div className="flex justify-center mb-4">
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md">
-              <Trophy className="text-blue-600" size={36} />
+              <Trophy className="text-lightBlue-600" size={36} />
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white">Certificate of Completion</h1>
@@ -321,7 +321,7 @@ const CertificatePreview = ({ certificate }) => {
                 </div>
                 <div className="flex justify-center">
                   <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
-                    <CheckCircle className="text-blue-600" size={48} />
+                    <CheckCircle className="text-lightBlue-600" size={48} />
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 mt-2">Verified Certificate</p>

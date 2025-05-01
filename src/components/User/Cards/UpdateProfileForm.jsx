@@ -50,7 +50,7 @@
 //     <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
 //       <div className="flex justify-between items-center p-6 border-b border-gray-100">
 //         <div className="flex items-center space-x-3">
-//           <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+//           <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
 //             <i className="fas fa-user-edit text-white"></i>
 //           </div>
 //           <h2 className="text-2xl font-semibold text-gray-800">Update Profile</h2>
@@ -70,7 +70,7 @@
 //                   <input type="text" name="name" value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200" required />
 //                   {formik.touched.name && formik.errors.name && <p className="text-red-500 text-sm">{formik.errors.name}</p>}
 //                 </div>
@@ -79,14 +79,14 @@
 //                   <input type="date" name="dob" value={formik.values.dob} onChange={formik.handleChange} onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200" required />
 //                   {formik.touched.dob && formik.errors.dob && <p className="text-red-500 text-sm">{formik.errors.dob}</p>}
 //                 </div>
 //                 <div>
 //                   <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
 //                   <select name="gender" value={formik.values.gender} onChange={formik.handleChange} onBlur={formik.handleBlur}
-//                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200" required>
+//                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200" required>
 //                     <option value="">Select Gender</option>
 //                     <option value="male">Male</option>
 //                     <option value="female">Female</option>
@@ -104,7 +104,7 @@
 //                   <input type="email" name="email" value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200" required />
 //                   {formik.touched.email && formik.errors.email && <p className="text-red-500 text-sm">{formik.errors.email}</p>}
 //                 </div>
@@ -113,7 +113,7 @@
 //                   <input type="text" name="mobile" value={formik.values.mobile} onChange={formik.handleChange} onBlur={formik.handleBlur}
 //                     className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
 //              bg-white text-gray-900 
-//              focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 
+//              focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
 //              focus:outline-none transition-all duration-200" required />
 //                   {formik.touched.mobile && formik.errors.mobile && <p className="text-red-500 text-sm">{formik.errors.mobile}</p>}
 //                 </div>
@@ -122,7 +122,7 @@
 //           </div>
 //           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-100">
 //             <button type="button" onClick={onClose} className="px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100">Cancel</button>
-//             <button type="submit" className="px-6 py-3 rounded-xl bg-blue-600 text-white">Save Changes</button>
+//             <button type="submit" className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white">Save Changes</button>
 //           </div>
 //         </form>
 //       </div>
@@ -236,7 +236,7 @@
 //               value={formik.values.name}
 //               onChange={formik.handleChange}
 //               onBlur={formik.handleBlur}
-//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
 //             />
 //             {formik.touched.name && formik.errors.name && (
 //               <p className="text-red-500 text-sm mt-1">{formik.errors.name}</p>
@@ -254,7 +254,7 @@
 //               value={formik.values.email}
 //               onChange={formik.handleChange}
 //               onBlur={formik.handleBlur}
-//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
 //             />
 //             {formik.touched.email && formik.errors.email && (
 //               <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
@@ -272,7 +272,7 @@
 //               value={formik.values.mobile}
 //               onChange={formik.handleChange}
 //               onBlur={formik.handleBlur}
-//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
 //             />
 //             {formik.touched.mobile && formik.errors.mobile && (
 //               <p className="text-red-500 text-sm mt-1">{formik.errors.mobile}</p>
@@ -289,7 +289,7 @@
 //               value={formik.values.gender}
 //               onChange={formik.handleChange}
 //               onBlur={formik.handleBlur}
-//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
 //             >
 //               <option value="">Select Gender</option>
 //               <option value="male">Male</option>
@@ -312,7 +312,7 @@
 //               value={formik.values.dob}
 //               onChange={formik.handleChange}
 //               onBlur={formik.handleBlur}
-//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
 //             />
 //             {formik.touched.dob && formik.errors.dob && (
 //               <p className="text-red-500 text-sm mt-1">{formik.errors.dob}</p>
@@ -331,7 +331,7 @@
 //             <button
 //               type="submit"
 //               disabled={loading}
-//               className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
+//               className="px-6 py-2 text-white bg-lightBlue-600 rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
 //             >
 //               {loading ? "Updating..." : "Save Changes"}
 //             </button>
@@ -409,7 +409,7 @@ return(
     {/* Header (Fixed) */}
     <div className="sticky top-0 z-10 bg-white p-6 border-b border-gray-100 flex justify-between items-center">
       <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
           <i className="fas fa-user-edit text-white"></i>
         </div>
         <h2 className="text-2xl font-semibold text-gray-800">Update Profile</h2>
@@ -439,7 +439,7 @@ return(
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
               />
               {formik.touched.name && formik.errors.name && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.name}</p>
@@ -457,7 +457,7 @@ return(
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
               />
               {formik.touched.email && formik.errors.email && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
@@ -475,7 +475,7 @@ return(
                 value={formik.values.mobile}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
               />
               {formik.touched.mobile && formik.errors.mobile && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.mobile}</p>
@@ -492,7 +492,7 @@ return(
                 value={formik.values.gender}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
               >
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
@@ -515,7 +515,7 @@ return(
                 value={formik.values.dob}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-blue-500 focus:ring-2 focus:!ring-blue-500/20 focus:outline-none transition-all duration-200"
+                className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200"
               />
               {formik.touched.dob && formik.errors.dob && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.dob}</p>
@@ -564,7 +564,7 @@ return(
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-400"
+              className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-blue-700 disabled:bg-blue-400"
             >
               {loading ? "Updating..." : "Save Changes"}
             </button>

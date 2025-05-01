@@ -189,7 +189,7 @@
 //                   key={type}
 //                   onClick={() => setChartType(type)}
 //                   className={`px-3 py-1 rounded capitalize ${chartType === type ? 
-//                     'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+//                     'bg-lightBlue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
 //                 >
 //                   {type} Chart
 //                 </button>

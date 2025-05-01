@@ -132,7 +132,7 @@ const TradingControls = ({
                     className={`
                       px-3 py-1.5 text-sm rounded-lg transition-all 
                       ${quantity === value 
-                        ? 'bg-blue-100 text-blue-600 font-medium' 
+                        ? 'bg-blue-100 text-lightBlue-600 font-medium' 
                         : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                       }`}
                   >

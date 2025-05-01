@@ -70,7 +70,7 @@
 //         {error}
 //         <button 
 //           onClick={() => window.location.reload()} 
-//           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+//           className="ml-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600"
 //         >
 //           Retry
 //         </button>
@@ -172,7 +172,7 @@ export default function OrganizationDashboard({ type, showAllCards, showCardsTab
         {loadingState.error}
         <button 
           onClick={() => window.location.reload()} 
-          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="ml-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600"
         >
           Retry
         </button>

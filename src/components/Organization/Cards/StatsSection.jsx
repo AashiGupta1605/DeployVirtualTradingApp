@@ -150,7 +150,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         // statTitle: userStats?.total?.toString() || "0",
         statTitle: pageType !== "dashboard" ? userStats?.total?.toString() : "",
         showDetails: true,
-        statIconColor: "bg-blue-500",
+        statIconColor: "bg-lightBlue-600",
         statArrow: "up",
         statPercent: "5.48",
         statPercentColor: "text-emerald-500",
@@ -290,7 +290,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statIconName: "fas fa-users",
         statSubtitle: "TOTAL USERS",
         statTitle: userStats?.total?.toString() || "0",
-        statIconColor: "bg-blue-500",
+        statIconColor: "bg-lightBlue-600",
         showDetails: false,
         onClick: () => handleCardClick('users', 'User Statistics')
       },
@@ -358,7 +358,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statIconName: "fas fa-comment-alt",
         statSubtitle: "TOTAL FEEDBACK",
         statTitle: feedbackStats?.total?.toString() || "0",
-        statIconColor: "bg-blue-500",
+        statIconColor: "bg-lightBlue-600",
         showDetails: false,
         onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
       },
@@ -417,7 +417,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statIconName: "fas fa-comment-alt",
         statSubtitle: "TOTAL FEEDBACK",
         statTitle: organizationUserFeedbacksStats?.total?.toString() || "0",
-        statIconColor: "bg-blue-500",
+        statIconColor: "bg-lightBlue-600",
         showDetails: false,
         onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
       },
@@ -499,7 +499,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statSubtitle: "RESOLUTION RATE",
         showDetails: false,
         statTitle: `${complaintStats?.resolutionRate || '0'}%`,
-        statIconColor: "bg-blue-500",
+        statIconColor: "bg-lightBlue-600",
         onClick: () => handleCardClick('complaints', 'Complaint Statistics')
       }
     ]

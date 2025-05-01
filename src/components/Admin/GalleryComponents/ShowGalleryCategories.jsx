@@ -324,7 +324,7 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
     <div className="relative">
       <Filter className="text-gray-500 text-xl hover:text-gray-700" />
       {filterCount > 0 && (
-        <span className="absolute -top-1 -right-3 bg-blue-500 text-white px-2 py-[2px] rounded-full text-xs">
+        <span className="absolute -top-1 -right-3 bg-lightBlue-600 text-white px-2 py-[2px] rounded-full text-xs">
           {filterCount}
         </span>
       )}
@@ -563,7 +563,7 @@ const ShowGalleryCategories = ({ sidebarExpanded }) => {
                       {/* <Tooltip text="Edit organization"> */}
                             {/* <button
                               onClick={() => openImageTable(data.name)}
-                              className="mr-3 text-blue-600 mx-2 hover:text-blue-900 transition-colors focus:outline-none"
+                              className="mr-3 text-lightBlue-600 mx-2 hover:text-blue-900 transition-colors focus:outline-none"
                             >
                               <Info size={18} />
                             </button> */}

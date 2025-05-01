@@ -213,7 +213,7 @@ console.log(feedbacks);
                       {/* <Tooltip title="Edit Feedback" isVisible={true}>
                         <button
                           onClick={() => onEdit(feedback)}
-                          className="text-blue-500 hover:text-blue-700 overflow-hidden"
+                          className="text-lightBlue-600 hover:text-blue-700 overflow-hidden"
                         >
                           <Edit3 size={18} />
                         </button>

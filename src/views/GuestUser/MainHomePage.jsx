@@ -494,7 +494,7 @@
 //                 <motion.a 
 //                   href="#" 
 //                   whileHover={{ y: -2 }}
-//                   className="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none"
+//                   className="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none"
 //                 >
 //                   <FiFacebook className="w-5 h-5" />
 //                 </motion.a>
@@ -1087,7 +1087,7 @@
 //                 <motion.a 
 //                   href="#" 
 //                   whileHover={{ y: -2 }}
-//                   className="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out" // Added transition
+//                   className="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out" // Added transition
 //                 >
 //                   <FiFacebook className="w-5 h-5" />
 //                 </motion.a>
@@ -1673,7 +1673,7 @@ const MainHomePage = () => {
                 <motion.a
                   href="#"
                   whileHover={{ y: -2 }}
-                  className="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out"
+                  className="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out"
                 >
                   <FiFacebook className="w-5 h-5" />
                 </motion.a>

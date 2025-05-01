@@ -160,7 +160,7 @@ const {refetch} = useUserStats();
                 setIsOpen(false);
               }}
               className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm ${
-                !activeEvent ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                !activeEvent ? 'bg-blue-50 text-lightBlue-600' : 'text-gray-700'
               }`}
             >
               Basic Transactions
@@ -173,7 +173,7 @@ const {refetch} = useUserStats();
                   setIsOpen(false);
                 }}
                 className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm ${
-                  activeEvent?._id === event._id ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  activeEvent?._id === event._id ? 'bg-blue-50 text-lightBlue-600' : 'text-gray-700'
                 }`}
               >
                 {event.title}
@@ -199,7 +199,7 @@ const {refetch} = useUserStats();
               </span>
             </div>
             <div className="relative w-auto pl-4 flex-initial">
-              <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-blue-500">
+              <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-lightBlue-600">
                 {icon}
               </div>
             </div>

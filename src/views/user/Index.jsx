@@ -23,7 +23,7 @@ export default function Index() {
           </p>
           <div className="flex gap-4 mt-6">
             <Link to="/learn">
-              <button className="bg-lightBlue-600 text-white hover:from-blue-600 hover:to-indigo-700  px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg">
+              <button className="bg-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-indigo-700  px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg">
                 LEARN MORE
               </button>
             </Link>

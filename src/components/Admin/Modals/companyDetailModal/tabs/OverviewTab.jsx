@@ -62,7 +62,7 @@ const OverviewTab = ({ data, loading, error }) => {
       {/* Price Information Card */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center space-x-2 mb-4">
-          <TrendingUp className="text-blue-600" size={20} />
+          <TrendingUp className="text-lightBlue-600" size={20} />
           <h2 className="text-lg font-semibold text-gray-900">Price Information</h2>
         </div>
         <div className="space-y-1">
@@ -98,7 +98,7 @@ const OverviewTab = ({ data, loading, error }) => {
       {/* Trading Information Card */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center space-x-2 mb-4">
-          <BarChart2 className="text-blue-600" size={20} />
+          <BarChart2 className="text-lightBlue-600" size={20} />
           <h2 className="text-lg font-semibold text-gray-900">Trading Information</h2>
         </div>
         <div className="space-y-1">

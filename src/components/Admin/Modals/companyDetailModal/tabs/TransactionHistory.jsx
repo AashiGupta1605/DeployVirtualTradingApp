@@ -161,14 +161,14 @@ const TransactionHistory = ({ currentPrice, symbol }) => {
                   placeholder="Search transactions..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-48 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-48 pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
                 />
               </div>
   
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
-                className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lightBlue-600"
               >
                 <option value="all">All Types</option>
                 <option value="buy">Buy Only</option>
@@ -177,7 +177,7 @@ const TransactionHistory = ({ currentPrice, symbol }) => {
   
               <button
                 onClick={exportTransactions}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-lightBlue-600 rounded-lg hover:bg-blue-100 transition-colors"
               >
                 <Download size={18} />
                 <span>Export</span>
@@ -308,7 +308,7 @@ const TransactionHistory = ({ currentPrice, symbol }) => {
                         onClick={() => setCurrentPage(page)}
                         className={`px-3 py-1 rounded ${
                           currentPageSafe === page
-                            ? 'bg-blue-500 text-white'
+                            ? 'bg-lightBlue-600 text-white'
                             : 'hover:bg-gray-200'
                         }`}
                       >

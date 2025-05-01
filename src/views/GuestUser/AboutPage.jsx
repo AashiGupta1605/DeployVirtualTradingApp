@@ -113,7 +113,7 @@ const AboutPage = () => {
           Why Choose Us?
         </h2>
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
-          <FeatureCard icon={<FaShieldAlt />} title="Reliable Data" color="text-blue-600" description="We source accurate and timely financial data." />
+          <FeatureCard icon={<FaShieldAlt />} title="Reliable Data" color="text-lightBlue-600" description="We source accurate and timely financial data." />
           <FeatureCard icon={<FaRocket />} title="Fast & Responsive" color="text-red-500" description="Optimized performance ensures a seamless experience." />
           <FeatureCard icon={<FaCogs />} title="Customizable Tools" color="text-yellow-500" description="Tailor features and insights to your personal strategy." />
           <FeatureCard icon={<FaHandHoldingUsd />} title="Financial Empowerment" color="text-green-600" description="We believe in creating wealth through smart decisions." />

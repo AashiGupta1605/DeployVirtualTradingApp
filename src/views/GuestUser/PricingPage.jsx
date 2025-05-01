@@ -68,7 +68,7 @@ const PricingPage = () => {
       },
       diamond: {
         border: "border-blue-200 hover:border-blue-300",
-        button: "bg-blue-600 hover:bg-blue-700",
+        button: "bg-lightBlue-600 hover:bg-blue-700",
         badge: "bg-blue-100 text-blue-800",
         highlight: "bg-blue-50"
       }
@@ -163,7 +163,7 @@ const PricingPage = () => {
               ...prev,
               [planId]: !prev[planId]
             }))}
-            className="text-blue-600 text-xs mt-1 flex items-center hover:underline"
+            className="text-lightBlue-600 text-xs mt-1 flex items-center hover:underline"
           >
             {isShowingAll ? (
               <>
@@ -194,7 +194,7 @@ const PricingPage = () => {
       bg: "bg-yellow-50"
     },
     {
-      icon: <FiDollarSign className="text-blue-600" size={18} />,
+      icon: <FiDollarSign className="text-lightBlue-600" size={18} />,
       title: "Monthly Payouts",
       value: "₹5M+",
       bg: "bg-blue-50"
@@ -432,7 +432,7 @@ const PricingPage = () => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
               <div className="p-4 sm:p-6 border-b border-gray-200">
                 <h3 className="font-medium flex items-center text-sm sm:text-base">
-                  <FiCheckCircle className="text-blue-500 mr-3" size={18} />
+                  <FiCheckCircle className="text-lightBlue-600 mr-3" size={18} />
                   How do I upgrade or downgrade my plan?
                 </h3>
                 <p className="mt-2 text-gray-600 pl-7 sm:pl-8 text-xs sm:text-sm">
@@ -441,7 +441,7 @@ const PricingPage = () => {
               </div>
               <div className="p-4 sm:p-6 border-b border-gray-200">
                 <h3 className="font-medium flex items-center text-sm sm:text-base">
-                  <FiCheckCircle className="text-blue-500 mr-3" size={18} />
+                  <FiCheckCircle className="text-lightBlue-600 mr-3" size={18} />
                   Is there a free trial available?
                 </h3>
                 <p className="mt-2 text-gray-600 pl-7 sm:pl-8 text-xs sm:text-sm">
@@ -450,7 +450,7 @@ const PricingPage = () => {
               </div>
               <div className="p-4 sm:p-6">
                 <h3 className="font-medium flex items-center text-sm sm:text-base">
-                  <FiCheckCircle className="text-blue-500 mr-3" size={18} />
+                  <FiCheckCircle className="text-lightBlue-600 mr-3" size={18} />
                   What payment methods do you accept?
                 </h3>
                 <p className="mt-2 text-gray-600 pl-7 sm:pl-8 text-xs sm:text-sm">

@@ -27,7 +27,7 @@ const ServicesPage = () => {
       icon: <FiAlertCircle className="text-2xl" />,
       title: "Live Market Updates",
       description: "Real-time stock market movements and breaking news alerts.",
-      color: "bg-blue-100 text-blue-600"
+      color: "bg-blue-100 text-lightBlue-600"
     },
     {
       icon: <FiBarChart2 className="text-2xl" />,
