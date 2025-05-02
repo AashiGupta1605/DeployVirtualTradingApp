@@ -1312,7 +1312,7 @@ const MainHomePage = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="snap-y snap-mandatary overflow-y-scroll h-screen relative w-full" // Removed h-screen
+      className="snap-y snap-mandatary overflow-y-scroll h-screen relative w-full hide-scrollbar" // Removed h-screen
     >
      
             {/* Hero Section - RESTORED STRUCTURE */}
@@ -1647,88 +1647,7 @@ const MainHomePage = () => {
         </div>
       </section>
 
-      {/* --- FOOTER IS NOW THE LAST ELEMENT INSIDE THE SCROLLING DIV --- */}
-      {/* It does NOT have snap-start, so scrolling past the last section will reveal it */}
-      {/* <footer className="bg-blueGray-800 pt-20 pb-6 relative w-full"> 
-        <div className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20 h-20" style={{ transform: "translateZ(0)" }}>
-          <svg className="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
-            <polygon className="text-blueGray-800 fill-current" points="2560 0 2560 100 0 100"></polygon>
-          </svg>
-        </div>
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap text-center lg:text-left">
-            <div className="w-full lg:w-4/12 px-4 mb-6 lg:mb-0">
-              <h4 className="text-3xl font-semibold text-white">Let's Keep in Touch!</h4>
-              <p className="text-lg mt-0 mb-2 text-blueGray-300">
-                We're here to help and answer any questions you might have.
-              </p>
-              <div className="mt-6 lg:mb-0 mb-6 flex justify-center lg:justify-start space-x-4">
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2 }}
-                  className="bg-white text-blue-400 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out"
-                >
-                  <FiTwitter className="w-5 h-5" />
-                </motion.a>
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2 }}
-                  className="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out"
-                >
-                  <FiFacebook className="w-5 h-5" />
-                </motion.a>
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2 }}
-                  className="bg-white text-pink-500 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out"
-                >
-                  <FiInstagram className="w-5 h-5" />
-                </motion.a>
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2 }}
-                  className="bg-white text-gray-800 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none transition-transform duration-150 ease-in-out"
-                >
-                  <FiGithub className="w-5 h-5" />
-                </motion.a>
-              </div>
-            </div>
-
-            <div className="w-full lg:w-4/12 px-4 mb-6 lg:mb-0">
-              <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">
-                Quick Links
-              </span>
-              <ul className="list-unstyled text-blueGray-300">
-                <motion.li whileHover={{ x: 5 }} className="py-1">
-                  <a className="text-white hover:text-blueGray-400 font-semibold block text-sm transition-colors duration-150" href="#about">
-                    About Us
-                  </a>
-                </motion.li>
-                <motion.li whileHover={{ x: 5 }} className="py-1">
-                  <a className="text-white hover:text-blueGray-400 font-semibold block text-sm transition-colors duration-150" href="#services">
-                    Services
-                  </a>
-                </motion.li>
-                <motion.li whileHover={{ x: 5 }} className="py-1">
-                  <a className="text-white hover:text-blueGray-400 font-semibold block text-sm transition-colors duration-150" href="#contact">
-                    Contact Us
-                  </a>
-                </motion.li>
-              </ul>
-            </div>
-
-          </div>
-          <hr className="my-6 border-blueGray-700" />
-          <div className="flex flex-wrap items-center md:justify-between justify-center">
-            <div className="w-full md:w-4/12 px-4 mx-auto text-center">
-              <div className="text-sm text-blueGray-500 font-semibold py-1 text-white">
-                Copyright © {new Date().getFullYear()} Virtual Trading Platform. All rights reserved.
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer> */}
-      <Footer/> 
+    
 
       {/* --- END OF MOVED FOOTER --- */}
 
