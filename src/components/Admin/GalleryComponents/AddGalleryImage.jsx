@@ -1,1234 +1,466 @@
-// Have to do work
-
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from 'prop-types';
-import { Listbox } from '@headlessui/react';
+import { Listbox, Transition } from '@headlessui/react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import { toast } from 'react-hot-toast';
-import './Gallery.css'
+import { Camera, Check, ChevronsUpDown, X } from 'lucide-react';
 
-// const AddGalleryImage = ({ closeModal }) => {
-
-//   const [categories, setCategories] = useState([]);
-//   const [err, setErr] = useState("");
-
-//   const fetchGalleryCategories = async () => {
-//     try {
-//       const response = await axios.get(
-//         `${BASE_API_URL}/admin/galleryCategory/getGalleryCategories/name/increasing`
-//       );
-//       setCategories(response.data.categoryData);
-//       console.log("Gallery Categories: ", response.data);
-//     } 
-//     catch (error) {
-//       if (error.response) {
-//         setErr(error.response?.data?.message);
-//       }
-//       else{
-//         setErr("Something went wrong.")
-//       }
-//       throw error; 
-//     }
-//   };
-    
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         fetchGalleryCategories()
-//         setErr("");
-//       } 
-//       catch (error) {
-//         setErr(error.response?.data?.message || "Something went wrong.");
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   const initialValues = {
-//     categoryName: "",
-//     title: null,
-//     desc: null,
-//     photo: "", 
-//   };
-
-//   const validationSchema = Yup.object({
-//     categoryName: Yup.string()
-//       .required("Category name is required")
-//       .trim(), 
-  
-//     title: Yup.string()
-//       .nullable()
-//       .notRequired()
-//       .min(8, "Title must be at least 8 characters")
-//       .max(80, "Title must be at most 80 characters"),
-  
-//     desc: Yup.string()
-//       .nullable()
-//       .notRequired()
-//       .min(15, "Description must be at least 15 characters")
-//       .max(600, "Description must be at most 600 characters"),
-    
-//     // photo: Yup.string()
-//     //   .required("Photo is required")
-//     //   .matches(/^https?:\/\/.+\..+/, "Invalid URL. Please re-upload the image."),
-
-//     // photo: Yup.string()
-//     //   .required("Photo is required")
-//     //   .url("Invalid URL. Please re-upload the image."),
-
-//     photo: Yup.mixed()
-//     .required("Photo is required")
-//     .test("fileSize", "File too large (max 15MB)", (value) => {
-//     if (!value) return true;
-//     return value.size <= 15 * 1024 * 1024; // 5MB
-//     })
-//     .test("fileType", "Unsupported file format", (value) => {
-//     if (!value) return true;
-//     return ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(value.type);
-//     }),
-
-//   });  
-
-//   const handlePageRefresh = () => {
-//     const delay = 2000; // Time delay in milliseconds (3 seconds)
-//     setTimeout(() => {
-//       window.location.reload();
-//     }, delay);
-//   };
-  
-//   const handleImageUpload = async (event, setFieldValue) => {
-//     const file = event.target.files[0];
-
-//     if (!file) {
-//       toast("First, Choose any file...", {
-//         icon: '⚠️',
-//       })
-//       return
-//     } 
-
-//     try{
-//       setFieldValue("photo", file);
-//       toast.success("Image uploaded successfully!");
-//     }
-//     catch (error) {
-//       console.error("Upload failed", error);
-//       toast.error("Image upload failed!");
-//     }
-//   };  
-
-//   const addGalleryImage = async (values, { resetForm }) => {
-
-//     if (!values.photo) {
-//       toast("Please upload an image!", {
-//         icon: '⚠️',
-//       });
-//       return;
-//     }  
-//     try {
-//       const formData = new FormData();
-//       formData.append('photo', values.photo);
-//       formData.append('categoryName', values.categoryName);
-//       if (values.title) formData.append('title', values.title);
-//       if (values.desc) formData.append('desc', values.desc);
-      
-//       const response = await axios.post(
-//         `${BASE_API_URL}/admin/gallery/addGalleryItem`, formData,
-//         {
-//           headers: {
-//             'Content-Type': 'multipart/form-data'
-//           },
-//         }
-//       );
-//       console.log("Add Gallery Item Response:", response);
-
-//       if(response?.status === 201){
-//         console.log("Form submitted successfully", response.data);
-//         toast.success(response?.data?.message);
-//         resetForm()
-//         handlePageRefresh()
-//       }
-//       else if (response?.status === 409) {
-//         toast(response?.data?.message, {
-//           icon: '⚠️',
-//         });
-//         return
-//       }
-//       else if (response.status === 500) {
-//         toast(response?.data?.message, {
-//           icon: '🛑',
-//         });
-//         return
-//       }
-//     } 
-//     catch (error) {
-//       console.error("Error submitting data:", error);
-//       if (error.response) {
-//         const { status, data } = error.response;
-//         if (status === 409) {
-//           // toast.warning(data?.message);
-//           toast(data?.message, {
-//             icon: '⚠️',
-//           });
-//         } 
-//         else if (status === 500) {
-//           // toast.error(data?.message);
-//           toast(data?.message, {
-//             icon: '🛑',
-//           })
-//         } 
-//         else {
-//           toast.error(data?.message || "Unknown error, please try again.");
-//         }
-//       } 
-//       else {
-//         toast.error("An internal server error occurred!");
-//       }  
-//       throw error; 
-//     }
-//   };
-
-//   return (
-//     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-//       <div
-//         className="fixed inset-0 bg-gray-900 opacity-50"
-//         onClick={closeModal}
-//       />
-
-//       {/* Modal Box */}
-//       <div
-//         style={{ width: "100%", maxWidth: "80%" }}
-//         className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
-//       >
-//         {/* Header */}
-//         <div className="flex justify-between items-center p-6 border-b border-gray-100">
-//           <div className="flex items-center space-x-3">
-//             <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-//               {/* <i className="fas fa-photo-video text-white fa-lg" /> */}
-//               <i className="fas fa-camera-retro text-white fa-lg" />
-//             </div>
-//             <h2 className="text-2xl font-semibold text-gray-800">
-//               Register New Image
-//             </h2>
-//           </div>
-//           <button
-//             onClick={closeModal}
-//             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-//           >
-//             <i className="fas fa-times text-gray-400 hover:text-gray-600" />
-//           </button>
-//         </div>
-
-//         {/* Form */}
-//         <div className="p-6">
-//           <Formik
-//             initialValues={initialValues}
-//             validationSchema={validationSchema}
-//             onSubmit={addGalleryImage}
-//           >
-//             {({ isSubmitting, isValid, setFieldValue}) => (
-//               <Form className="space-y-6">
-//                 <div className="flex flex-col md:flex-row gap-5">
-//                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-//                     <div className="space-y-6">
-
-//                       <FormField
-//                         required
-//                         label="Category Name"
-//                         // type="text"
-//                         type="select"
-//                         name="categoryName"
-//                         options={categories}
-//                         className="max-h-[150px] overflow-y-auto"
-//                         placeholder="Select Category"
-//                       />
-
-//                       <FormField
-//                         required
-//                         label="Event Image"
-//                         type="file"
-//                         name="photo"
-//                         accept="image/*"
-//                         // placeholder="Enter image URL"
-//                         onChange={(event) => handleImageUpload(event, setFieldValue)}
-//                         // className="file-input"
-//                       />
-        
-//                     </div>
-//                   </div>
-
-//                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-//                     <div className="space-y-6">
-
-//                       <FormField
-//                         label="Title(Optional)"
-//                         type="text"
-//                         name="title"
-//                         placeholder="Enter Title"
-//                       />
-
-//                       <FormField
-//                         label="Description(Optional)"
-//                         // as="textarea"
-//                         type="text"
-//                         name="desc"
-//                         placeholder="Enter description"
-//                         className=" h-auto min-h-40 max-h-50 overflow-y-auto break-words text-base block"
-//                       />
-                    
-//                     </div>
-//                   </div>
-//                 </div>
-
-//                 {/* Action Buttons */}
-//                 <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
-//                   <button
-//                     type="button"
-//                     onClick={closeModal}
-//                     disabled={isSubmitting }
-//                     className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
-//                   >
-//                     Cancel
-//                   </button>
-//                   <button
-//                     type="submit"
-//                     disabled={isSubmitting || !isValid}
-//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
-//                   >
-//                     {isSubmitting ? "Saving...." : "Register Image"}
-//                   </button>
-//                 </div>
-//               </Form>
-//             )}
-//           </Formik>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-const AddGalleryImage = ({ closeModal }) => {
-
+const AddGalleryImage = ({ closeModal, refreshData }) => {
   const [categories, setCategories] = useState([]);
-  const [err, setErr] = useState("");
+  const [fetchError, setFetchError] = useState("");
 
-  const fetchGalleryCategories = async () => {
+  const fetchGalleryCategories = useCallback(async () => {
+    setFetchError("");
     try {
       const response = await axios.get(
-        `${BASE_API_URL}/admin/galleryCategory/getGalleryCategories/name/increasing`
+        `${BASE_API_URL}/admin/galleryCategory/getGalleryCategories/all/name/increasing`
       );
-      setCategories(response.data.categoryData);
-      console.log("Gallery Categories: ", response.data);
-    } 
-    catch (error) {
-      if (error.response) {
-        setErr(error.response?.data?.message);
+      const categoryData = response.data?.categoryData || [];
+      setCategories(categoryData);
+
+      if (categoryData.length === 0) {
+        setFetchError("No categories found. Please add a category first.");
+        toast.error("No categories found to select from.");
       }
-      else{
-        setErr("Something went wrong.")
-      }
-      throw error; 
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || "Failed to fetch categories. Cannot add image.";
+      console.error("Error fetching categories:", error);
+      setFetchError(errorMsg);
+      toast.error(errorMsg);
+      setCategories([]);
     }
-  };
-    
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        fetchGalleryCategories()
-        setErr("");
-      } 
-      catch (error) {
-        setErr(error.response?.data?.message || "Something went wrong.");
-      }
-    };
-    fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchGalleryCategories();
+  }, [fetchGalleryCategories]);
 
   const initialValues = {
     categoryName: "",
-    title: null,
-    desc: null,
-    photo: "", 
+    title: "",
+    desc: "",
+    photo: null,
   };
 
   const validationSchema = Yup.object({
     categoryName: Yup.string()
-      .required("Category name is required")
-      .trim(), 
-  
+      .required("Category Name is required"),
     title: Yup.string()
       .nullable()
-      .notRequired()
-      .min(5, "Title must be at least 5 characters")
+      .transform((value) => (value === "" ? null : value))
+      .min(5, "Title must be at least 8 characters")
       .max(50, "Title must be at most 50 characters"),
-  
     desc: Yup.string()
       .nullable()
-      .notRequired()
+      .transform((value) => (value === "" ? null : value))
       .min(15, "Description must be at least 15 characters")
       .max(200, "Description must be at most 200 characters"),
-    
-    photo: Yup.string()
-    .nullable()
-    .required("Photo is required")
-    .test('is-base64', 'Invalid Image. Please Re-Upload Image.', value => {
-    if (!value) return false;
-    try {
-      return /^[A-Za-z0-9+/]+={0,2}$/.test(value);
-    } 
-    catch (err) {
-      return false;
-    }
-  }),
+    photo: Yup.mixed()
+      .required("An image file is required")
+      .test('is-base64-string', 'Image data is not valid. Please re-upload.', value => {
+          return typeof value === 'string' && /^[A-Za-z0-9+/]+={0,2}$/.test(value);
+      }),
+  });
 
-  });  
-
-  const handlePageRefresh = () => {
-    const delay = 2000; // Time delay in milliseconds (3 seconds)
-    setTimeout(() => {
-      window.location.reload();
-    }, delay);
-  };
-  
-  const handleImageUpload = async (event, setFieldValue, setTouched) => {
-    const file = event.target.files[0];
+  const handleImageUpload = useCallback((event, setFieldValue, setFieldError) => {
+    const file = event.target.files?.[0];
 
     if (!file) {
-      toast("First, Choose any file...", {
-        icon: '⚠️',
-      })
-      return
-    } 
-
-    if (!file.type.match('image.*')) {
-      toast.error("Please select an image file (JPEG, PNG, etc.)");
+      setFieldValue("photo", null);
+      setFieldError("photo", undefined);
       return;
     }
 
-    try{
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result.split(',')[1]; // Remove the data URL prefix
-        setFieldValue("photo", base64String);
-        setTouched({ photo: true });
-        toast.success("Image ready for upload!");
-      };
-      reader.readAsDataURL(file);
-    }
-    catch (error) {
-      console.error("Upload failed", error);
-      toast.error("Image upload failed!");
-    }
-  };  
-
-  const addGalleryImage = async (values, { resetForm }) => {
-
-    if (!values.photo) {
-      toast("Please upload an image!", {
-        icon: '⚠️',
-      });
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!acceptedTypes.includes(file.type)) {
+      const errorMsg = "Invalid file type (JPG, PNG, GIF, WEBP only).";
+      toast.error(errorMsg);
+      setFieldError("photo", errorMsg);
+      setFieldValue("photo", null);
+      event.target.value = null;
       return;
-    }  
+    }
+
+    const maxSizeMB = 5;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      const errorMsg = `Image size exceeds ${maxSizeMB}MB limit.`;
+      toast.error(errorMsg);
+      setFieldError("photo", errorMsg);
+      setFieldValue("photo", null);
+      event.target.value = null;
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      try {
+        const base64String = reader.result?.toString().split(',')[1];
+        if (base64String) {
+          setFieldValue("photo", base64String);
+          setFieldError("photo", undefined);
+          toast.success("Image ready!");
+        } else {
+          throw new Error("Could not extract base64 data.");
+        }
+      } catch (readError) {
+        console.error("Error processing file reader result:", readError);
+        toast.error("Failed to process image.");
+        setFieldError("photo", "Failed to process image.");
+        setFieldValue("photo", null);
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("FileReader error:", error);
+      toast.error("Error reading file.");
+      setFieldError("photo", "Error reading file.");
+      setFieldValue("photo", null);
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  const addGalleryImage = async (values, { resetForm, setSubmitting, setFieldError }) => {
+    if (!values.photo || typeof values.photo !== 'string') {
+      setFieldError("photo", "Image data is missing or invalid. Please re-upload.");
+      toast.error("Image data missing. Please re-upload.");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const payload = {
-        photo: values.photo, // This is now the base64 string
+        photo: values.photo,
         categoryName: values.categoryName,
         title: values.title || null,
-        desc: values.desc || null
+        desc: values.desc || null,
       };
-      
-      const response = await axios.post(
-        `${BASE_API_URL}/admin/gallery/addGalleryItem`, payload,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        }
-      );
-      console.log("Add Gallery Item Response:", response);
 
-      if(response?.status === 201){
-        console.log("Form submitted successfully", response.data);
-        toast.success(response?.data?.message);
-        resetForm()
-        handlePageRefresh()
-      }
-      else if (response?.status === 409) {
-        toast(response?.data?.message, {
-          icon: '⚠️',
-        });
-        return
-      }
-      else if (response.status === 500) {
-        toast(response?.data?.message, {
-          icon: '🛑',
-        });
-        return
-      }
-    } 
-    catch (error) {
-      console.error("Error submitting data:", error);
-      if (error.response) {
-        const { status, data } = error.response;
-        if (status === 409) {
-          // toast.warning(data?.message);
-          toast(data?.message, {
-            icon: '⚠️',
-          });
-        } 
-        else if (status === 500) {
-          // toast.error(data?.message);
-          toast(data?.message, {
-            icon: '🛑',
-          })
-        } 
-        else {
-          toast.error(data?.message || "Unknown error, please try again.");
+      console.log("Submitting Gallery Item Payload:", {
+          ...payload,
+          photo: payload.photo ? `Base64 string (${(payload.photo.length * 0.75 / 1024).toFixed(2)} KB)` : 'None'
+      });
+
+      const response = await axios.post(
+        `${BASE_API_URL}/admin/gallery/addGalleryItem`,
+        payload,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      console.log("Add Gallery Item API Response:", response);
+
+      if (response?.status === 201) {
+        toast.success(response.data?.message || "Image added successfully!");
+        resetForm();
+        if (refreshData) {
+          refreshData();
         }
-      } 
-      else {
-        toast.error("An internal server error occurred!");
-      }  
-      throw error; 
+        closeModal();
+      } else {
+        toast.warn(response.data?.message || 'Received an unexpected success status.');
+      }
+
+    } catch (error) {
+      console.error("Error submitting gallery item:", error.response || error);
+      const errorMsg = error.response?.data?.message || "Submission failed. Please try again.";
+      toast.error(errorMsg);
+
+      const fieldErrors = error.response?.data?.fieldErrors;
+      if (fieldErrors && typeof setFieldError === 'function') {
+         Object.entries(fieldErrors).forEach(([field, message]) => {
+            setFieldError(field, message);
+         });
+      } else if (error.response?.status === 400 && errorMsg.toLowerCase().includes('category')) {
+          if (typeof setFieldError === 'function') setFieldError('categoryName', errorMsg);
+      } else if (error.response?.status === 400 && errorMsg.toLowerCase().includes('photo')) {
+          if (typeof setFieldError === 'function') setFieldError('photo', errorMsg);
+      }
+    } finally {
+      if (typeof setSubmitting === 'function') {
+         setSubmitting(false);
+      }
     }
   };
 
   return (
-    // <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-    //   <div
-    //     className="fixed inset-0 bg-gray-900 opacity-50"
-    //     onClick={closeModal}
-    //   />
-
-    //   {/* Modal Box */}
-    //   <div
-    //     style={{ width: "100%", maxWidth: "80%" }}
-    //     className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
-    //   >
-    //     {/* Header */}
-    //     <div className="flex justify-between items-center p-6 border-b border-gray-100">
-    //       <div className="flex items-center space-x-3">
-    //         <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-    //           {/* <i className="fas fa-photo-video text-white fa-lg" /> */}
-    //           <i className="fas fa-camera-retro text-white fa-lg" />
-    //         </div>
-    //         <h2 className="text-2xl font-semibold text-gray-800">
-    //           Register New Image
-    //         </h2>
-    //       </div>
-    //       <button
-    //         onClick={closeModal}
-    //         className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-    //       >
-    //         <i className="fas fa-times text-gray-400 hover:text-gray-600" />
-    //       </button>
-    //     </div>
-
-    //     {/* Form */}
-    //     <div className="p-6">
-    //       <Formik
-    //         initialValues={initialValues}
-    //         validationSchema={validationSchema}
-    //         onSubmit={addGalleryImage}
-    //       >
-    //         {({ isSubmitting, isValid, setFieldValue, setTouched }) => (
-    //           <Form className="space-y-6">
-    //             <div className="flex flex-col md:flex-row gap-5">
-    //               <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-    //                 <div className="space-y-6">
-
-    //                   <FormField
-    //                     required
-    //                     label="Category Name"
-    //                     // type="text"
-    //                     type="select"
-    //                     name="categoryName"
-    //                     options={categories}
-    //                     className="max-h-[150px] overflow-y-auto"
-    //                     placeholder="Select Category"
-    //                   />
-
-    //                   <FormField
-    //                     required
-    //                     label="Event Image"
-    //                     type="file"
-    //                     name="photo"
-    //                     accept="image/*"
-    //                     onChange={(event) => handleImageUpload(event, setFieldValue, setTouched)}
-    //                     className="file-input"
-    //                   />
-        
-    //                 </div>
-    //               </div>
-
-    //               <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-    //                 <div className="space-y-6">
-
-    //                   <FormField
-    //                     label="Title(Optional)"
-    //                     type="text"
-    //                     name="title"
-    //                     placeholder="Enter title"
-    //                   />
-
-    //                   <FormField
-    //                     label="Description(Optional)"
-    //                     // as="textarea"
-    //                     type="text"
-    //                     name="desc"
-    //                     placeholder="Enter description"
-                        
-    //                   />
-                    
-    //                 </div>
-    //               </div>
-    //             </div>
-
-    //             {/* Action Buttons */}
-    //             <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
-    //               <button
-    //                 type="button"
-    //                 onClick={closeModal}
-    //                 disabled={isSubmitting }
-    //                 className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
-    //               >
-    //                 Cancel
-    //               </button>
-    //               <button
-    //                 type="submit"
-    //                 disabled={isSubmitting || !isValid}
-    //                 className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
-    //               >
-    //                 {isSubmitting ? "Saving...." : "Register Image"}
-    //               </button>
-    //             </div>
-    //           </Form>
-    //         )}
-    //       </Formik>
-    //     </div>
-    //   </div>
-    // </div>
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-  <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={closeModal} />
+      <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={closeModal} />
 
-  {/* Modal Box */}
-  <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
-    {/* Header */}
-    <div className="flex justify-between items-center p-6 border-b border-gray-100">
-      <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-          <i className="fas fa-camera-retro text-white fa-lg" />
+      {/* Modal Box */}
+      <div style={{ width: "100%", maxWidth: "80%" }} className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+        {/* Header */}
+        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Camera className="h-5 w-5 text-white" />
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Register New Image
+            </h2>
+          </div>
+          <button
+            onClick={closeModal}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+          >
+            <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+          </button>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-800">Register New Image</h2>
-      </div>
-      <button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200">
-        <i className="fas fa-times text-gray-400 hover:text-gray-600" />
-      </button>
-    </div>
 
-    {/* Form */}
-    <div className="p-6">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={addGalleryImage}
-      >
-        {({ isSubmitting, isValid, setFieldValue, setTouched }) => (
-          <Form className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-5 max-h-[300px]  overflow-y-auto ">
-              <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-                <div className="space-y-6">
-                  <FormField
-                    required
-                    label="Category Name"
-                    type="select"
-                    name="categoryName"
-                    options={categories}  // Make sure you pass the categories array
-                    className="max-h-[150px] overflow-y-auto"
-                    placeholder="Select Category"
-                  />
-
-                  <FormField
-                    required
-                    label="Event Image"
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={(event) => handleImageUpload(event, setFieldValue, setTouched)}
-                    className="file-input"
-                  />
-                </div>
-              </div>
-
-              <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-                <div className="space-y-6">
-                  <FormField
-                    label="Title(Optional)"
-                    type="text"
-                    name="title"
-                    placeholder="Enter title"
-                  />
-
-                  <FormField
-                    label="Description (Optional)"
-                    type="textarea"  // Change the type to "textarea"
-                    name="desc"
-                    placeholder="Enter description"
-                    className="resize-none h-32"
-                  />
-                  
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="sticky flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={closeModal}
-                disabled={isSubmitting}
-                className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting || !isValid}
-                className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
-              >
-                {isSubmitting ? "Saving...." : "Register Image"}
-              </button>
-            </div>
-          </Form>
+        {fetchError && (
+          <div className="p-3 mx-5 mt-4 text-sm rounded-md text-yellow-800 bg-yellow-100 border border-yellow-200 flex items-center gap-2 flex-shrink-0">
+            <X className="h-4 w-4 text-yellow-600" />
+            <span>{fetchError}</span>
+          </div>
         )}
-      </Formik>
-    </div>
-  </div>
-</div>
 
+        {/* Form */}
+        <div className="p-6">
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={addGalleryImage}
+            enableReinitialize
+          >
+            {({ isSubmitting, isValid, setFieldValue, setFieldError, errors, touched }) => (
+              <Form className="space-y-6">
+                <div className="flex flex-col md:flex-row gap-5 max-h-[300px] overflow-y-auto">
+                  <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
+                    <div className="space-y-6">
+                      <FormField
+                        required
+                        label="Category Name"
+                        type="select"
+                        name="categoryName"
+                        options={categories}
+                        className="max-h-[150px] overflow-y-auto"
+                        placeholder="Select Category"
+                        setFieldValue={setFieldValue}
+                        error={errors.categoryName}
+                        touched={touched.categoryName}
+                      />
+
+                      <FormField
+                        required
+                        label="Event Image"
+                        type="file"
+                        name="photo"
+                        accept="image/jpeg, image/png, image/gif, image/webp"
+                        onChange={(event) => handleImageUpload(event, setFieldValue, setFieldError)}
+                        className="file-input"
+                        error={errors.photo}
+                        touched={touched.photo}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
+                    <div className="space-y-6">
+                      <FormField
+                        label="Title"
+                        required
+                        type="text"
+                        name="title"
+                        placeholder="Enter title (max 50 chars)"
+                        error={errors.title}
+                        touched={touched.title}
+                      />
+
+                      <FormField
+                        label="Description"
+                        type="textarea"
+                        required
+                        name="desc"
+                        placeholder="Enter description (max 200 chars)"
+                        className="resize-none h-32"
+                        error={errors.desc}
+                        touched={touched.desc}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="sticky flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    disabled={isSubmitting}
+                    className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || !isValid || categories.length === 0}
+                    className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+                  >
+                    {isSubmitting ? (
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    ) : "Register Image"}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </div>
+    </div>
   );
 };
 
-// const FormField = ({ 
-//   name, 
-//   label, 
-//   required = false, 
-//   type = "text", 
-//   placeholder, 
-//   className = "", 
-//   options = [], 
-//   onChange  // Add this prop
-// }) => (
-//   <div>
-//     <label className="block text-sm font-medium text-gray-700 mb-2">
-//       {label} {required && <span className="text-red-500">*</span>}
-//     </label>
-    
-//     {type === "file" ? (
-//       <input
-//         type="file"
-//         name={name}
-//         accept="image/*"
-//         onChange={(e) => {
-//           e.persist();
-//           onChange(e);  // Use the passed onChange prop
-//         }}
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//       />
-//     ) : type === "select" ? (
-//       <Field 
-//         as="select" 
-//         name={name} 
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//       >
-//         <option value="" disabled>Select Category</option>
-//         {options.map((option, index) => (
-//           <option key={index} value={option.name}>
-//             {option.name}
-//           </option>
-//         ))}
-//       </Field>
-//     ) : (
-//       <Field
-//         type={type}
-//         name={name}
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//         placeholder={placeholder}
-//       />
-//     )}
-
-//     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
-//   </div>
-// );
 const FormField = ({
   name,
   label,
   required = false,
   type = "text",
-  placeholder,
+  placeholder = "",
   className = "",
   options = [],
-  onChange, // For file input
-}) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-2">
-      {label} {required && <span className="text-red-500">*</span>}
-    </label>
+  onChange,
+  accept,
+  error,
+  touched,
+  setFieldValue
+}) => {
+    const borderColor = touched && error ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:border-lightBlue-500 focus:ring-lightBlue-500';
+    const ringColor = touched && error ? 'ring-red-500' : 'focus:ring-lightBlue-500';
 
-    {/* File Input */}
-    {type === "file" ? (
-      <input
-        type="file"
-        name={name}
-        accept="image/*"
-        onChange={(e) => {
-          e.persist();
-          onChange(e); // Use the passed onChange prop
-        }}
-        className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-      />
-    ) : type === "select" ? (
-      <Field name={name}>
-        {({ field, form }) => (
-          <div className="relative">
-            <Listbox
-              value={options.find((option) => option.name === field.value) || null}
-              onChange={(selected) => form.setFieldValue(name, selected.name)}
-            >
-              <Listbox.Button className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-lightBlue-600">
-                {field.value ? field.value : "Select Category"}
-              </Listbox.Button>
+    return (
+      <div className={`flex flex-col ${className}`}>
+        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1.5">
+          {label} {required && <span className="text-red-500 ml-0.5">*</span>}
+        </label>
 
-              <Listbox.Options className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl max-h-[150px] overflow-y-auto shadow-lg">
-                {options.map((option, index) => (
-                  <Listbox.Option key={index} value={option} disabled={!option}>
-                    {({ active }) => (
-                      <div
-                        className={`cursor-pointer px-4 py-1 ${
-                          active ? "bg-lightBlue-600 text-white" : "text-black"
-                        }`}
-                      >
-                        {option.name}
-                      </div>
-                    )}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </Listbox>
-          </div>
+        {type === "select" ? (
+          <Field name={name}>
+            {({ field, form }) => (
+               <Listbox
+                 value={field.value}
+                 onChange={(value) => form.setFieldValue(name, value)}
+                 disabled={options.length === 0}
+               >
+                <div className="relative">
+                  <Listbox.Button className={`relative w-full cursor-default rounded-xl border ${borderColor} bg-white py-3 px-4 text-left shadow-sm focus:outline-none focus:ring-1 ${ringColor} sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed`}>
+                    <span className={`block truncate ${field.value ? 'text-gray-900' : 'text-gray-400'}`}>
+                       {field.value || placeholder || "Select Category"}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronsUpDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={React.Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {options.length > 0 ? options.map((option) => (
+                        <Listbox.Option
+                          key={option._id || option.name}
+                          className={({ active }) =>
+                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                              active ? 'bg-lightBlue-100 text-lightBlue-900' : 'text-gray-900'
+                            }`
+                          }
+                          value={option.name}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                                {option.name}
+                              </span>
+                              {selected ? (
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lightBlue-600">
+                                  <Check className="h-5 w-5" aria-hidden="true" />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      )) : (
+                         <div className="relative cursor-default select-none py-2 px-4 text-gray-500">No categories available</div>
+                      )}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            )}
+          </Field>
+        ) :
+        type === "file" ? (
+          <input
+            id={name}
+            type="file"
+            name={name}
+            accept={accept || "image/*"}
+            onChange={onChange}
+            className={`form-input block w-full text-sm text-gray-500 border ${borderColor} rounded-xl shadow-sm
+                        file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold
+                        file:bg-lightBlue-50 file:text-lightBlue-700 hover:file:bg-lightBlue-100
+                        focus:outline-none focus:ring-1 ${ringColor} file:cursor-pointer file:transition-colors file:duration-150
+                        ${className}`}
+          />
+        ) :
+        type === "textarea" ? (
+           <Field
+            id={name}
+            as="textarea"
+            name={name}
+            className={`form-textarea block w-full px-4 py-3 rounded-xl border ${borderColor} shadow-sm
+                        text-sm text-gray-900 placeholder-gray-400
+                        focus:ring-1 ${ringColor} focus:outline-none transition duration-150 ease-in-out
+                        ${className}`}
+            placeholder={placeholder}
+            rows={4}
+           />
+        ) :
+        (
+           <Field
+            id={name}
+            type={type}
+            name={name}
+            className={`form-input block w-full px-4 py-3 rounded-xl border ${borderColor} shadow-sm
+                        text-sm text-gray-900 placeholder-gray-400
+                        focus:ring-1 ${ringColor} focus:outline-none transition duration-150 ease-in-out
+                        disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed
+                        ${className}`}
+            placeholder={placeholder}
+           />
         )}
-      </Field>
-    ) : type === "textarea" ? (
-      <Field
-        as="textarea"
-        name={name}
-        className={`${className} shadow-sm w-full px-4 py-3 h-[120px] resize-none !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-        placeholder={placeholder}
-      />
-    ) : (
-      <Field
-        type={type}
-        name={name}
-        className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-        placeholder={placeholder}
-      />
-    )}
 
-    <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
-  </div>
-);
-// const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [] }) => (
-//   <div>
-//     <label className="block text-sm font-medium text-gray-700 mb-2">
-//       {label} {required && <span className="text-red-500">*</span>}
-//     </label>
-    
-//     {type === "select" ? (
-//       <Field as="select" name={name} className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}>
+        <ErrorMessage
+          name={name}
+          component="div"
+          className="text-red-600 text-xs mt-1"
+        />
+      </div>
+    );
+};
 
-//         <option value="" disabled>Select Category</option>
-//         {options.map((option, index) => (
-//           <option key={index} value={option.name}>
-//             {option.name}
-//           </option>
-//         ))}
-        
-//       </Field>
-//     ) : (
-//       <Field
-//         type={type}
-//         name={name}
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//         placeholder={placeholder}
-//       />
-//     )}
-
-//     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
-//   </div>
-// );
+FormField.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  required: PropTypes.bool,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  className: PropTypes.string,
+  options: PropTypes.array,
+  onChange: PropTypes.func,
+  accept: PropTypes.string,
+  error: PropTypes.string,
+  touched: PropTypes.bool,
+  setFieldValue: PropTypes.func,
+};
 
 AddGalleryImage.propTypes = {
   closeModal: PropTypes.func.isRequired,
-}
+  refreshData: PropTypes.func,
+};
 
 export default AddGalleryImage;
-
-
-
-
-
-
-// import React, {useState, useEffect} from "react";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import * as Yup from "yup";
-// import axios from "axios";
-// import { BASE_API_URL } from "../../../utils/BaseUrl";
-// import { toast } from 'react-hot-toast';
-// import './Gallery.css'
-
-// const AddGalleryImage = ({ closeModal }) => {
-
-//   const [categories, setCategories] = useState([]);
-//   const [err, setErr] = useState("");
-
-//   const fetchGalleryCategories = async () => {
-//     try {
-//       const response = await axios.get(
-//         `${BASE_API_URL}/admin/galleryCategory/getGalleryCategories/name/increasing`
-//       );
-//       setCategories(response.data.categoryData);
-//       console.log("Gallery Categories: ", response.data);
-//     } 
-//     catch (error) {
-//       if (error.response) {
-//         setErr(error.response?.data?.message);
-//       }
-//       else{
-//         setErr("Something went wrong.")
-//       }
-//       throw error; 
-//     }
-//   };
-//     useEffect(() => {
-//       const fetchData = async () => {
-//         try {
-//           fetchGalleryCategories()
-//           setErr("");
-//         } 
-//         catch (error) {
-//           setErr(error.response?.data?.message || "Something went wrong.");
-//         }
-//       };
-//       fetchData();
-//     }, []);
-
-//   const initialValues = {
-//     categoryName: "",
-//     title: null,
-//     desc: null,
-//     photo: null, //to handle file uploads
-//   };
-
-//   const validationSchema = Yup.object({
-//     categoryName: Yup.string()
-//       .required("Category name is required")
-//       .trim(), 
-  
-//     title: Yup.string()
-//       // .transform((value) => (value === "" ? null : value)) // Convert empty string to null
-//       .nullable()
-//       .notRequired()
-//       .min(8, "Title must be at least 8 characters")
-//       .max(80, "Title must be at most 80 characters"),
-  
-//     desc: Yup.string()
-//       // .transform((value) => (value === "" ? null : value)) // Convert empty string to null
-//       .nullable()
-//       .notRequired()
-//       .min(15, "Description must be at least 15 characters")
-//       .max(600, "Description must be at most 600 characters"),
-    
-//     photo: Yup.mixed()
-//       .required("Photo is required")
-//       .test("fileType", "Only image files are allowed", (value) => {
-//       return value instanceof File || typeof value === "string";
-//     }),
-
-
-//     // photo: Yup.string()
-//     //   .url("Invalid URL")
-//     //   .required("Photo (image URL) is required")
-//     //   .trim(),
-  
-//   });  
-
-//   const handlePageRefresh = () => {
-//     const delay = 2000; // Time delay in milliseconds (3 seconds)
-//     setTimeout(() => {
-//       window.location.reload();
-//     }, delay);
-//   };
-
-//   const handleImageUpload = async (event, setFieldValue) => {
-//     const file = event.target.files[0];
-//     if (!file) {
-//       toast("First, Choose any file...", {
-//         icon: '⚠️',
-//       })
-//       return
-//     } 
-  
-//     const formData = new FormData();
-//     formData.append("file", file);
-//     formData.append("upload_preset", "PGR - Virtual Trading App Gallery"); // Replace with Cloudinary preset
-//     formData.append("cloud_name","damdh1six")
-//     try {
-//       const response = await axios.post(
-//         "https://api.cloudinary.com/v1_1/damdh1six/image/upload",
-//         formData
-//       );
-//       setFieldValue("photo", response.data.url); // Store image URL in Formik state
-//       toast.success("Image uploaded successfully!");
-//     } 
-//     catch (error) {
-//       console.error("Upload failed", error);
-//       toast.error("Image upload failed!");
-//     }
-//   };  
-
-//   const addGalleryImage = async (values, { resetForm }) => {
-
-//     if (!values.photo) {
-//       toast("Please upload an image!", {
-//          icon: '⚠️',
-//       });
-//       return;
-//     }  
-//     try {
-//       const response = await axios.post(
-//         `${BASE_API_URL}/admin/gallery/addGalleryItem`, values
-//       );
-//       console.log("Add Gallery Item Response:", response);
-
-//       if(response?.status === 201){
-//         console.log("Form submitted successfully", response.data);
-//         toast.success(response?.data?.message);
-//         resetForm()
-//         handlePageRefresh()
-//       }
-//       else if (response?.status === 409) {
-//          toast(response?.data?.message, {
-//             icon: '⚠️',
-//          });
-//          return
-//       }
-//       else if (response.status === 500) {
-//          toast(response?.data?.message, {
-//             icon: '🛑',
-//          });
-//         return
-//       }
-//     } 
-//     catch (error) {
-//       console.error("Error submitting data:", error);
-//       if (error.response) {
-//        const { status, data } = error.response;
-//        if (status === 409) {
-//          // toast.warning(data?.message);
-//          toast(data?.message, {
-//            icon: '⚠️',
-//          });
-//        } 
-//        else if (status === 500) {
-//          // toast.error(data?.message);
-//          toast(data?.message, {
-//            icon: '🛑',
-//          })
-//        } 
-//        else {
-//          toast.error(data?.message || "Unknown error, please try again.");
-//        }
-//      } 
-//      else {
-//        toast.error("An internal server error occurred!");
-//      }  
-//       throw error; 
-//     }
-//   };
-
-//   return (
-//     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-//       <div
-//         className="fixed inset-0 bg-gray-900 opacity-50"
-//         onClick={closeModal}
-//       />
-
-//       {/* Modal Box */}
-//       <div
-//         style={{ width: "100%", maxWidth: "80%" }}
-//         className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
-//       >
-//         {/* Header */}
-//         <div className="flex justify-between items-center p-6 border-b border-gray-100">
-//           <div className="flex items-center space-x-3">
-//             <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-//               {/* <i className="fas fa-photo-video text-white fa-lg" /> */}
-//               <i className="fas fa-camera-retro text-white fa-lg" />
-//             </div>
-//             <h2 className="text-2xl font-semibold text-gray-800">
-//               Register New Image
-//             </h2>
-//           </div>
-//           <button
-//             onClick={closeModal}
-//             className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-//           >
-//             <i className="fas fa-times text-gray-400 hover:text-gray-600" />
-//           </button>
-//         </div>
-
-//         {/* Form */}
-//         <div className="p-6">
-//           <Formik
-//             initialValues={initialValues}
-//             validationSchema={validationSchema}
-//             onSubmit={addGalleryImage}
-//           >
-//             {({ isSubmitting, isValid, setFieldValue}) => (
-//               <Form className="space-y-6">
-//                 <div className="flex flex-col md:flex-row gap-5">
-//                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-//                     <div className="space-y-6">
-
-//                       <FormField
-//                         required
-//                         label="Category Name"
-//                         // type="text"
-//                         type="select"
-//                         name="categoryName"
-//                         options={categories}
-//                         className="max-h-[150px] overflow-y-auto"
-//                         placeholder="Select Category"
-//                       />
-
-//                       <FormField
-//                         required
-//                         label="Event Image"
-//                         type="file"
-//                         name="photo"
-//                         // placeholder="Enter image URL"
-//                         onChange={(event) => handleImageUpload(event, setFieldValue)}
-//                         className="file-input"
-//                       />
-        
-//                     </div>
-//                   </div>
-
-//                   <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-//                     <div className="space-y-6">
-
-//                       <FormField
-//                         label="Title(Optional)"
-//                         type="text"
-//                         name="title"
-//                         placeholder="Enter Title"
-//                       />
-
-//                       <FormField
-//                         label="Description(Optional)"
-//                         // as="textarea"
-//                         type="text"
-//                         name="desc"
-//                         placeholder="Enter description"
-//                         className=" h-auto min-h-40 max-h-50 overflow-y-auto break-words text-base block"
-//                       />
-                    
-//                     </div>
-//                   </div>
-//                 </div>
-
-//                 {/* Action Buttons */}
-//                 <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
-//                   <button
-//                     type="button"
-//                     onClick={closeModal}
-//                     disabled={isSubmitting}
-//                     className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
-//                   >
-//                     Cancel
-//                   </button>
-//                   <button
-//                     type="submit"
-//                     disabled={isSubmitting || !isValid}
-//                     className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
-//                   >
-//                     {isSubmitting ? "Saving...." : "Register Image"}
-//                   </button>
-//                 </div>
-//               </Form>
-//             )}
-//           </Formik>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [] }) => (
-//   <div>
-//     <label className="block text-sm font-medium text-gray-700 mb-2">
-//       {label} {required && <span className="text-red-500">*</span>}
-//     </label>
-    
-//     {type === "select" ? (
-//       <Field as="select" name={name} className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}>
-
-//         <option value="" disabled>Select Category</option>
-//         {options.map((option, index) => (
-//           <option key={index} value={option.name}>
-//             {option.name}
-//           </option>
-//         ))}
-        
-//       </Field>
-//     ) : (
-//       <Field
-//         type={type}
-//         name={name}
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                         bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                         focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//         placeholder={placeholder}
-//       />
-//     )}
-
-//     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
-//   </div>
-// );
-
-// export default AddGalleryImage;
-
-
-
-
-

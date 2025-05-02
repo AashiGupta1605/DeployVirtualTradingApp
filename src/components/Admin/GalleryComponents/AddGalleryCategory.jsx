@@ -6,18 +6,20 @@ import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import { toast } from 'react-hot-toast';
 
-//Set Initial Values to NULL
-const initialValues = {
-  name: "",
-}
 
-// Validation schema using Yup
-const validationSchema = Yup.object({
-  name: Yup.string().trim().required("Category name is required").min(3,"Category must not be of more than 3 characters").max(50, "Category must not be of more than 50 characters"),
-});
 
 const AddGalleryCategory = ({ closeModal, refreshCategories }) => {
-  
+
+  //Set Initial Values to NULL
+  const initialValues = {
+    name: "",
+  }
+
+  // Validation schema using Yup
+  const validationSchema = Yup.object({
+    name: Yup.string().trim().required("Category name is required").min(3,"Category must not be of more than 3 characters").max(50, "Category must not be of more than 50 characters"),
+  });
+
   const addCategoryName = async (values, {resetForm}) => {
     try {
       const response = await axios.post(
@@ -25,12 +27,15 @@ const AddGalleryCategory = ({ closeModal, refreshCategories }) => {
       );
       console.log("Add Gallery Category Response:", response);
 
+      // --- SUCCESS BLOCK ---
       if(response?.status === 201){
         console.log("Form submitted successfully", response.data);
         toast.success(response?.data?.message);
-        refreshCategories()
-        resetForm()
+        refreshCategories(); // Refresh the list in the parent component
+        resetForm();         // Reset the form fields
+        closeModal();        // <-- **** ADD THIS LINE **** Close the modal
       }
+      // --- Other status checks ---
       else if (response?.status === 409) {
         toast(response?.data?.message, {
           icon: '⚠️',
@@ -41,32 +46,29 @@ const AddGalleryCategory = ({ closeModal, refreshCategories }) => {
           icon: '🛑',
         })
       }
-    } 
+    }
     catch (error) {
       console.error("Error submitting data:", error);
+      // --- Keep your existing error handling ---
       if (error.response) {
         const { status, data } = error.response;
         if (status === 409) {
-          // toast.warning(data?.message);
-          toast(data?.message, {
-            icon: '⚠️',
-          });
-        } 
+          toast(data?.message, { icon: '⚠️' });
+        }
         else if (status === 500) {
-          // toast.error(data?.message);
-          toast(data?.message, {
-            icon: '🛑',
-          })
-        } 
+          toast(data?.message, { icon: '🛑' });
+        }
         else {
           toast.error(data?.message || "Unknown error, please try again.");
         }
-      } 
+      }
       else {
         toast.error("An internal server error occurred!");
-      }  
-      throw error; 
+      }
+      // Do NOT close the modal on error, user might need to fix input
+      throw error; // Re-throw if needed by Formik/calling context
     }
+    // No finally block needed here
   };
 
   return (
