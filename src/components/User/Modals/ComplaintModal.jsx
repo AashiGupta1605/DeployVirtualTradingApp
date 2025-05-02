@@ -73,7 +73,7 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray">
       <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-      <div className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100" style={{ width: "80%", maxWidth: "80%" }}>
+      <div className="relative w-full sm:mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100" style={{ width: "80%", maxWidth: "80%", maxHeight: "90vh" }}>
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
             <i className="fas fa-exclamation-circle text-red-600 mr-2"></i> {complaintData ? "Edit Complaint" : "Submit Complaint"}
@@ -92,7 +92,11 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
                   value={formik.values.category}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                  className={`w-full px-4 py-3 rounded-xl border ${
+                    formik.touched.category && formik.errors.category
+                      ? 'border-yellow-500 focus:ring-yellow-500/20'
+                      : 'border-gray-200 focus:border-lightBlue-500 focus:ring-lightBlue-500/20'
+                  }`}
                 >
                   <option value="">Select Type</option>
                   <option value="Account Issues">Account Issues</option>
@@ -114,7 +118,11 @@ const ComplaintModal = ({ onClose, onComplaintSubmit, complaintData }) => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   placeholder="Write your complaint here..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                  className={`w-full px-4 py-3 rounded-xl border ${
+                    formik.touched.category && formik.errors.category
+                      ? 'border-yellow-500 focus:ring-yellow-500/20'
+                      : 'border-gray-200 focus:border-lightBlue-500 focus:ring-lightBlue-500/20'
+                  }`}
                 ></textarea>
                 {formik.touched.complaintMessage && formik.errors.complaintMessage && (
                   <p className="text-sm text-red-600 mt-1">{formik.errors.complaintMessage}</p>

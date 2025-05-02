@@ -1,6 +1,7 @@
 import Loader from '../Common/Loader';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useDebounce } from 'use-debounce';
 import { 
   ChevronDown, 
   ChevronUp,
@@ -30,6 +31,8 @@ import "../../assets/styles/table.css";
 
 const StockTable = ({ userData }) => {
   const dispatch = useDispatch();
+ 
+
   const { 
     stockData = [], 
     loading = false, 
@@ -70,8 +73,15 @@ const StockTable = ({ userData }) => {
     dispatch(fetchCompanyDetails(symbol));
   };
 
+  const [localSearch, setLocalSearch] = useState(searchTerm);
+  const [debouncedSearch] = useDebounce(localSearch, 1000);
+
+  useEffect(() => {
+    dispatch(setSearchTerm(debouncedSearch));
+  }, [debouncedSearch, dispatch]);
+  
   const handleSearchChange = (value) => {
-    dispatch(setSearchTerm(value));
+    setLocalSearch(value); // only update local state
   };
 
   const handleSortChange = (key) => {
@@ -188,22 +198,24 @@ const StockTable = ({ userData }) => {
             <SearchIcon size={18} className="text-gray-400" />
           </div>
           <input
-            type="text"
-            placeholder="Search by symbol..."
-            className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-              focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-              text-sm placeholder-gray-500"
-            value={searchTerm}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
-              onClick={() => handleSearchChange("")}
-            >
-              <X size={16} />
-            </button>
-          )}
+  type="text"
+  placeholder="Search by symbol..."
+  className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+    focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+    text-sm placeholder-gray-500"
+  value={localSearch}
+  onChange={(e) => handleSearchChange(e.target.value)}
+/>
+
+{localSearch && (
+  <button
+    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+    onClick={() => handleSearchChange("")}
+  >
+    <X size={16} />
+  </button>
+)}
+
         </div>
       </div>
 
