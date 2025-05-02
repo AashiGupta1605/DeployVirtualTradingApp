@@ -1,5 +1,5 @@
 import Loader from '../Common/Loader';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   X, 
@@ -73,6 +73,11 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     selectedSymbol = null
   } = niftyState || {};
 
+  const [searchValue, setSearchValue] = useState(searchTerm);// Add this useEffect to sync Redux state to local input only when Redux value changes externally
+  
+
+
+
   const { currentPage, itemsPerPage } = pagination;
 
   // Helper function to get the appropriate action based on tableType
@@ -84,6 +89,23 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
     dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
   }, [dispatch, currentPage, itemsPerPage, searchTerm, tableType]);
+  
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchValue !== searchTerm) {
+        const setSearchAction = getAction(setNifty50SearchTerm, setNifty500SearchTerm);
+        dispatch(setSearchAction(searchValue));
+      }
+    }, 30000 );
+    return () => clearTimeout(delayDebounce);
+  }, [searchValue, searchTerm, dispatch, tableType]);
+
+
+  const handleSearchInputChange = (value) => {
+    setSearchValue(value);
+  };
+
 
   const handleSymbolClick = (symbol, e) => {
     e.preventDefault();
@@ -101,10 +123,9 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     }
   };
 
-  const handleSearchChange = (value) => {
-    const setSearchAction = getAction(setNifty50SearchTerm, setNifty500SearchTerm);
-    dispatch(setSearchAction(value));
-  };
+ 
+
+    
 
   const handleSortChange = (key) => {
     let direction = 'ascending';
@@ -143,6 +164,10 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     });
   };
 
+  const filteredItems = getSortedData(data).filter(stock =>
+    stock.symbol?.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   const formatColumnHeader = (key) => {
     const words = key.replace(/([A-Z])/g, ' $1');
     return words.split(' ')
@@ -150,8 +175,7 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
       .join(' ');
   };
 
-  const filteredItems = getSortedData(data)
-    .filter(stock => stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()));
+  
   
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -187,17 +211,20 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     return (
       <div className="flex flex-col items-center justify-center h-64 p-4">
         <div className="text-gray-500 mb-4">No data available</div>
-        <button 
+        <button
           onClick={() => {
             const fetchAction = getAction(fetchNiftyData, fetchNifty500Data);
-            dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: searchTerm }));
+            const setSearchAction = getAction(setNifty50SearchTerm, setNifty500SearchTerm);
+            dispatch(setSearchAction(''));
+            dispatch(fetchAction({ page: currentPage, limit: itemsPerPage, search: '' }));
+            setSearchValue('');
           }}
           className="flex items-center gap-2 bg-lightBlue-600 text-white px-4 py-2 rounded hover:bg-lightBlue-600 transition-colors"
         >
-          <RefreshCw size={16} />
-          Refresh Data
+          <RefreshCw size={16} /> Refresh Data
         </button>
       </div>
+     
     );
   }
 
@@ -228,22 +255,24 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
             <SearchIcon size={18} className="text-gray-400" />
           </div>
           <input
-            type="text"
-            placeholder="Search by symbol..."
-            className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
-              focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
-              text-sm placeholder-gray-500"
-            value={searchTerm}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
-              onClick={() => handleSearchChange("")}
-            >
-              <X size={16} />
-            </button>
-          )}
+  type="text"
+  placeholder="Search by symbol..."
+  className="w-full h-10 pl-10 pr-10 rounded-lg border border-gray-300 
+    focus:outline-none focus:ring-2 focus:ring-lightBlue-500 
+    text-sm placeholder-gray-500"
+  value={searchValue}
+  onChange={(e) => handleSearchInputChange(e.target.value)}
+/>
+
+{searchValue && (
+  <button
+    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+    onClick={() => handleSearchInputChange('')}
+  >
+    <X size={16} />
+  </button>
+)}
+
         </div>
       </div>
 

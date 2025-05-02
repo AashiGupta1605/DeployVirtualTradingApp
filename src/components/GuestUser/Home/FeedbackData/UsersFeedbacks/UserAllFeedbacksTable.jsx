@@ -6,6 +6,8 @@ import { Filter, Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { FolderOpen } from "lucide-react";
 import { FaTimes, FaComments } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
+import { Listbox } from "@headlessui/react";
+import { IoIosArrowDown } from "react-icons/io";
 
 const CATEGORY_COLORS = {
   "Website UI/UX": "bg-blue-100 text-blue-800",
@@ -23,6 +25,11 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
   const [appliedFilters, setAppliedFilters] = useState({});
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const listboxButtonStyle =
+  "border rounded-lg px-5 py-[6px] text-sm w-38 text-left flex justify-between items-center bg-white text-gray-600 border-gray-600 hover:border-blue-400";
+
+const listboxOptionsStyle =
+  "absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none";
 
   const [popoverRow1, setPopoverRow1] = useState(null);
   const popoverRef1 = useRef(null);
@@ -199,7 +206,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
       onClick={closeModal}
     >
       <div
-        className="relative bg-white pl-1 pr-1 pt-0 rounded-xl shadow-lg w-[85%] h-[83vh] flex flex-col"
+        className="relative bg-white pl-1 pr-1 pt-0 rounded-xl shadow-lg w-[85%] h-[83vh] flex flex-col "
         onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
       >
         <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-100 p-4 mt-1">
@@ -285,75 +292,56 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
               <div className="flex gap-4 mr-auto">
 
                 {/* Organization Select */}
-                <div className="flex flex-col relative">
-                  {/* Label */}
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Organization
-                  </label>
+               
+{/* Organization Select (with Listbox) */}
+<div className="flex flex-col relative">
+  <label className="text-sm font-medium text-gray-600 mb-1">
+    Organization
+  </label>
 
-                  <div className="relative">
-                    {/* Clickable Select Box */}
-                    <button
-                      onClick={() => setShowDropdown(!showDropdown)}
-                      className={`border rounded-lg px-5 py-[6px] text-sm w-38 text-left flex justify-between items-center 
-                      bg-white transition-colors duration-200 
-                      ${
-                        showDropdown
-                          ? "border-lightBlue-600 bg-blue-100"
-                          : "border-gray-300 hover:border-blue-400"
-                      }`}
-                    >
-                      <span className="text-gray-600">
-                        {organization || "All"}
-                      </span>
-                      <IoIosArrowUp
-                        className={`text-gray-500 text-lg transition-transform duration-200 
-                        ${showDropdown ? "rotate-180" : "rotate-180"}`}
-                      />
-                    </button>
+  <Listbox value={organization} onChange={setOrganization}>
+    <div className="relative overflow-visible">
+      <Listbox.Button className={listboxButtonStyle}>
+        <span>{organization || "All"}</span>
+        <IoIosArrowDown className="text-lg text-gray-500" />
+      </Listbox.Button>
 
-                    {/* Scrollable Organization Options */}
-                    <div className="relative">
-                      {showDropdown && (
-                        <div className="absolute mt-2 top-full left-0 w-[150px] bg-white border rounded-md shadow-lg max-h-53 overflow-y-auto z-50">
-                          {/* "All" Option */}
-                          <div>
-                          <div
-                            onClick={() => {
-                              setOrganization("All");
-                              setShowDropdown(false);
-                            }}
-                            className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
-                          >
-                            All
-                          </div>
+      <Listbox.Options className={listboxOptionsStyle}>
+        <Listbox.Option
+          value="All"
+          className={({ active }) =>
+            `cursor-pointer px-4 py-2 ${
+              active ? "bg-blue-100" : "text-gray-700"
+            }`
+          }
+        >
+          All
+        </Listbox.Option>
 
-                          {/* Organization List */}
-                          {orgData.map((org) => (
-                            <div
-                              key={org._id}
-                              onClick={() => {
-                                setOrganization(org.name);
-                                setShowDropdown(false);
-                              }}
-                              className="cursor-pointer p-2 hover:bg-blue-100 text-gray-700"
-                            >
-                              {org.name
-                                .split(" ")
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() +
-                                    word.slice(1).toLowerCase()
-                                )
-                                .join(" ")}
-                            </div>
-                          ))}
-                        </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+        {orgData.map((org) => (
+          <Listbox.Option
+            key={org._id}
+            value={org.name}
+            className={({ active }) =>
+              `cursor-pointer px-4 py-2 ${
+                active ? "bg-blue-100" : "text-gray-700"
+              }`
+            }
+          >
+            {org.name
+              .split(" ")
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(" ")}
+          </Listbox.Option>
+        ))}
+      </Listbox.Options>
+    </div>
+  </Listbox>
+</div>
+
 
                 {/* Category Select */}
                 <div className="flex flex-col">
@@ -484,7 +472,7 @@ const UserAllFeedbacksTable = ({ closeModal }) => {
             <table className="inset-0 min-w-full table-fixed divide-y divide-gray-200 border-collapse bg-white">
               <thead className="bg-gray-50 sticky top-0 z-10">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ">
                     Organization Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

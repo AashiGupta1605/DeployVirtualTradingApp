@@ -98,7 +98,11 @@ const OrganizationComplaintModal = ({
                 value={formik.values.category}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                className={`w-full px-4 py-3 rounded-xl border ${
+                  formik.touched.category && formik.errors.category
+                    ? 'border-yellow-500 focus:ring-yellow-500/20'
+                    : 'border-gray-200 focus:border-lightBlue-500 focus:ring-lightBlue-500/20'
+                }`}
               >
                 <option value="">Select Type</option>
                 <option value="Account Issues">Account Issues</option>
@@ -122,7 +126,11 @@ const OrganizationComplaintModal = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder="Write your complaint here..."
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                className={`w-full px-4 py-3 rounded-xl border ${
+                  formik.touched.category && formik.errors.category
+                    ? 'border-yellow-500 focus:ring-yellow-500/20'
+                    : 'border-gray-200 focus:border-lightBlue-500 focus:ring-lightBlue-500/20'
+                }`}
               ></textarea>
               {formik.touched.complaintMessage && formik.errors.complaintMessage && (
                 <p className="text-sm text-red-600 mt-1">{formik.errors.complaintMessage}</p>
