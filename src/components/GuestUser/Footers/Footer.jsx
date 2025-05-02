@@ -3,6 +3,7 @@ import React, { useState } from "react";
 // import { Link } from "react-router-dom";
 import ScrollToTopLink from "../../Common/ScrollToTopLink";
 import StartScreenPopupModal from "../Home/StartScreenPopupModal";
+
 export default function Footer() {
   const [showModal, setShowModal] = useState(false);
 
@@ -33,7 +34,7 @@ export default function Footer() {
                   href="https://x.com/GlobalPraedico/status/1654331946049339393"
                   target="blank"
                   className="bg-gray-800 hover:bg-lightBlue-600 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
-                >
+                  >
                   <i className="fab fa-twitter"></i>
                 </a>
                 <a
@@ -41,7 +42,7 @@ export default function Footer() {
                   target="blank"
                   aria-label="Facebook"
                   className="bg-gray-800 hover:bg-blue-700 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
-                >
+                  >
                   <i className="fab fa-facebook-f"></i>
                 </a>
                 <a
@@ -49,7 +50,7 @@ export default function Footer() {
                   aria-label="Instagram"
                   target="blank"
                   className="bg-gray-800 hover:bg-pink-600 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
-                >
+                  >
                   <i className="fab fa-instagram"></i>
                 </a>
                 <a
@@ -57,7 +58,7 @@ export default function Footer() {
                   target="blank"
                   aria-label="LinkedIn"
                   className="bg-gray-800 hover:bg-lightBlue-600 text-white h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300"
-                >
+                  >
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
@@ -74,7 +75,7 @@ export default function Footer() {
                 <ScrollToTopLink
                   to="/about"
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   About Us
                 </ScrollToTopLink>
@@ -83,7 +84,7 @@ export default function Footer() {
                 <ScrollToTopLink
                   to="/contact"
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Contact Us
                 </ScrollToTopLink>
@@ -92,7 +93,7 @@ export default function Footer() {
                 <ScrollToTopLink
                   to="/services"
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Services
                 </ScrollToTopLink>
@@ -101,7 +102,7 @@ export default function Footer() {
                 <ScrollToTopLink
                   to="/event"
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Events
                 </ScrollToTopLink>
@@ -110,7 +111,7 @@ export default function Footer() {
                 <ScrollToTopLink
                   to="/gallery"
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Gallery
                 </ScrollToTopLink>
@@ -127,7 +128,7 @@ export default function Footer() {
                 <button
                   onClick={() => handleLegalLinkClick()}
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center w-full text-left"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Privacy Policy
                 </button>
@@ -136,7 +137,7 @@ export default function Footer() {
                 <button
                   onClick={() => handleLegalLinkClick()}
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center w-full text-left"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Terms & Conditions
                 </button>
@@ -145,7 +146,7 @@ export default function Footer() {
                 <button
                   onClick={() => handleLegalLinkClick()}
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center w-full text-left"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Disclaimer
                 </button>
@@ -154,7 +155,7 @@ export default function Footer() {
                 <button
                   onClick={() => handleLegalLinkClick()}
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center w-full text-left"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   Risk Disclosure
                 </button>
@@ -163,7 +164,7 @@ export default function Footer() {
                 <button
                   onClick={() => handleLegalLinkClick()}
                   className="text-gray-400 hover:text-white transition-colors duration-300 text-sm flex items-center w-full text-left"
-                >
+                  >
                   <i className="fas fa-chevron-right text-xs mr-2 text-lightBlue-500"></i>
                   FAQ
                 </button>
@@ -195,7 +196,7 @@ export default function Footer() {
                 <a
                   href="tel:+1234567890"
                   className="hover:text-white transition-colors duration-300"
-                >
+                  >
                   + 91 83193 35916
                 </a>
               </li>
@@ -204,7 +205,7 @@ export default function Footer() {
                 <a
                   href="mailto:guptapriyank87@gmail.com"
                   className="hover:text-white transition-colors duration-300"
-                >
+                  >
                   guptapriyank87@gmail.com
                 </a>
               </li>
@@ -219,22 +220,22 @@ export default function Footer() {
         {/* Newsletter Subscription */}
         {/* <div className="mb-8 bg-gray-800 rounded-lg p-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <h4 className="text-lg font-bold mb-2">Subscribe to our Newsletter</h4>
-              <p className="text-gray-400 text-sm">Get the latest updates and news</p>
-            </div>
-            <div className="w-full md:w-auto flex">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
-                className="px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 text-gray-900 w-full"
-              />
-              <button className="bg-lightBlue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-r-lg transition-colors duration-300">
-                Subscribe
-              </button>
-            </div>
+          <div className="mb-4 md:mb-0">
+          <h4 className="text-lg font-bold mb-2">Subscribe to our Newsletter</h4>
+          <p className="text-gray-400 text-sm">Get the latest updates and news</p>
           </div>
-        </div> */}
+          <div className="w-full md:w-auto flex">
+          <input 
+          type="email" 
+          placeholder="Your email address" 
+          className="px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 text-gray-900 w-full"
+          />
+          <button className="bg-lightBlue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-r-lg transition-colors duration-300">
+          Subscribe
+          </button>
+          </div>
+          </div>
+          </div> */}
 
         {/* Copyright Section */}
         <div className="border-t border-gray-800 pt-6">
@@ -247,7 +248,7 @@ export default function Footer() {
               <a href="#privacy" className="text-gray-500 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>
               <a href="#terms" className="text-gray-500 hover:text-white text-sm transition-colors duration-300">Terms of Service</a>
               <a href="#cookies" className="text-gray-500 hover:text-white text-sm transition-colors duration-300">Cookies</a>
-            </div> */}
+              </div> */}
           </div>
         </div>
       </div>
