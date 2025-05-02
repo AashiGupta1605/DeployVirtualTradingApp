@@ -37,9 +37,12 @@ const ForgotPasswordModal = ({ onClose }) => {
           {/* Modal Header */}
           <div className="flex justify-between items-center pb-4 border-b border-gray-100">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-full flex items-center justify-center shadow-lg">
-                <i className="fas fa-lock text-white"></i>
-              </div>
+           
+  <div className="w-8 h-8 bg-sky-600 rounded-full flex items-center justify-center shadow-lg">
+    <i className="fas fa-lock text-white text-sm"></i>
+  </div>
+
+
               <h2 className="text-xl font-semibold text-gray-800">Forgot Password</h2>
             </div>
             <button
@@ -71,7 +74,7 @@ const ForgotPasswordModal = ({ onClose }) => {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-blue-400 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
+              className="w-full px-4 py-3 rounded-lg bg-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-blue-400 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
             >
               {status === "loading" ? "Sending..." : "Send Reset Link"}
             </button>

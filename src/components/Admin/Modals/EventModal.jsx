@@ -258,12 +258,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       }
     
       // Entry Fee - optional, but if filled must be number
-      if (values.entryFee !== undefined && values.entryFee !== '' && values.entryFee !== null) {
-        errors.entryFee = 'Entry fee is Required';
-        if (isNaN(values.entryFee)) {
-          errors.entryFee = 'Entry fee must be a number.';
-        }
-      }
+      if (values.entryFee && isNaN(values.entryFee)) errors.entryFee = 'Must be a number';
     
       // Cashback Percentage - optional, but if filled must be number
       if (values.cashbackPercentage !== undefined && values.cashbackPercentage !== '' && values.cashbackPercentage !== null) {

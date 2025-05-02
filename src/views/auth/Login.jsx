@@ -94,7 +94,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
             <input
               type="text"
               name="identifier"
-              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+              className="w-full ml-1 px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -114,7 +114,7 @@ export const UserLoginForm = ({ onClose, onOpenRegister, onOpenForgotPassword })
             <input
               type="password"
               name="password"
-              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+              className="w-full ml-1 mb-1 px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"

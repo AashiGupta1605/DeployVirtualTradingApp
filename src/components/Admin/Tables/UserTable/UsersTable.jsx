@@ -76,13 +76,13 @@ const UsersTable = ({
                       >
                         <Edit size={18} />
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => onSubscriptionClick(user)} // Now this will work
                         className="text-lightBlue-600 mx-2 hover:text-lightBlue-900 transition-colors duration-200"
                         aria-label="Manage subscription"
                       >
                         <CreditCard size={18} />
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => onDeleteClick(user)}
                         className="text-red-600 mx-2 hover:text-red-900 transition-colors duration-200"

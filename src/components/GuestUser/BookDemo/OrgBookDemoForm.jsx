@@ -46,7 +46,7 @@ const validationSchema = Yup.object().shape({
     .test(
       "only-digits",
       "Phone number must contain only digits (0-9)",
-      (value) => /^[0-9]*$/.test(value || "")
+      (value) => /^[9876]\d{9}$/.test(value || "")
     )
     .test(
       "exact-length",

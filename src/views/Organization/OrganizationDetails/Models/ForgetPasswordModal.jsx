@@ -71,7 +71,7 @@ const ForgotPasswordModal = ({ onClose }) => {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-blue-400 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
+              className="w-full px-4 py-3 rounded-lg !bg-gradient-to-r !from-lightBlue-600 !to-lightBlue-600 text-white !hover:from-lightBlue-600 !hover:to-blue-400 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50"
             >
               {status === "loading" ? "Sending..." : "Send Reset Link"}
             </button>

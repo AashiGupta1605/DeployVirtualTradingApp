@@ -132,17 +132,19 @@ const ContactPage = () => {
     </p>
 
     <motion.div
-      className="flex gap-4 mt-6"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="bg-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-indigo-700 px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
-      >
-        CONTACT US
-      </button>
-    </motion.div>
+  className="flex gap-4 mt-6"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  style={{ display: 'inline-block' }} // Ensure it's inline so that the layout doesn't shift
+>
+  <button
+    onClick={() => setIsModalOpen(true)}
+    className="bg-lightBlue-600 text-white hover:from-lightBlue-600 hover:to-indigo-700 px-6 py-3 font-bold rounded-md text-sm md:text-lg shadow-lg"
+  >
+    CONTACT US
+  </button>
+</motion.div>
+
   </motion.div>
 
   {/* Right - Image */}
@@ -225,8 +227,8 @@ const ContactModal = ({ onClose }) => {
   .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     mobile: Yup.string()
-      .matches(/^[0-9]{10}$/, "Mobile must be 10 digits")
-      .required("Mobile is required"),
+    .matches(/^[9876]\d{9}$/ , 'Mobile number must start with 9, 8, 7, or 6 and contain 10 digits')
+    .required("Mobile number is required"),
     type: Yup.string().required("Type is required"),
     desc: Yup.string().required("Description is required").min(5, "Description must be at least 5 characters")
     .max(200, "Description must be less than 200 characters"),

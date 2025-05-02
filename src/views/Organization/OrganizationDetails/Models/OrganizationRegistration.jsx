@@ -13,14 +13,15 @@ const validationSchema = Yup.object({
   name: Yup.string()
     .required('Name is required')
     .min(3, "Name must be at least 3 characters")
-    .max(50, "Name must be less than 50 characters"),
+    .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
   address: Yup.string().required('Address is required'),
   website: Yup.string().url('Invalid URL format').nullable(),
-  contactPerson: Yup.string().nullable(),
+  contactPerson: Yup.string().nullable().min(3, "Name must be at least 3 characters")
+  .max(50, "Name must be less than 50 characters").matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
   email: Yup.string().email('Invalid email format').required('Email is required'),
   mobile: Yup.string()
     .matches(/^[9876]\d{9}$/, 'Mobile number must start with 9, 8, 7, or 6 and contain 10 digits')
-    .nullable(),
+    .required("Mobile number is required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
     .max(15, "Password cannot be more than 15 characters")
