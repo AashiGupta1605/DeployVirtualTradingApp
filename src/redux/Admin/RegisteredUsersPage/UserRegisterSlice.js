@@ -12,28 +12,36 @@ const generatePassword = (name) => {
 };
 
 // Async Thunks
+// Async Thunks
 export const registerUser = createAsyncThunk(
   'userRegistration/register',
-  async (userData, { rejectWithValue, dispatch }) => {
+  async (userData, { rejectWithValue, dispatch }) => { // userData comes from formik values
     try {
-      const generatedPassword = generatePassword(userData.name);
-      const dataWithPassword = {
-        ...userData,
-        password: generatedPassword,
-        status: userData.status || 'active'
-      };
-
+      // REMOVED password generation and adding password/status fields.
+      // Send only the original form data (userData).
       const response = await axios.post(
-        `${BASE_API_URL}/admin/UserRegister`,
-        dataWithPassword
+        `${BASE_API_URL}/admin/UserRegister`, // Endpoint seems correct
+        userData // Send only what the form provided
       );
 
+      // Display a success message appropriate for backend generation
       toast.success('User registered successfully! Login credentials sent via email.');
-      dispatch(fetchUsers());
-      return response.data;
+      // You might want to dispatch fetchUsers AFTER the modal closes or in onSuccess prop
+      // dispatch(fetchUsers()); // Consider moving this if needed elsewhere
+      return response.data; // Return data from backend (includes generated user potentially)
+
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
-      return rejectWithValue(error.response?.data?.message || 'Registration failed');
+      // Handle the error - Check if backend sends structured errors
+      const errorMsg = error.response?.data?.message || 'Registration failed';
+      const backendErrors = error.response?.data?.errors; // Check for the errors array
+
+      toast.error(errorMsg);
+
+      // Reject with structured error if available, otherwise just the message
+      return rejectWithValue({
+         message: errorMsg,
+         errors: backendErrors || null // Pass backend errors if they exist
+      });
     }
   }
 );
