@@ -294,7 +294,7 @@ const listboxOptionsStyle =
                 {/* Organization Select */}
                
 {/* Organization Select (with Listbox) */}
-<div className="flex flex-col relative">
+{/* <div className="flex flex-col relative">
   <label className="text-sm font-medium text-gray-600 mb-1">
     Organization
   </label>
@@ -340,7 +340,34 @@ const listboxOptionsStyle =
       </Listbox.Options>
     </div>
   </Listbox>
+</div> */}
+{/* Organization Select (using native select) */}
+<div className="flex flex-col">
+  <label className="text-sm font-medium text-gray-600 mb-1">
+    Organization
+  </label>
+  <div className="relative">
+    <select
+      className="border rounded-lg px-5 py-[6px] text-sm appearance-none w-38 pr-8"
+      value={organization}
+      onChange={(e) => setOrganization(e.target.value || "All")}
+    >
+      <option  value="All">All</option>
+      {orgData.map((org) => (
+        <option key={org._id} value={org.name}>
+          {org.name
+            .split(" ")
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(" ")}
+        </option>
+      ))}
+    </select>
+  </div>
 </div>
+
 
 
                 {/* Category Select */}
