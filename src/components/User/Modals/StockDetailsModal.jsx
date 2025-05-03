@@ -30,17 +30,11 @@ const StockDetailsModal = ({ stock, onClose }) => {
     const buyTransactions = stock.transactions.filter(t => t.type === 'buy');
     const sellTransactions = stock.transactions.filter(t => t.type === 'sell');
 
-    // Calculate total fees
     const totalFeesPaid = stock.transactions.length * PORTAL_FEE;
-
-    // Calculate total investment (including fees)
     const totalInvestment = buyTransactions.reduce((total, t) => 
       total + (t.price * t.numberOfShares), 0);
-
-    // Calculate net investment (including fees)
     const netInvestment = totalInvestment + (buyTransactions.length * PORTAL_FEE);
 
-    // Calculate realized P/L (including fees)
     const realizedPL = sellTransactions.reduce((total, sell) => {
       const correspondingBuy = buyTransactions.find(buy => 
         buy.companySymbol === sell.companySymbol
@@ -50,14 +44,13 @@ const StockDetailsModal = ({ stock, onClose }) => {
         const profitLoss = (
           (sell.price * sell.numberOfShares) - 
           (correspondingBuy.price * sell.numberOfShares) - 
-          PORTAL_FEE // Subtract fee for each transaction
+          PORTAL_FEE
         );
         return total + profitLoss;
       }
       return total;
     }, 0);
 
-    // Calculate unrealized P/L
     const unrealizedPL = stock.holding 
       ? (stock.currentMarketPrice - stock.holding.averageBuyPrice) * 
         stock.holding.quantity - 
@@ -77,14 +70,6 @@ const StockDetailsModal = ({ stock, onClose }) => {
     };
   }, [stock]);
 
-  if (!stock || !stock.transactions || stock.transactions.length === 0) {
-    return (
-      <div className='text-center flex justify-center items-center h-screen text-4xl'>
-        PLEASE DO TRADING TO SEE THE HISTORY....
-      </div>
-    );
-  }
-
   const handleOpenCompanyDetails = () => {
     if (!activeSubscription?._id) {
       toast.error('Please activate a subscription to view company details');
@@ -92,6 +77,14 @@ const StockDetailsModal = ({ stock, onClose }) => {
     }
     setShowCompanyModal(true);
   };
+
+  if (!stock || !stock.transactions || stock.transactions.length === 0) {
+    return (
+      <div className='text-center flex justify-center items-center h-screen text-4xl'>
+        PLEASE DO TRADING TO SEE THE HISTORY....
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -246,21 +239,10 @@ const StockDetailsModal = ({ stock, onClose }) => {
           isOpen={showCompanyModal}
           onClose={() => setShowCompanyModal(false)}
           symbol={stock.symbol}
-          type="stock"
+          type={stock.type || 'nifty50'} // Pass the type from stock or default to nifty50
           userData={{
             ...user,
             subscriptionPlanId: activeSubscription?._id
-          }}
-          data={stock.companyDetails?.stockData || {}}
-          chartData={stock.companyDetails?.chartData || []}
-          onTimeRangeChange={() => {}}
-          loading={false}
-          error={null}
-          chartSettings={{
-            theme: 'light',
-            showGrid: true,
-            showVolume: true,
-            showDetails: true
           }}
         />
       )}
