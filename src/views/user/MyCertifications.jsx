@@ -342,7 +342,7 @@ const userId = user?._id;
     const dataForModal = {
         certificateId: certData.certificateId,
         // Get user name from logged-in user state as primary source
-        userName: loggedInUser?.name || 'User Name', // Provide fallback
+        userName: user?.name || 'User Name', // Provide fallback
         // Pass the event object nested inside, as the modal expects
         event: {
             title: certData.event?.title || 'Untitled Event', // Use optional chaining and fallback
