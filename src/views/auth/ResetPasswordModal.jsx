@@ -89,7 +89,7 @@ return (
 
       <div className="flex justify-between items-center pb-4 border-b border-gray-100 mt-4">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-full flex items-center justify-center shadow-lg">
+          <div className="w-8 h-8 bg-lightBlue-600 rounded-full flex items-center justify-center shadow-lg">
             <i className="fas fa-lock text-white"></i>
           </div>
           <h2 className="text-xl font-semibold text-gray-800">Reset Password</h2>
@@ -140,7 +140,7 @@ return (
         <button
           type="submit"
           disabled={status === "loading" || isExpired}
-          className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-lightBlue-600 to-lightBlue-600 text-white 
+          className="w-full px-4 py-3 rounded-lg bg-lightBlue-600 text-white 
                      hover:from-lightBlue-600 hover:to-blue-400 focus:ring-2 focus:ring-lightBlue-600/20 
                      transition-all duration-200 disabled:opacity-50"
         >

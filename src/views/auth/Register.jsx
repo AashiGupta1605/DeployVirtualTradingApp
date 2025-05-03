@@ -187,7 +187,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             name="name"
              placeholder="Enter your name"
             {...formik.getFieldProps("name")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+            className="w-full ml-1 px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -204,7 +204,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             name="email"
              placeholder="Enter your email"
             {...formik.getFieldProps("email")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+            className="w-full ml-1  px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -221,7 +221,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             name="password"
              placeholder="Create a password"
             {...formik.getFieldProps("password")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+            className="w-full ml-1 px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -238,7 +238,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             name="confirmPassword"
             placeholder="Confirm your password"
             {...formik.getFieldProps("confirmPassword")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+            className="w-full ml-1  px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -255,7 +255,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
             name="mobile"
             placeholder="Enter mobile number"
             {...formik.getFieldProps("mobile")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+            className="w-full ml-1  px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -270,7 +270,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
           <select
             name="gender"
             {...formik.getFieldProps("gender")}
-            className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+            className="w-full ml-1  px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
@@ -293,7 +293,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
               type="date"
               name="dob"
               {...formik.getFieldProps("dob")}
-              className="w-full px-4 py-3 !rounded-xl border !border-gray-200 
+              className="w-full ml-1  px-4 py-3 !rounded-xl border !border-gray-200 
                bg-white text-gray-900 
                focus:!border-lightBlue-600 focus:ring-2 focus:!ring-lightBlue-600/20 
                focus:outline-none transition-all duration-200"
