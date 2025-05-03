@@ -2,6 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 import axios from "axios";
 
+
+const formatDateForDisplay = (dateString) => {
+  if (!dateString) return null;
+  
+  if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) {
+    const [day, month, year] = dateString.split('-');
+    return new Date(`${year}-${month}-${day}`).toISOString();
+  }
+  
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date.toISOString();
+};
+
 // Enhanced helper function to normalize historical data
 const normalizeHistoricalData = (data, symbol) => {
   console.log(`Normalizing data for ${symbol}, input data:`, data);
@@ -199,23 +212,42 @@ export const fetchCompanyDetails = createAsyncThunk(
   'companyDetails/fetchCompanyDetails',
   async ({ symbol, type }, { rejectWithValue }) => {
     try {
-      // Try the endpoint matching the table type first
       let endpoint;
+      let response;
+      
       switch (type) {
         case 'nifty50':
           endpoint = `${BASE_API_URL}/admin/nifty/company/${symbol}`;
+          response = await axios.get(endpoint);
           break;
         case 'nifty500':
           endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
+          response = await axios.get(endpoint);
           break;
         case 'etf':
           endpoint = `${BASE_API_URL}/admin/etf/${symbol}`;
+          response = await axios.get(endpoint);
           break;
         default:
-          endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
+          // Try all endpoints if type is not specified
+          try {
+            endpoint = `${BASE_API_URL}/admin/nifty/company/${symbol}`;
+            response = await axios.get(endpoint);
+          } catch (nifty50Error) {
+            try {
+              endpoint = `${BASE_API_URL}/admin/nifty500/company/${symbol}`;
+              response = await axios.get(endpoint);
+            } catch (nifty500Error) {
+              endpoint = `${BASE_API_URL}/admin/etf/${symbol}`;
+              response = await axios.get(endpoint);
+            }
+          }
       }
 
-      const response = await axios.get(endpoint);
+      if (!response.data) {
+        throw new Error(`No data found for symbol ${symbol} (type: ${type})`);
+      }
+
       const normalizedData = {
         ...response.data,
         lastPrice: response.data.lastPrice || response.data.currentPrice || 0,
@@ -226,27 +258,21 @@ export const fetchCompanyDetails = createAsyncThunk(
         totalTradedVolume: response.data.totalTradedVolume || response.data.volume || 0,
         changePercent: response.data.pChange || response.data.changePercent || 0
       };
+
       return normalizedData;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || `Failed to fetch details for ${symbol}`);
+      console.error(`Error fetching details for ${symbol} (type: ${type}):`, error);
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        `Failed to fetch details for ${symbol} (type: ${type})`
+      );
     }
   }
 );
 
 // Helper function to format dates
-const formatDateForDisplay = (dateString) => {
-  if (!dateString) return null;
-  
-  // Handle different date formats
-  if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) { // DD-MM-YYYY format
-    const [day, month, year] = dateString.split('-');
-    return new Date(`${year}-${month}-${day}`).toISOString();
-  }
-  
-  // Try to parse as ISO string
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) ? null : date.toISOString();
-};
+
 
 // Fetch historical data thunk
 export const fetchHistoricalData = createAsyncThunk(
@@ -272,17 +298,10 @@ export const fetchHistoricalData = createAsyncThunk(
         params: { timeRange }
       });
 
-      const normalizedData = normalizeHistoricalData(response.data, symbol);
-      const filteredData = filterDataByTimeRange(normalizedData, timeRange);
-      const technicalIndicators = calculateTechnicalIndicators(normalizedData);
-      const priceAnalysis = analyzePriceData(filteredData);
-
       return {
-        rawData: normalizedData,
-        processedData: filteredData,
-        timeRange,
-        technicalIndicators,
-        priceAnalysis
+        rawData: response.data,
+        processedData: response.data,
+        timeRange
       };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

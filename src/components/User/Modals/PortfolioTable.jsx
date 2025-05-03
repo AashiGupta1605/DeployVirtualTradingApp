@@ -27,6 +27,14 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
   // Selectors
   const { loading } = useSelector(selectLoadingState);
 
+  // Determine stock type based on symbol pattern
+  const getStockType = (symbol) => {
+    if (!symbol) return 'nifty50';
+    if (symbol.includes('.ETF') || symbol.includes('-ETF')) return 'etf';
+    if (symbol.length <= 4) return 'nifty50';
+    return 'nifty500';
+  };
+
   // Fetch data on component mount (only if no transactions passed as props)
   useEffect(() => {
     const fetchData = async () => {
@@ -68,11 +76,12 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
       return {
         totalTrades: stockTransactions.length,
         buyTrades: totalBuyShares,
-        sellTrades: totalSellShares
+        sellTrades: totalSellShares,
+        type: getStockType(symbol) // Add type to stats
       };
     } catch (error) {
       console.error('Error calculating stock stats:', error);
-      return { totalTrades: 0, buyTrades: 0, sellTrades: 0 };
+      return { totalTrades: 0, buyTrades: 0, sellTrades: 0, type: 'nifty50' };
     }
   };
 
@@ -82,7 +91,10 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
       const holdingsMap = new Map(
         holdings.map(holding => [
           holding?.companySymbol, 
-          holding
+          {
+            ...holding,
+            type: getStockType(holding?.companySymbol)
+          }
         ])
       );
 
@@ -105,7 +117,8 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
               .filter(t => t?.companySymbol === symbol)
               .sort((a, b) => 
                 new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0)
-              )[0]?.createdAt || new Date()
+              )[0]?.createdAt || new Date(),
+            type: getStockType(symbol) // Add type to each stock
           };
 
           return holding;
@@ -134,6 +147,13 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
       return date.toLocaleDateString();
     } catch {
       return 'N/A';
+    }
+  };
+
+  // Handle stock click with type information
+  const handleStockClick = (symbol, type) => {
+    if (onStockClick) {
+      onStockClick(symbol, type);
     }
   };
 
@@ -182,14 +202,6 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
             ? 'Start trading to see your portfolio history here.'
             : 'No holdings found for the selected transactions.'}
         </div>
-        {/* {onStockClick && transactions.length === 0 && (
-          <button
-            onClick={() => onStockClick('start-trading')}
-            className="px-6 py-3 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
-          >
-            Start Trading
-          </button>
-        )} */}
       </div>
     );
   }
@@ -201,6 +213,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Stock</th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Type</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Quantity</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Avg. Price</th>
               <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase">Current Value</th>
@@ -219,11 +232,16 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
                 <tr
                   key={stock.companySymbol}
                   className={`hover:bg-gray-50 cursor-pointer ${isSoldOut ? 'opacity-50' : ''}`}
-                  onClick={() => onStockClick && onStockClick(stock.companySymbol)}
+                  onClick={() => handleStockClick(stock.companySymbol, stock.type)}
                 >
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">
                       {stock.companySymbol}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs font-medium text-gray-500 capitalize">
+                      {stock.type}
                     </div>
                   </td>
                   <td className="px-6 py-4">

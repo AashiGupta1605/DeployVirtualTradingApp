@@ -94,7 +94,7 @@ export const createEvent = createAsyncThunk(
 
       const response = await axios.post(`${BASE_API_URL}/admin/events`, finalData);
       
-      toast.success('Event created successfully!');
+      // toast.success('Event created successfully!');
       dispatch(fetchEvents());
       return response.data.event;
     } catch (error) {
@@ -120,7 +120,7 @@ export const updateEvent = createAsyncThunk(
   async ({ eventId, eventData }, { dispatch, rejectWithValue }) => {
     try {
       const updatedEvent = await eventService.update(eventId, eventData);
-      toast.success('Event updated successfully!');
+      // toast.success('Event updated successfully!');
       dispatch(fetchEvents());
       return updatedEvent;
     } catch (error) {
@@ -135,7 +135,7 @@ export const deleteEvent = createAsyncThunk(
   async (eventId, { dispatch, rejectWithValue }) => {
     try {
       await eventService.delete(eventId);
-      toast.success('Event deleted successfully!');
+      // toast.success('Event deleted successfully!');
       dispatch(fetchEvents());
       return eventId;
     } catch (error) {
