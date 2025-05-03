@@ -192,7 +192,7 @@ export default function Footer() {
                 </span>
               </li>
               <li className="flex items-center">
-                <i className="fas fa-phone-alt mr-3 text-lightBlue-500"></i>
+                <i className="fas fa-phone-volume mr-3 text-lightBlue-500" ></i>
                 <a
                   href="tel:+1234567890"
                   className="hover:text-white transition-colors duration-300"
