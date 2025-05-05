@@ -5,7 +5,7 @@ import { Edit, Trash2, ChevronDown, ChevronRight, CreditCard } from "lucide-reac
 import Tooltip from "../../../Common/Tooltip"; // Adjust the import path as necessary
 
 const TYPE_COLORS = {
-  "Male": "bg-lightBlue-100 text-lightBlue-600",
+  "Male": "bg-lightBlue-200 text-lightBlue-600",
   "Female": "bg-red-100 text-red-800",
 };
 

@@ -3,9 +3,22 @@ import { Trash2, Edit, CreditCard } from 'lucide-react';
 import PropTypes from 'prop-types';
 
 const TYPE_COLORS = {
-  "Male": "bg-lightBlue-100 text-lightBlue-600",
+  "Male": "bg-lightBlue-200 text-lightBlue-600",
   "Female": "bg-red-100 text-red-800",
 };
+
+const getStatusColor = (status) => {
+  if (!status || typeof status !== 'string') return "bg-gray-100 text-gray-800";
+  
+  const statusColors = {
+    approved: "bg-green-100 text-green-800",
+    notapproved: "bg-yellow-100 text-yellow-800",
+    
+  };
+  
+  return statusColors[status.toLowerCase()] || "bg-gray-100 text-gray-800";
+};
+
 
 const UsersTable = ({
   users,
@@ -25,7 +38,7 @@ const UsersTable = ({
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
-              {['Name', 'Email', 'Mobile', 'Gender', 'DOB', 'Join Date', 'Actions'].map(header => (
+              {['Name', 'Email', 'Mobile', 'Gender', 'DOB', 'Join Date', 'Status' ,'Actions'].map(header => (
                 <th 
                   key={header} 
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -65,6 +78,11 @@ const UsersTable = ({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-500">
                       {formatDate(user.createdDate)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(user.status)}`}>
+                     {user.status}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
@@ -118,6 +136,7 @@ UsersTable.propTypes = {
       gender: PropTypes.string.isRequired,
       dob: PropTypes.string,
       createdDate: PropTypes.string.isRequired,
+      status: PropTypes.string.isRequired,
     })
   ).isRequired,
   onEditClick: PropTypes.func.isRequired,

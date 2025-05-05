@@ -163,18 +163,34 @@ const OrganizationUsers = () => {
           {/* Header Section - Updated to match OrganizationUsersFeedbacks */}
           <div className="bg-gray-50 mt-0 px-4 md:px-6 py-4 rounded-lg border border-gray-200">
             {/* Desktop Layout - Single Row */}
-            <div className="hidden md:flex items-center justify-between mb-4">
+            <div className="hidden md:flex items-center justify-between mb-1">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <Users className="mr-2 text-gray-600" size={24} />
                 Manage Users
               </h2>
+
+
               
-              <div className="flex items-center gap-4 w-2/3">
+              <div className=" flex items-center gap-4 w-2/3 justify-end items-end">
+              
+                {/* Filter Button */}
+                <button
+                  onClick={() => setFilterOpen(!isFilterOpen)}
+                  className="flex items-center justify-center h-10 px-4 rounded-lg border border-gray-300 
+                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
+                >
+                  <Filter size={16} className="mr-2" />
+                 
+                  {appliedFiltersCount > 0 && (
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs">
+                      {appliedFiltersCount}
+                    </span>
+                  )}
+                    {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
                 {/* Search Bar */}
-                <div className="flex-grow">
-                  <div className="relative w-full border border-gray-200 rounded-lg 
-                      focus-within:border-gray-300 focus-within:ring-1 
-                      focus-within:ring-lightBlue-500 transition-colors">
+               
+                  <div className="relative w-70 ">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <SearchIcon size={18} className="text-gray-400" />
                     </div>
@@ -196,22 +212,9 @@ const OrganizationUsers = () => {
                       </button>
                     )}
                   </div>
-                </div>
+               
 
-                {/* Filter Button */}
-                <button
-                  onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="flex items-center justify-center h-10 px-4 rounded-lg border border-gray-300 
-                     hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
-                >
-                  <Filter size={16} className="mr-2" />
-                  Filters
-                  {appliedFiltersCount > 0 && (
-                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
-                      {appliedFiltersCount}
-                    </span>
-                  )}
-                </button>
+              
 
                 {/* Add User Button */}
                 <button
@@ -272,12 +275,13 @@ const OrganizationUsers = () => {
                      hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 transition-colors"
                 >
                   <Filter size={16} className="mr-2" />
-                  Filters
+                 
                   {appliedFiltersCount > 0 && (
                     <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs">
                       {appliedFiltersCount}
                     </span>
                   )}
+                    {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
 
                 <button
@@ -297,7 +301,7 @@ const OrganizationUsers = () => {
 
           {/* Filter Panel */}
           {isFilterOpen && (
-            <div className="bg-white mt-2 p-4 rounded-lg border border-gray-200 shadow-sm">
+           
               <FilterComponent
                 isFilterOpen={isFilterOpen}
                 setFilterOpen={setFilterOpen}
@@ -310,38 +314,37 @@ const OrganizationUsers = () => {
                 onClearFilters={clearAllFilters}
                 onApplyFilters={handleApplyFilters}
               />
-            </div>
+          
           )}
 
           {/* Active Filters Display */}
           {appliedFiltersCount > 0 && (
-            <div className="bg-gray-50 px-4 md:px-6 py-2 mt-2 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between">
-              <div className="flex items-center flex-wrap gap-2">
-                <span className="text-sm text-gray-600">Active filters:</span>
-                <div className="flex flex-wrap gap-2">
-                  {appliedFiltersText && (
-                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                      {appliedFiltersText}
-                    </span>
-                  )}
-                </div>
-              </div>
+  <div className="bg-gray-50 px-4 md:px-6 py-2 rounded-lg flex flex-row flex-wrap items-center justify-between w-full">
+    <div className="flex items-center flex-wrap gap-2">
+      <span className="text-sm text-gray-600">Active filters:</span>
+      {appliedFiltersText && (
+        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+          {appliedFiltersText}
+        </span>
+      )}
+    </div>
 
-              <button
-                onClick={clearAllFilters}
-                className="text-sm text-gray-600 hover:text-gray-800 flex items-center mt-2 sm:mt-0"
-              >
-                <X size={14} className="mr-1" />
-                Clear all
-              </button>
-            </div>
-          )}
+    <button
+      onClick={clearAllFilters}
+      className="text-sm text-gray-600 hover:text-gray-800 flex items-center"
+    >
+      <X size={14} className="mr-1" />
+      Clear all
+    </button>
+  </div>
+)}
+
 
           {/* Table Section */}
           {loading ? (
             <Loader />
           ) : (
-            <div className="mt-4 overflow-x-auto">
+            <div className="mt-0">
               <OrgUserTable
                 users={studentList}
                 onEdit={handleEdit}
