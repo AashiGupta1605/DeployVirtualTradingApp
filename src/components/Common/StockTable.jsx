@@ -66,11 +66,12 @@ const StockTable = ({ userData }) => {
     }));
   }, [dispatch, currentPage, itemsPerPage, searchTerm]);
 
+
   const handleSymbolClick = (symbol, e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(setSelectedSymbol(symbol));
-    dispatch(fetchCompanyDetails(symbol));
+    dispatch(setSelectedSymbol(symbol)); // Just pass the symbol string
+    dispatch(fetchCompanyDetails({ symbol, type: 'etf' })); // Explicitly pass type
   };
 
   const [localSearch, setLocalSearch] = useState(searchTerm);

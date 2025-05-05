@@ -12,7 +12,7 @@ import { BASE_API_URL } from "../../../utils/BaseUrl";
 import CategoryImagesTable from "./CategoryImagesTable";
 
 
-const Card = ({ refreshCategories, id, image, title, description, postDate }) => {
+const Card = ({ refreshCategories, id, image, title, description, postDate, categoryName}) => {
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -132,18 +132,18 @@ const Card = ({ refreshCategories, id, image, title, description, postDate }) =>
 
        {/* Update Modal */}
        {isUpdateModalOpen && (
-        <UpdateGalleryImage
-          closeModal={() => setIsUpdateModalOpen(false)}
-          refreshCategoryImages={refreshCategories}
-          updateImageId={id}
-          updateImageData={{
-            photo: image,
-            title: title,
-            desc: description,
-            // you may add other fields like categoryName here if needed
-          }}
-        />
-      )}
+  <UpdateGalleryImage
+    closeModal={() => setIsUpdateModalOpen(false)}
+    refreshCategoryImages={refreshCategories}
+    updateImageId={id}
+    updateImageData={{
+      photo: image,
+      title: title,
+      desc: description,
+      categoryName: categoryName, // Add this line
+    }}
+  />
+)}
       </>
     );
 };
@@ -301,21 +301,22 @@ const CategoryImagesCards = ({ categoryName }) => {
 
             {galleryItems.length > 0 ? (
               <>
-                {visibleFeedbacks.map((card) => (
-                  <Card
-                    key={card._id}
-                    refreshCategories={refreshCategories}
-                    id={card._id}
-                    image={card.photo}
-                    title={card.title}
-                    description={card.desc}
-                    postDate={
-                      card.updatedDate == null
-                        ? card.createdDate
-                        : card.updatedDate
-                    }
-                  />
-                ))}
+{visibleFeedbacks.map((card) => (
+  <Card
+    key={card._id}
+    refreshCategories={refreshCategories}
+    id={card._id}
+    image={card.photo}
+    title={card.title}
+    description={card.desc}
+    categoryName={categoryName} // Add this line
+    postDate={
+      card.updatedDate == null
+        ? card.createdDate
+        : card.updatedDate
+    }
+  />
+))}
               </>
             ) : (
               !err && (
@@ -352,12 +353,13 @@ const CategoryImagesCards = ({ categoryName }) => {
 };
 
 Card.propTypes = {
-    refreshCategories: PropTypes.func.isRequired,
-    id: PropTypes.instanceOf(Object).isRequired,
-    image: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    postDate: PropTypes.instanceOf(Date).isRequired,
+  refreshCategories: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  categoryName: PropTypes.string.isRequired, // Add this line
+  postDate: PropTypes.string.isRequired,
 }
 
 CategoryImagesCards.propTypes = {

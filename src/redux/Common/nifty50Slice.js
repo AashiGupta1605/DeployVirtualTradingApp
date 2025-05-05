@@ -1,9 +1,7 @@
-// src/redux/Common/nifty50Slice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 
-// Async thunks
 export const fetchNiftyData = createAsyncThunk(
   'nifty50/fetchNiftyData',
   async ({ page, limit, search }, { rejectWithValue }) => {
@@ -12,7 +10,6 @@ export const fetchNiftyData = createAsyncThunk(
         params: { page, limit, search },
         timeout: 5000
       });
-      
       const stocks = response.data.data[0]?.stocks || [];
       return stocks;
     } catch (error) {
@@ -23,12 +20,12 @@ export const fetchNiftyData = createAsyncThunk(
 
 export const fetchCompanyDetails = createAsyncThunk(
   'nifty50/fetchCompanyDetails',
-  async (symbol, { rejectWithValue }) => {
+  async ({ symbol }, { rejectWithValue }) => { // Changed to expect an object with symbol
     try {
       const response = await axios.get(`${BASE_API_URL}/admin/nifty/company/${symbol}`);
       return {
         stockData: response.data,
-        chartData: null // Remove chart data handling
+        chartData: null
       };
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch company details');
@@ -40,6 +37,7 @@ const initialState = {
   data: [],
   loading: false,
   error: null,
+  type: 'nifty50',
   companyDetails: {
     stockData: null,
     chartData: null,

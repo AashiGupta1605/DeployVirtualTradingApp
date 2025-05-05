@@ -202,24 +202,21 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
     const orderPrice = orderType === 'market' ? currentMarketPrice : price;
     return quantity * orderPrice;
   };
-
+  
   const handlePlaceOrder = async (orderDetails) => {
     try {
-      // Validate order before proceeding
-      validateOrder(orderDetails, holdings, calculateRemainingBalance);
-  
-      // Add additional order metadata
       const enrichedOrderDetails = {
         ...orderDetails,
         symbol,
+        stockType: data?.type || 'nifty50', // This is for the stock type
         currentMarketPrice,
         eventId: activeEvent?._id,
         orderValue: calculateOrderValue(),
         timestamp: new Date().toISOString(),
-        subscriptionPlanId: activeSubscription._id // Make sure this is included
+        subscriptionPlanId: activeSubscription._id,
+        // Don't include type here as it's already in orderDetails from TradingControls
       };
   
-      // Dispatch order placement
       await dispatch(placeOrder(enrichedOrderDetails)).unwrap();
 
       // Show success message
@@ -229,38 +226,20 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
         ? orderTotal + PORTAL_FEE 
         : orderTotal - PORTAL_FEE;
   
-      // Show success message with correct variables
-// Show success message with center position
-toast.success(
-  `Successfully ${orderDetails.type}${orderDetails.type === 'sell' ? 'sold' : 'bought'} ${orderDetails.numberOfShares} shares of ${symbol} for ₹${totalWithFee.toFixed(2)} (including ₹${PORTAL_FEE} portal fee)`,
-  {
-    position: 'top-center', // Changed from 'top-right' to 'top-center'
-    duration: 3000,
-    style: {
-      backgroundColor: '#fff',
-      padding: '16px',
-      color: '#333',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    }
-  }
-);
-
-// Also update the error toast to match
-// toast.error(
-//   error.message || 'Failed to place order. Please try again.',
-//   {
-//     position: 'top-center', // Changed from 'top-right' to 'top-center'
-//     duration: 3000,
-//     style: {
-//       backgroundColor: '#fff',
-//       padding: '16px',
-//       color: '#333',
-//       borderRadius: '8px',
-//       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-//     }
-//   }
-// );
+      toast.success(
+        `Successfully ${orderDetails.type}${orderDetails.type === 'sell' ? 'sold' : 'bought'} ${orderDetails.numberOfShares} shares of ${symbol} for ₹${totalWithFee.toFixed(2)} (including ₹${PORTAL_FEE} portal fee)`,
+        {
+          position: 'top-center',
+          duration: 3000,
+          style: {
+            backgroundColor: '#fff',
+            padding: '16px',
+            color: '#333',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          }
+        }
+      );
 
       // Reset form and close confirmation
       setShowConfirmation(false);
@@ -308,8 +287,6 @@ toast.success(
     </div>
   );
 
-  // BuySellTab.jsx - Part 3
-
   const renderTradingTabs = () => (
     <div className="bg-gray-100 p-0.5 rounded-lg inline-flex gap-1 shadow-sm mb-3 sm:mb-4">
       <button
@@ -334,34 +311,6 @@ toast.success(
       </button>
     </div>
   );
-
-  // const renderOrderSummary = () => (
-  //   <div className="bg-gray-50 rounded-lg p-4 mt-4">
-  //     <h4 className="text-sm font-semibold text-gray-700 mb-3">Order Summary</h4>
-  //     <div className="space-y-2">
-  //       <div className="flex justify-between text-sm">
-  //         <span className="text-gray-600">Order Type</span>
-  //         <span className="font-medium">{orderType.toUpperCase()}</span>
-  //       </div>
-  //       <div className="flex justify-between text-sm">
-  //         <span className="text-gray-600">Quantity</span>
-  //         <span className="font-medium">{quantity} shares</span>
-  //       </div>
-  //       <div className="flex justify-between text-sm">
-  //         <span className="text-gray-600">Price per share</span>
-  //         <span className="font-medium">
-  //           {formatCurrency(orderType === 'market' ? currentMarketPrice : price)}
-  //         </span>
-  //       </div>
-  //       <div className="border-t border-gray-200 my-2 pt-2">
-  //         <div className="flex justify-between text-sm font-semibold">
-  //           <span className="text-gray-700">Total Value</span>
-  //           <span className="text-gray-900">{formatCurrency(calculateOrderValue())}</span>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 
   // Loading State
   if (loading || tradingLoading || isLoading) {
@@ -453,8 +402,6 @@ toast.success(
               : currentHolding?.quantity || 0
             }
           />
-
-          {/* {renderOrderSummary()} */}
         </div>
 
         {/* Right Side - Analysis */}
@@ -480,35 +427,36 @@ toast.success(
 
       {/* Confirmation Modal */}
       {showConfirmation && (
-  <ConfirmationModal
-    isOpen={showConfirmation}
-    onClose={() => setShowConfirmation(false)}
-    onConfirm={() =>
-      handlePlaceOrder({
-        userId,
-        subscriptionPlanId: activeSubscription._id,
-        symbol,
-        type: activeTab,
-        numberOfShares: quantity,
-        price: orderType === 'market' ? currentMarketPrice : price,
-        orderType,
-        total: calculateOrderValue(),
-        currentMarketPrice,
-      })
-    }
-    title="Confirm Order"
-    stockName={data?.companyName || symbol}
-    quantity={quantity}
-    pricePerStock={orderType === 'market' ? currentMarketPrice : price}
-    type={activeTab}
-  />
-)}
+        <ConfirmationModal
+          isOpen={showConfirmation}
+          onClose={() => setShowConfirmation(false)}
+          onConfirm={() =>
+            handlePlaceOrder({
+              userId,
+              subscriptionPlanId: activeSubscription._id,
+              symbol,
+              type: activeTab,
+              numberOfShares: quantity,
+              price: orderType === 'market' ? currentMarketPrice : price,
+              orderType,
+              total: calculateOrderValue(),
+              currentMarketPrice,
+            })
+          }
+          title="Confirm Order"
+          stockName={data?.companyName || symbol}
+          quantity={quantity}
+          pricePerStock={orderType === 'market' ? currentMarketPrice : price}
+          type={activeTab}
+        />
+      )}
     </div>
   );
 };
 
 BuySellTab.propTypes = {
   symbol: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']).isRequired,
   data: PropTypes.shape({
     type: PropTypes.string,
     companyName: PropTypes.string,

@@ -106,15 +106,17 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
     setSearchValue(value);
   };
 
-
   const handleSymbolClick = (symbol, e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Just pass the symbol string
     const setSymbolAction = getAction(setNifty50SelectedSymbol, setNifty500SelectedSymbol);
-    const fetchDetailsAction = getAction(fetchNifty50CompanyDetails, fetchNifty500CompanyDetails);
     dispatch(setSymbolAction(symbol));
-    dispatch(fetchDetailsAction(symbol));
-  };
+    
+    const fetchDetailsAction = getAction(fetchNifty50CompanyDetails, fetchNifty500CompanyDetails);
+    dispatch(fetchDetailsAction({ symbol }));
+};
 
   const handleTimeRangeChange = (range) => {
     if (selectedSymbol) {
@@ -236,18 +238,7 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
             <BarChart2 className="mr-2 text-lightBlue-600" size={24} />
             {tableType === 'nifty50' ? 'Nifty 50 Market Data' : 'Nifty 500 Market Data'}
           </h2>
-          {/* {userData && (
-            // <div className="flex items-center space-x-2 bg-white px-3 py-1 rounded-lg shadow-sm border border-gray-200">
-            //   <span className="text-sm font-medium text-gray-700">
-            //     {userData.name}
-            //   </span>
-            //   {userData.role && (
-            //     <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
-            //       {userData.role}
-            //     </span>
-            //   )}
-            // </div>
-          )} */}
+
         </div>
         
         <div className="relative w-[300px]">
