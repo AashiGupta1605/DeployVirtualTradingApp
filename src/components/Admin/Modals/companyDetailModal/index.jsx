@@ -31,7 +31,7 @@ import SubscriptionModal from '../SubscriptionModal';
 const LoadingOverlay = ({ message = 'Loading data...' }) => (
   <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
     <div className="flex flex-col items-center">
-      <div className="w-12 h-12 border-4 border-lightBlue-600 border-t-transparent rounded-full animate-spin"></div>
+      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       <p className="mt-4 text-gray-600">{message}</p>
     </div>
   </div>
@@ -54,7 +54,7 @@ const ErrorDisplay = ({ error, onRetry, onClose }) => (
           </button>
           <button
             onClick={onRetry}
-            className="px-4 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
             Retry
           </button>
@@ -196,9 +196,7 @@ const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
     return ['overview', 'historical', 'trading-view', 'trading'];
   }, []);
 
-  // Effects
 // In CompanyDetailModal.jsx
-
 useEffect(() => {
   if (isOpen && symbol) {
     const loadData = async () => {
@@ -257,7 +255,7 @@ useEffect(() => {
       }
     } catch (error) {
       console.error('Error refreshing data:', error);
-      toast.error(`Error refreshing data: ${error.message || 'Unknown error'}`);
+      toast.error(`Error refreshing data:` `${error.message || 'Unknown error'}`);
     } finally {
       dispatch(setIsRefreshing(false));
     }
@@ -298,8 +296,10 @@ case 'trading':
   return (
     <Buy_SellTab
       symbol={symbol}
+      type={type} // Ensure type is passed explicitly
       data={{
-        type: type,
+        type: type,  
+        stockType: type,
         companyName: data?.companyName,
         currentPrice: data?.lastPrice || data?.currentPrice,
         lastPrice: data?.lastPrice,
@@ -336,13 +336,13 @@ case 'trading':
   }
 
   return (
-    <div className="fixed inset-0 z-[1001] overflow-hidden"> {/* Changed from z-[100] to z-[1001] */}
+    <div className="fixed inset-0 z-50 overflow-hidden">
       <div 
-        className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity z-[1000]" /* Changed from z-[90] to z-[1000] */
+        className="fixed inset-0 bg-gray-900 opacity-50 transition-opacity z-0" 
         onClick={onClose}
       />
-  
-      <div className="fixed inset-0 flex items-center justify-center z-[1001]"> 
+
+      <div className="fixed inset-0 flex items-center justify-center z-10">
         <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           <button
             onClick={onClose}

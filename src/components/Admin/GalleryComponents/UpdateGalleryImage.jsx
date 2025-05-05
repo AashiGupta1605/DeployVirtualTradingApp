@@ -1,17 +1,18 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Listbox } from '@headlessui/react';
+import { Listbox, Transition } from '@headlessui/react';
+import { Camera, Check, ChevronsUpDown, X } from 'lucide-react';
 import * as Yup from "yup";
 import axios from "axios";
 import { BASE_API_URL } from "../../../utils/BaseUrl";
 import { toast } from 'react-hot-toast';
-import './Gallery.css'
 
-const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, updateImageData}) => {
-
+const UpdateGalleryImage = ({ closeModal, refreshCategoryImages, updateImageId, updateImageData }) => {
   const [categories, setCategories] = useState([]);
-  const [err, setErr] = useState("");
+  const [imagePreview, setImagePreview] = useState(updateImageData?.photo || null);
+  const [isNewImageUploaded, setIsNewImageUploaded] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(updateImageData?.categoryName || "");
 
   const fetchGalleryCategories = async () => {
     try {
@@ -19,302 +20,298 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
         `${BASE_API_URL}/admin/galleryCategory/getGalleryCategories/name/increasing`
       );
       setCategories(response.data.categoryData);
-      console.log("Gallery Categories: ", response.data);
-    } 
-    catch (error) {
-      if (error.response) {
-        setErr(error.response?.data?.message);
-      }
-      else{
-        setErr("Something went wrong.")
-      }
-      throw error; 
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch categories");
     }
   };
-    
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        fetchGalleryCategories()
-        setErr("");
-      } 
-      catch (error) {
-        setErr(error.response?.data?.message || "Something went wrong.");
-      }
-    };
-    fetchData();
+    fetchGalleryCategories();
   }, []);
+
+  useEffect(() => {
+    if (updateImageData?.categoryName) {
+      setSelectedCategory(updateImageData.categoryName);
+    }
+  }, [updateImageData]);
 
   const initialValues = {
     categoryName: updateImageData?.categoryName || "",
-    title: updateImageData?.title || null,
-    desc: updateImageData?.desc || null,
-    photo: updateImageData?.photo || "", 
+    title: updateImageData?.title || "",
+    desc: updateImageData?.desc || "",
+    photo: updateImageData?.photo || "",
   };
 
   const validationSchema = Yup.object({
     categoryName: Yup.string()
       .required("Category name is required")
-      .trim(), 
-  
+      .trim(),
     title: Yup.string()
       .nullable()
       .notRequired()
       .min(5, "Title must be at least 5 characters")
       .max(50, "Title must be at most 50 characters"),
-  
     desc: Yup.string()
       .nullable()
       .notRequired()
       .min(5, "Description must be at least 5 characters")
       .max(200, "Description must be at most 200 characters"),
-    
     photo: Yup.string()
-    .required("Photo is required")
-    .test('is-base64', 'Invalid Image. Please Re-Upload Image.', value => {
-    if (!value) return false;
-    // Simple base64 validation
-    return /^[A-Za-z0-9+/]+={0,2}$/.test(value);
-  }),
+      .required("Photo is required")
+  });
 
-  });  
-
-  // const handlePageRefresh = () => {
-  //   const delay = 2000; // Time delay in milliseconds (3 seconds)
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, delay);
-  // };
-  
-  const handleImageUpload = async (event, setFieldValue) => {
+  const handleImageUpload = (event, setFieldValue, setFieldError) => {
     const file = event.target.files[0];
+    event.target.value = null;
 
     if (!file) {
-      toast("First, Choose any file...", {
-        icon: '⚠️',
-      })
-      return
-    } 
+      toast("Please select a file", { icon: '⚠️' });
+      return;
+    }
 
     if (!file.type.match('image.*')) {
       toast.error("Please select an image file (JPEG, PNG, etc.)");
       return;
     }
 
-    try{
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result.split(',')[1]; // Remove the data URL prefix
-        setFieldValue("photo", base64String);
-        toast.success("Image ready for upload!");
-      };
-      reader.readAsDataURL(file);
-    }
-    catch (error) {
-      console.error("Upload failed", error);
-      toast.error("Image upload failed!");
-    }
-  };  
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result);
+      setFieldValue("photo", reader.result);
+      setIsNewImageUploaded(true);
+      toast.success("Image ready for update!");
+    };
+    reader.onerror = () => {
+      toast.error("Failed to read image file");
+      setFieldError("photo", "Failed to read image file");
+    };
+    reader.readAsDataURL(file);
+  };
 
   const updateGalleryImage = async (values, { resetForm }) => {
-
-    if (!values.photo) {
-      toast("Please upload an image!", {
-        icon: '⚠️',
-      });
-      return;
-    }  
     try {
+      let photoPayload = values.photo;
+      
+      if (isNewImageUploaded && values.photo.startsWith('data:')) {
+        photoPayload = values.photo.split(',')[1];
+      }
+
       const payload = {
-        photo: values.photo, // This is now the base64 string
+        photo: photoPayload,
         categoryName: values.categoryName,
         title: values.title || null,
-        desc: values.desc || null
+        desc: values.desc || null,
       };
-      
-      const response = await axios.post(
-        `${BASE_API_URL}/admin/gallery/updateGalleryItem/${updateImageId}`, payload,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        }
-      );
-      console.log("Add Gallery Item Response:", response);
 
-      if(response?.status === 201){
-        console.log("Form submitted successfully", response.data);
-        toast.success(response?.data?.message);
-        refreshCategoryImages()
-        closeModal()
+      const response = await axios.put(
+        `${BASE_API_URL}/admin/gallery/updateGalleryItem/${updateImageId}`,
+        payload,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      if (response?.status === 200 || response?.status === 201) {
+        toast.success(response.data?.message || "Image updated successfully!");
+        refreshCategoryImages();
+        closeModal();
+      } else {
+        toast.error(response.data?.message || "Failed to update image");
       }
-      else if (response?.status === 409) {
-        toast(response?.data?.message, {
-          icon: '⚠️',
-        });
-        resetForm()
-      }
-      else if (response.status === 500) {
-        toast(response?.data?.message, {
-          icon: '🛑',
-        });
-        resetForm()
-      }
-    } 
-    catch (error) {
-      console.error("Error submitting data:", error);
-      if (error.response) {
-        const { status, data } = error.response;
-        if (status === 409) {
-          // toast.warning(data?.message);
-          toast(data?.message, {
-            icon: '⚠️',
-          });
-          resetForm()
-        } 
-        else if (status === 500) {
-          // toast.error(data?.message);
-          toast(data?.message, {
-            icon: '🛑',
-          })
-          resetForm()
-        } 
-        else {
-          toast.error(data?.message || "Unknown error, please try again.");
-          resetForm()
-        }
-      } 
-      else {
-        toast.error("An internal server error occurred!");
-        resetForm()
-      }  
-      throw error; 
+    } catch (error) {
+      console.error("Error updating image:", error);
+      toast.error(error.response?.data?.message || "Failed to update image. Please try again.");
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
-      <div
-        className="fixed inset-0 bg-gray-900 opacity-50"
-        onClick={closeModal}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
+      <div className="fixed inset-0 bg-gray-900 opacity-50" onClick={closeModal} />
 
-      {/* Modal Box */}
-      <div
-        style={{ width: "100%", maxWidth: "80%" }}
-        className="relative w-full max-w-4xl mx-auto my-8 bg-white rounded-2xl shadow-2xl border border-gray-100"
-      >
-        {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+      <div className="relative w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-y-auto max-h-[90vh]">
+        <div className="flex justify-between items-center p-4 md:p-6 border-b border-gray-100 sticky top-0 bg-white z-10">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-lightBlue-600 rounded-xl flex items-center justify-center shadow-lg">
-              {/* <i className="fas fa-photo-video text-white fa-lg" /> */}
-              <i className="fas fa-camera-retro text-white fa-lg" />
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-lightBlue-600 rounded-lg flex items-center justify-center">
+              <Camera className="h-4 w-4 md:h-5 md:w-5 text-white" />
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800">
-              Update Image
-            </h2>
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800">Update Image</h2>
           </div>
-          <button
-            onClick={closeModal}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+          <button 
+            onClick={closeModal} 
+            className="p-1 md:p-2 text-gray-400 hover:text-gray-600 rounded-lg"
           >
-            <i className="fas fa-times text-gray-400 hover:text-gray-600" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Form */}
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values, actions) =>updateGalleryImage(values, actions, closeModal)}
+            onSubmit={updateGalleryImage}
+            enableReinitialize
           >
-            {({ isSubmitting, isValid, setFieldValue}) => (
-              <Form className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-5">
-                  <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-                    <div className="space-y-6">
+            {({ isSubmitting, isValid, setFieldValue, setFieldError, values }) => (
+              <Form className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+                  <div className="space-y-3 md:space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Category Name <span className="text-red-500">*</span>
+                      </label>
+                      <Listbox
+                        value={selectedCategory}
+                        onChange={(value) => {
+                          setSelectedCategory(value);
+                          setFieldValue("categoryName", value);
+                        }}
+                      >
+                        <div className="relative">
+                          <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border border-gray-300 focus:outline-none focus:ring-1 focus:ring-lightBlue-600 focus:border-lightBlue-600 sm:text-sm h-[42px]">
+                            <span className="block truncate">
+                              {selectedCategory || "Select Category"}
+                            </span>
+                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                              <ChevronsUpDown className="h-5 w-5 text-gray-400" />
+                            </span>
+                          </Listbox.Button>
+                          <Transition
+                            as={React.Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                              {categories.map((category) => (
+                                <Listbox.Option
+                                  key={category._id}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                      active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                                    }`
+                                  }
+                                  value={category.name}
+                                >
+                                  {({ selected }) => (
+                                    <>
+                                      <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                                        {category.name}
+                                      </span>
+                                      {selected && (
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-lightBlue-600">
+                                          <Check className="h-5 w-5" />
+                                        </span>
+                                      )}
+                                    </>
+                                  )}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </Transition>
+                        </div>
+                      </Listbox>
+                      <ErrorMessage name="categoryName" component="div" className="text-red-500 text-xs mt-1" />
+                    </div>
 
-                      {/* <FormField
-                        required
-                        label="Category Name"
-                        // type="text"
-                        type="select"
-                        name="categoryName"
-                        options={categories}
-                        className="max-h-[150px] overflow-y-auto"
-                        placeholder="Select Category"
-                      /> */}
-                                        <FormField
-                    required
-                    label="Category Name"
-                    type="select"
-                    name="categoryName"
-                    options={categories}  // Make sure you pass the categories array
-                    className="max-h-[150px] overflow-y-auto"
-                    placeholder="Select Category"
-                  />
-
-                      <FormField
-                        required
-                        label="Event Image"
-                        type="file"
-                        name="photo"
-                        accept="image/*"
-                        onChange={(event) => handleImageUpload(event, setFieldValue)}
-                        className="file-input"
-                      />
-        
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Event Image <span className="text-red-500">*</span>
+                      </label>
+                      <div className="mt-1 flex justify-center rounded-lg border border-dashed border-gray-300 px-4 py-8 md:px-6 md:py-10">
+                        {imagePreview ? (
+                          <div className="relative">
+                            <img
+                              src={imagePreview.startsWith('data:') ? imagePreview : `${imagePreview}?${Date.now()}`}
+                              alt="Preview"
+                              className="max-h-32 md:max-h-40 rounded-lg object-contain"
+                              onError={() => {
+                                setImagePreview(null);
+                                setFieldValue("photo", "");
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setImagePreview(null);
+                                setFieldValue("photo", "");
+                                setIsNewImageUploaded(false);
+                              }}
+                              className="absolute top-0 right-0 p-1 bg-red-500 rounded-full text-white"
+                            >
+                              <X className="w-3 h-3 md:w-4 md:h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="text-center">
+                            <Camera className="mx-auto h-10 w-10 md:h-12 md:w-12 text-gray-400" />
+                            <div className="mt-3 md:mt-4 flex flex-col md:flex-row text-sm text-gray-600 items-center justify-center">
+                              <label
+                                htmlFor="photo-upload"
+                                className="relative cursor-pointer rounded-md bg-white font-medium text-lightBlue-600 hover:text-lightBlue-600 focus-within:outline-none"
+                              >
+                                <span>Upload a file</span>
+                                <input
+                                  id="photo-upload"
+                                  name="photo"
+                                  type="file"
+                                  accept="image/*"
+                                  className="sr-only"
+                                  onChange={(e) => handleImageUpload(e, setFieldValue, setFieldError)}
+                                />
+                              </label>
+                              <p className="md:pl-1">or drag and drop</p>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1 md:mt-2">PNG, JPG, GIF up to 5MB</p>
+                          </div>
+                        )}
+                      </div>
+                      <ErrorMessage name="photo" component="div" className="text-red-500 text-xs mt-1" />
                     </div>
                   </div>
 
-                  <div className="p-2 pt-3 pb-3 rounded-xl flex-1">
-                    <div className="space-y-6">
-
-                      <FormField
-                        label="Title(Optional)"
+                  <div className="space-y-3 md:space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Title
+                      </label>
+                      <Field
                         type="text"
                         name="title"
+                        className="block w-full rounded-lg border !border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-1 focus:ring-lightBlue-600 focus:border-lightBlue-600 sm:text-sm"
                         placeholder="Enter Title"
                       />
+                      <ErrorMessage name="title" component="div" className="text-red-500 text-xs mt-1" />
+                    </div>
 
-                      {/* <FormField
-                        label="Description(Optional)"
-                        // as="textarea"
-                        type="text"
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Description
+                      </label>
+                      <Field
+                        as="textarea"
                         name="desc"
+                        rows={3}
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-1 focus:ring-lightBlue-600 focus:border-lightBlue-600 sm:text-sm"
                         placeholder="Enter description"
-                        className=" h-auto min-h-40 max-h-50 overflow-y-auto break-words text-base block"
-                      /> */}
-                      <FormField
-                    label="Description (Optional)"
-                    type="textarea"  // Change the type to "textarea"
-                    name="desc"
-                    placeholder="Enter description"
-                    className="resize-none h-32"
-                  />
-                    
+                      />
+                      <ErrorMessage name="desc" component="div" className="text-red-500 text-xs mt-1" />
                     </div>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-end items-center space-x-4 pt-6 border-t border-gray-100">
+                <div className="flex justify-end items-center space-x-3 pt-4 md:pt-6 border-t border-gray-200 sticky bottom-0 bg-white py-3">
                   <button
                     type="button"
                     onClick={closeModal}
-                    disabled={isSubmitting }
-                    className="mr-3 px-6 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50"
+                    disabled={isSubmitting}
+                    className="px-3 py-1 md:px-4 md:py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lightBlue-600 disabled:opacity-50 text-sm md:text-base"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting || !isValid}
-                    className="px-6 py-3 rounded-xl bg-lightBlue-600 text-white hover:bg-lightBlue-700 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200 disabled:opacity-50 flex items-center"
+                    className="px-3 py-1 md:px-4 md:py-2 border border-transparent rounded-lg shadow-sm text-white bg-lightBlue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lightBlue-600 disabled:opacity-50 text-sm md:text-base"
                   >
-                    {isSubmitting ? "Saving...." : "Register Image"}
+                    {isSubmitting ? "Updating..." : "Update Image"}
                   </button>
                 </div>
               </Form>
@@ -326,143 +323,11 @@ const UpdateGalleryImage = ({closeModal, refreshCategoryImages, updateImageId, u
   );
 };
 
-// const FormField = ({ name, label, required = false, type = "text", placeholder, className = "", options = [], onChange }) => (
-//   <div>
-//     <label className="block text-sm font-medium text-gray-700 mb-2">
-//       {label} {required && <span className="text-red-500">*</span>}
-//     </label>
-    
-//     {type === "file" ? (
-//       <input
-//         type="file"
-//         name={name}
-//         accept="image/*"
-//         onChange={(e) => {
-//           e.persist();
-//           onChange(e);  // Use the passed onChange prop
-//         }}
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//       />
-//     ) : type === "select" ? (
-//       <Field 
-//         as="select" 
-//         name={name} 
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//       >
-//         <option value="" disabled>Select Category</option>
-//         {options.map((option, index) => (
-//           <option key={index} value={option.name}>
-//             {option.name}
-//           </option>
-//         ))}
-//       </Field>
-//     ) : (
-//       <Field
-//         type={type}
-//         name={name}
-//         className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-//                     bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-//                     focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-//         placeholder={placeholder}
-//       />
-//     )}
-
-//     <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
-//   </div>
-// );
-const FormField = ({
-  name,
-  label,
-  required = false,
-  type = "text",
-  placeholder,
-  className = "",
-  options = [],
-  onChange, // For file input
-}) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-2">
-      {label} {required && <span className="text-red-500">*</span>}
-    </label>
-
-    {/* File Input */}
-    {type === "file" ? (
-      <input
-        type="file"
-        name={name}
-        accept="image/*"
-        onChange={(e) => {
-          e.persist();
-          onChange(e); // Use the passed onChange prop
-        }}
-        className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-      />
-    ) : type === "select" ? (
-      <Field name={name}>
-        {({ field, form }) => (
-          <div className="relative">
-            <Listbox
-              value={options.find((option) => option.name === field.value) || null}
-              onChange={(selected) => form.setFieldValue(name, selected.name)}
-            >
-              <Listbox.Button className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-lightBlue-600">
-                {field.value ? field.value : "Select Category"}
-              </Listbox.Button>
-
-              <Listbox.Options className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl max-h-[150px] overflow-y-auto shadow-lg">
-                {options.map((option, index) => (
-                  <Listbox.Option key={index} value={option} disabled={!option}>
-                    {({ active }) => (
-                      <div
-                        className={`cursor-pointer px-4 py-1 ${
-                          active ? "bg-lightBlue-600 text-white" : "text-black"
-                        }`}
-                      >
-                        {option.name}
-                      </div>
-                    )}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </Listbox>
-          </div>
-        )}
-      </Field>
-    ) : type === "textarea" ? (
-      <Field
-        as="textarea"
-        name={name}
-        className={`${className} shadow-sm w-full px-4 py-3 h-[120px] resize-none !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-        placeholder={placeholder}
-      />
-    ) : (
-      <Field
-        type={type}
-        name={name}
-        className={`${className} shadow-sm w-full px-4 py-3 !rounded-xl border !border-gray-200 
-                    bg-white text-gray-900 focus:!border-lightBlue-600 focus:ring-2 
-                    focus:!ring-lightBlue-600/20 focus:outline-none transition-all duration-200`}
-        placeholder={placeholder}
-      />
-    )}
-
-    <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
-  </div>
-);
-
 UpdateGalleryImage.propTypes = {
   closeModal: PropTypes.func.isRequired,
   refreshCategoryImages: PropTypes.func.isRequired,
-  updateImageId: PropTypes.instanceOf(Object).isRequired,
+  updateImageId: PropTypes.string.isRequired,
   updateImageData: PropTypes.object.isRequired,
-}
+};
 
-export default UpdateGalleryImage
+export default UpdateGalleryImage;

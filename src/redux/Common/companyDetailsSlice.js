@@ -79,19 +79,10 @@ const normalizeHistoricalData = (data, symbol) => {
 
 // Enhanced time range filtering
 const filterDataByTimeRange = (data, timeRange) => {
-  if (!Array.isArray(data)) {
-    console.warn('Invalid data passed to filter:', data);
-    return [];
-  }
+  if (!Array.isArray(data)) return [];
 
-  if (data.length === 0) return [];
-
-  // Get the most recent date in the data
-  const dates = data.map(item => new Date(item.date));
-  const lastDate = new Date(Math.max(...dates));
-  console.log('Last date in data:', lastDate);
-
-  let cutoffDate = new Date(lastDate);
+  const now = new Date();
+  let cutoffDate = new Date(now);
 
   switch (timeRange) {
     case '1D':
@@ -113,15 +104,30 @@ const filterDataByTimeRange = (data, timeRange) => {
       return data;
   }
 
-  console.log(`Filtering data from ${cutoffDate} to ${lastDate}`);
+  return data.filter(item => {
+    let itemDate;
+    
+    // Handle different date formats
+    if (item.date instanceof Date) {
+      itemDate = item.date;
+    } else if (typeof item.date === 'string') {
+      // Handle ISO format
+      if (item.date.includes('T')) {
+        itemDate = new Date(item.date);
+      } 
+      // Handle DD-MM-YYYY format
+      else if (item.date.match(/^\d{2}-\d{2}-\d{4}$/)) {
+        const [day, month, year] = item.date.split('-');
+        itemDate = new Date(`${year}-${month}-${day}`);
+      }
+      // Handle Unix timestamp
+      else if (/^\d+$/.test(item.date)) {
+        itemDate = new Date(parseInt(item.date, 10));
+      }
+    }
 
-  const filteredData = data.filter(item => {
-    const itemDate = new Date(item.date);
-    return itemDate >= cutoffDate;
+    return itemDate && itemDate >= cutoffDate;
   });
-
-  console.log(`Filtered ${filteredData.length} records for ${timeRange} range`);
-  return filteredData;
 };
 
 // Calculate technical indicators
@@ -279,35 +285,78 @@ export const fetchHistoricalData = createAsyncThunk(
   'companyDetails/fetchHistoricalData',
   async ({ symbol, type, timeRange = '1D' }, { rejectWithValue }) => {
     try {
-      let endpoint;
+      let endpoint, response;
+      
       switch (type) {
         case 'nifty50':
           endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}`;
-          break;
+          response = await axios.get(endpoint, { params: { timeRange } });
+          return {
+            rawData: response.data,
+            processedData: normalizeNiftyHistoricalData(response.data, symbol),
+            timeRange
+          };
+          
         case 'nifty500':
           endpoint = `${BASE_API_URL}/admin/nifty500/company/history/${symbol}`;
-          break;
+          response = await axios.get(endpoint, { params: { timeRange } });
+          return {
+            rawData: response.data,
+            processedData: normalizeNiftyHistoricalData(response.data, symbol),
+            timeRange
+          };
+          
         case 'etf':
           endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}`;
-          break;
+          response = await axios.get(endpoint, { params: { timeRange } });
+          return {
+            rawData: response.data,
+            processedData: normalizeETFHistoricalData(response.data, symbol),
+            timeRange
+          };
+          
         default:
-          endpoint = `${BASE_API_URL}/admin/nifty500/company/history/${symbol}`;
+          return rejectWithValue('Invalid company type');
       }
-
-      const response = await axios.get(endpoint, {
-        params: { timeRange }
-      });
-
-      return {
-        rawData: response.data,
-        processedData: response.data,
-        timeRange
-      };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
+
+const normalizeNiftyHistoricalData = (data, symbol) => {
+  if (!Array.isArray(data)) return [];
+  
+  return data.map(item => ({
+    id: item._id || `${symbol}-${item.date}`,
+    symbol: symbol,
+    date: item.date || item.timestamp,
+    open: Number(item.open) || 0,
+    high: Number(item.high) || 0,
+    low: Number(item.low) || 0,
+    close: Number(item.close) || 0,
+    volume: Number(item.volume) || 0,
+    pChange: Number(item.pChange) || 0,
+    value: Number(item.value) || (Number(item.close) * Number(item.volume)) || 0
+  }));
+};
+
+const normalizeETFHistoricalData = (data, symbol) => {
+  if (!Array.isArray(data)) return [];
+  
+  return data.map(item => ({
+    id: item._id || `${symbol}-${item.date}`,
+    symbol: symbol,
+    date: item.date || item.timestamp,
+    open: Number(item.open) || Number(item.dayOpen) || 0,
+    high: Number(item.high) || Number(item.dayHigh) || 0,
+    low: Number(item.low) || Number(item.dayLow) || 0,
+    close: Number(item.close) || Number(item.lastPrice) || 0,
+    volume: Number(item.volume) || Number(item.totalTradedVolume) || 0,
+    pChange: Number(item.pChange) || Number(item.changePercent) || 0,
+    value: Number(item.value) || (Number(item.close) * Number(item.volume)) || 0
+  }));
+};
 
 // Refresh market data thunk
 export const refreshMarketData = createAsyncThunk(

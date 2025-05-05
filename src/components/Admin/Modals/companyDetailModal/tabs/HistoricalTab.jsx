@@ -189,41 +189,44 @@ const HistoricalTab = ({ symbol, type }) => {
   // Effects
   useEffect(() => {
     if (symbol && type) {
-      dispatch(fetchHistoricalData({ symbol, type, timeRange: activeTimeRange }));
+      dispatch(fetchHistoricalData({ 
+        symbol, 
+        type, 
+        timeRange: activeTimeRange 
+      }));
     }
   }, [symbol, type, activeTimeRange, dispatch]);
 
   // Memoized Data Processing
   const processedData = useMemo(() => {
     if (!Array.isArray(historicalData)) return [];
-
+    
     let filtered = [...historicalData];
-
-    // Apply search filter
+    
+    // Apply search filter if needed
     if (searchTerm) {
       filtered = filtered.filter(item => 
         Object.values(item).some(value => 
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
+      ));
     }
-
+    
     // Apply sorting
     filtered.sort((a, b) => {
-      let aValue = a[sortColumn];
-      let bValue = b[sortColumn];
-
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
+      
       if (sortColumn === 'date') {
-        aValue = new Date(a.date).getTime();
-        bValue = new Date(b.date).getTime();
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
       }
-
-      if (sortDirection === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      }
-      return aValue < bValue ? 1 : -1;
+      
+      return sortDirection === 'asc' 
+        ? (aValue > bValue ? 1 : -1)
+        : (aValue < bValue ? 1 : -1);
     });
-
+    
     return filtered;
   }, [historicalData, searchTerm, sortColumn, sortDirection]);
 

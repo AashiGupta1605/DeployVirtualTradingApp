@@ -122,61 +122,23 @@ export const fetchHoldings = createAsyncThunk(
   }
 );
 
+// In tradingSlice.js
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
-  async (orderDetails, { dispatch, rejectWithValue, getState }) => {
+  async (orderDetails, { rejectWithValue }) => {
     try {
-      const state = getState();
-      const activeEvent = state.user.events?.activeEvent;
+      // Validate required fields including type
+      const requiredFields = ['userId', 'symbol', 'type', 'numberOfShares', 'price'];
+      const missingFields = requiredFields.filter(field => !orderDetails[field]);
       
-      const requiredFields = [
-        'userId', 
-        'subscriptionPlanId', 
-        'symbol', 
-        'type', 
-        'numberOfShares', 
-        'price', 
-        'orderType', 
-        'total', 
-        'currentMarketPrice'
-      ];
-
-      const missingFields = requiredFields.filter(field => 
-        orderDetails[field] === undefined || orderDetails[field] === null
-      );
-
-      if (missingFields.length > 0) {
-        return rejectWithValue({
-          message: `Missing required fields: ${missingFields.join(', ')}`,
-          missingFields
-        });
+      if (missingFields.length) {
+        throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
       }
 
-      const response = await axios.post(
-        `${BASE_API_URL}/user/trading/trade`,
-        {
-          ...orderDetails,
-          eventId: activeEvent?._id || null
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      dispatch(updateSubscription({
-        id: orderDetails.subscriptionPlanId,
-        updateData: { vertualAmount: response.data.balance }
-      }));
-
+      const response = await axios.post(`${BASE_API_URL}/user/trading/trade`, orderDetails);
       return response.data;
     } catch (error) {
-      return rejectWithValue({
-        message: error.response?.data?.message || 'Failed to place order',
-        error: error.message,
-        details: error.response?.data
-      });
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );

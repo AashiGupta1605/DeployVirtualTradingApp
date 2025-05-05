@@ -11,7 +11,8 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   selectLoadingState,
-  fetchTransactionHistory
+  fetchTransactionHistory,
+  fetchHoldings
 } from '../../../redux/User/trading/tradingSlice';
 import Pagination from '../../Common/TableItems/Pagination';
 import Loader from '../../Common/Loader';
@@ -23,61 +24,76 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [error, setError] = useState(null);
+  const [lastRefresh, setLastRefresh] = useState(Date.now());
 
   // Selectors
   const { loading } = useSelector(selectLoadingState);
+  const userId = useSelector((state) => state.user.auth?.user?._id);
+  const subscriptionPlanId = useSelector((state) => 
+    state.user.subscriptionPlan?.activeSubscription?._id
+  );
 
-  // Determine stock type based on symbol pattern
-  const getStockType = (symbol) => {
-    if (!symbol) return 'nifty50';
-    if (symbol.includes('.ETF') || symbol.includes('-ETF')) return 'etf';
-    if (symbol.length <= 4) return 'nifty50';
+  // Enhanced stock type detection
+  const getStockType = (symbol, stockType, transactions = []) => {
+    // Priority 1: Explicitly provided type
+    if (stockType) return stockType;
+    
+    // Priority 2: Type from transactions
+    const tx = transactions.find(t => t.companySymbol === symbol);
+    if (tx?.stockType) return tx.stockType;
+    
+    // Priority 3: ETF detection
+    const etfKeywords = ['BEES', 'ETF', 'GOLD', 'LIQUID', 'MOMENTUM'];
+    if (etfKeywords.some(kw => symbol.includes(kw))) return 'etf';
+    
+    // Priority 4: Known Nifty 50 stocks
+    const nifty50Stocks = ['NIFTY 50', 'RELIANCE', 'HDFC', 'INFY', 'TCS'];
+    if (nifty50Stocks.includes(symbol)) return 'nifty50';
+    
+    // Default to nifty500
     return 'nifty500';
   };
-
-  // Fetch data on component mount (only if no transactions passed as props)
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId = localStorage.getItem('userId');
-        if (userId && transactions.length === 0) {
-          await dispatch(fetchTransactionHistory({ userId })).unwrap();
+        if (userId && subscriptionPlanId) {
+          await dispatch(fetchHoldings({ userId, subscriptionPlanId }));
+          await dispatch(fetchTransactionHistory({ userId }));
         }
       } catch (err) {
-        console.error('Failed to fetch transaction history:', err);
+        console.error('Failed to fetch data:', err);
         setError(err);
       }
     };
 
     fetchData();
-  }, [dispatch, transactions.length]);
+  }, [dispatch, userId, subscriptionPlanId, lastRefresh]);
 
-  // Helper function to calculate stock stats
+  // Calculate stock statistics
   const getStockStats = (symbol) => {
     try {
       if (!symbol) return { totalTrades: 0, buyTrades: 0, sellTrades: 0 };
 
       const stockTransactions = transactions.filter(t => 
-        t && t.companySymbol === symbol
+        t?.companySymbol === symbol
       );
       
       const totalBuyShares = stockTransactions
-        .filter(t => t && t.type === 'buy')
+        .filter(t => t?.type === 'buy')
         .reduce((total, transaction) => 
-          total + (transaction.numberOfShares || 0), 0
-        );
+          total + (transaction.numberOfShares || 0), 0);
       
       const totalSellShares = stockTransactions
-        .filter(t => t && t.type === 'sell')
+        .filter(t => t?.type === 'sell')
         .reduce((total, transaction) => 
-          total + (transaction.numberOfShares || 0), 0
-        );
+          total + (transaction.numberOfShares || 0), 0);
 
       return {
         totalTrades: stockTransactions.length,
         buyTrades: totalBuyShares,
         sellTrades: totalSellShares,
-        type: getStockType(symbol) // Add type to stats
+        type: getStockType(symbol)
       };
     } catch (error) {
       console.error('Error calculating stock stats:', error);
@@ -85,15 +101,15 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
     }
   };
 
-  // Memoized computation of combined stocks
+  // Combine holdings and transactions
   const combinedStocks = useMemo(() => {
     try {
       const holdingsMap = new Map(
         holdings.map(holding => [
-          holding?.companySymbol, 
+          holding?.companySymbol,
           {
             ...holding,
-            type: getStockType(holding?.companySymbol)
+            type: holding?.stockType || getStockType(holding?.companySymbol)
           }
         ])
       );
@@ -118,7 +134,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
               .sort((a, b) => 
                 new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0)
               )[0]?.createdAt || new Date(),
-            type: getStockType(symbol) // Add type to each stock
+            type: getStockType(symbol)
           };
 
           return holding;
@@ -129,18 +145,18 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
     }
   }, [holdings, transactions]);
 
-  // Sort combined stocks
+  // Sort by last updated
   const sortedStocks = [...combinedStocks].sort((a, b) => {
     return new Date(b.lastUpdated) - new Date(a.lastUpdated);
   });
 
-  // Pagination logic
+  // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentStocks = sortedStocks.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(sortedStocks.length / itemsPerPage);
 
-  // Helper function to extract date
+  // Helper functions
   const extractDate = (isoString) => {
     try {
       const date = new Date(isoString);
@@ -150,10 +166,13 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
     }
   };
 
-  // Handle stock click with type information
+  const handleRefresh = () => {
+    setLastRefresh(Date.now());
+  };
+
   const handleStockClick = (symbol, type) => {
     if (onStockClick) {
-      onStockClick(symbol, type);
+      onStockClick(symbol, type || getStockType(symbol));
     }
   };
 
@@ -171,12 +190,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
           {error.message || 'An unexpected error occurred while fetching your portfolio.'}
         </p>
         <button
-          onClick={() => {
-            setError(null);
-            dispatch(fetchTransactionHistory({ 
-              userId: localStorage.getItem('userId') 
-            }));
-          }}
+          onClick={handleRefresh}
           className="px-6 py-3 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
         >
           Retry Loading
@@ -202,6 +216,12 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
             ? 'Start trading to see your portfolio history here.'
             : 'No holdings found for the selected transactions.'}
         </div>
+        <button
+          onClick={handleRefresh}
+          className="px-6 py-3 bg-lightBlue-600 text-white rounded-lg hover:bg-lightBlue-600 transition-colors"
+        >
+          Refresh Data
+        </button>
       </div>
     );
   }

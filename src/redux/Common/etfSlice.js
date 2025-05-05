@@ -21,10 +21,9 @@ export const fetchStockData = createAsyncThunk(
 );
 
 // Thunk to fetch company details
-// Updated fetchCompanyDetails thunk
 export const fetchCompanyDetails = createAsyncThunk(
   "etf/fetchCompanyDetails",
-  async (symbol, { rejectWithValue }) => {
+  async ({ symbol, type }, { rejectWithValue }) => {
     try {
       const [companyResponse, historicalResponse] = await Promise.all([
         axios.get(`${BASE_API_URL}/admin/etf/${symbol}`),
@@ -45,6 +44,7 @@ const initialState = {
   stockData: [],
   loading: false,
   error: null,
+  type: 'etf',
   companyDetails: {
     stockData: null,
     chartData: null,
