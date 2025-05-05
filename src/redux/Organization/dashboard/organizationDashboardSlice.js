@@ -255,7 +255,7 @@ export const fetchOrganizationDashboardData = createAsyncThunk(
   "organizationDashboard/fetchDashboardData",
   async (orgName, { rejectWithValue }) => {
     try {
-      const [users, events, feedback, complaints, userFeedbacks, userQueries, stocks, gallery] = await Promise.all([
+      const [users, events, feedback, complaints, userFeedbacks, userQueries, stocks, gallery, eventParticipation, trading,userComplaints] = await Promise.all([
         axios.get(`${BASE_API_URL}/organization/${orgName}/stats/users`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/stats/events`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/stats/feedback`),
@@ -264,9 +264,12 @@ export const fetchOrganizationDashboardData = createAsyncThunk(
         axios.get(`${BASE_API_URL}/organization/${orgName}/stats/user-queries`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/stats/stocks`),
         axios.get(`${BASE_API_URL}/organization/${orgName}/stats/gallery`),
+        axios.get(`${BASE_API_URL}/organization/${orgName}/stats/event-participation`),
+        axios.get(`${BASE_API_URL}/organization/${orgName}/stats/trading`),
+        axios.get(`${BASE_API_URL}/organization/${orgName}/stats/user-complaints`) 
       ]);
 
-      console.log([users, events, feedback, complaints, userFeedbacks, userQueries, stocks, gallery]);
+      console.log([users, events, feedback, complaints, userFeedbacks, userQueries, stocks, gallery, eventParticipation, trading, userComplaints  ]);
 
       return {
         userStats: users.data.stats,
@@ -277,8 +280,9 @@ export const fetchOrganizationDashboardData = createAsyncThunk(
         organizationUserQueriesStats:userQueries.data.stats,
         stocksStats:stocks.data.stats,
         galleryStats:gallery.data.stats,
-
-
+        eventParticipationStats: eventParticipation.data.stats, // Add new data
+        tradingStats: trading.data.stats,  
+        userComplaintStats: userComplaints.data.stats,
       };
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch dashboard data.");
@@ -355,6 +359,25 @@ const initialState = {
     totalPhotos:0  
   },
 
+  eventParticipationStats: {
+    participatingUsers: 0,
+    participationRate: 0,
+    certificatesIssued: 0,
+  },
+
+  // NEW: Trading Stats
+  tradingStats: {
+    totalTrades: 0,
+  },
+
+  userComplaintStats: {
+    total: 0,
+    pending: 0,
+    resolved: 0,
+    resolutionRate: 0,
+    recentUserComplaints: [], // Renamed for clarity
+  },
+
   loading: false,
   error: null,
 };
@@ -384,7 +407,9 @@ const organizationDashboardSlice = createSlice({
         state.organizationUserQueriesStats = action.payload.organizationUserQueriesStats;
         state.stocksStats = action.payload.stocksStats;
         state.galleryStats = action.payload.galleryStats;
-
+        state.eventParticipationStats = action.payload.eventParticipationStats;
+        state.tradingStats = action.payload.tradingStats;
+        state.userComplaintStats = action.payload.userComplaintStats; 
       })
       .addCase(fetchOrganizationDashboardData.rejected, (state, action) => {
         state.loading = false;

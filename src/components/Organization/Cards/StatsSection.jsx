@@ -17,6 +17,8 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
     organizationUserQueriesStats,
     stocksStats, 
     galleryStats,
+    userComplaintStats,
+    eventParticipationStats,
     loading,
     error
   } = useSelector((state) => state.organization.dashboard);
@@ -79,7 +81,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         type = 'users';
         break;
       case 'events':
-        stats = eventStats;
+        stats = eventParticipationStats;
         type = 'events';
         break;
       case 'feedbacks':
@@ -106,6 +108,10 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
                 stats = galleryStats;
                 type = 'gallery';
                 break;
+                case 'userComplaint':
+                  stats = userComplaintStats;
+                  type = 'userComplaints';
+                  break;
       default:
         stats = {};
         type = 'users';
@@ -159,7 +165,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
           { label: "Total", value: userStats?.total?.toString() || "0" },
           { label: "Active", value: userStats?.active?.toString() || "0" },
         ],
-        onClick: () => handleCardClick('users', 'User Statistics')
+        onClick: () => handleCardClick('users', 'User')
       },
       {
         statIconName: "fas fa-user-plus",
@@ -175,7 +181,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statPercent: "3.48",
         statPercentColor: "text-emerald-500",
         statDescripiron: "Since last week",
-        onClick: () => handleCardClick('feedbacks', 'User Statistics')
+        onClick: () => handleCardClick('feedbacks', 'Feedback')
       },
       {
         statIconName: "fas fa-male",
@@ -191,23 +197,39 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statPercent: "2.10",
         statPercentColor: "text-emerald-500",
         statDescripiron: "Since last month",
-        onClick: () => handleCardClick('complaints', 'User Statistics')
+        onClick: () => handleCardClick('complaints', 'Complaint')
       },
+      // {
+      //   statIconName: "fas fa-female",
+      //   statSubtitle: "EVENT STATS",
+      //   statTitle: pageType!="dashboard" ?  eventStats?.total?.toString() : "",
+      //   statIconColor: "bg-pink-500",
+      //   showDetails: true,
+      //   statItems: [
+      //     { label: "Total", value: eventStats?.total?.toString() || "0" },
+      //     { label: "Completed", value:  eventStats?.completed?.toString() || "0" },
+      //   ],
+      //   statArrow: "up",
+      //   statPercent: "3.20",
+      //   statPercentColor: "text-emerald-500",
+      //   statDescripiron: "Since last month",
+      //   onClick: () => handleCardClick('events', 'User Statistics')
+      // },
       {
         statIconName: "fas fa-female",
         statSubtitle: "EVENT STATS",
-        statTitle: pageType!="dashboard" ?  eventStats?.total?.toString() : "",
+        statTitle: pageType!="dashboard" ?  eventParticipationStats?.participatingUsers?.toString() : "",
         statIconColor: "bg-pink-500",
         showDetails: true,
         statItems: [
-          { label: "Total", value: eventStats?.total?.toString() || "0" },
-          { label: "Completed", value:  eventStats?.completed?.toString() || "0" },
+          { label: "Total", value:  eventParticipationStats?.participatingUsers?.toString()  || "0" },
+          { label: "P Rate", value:  eventParticipationStats?.participationRate?.toString() || "0" },
         ],
         statArrow: "up",
         statPercent: "3.20",
         statPercentColor: "text-emerald-500",
         statDescripiron: "Since last month",
-        onClick: () => handleCardClick('events', 'User Statistics')
+        onClick: () => handleCardClick('events', 'Event')
       },
       {
         statIconName: "fas fa-user-check",
@@ -223,42 +245,47 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         statPercent: "4.10",
         statPercentColor: "text-emerald-500",
         statDescripiron: "Since last week",
-        onClick: () => handleCardClick('userFeedbacks', 'User Statistics')
-      },
-      {
-        statIconName: "fas fa-user-slash",
-        statSubtitle: "USER QUERIES",
-        statTitle: pageType!="dashboard" ?  organizationUserQueriesStats?.total?.toString() : "",
-        statIconColor: "bg-gray-500",
-        showDetails: true,
-        statItems: [
-          { label: "Total", value: organizationUserQueriesStats?.total?.toString() || "0" },
-          { label: "Response", value:  organizationUserQueriesStats?.responseRate?.toString() || "0" },
-        ],
-        statArrow: "down",
-        statPercent: "1.10",
-        statPercentColor: "text-red-500",
-        statDescripiron: "Since last week",
-        onClick: () => handleCardClick('userQueries', 'User Statistics')
+        onClick: () => handleCardClick('userFeedbacks', 'User Feedback')
       },
       // {
-      //   statIconName: "fas fa-birthday-cake",
-      //   statSubtitle: "AVERAGE AGE",
-      //   statTitle: userStats?.averageAge?.toString() || "0",
-      //   statIconColor: "bg-purple-500",
-      //   statArrow: "up",
-      //   statPercent: "",
-      //   statPercentColor: "text-emerald-500",
-      //   statDescripiron: "Average age of users",
-      //   onClick: () => handleCardClick('users', 'User Statistics')
+      //   statIconName: "fas fa-user-slash",
+      //   statSubtitle: "USER QUERIES",
+      //   statTitle: pageType!="dashboard" ?  organizationUserQueriesStats?.total?.toString() : "",
+      //   statIconColor: "bg-gray-500",
+      //   showDetails: true,
+      //   statItems: [
+      //     { label: "Total", value: organizationUserQueriesStats?.total?.toString() || "0" },
+      //     { label: "Response", value:  organizationUserQueriesStats?.responseRate?.toString() || "0" },
+      //   ],
+      //   statArrow: "down",
+      //   statPercent: "1.10",
+      //   statPercentColor: "text-red-500",
+      //   statDescripiron: "Since last week",
+      //   onClick: () => handleCardClick('userQueries', 'User Statistics')
       // },
+      {
+        statIconName: "fas fa-birthday-cake",
+        statSubtitle: "USER COMPLAINTS",
+        statTitle: pageType!="dashboard" ?  userComplaintStats?.total?.toString() : "",
+        statIconColor: "bg-purple-500",
+        showDetails: true,
+           statItems: [
+          { label: "Total", value: userComplaintStats?.total?.toString() || "0" },
+          { label: "Resolve", value:  userComplaintStats?.resolved?.toString() || "0" },
+        ],
+        statArrow: "up",
+        statPercent: "",
+        statPercentColor: "text-emerald-500",
+        statDescripiron: "Average age of users",
+        onClick: () => handleCardClick('userComplaint', 'User Complaint')
+      },
       // {
       //   statIconName: "fas fa-calendar-alt",
       //   statSubtitle: "TOTAL EVENTS",
       //   statTitle: eventStats?.total?.toString() || "0",
       //   statIconColor: "bg-indigo-500",
       //   onClick: () => handleCardClick('events', 'Event Statistics')
-      // }
+      // },
       {
         statIconName: "fas fa-boxes",
         statSubtitle: "STOCK STATS",
@@ -269,7 +296,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
           { label: "Nifty50", value:stocksStats?.nifty50 - 1?.toString() || "0" },
           { label: "Nifty500", value: stocksStats?.nifty500 - 1?.toString() || "0" },
         ],
-onClick: () => handleCardClick('stocks', 'Stock Statistics')
+onClick: () => handleCardClick('stocks', 'Stock')
 
       },
       {
@@ -282,7 +309,7 @@ onClick: () => handleCardClick('stocks', 'Stock Statistics')
           { label: "Total", value: galleryStats?.totalPhotos?.toString() || "0" },
           { label: "Category", value: galleryStats?.totalCategories?.toString() || "0" },
         ],
-onClick: () => handleCardClick('gallery', 'Gallery Statistics')
+onClick: () => handleCardClick('gallery', 'Gallery')
       },
     ],
     users: [
@@ -292,7 +319,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: userStats?.total?.toString() || "0",
         statIconColor: "bg-lightBlue-600",
         showDetails: false,
-        onClick: () => handleCardClick('users', 'User Statistics')
+        onClick: () => handleCardClick('users', 'User')
       },
       {
         statIconName: "fas fa-user-plus",
@@ -300,7 +327,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: userStats?.averageAge?.toString() || "0",
         statIconColor: "bg-orange-500",
         showDetails: false,
-        onClick: () => handleCardClick('users', 'User Statistics')
+        onClick: () => handleCardClick('users', 'User')
       },
       {
         statIconName: "fas fa-user-check",
@@ -308,7 +335,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: userStats?.active?.toString() || "0",
         statIconColor: "bg-green-500",
         showDetails: false,
-        onClick: () => handleCardClick('users', 'User Statistics')
+        onClick: () => handleCardClick('users', 'User')
       },
       {
         statIconName: "fas fa-user-slash",
@@ -316,7 +343,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: userStats?.deactive?.toString() || "0",
         statIconColor: "bg-gray-500",
         showDetails: false,
-        onClick: () => handleCardClick('users', 'User Statistics')
+        onClick: () => handleCardClick('users', 'User')
       }
     ],
     events: [
@@ -326,7 +353,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: eventStats?.total?.toString() || "0",
         statIconColor: "bg-indigo-500",
         showDetails: false,
-        onClick: () => handleCardClick('events', 'Event Statistics')
+        onClick: () => handleCardClick('events', 'Event')
       },
       {
         statIconName: "fas fa-clock",
@@ -334,7 +361,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: eventStats?.upcoming?.toString() || "0",
         statIconColor: "bg-blue-400",
         showDetails: false,
-        onClick: () => handleCardClick('events', 'Event Statistics')
+        onClick: () => handleCardClick('events', 'Event')
       },
       {
         statIconName: "fas fa-running",
@@ -342,7 +369,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: eventStats?.ongoing?.toString() || "0",
         statIconColor: "bg-green-400",
         showDetails: false,
-        onClick: () => handleCardClick('events', 'Event Statistics')
+        onClick: () => handleCardClick('events', 'Event')
       },
       {
         statIconName: "fas fa-history",
@@ -350,7 +377,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: eventStats?.completed?.toString() || "0",
         statIconColor: "bg-gray-400",
         showDetails: false,
-        onClick: () => handleCardClick('events', 'Event Statistics')
+        onClick: () => handleCardClick('events', 'Event')
       }
     ],
     feedbacks: [
@@ -360,7 +387,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: feedbackStats?.total?.toString() || "0",
         statIconColor: "bg-lightBlue-600",
         showDetails: false,
-        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
+        onClick: () => handleCardClick('feedbacks', 'Feedback')
       },
       {
         statIconName: "fas fa-star",
@@ -390,7 +417,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         ),
         statIconColor: "bg-yellow-400",
         showDetails: false,
-        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
+        onClick: () => handleCardClick('feedbacks', 'Feedback')
       },
       {
         statIconName: "fas fa-thumbs-up",
@@ -398,7 +425,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: `${feedbackStats?.recommendationRate || '0'}%`,
         statIconColor: "bg-green-400",
         showDetails: false,
-        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
+        onClick: () => handleCardClick('feedbacks', 'Feedback')
       },
       {
         statIconName: "fas fa-list-ul",
@@ -406,7 +433,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: feedbackStats?.recentFeedbacks?.length?.toString() || "0",
         statIconColor: "bg-purple-400",
         showDetails: false,
-        onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
+        onClick: () => handleCardClick('feedbacks', 'Feedback')
       }
     ],
 
@@ -419,7 +446,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: organizationUserFeedbacksStats?.total?.toString() || "0",
         statIconColor: "bg-lightBlue-600",
         showDetails: false,
-        onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
+        onClick: () => handleCardClick('userFeedbacks', 'User Feedback')
       },
       {
         statIconName: "fas fa-star",
@@ -449,7 +476,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         ),
         statIconColor: "bg-yellow-400",
         showDetails: false,
-        onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
+        onClick: () => handleCardClick('userFeedbacks', 'User Feedback')
       },
       {
         statIconName: "fas fa-thumbs-up",
@@ -457,7 +484,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: `${organizationUserFeedbacksStats?.recommendationRate || '0'}%`,
         statIconColor: "bg-green-400",
         showDetails: false,
-        onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
+        onClick: () => handleCardClick('userFeedbacks', 'User Feedback')
       },
       {
         statIconName: "fas fa-list-ul",
@@ -465,7 +492,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: organizationUserFeedbacksStats?.recentFeedbacks?.length?.toString() || "0",
         statIconColor: "bg-purple-400",
         showDetails: false,
-        onClick: () => handleCardClick('userFeedbacks', 'User Feedback Statistics')
+        onClick: () => handleCardClick('userFeedbacks', 'User Feedback')
       }
     ],
 
@@ -476,7 +503,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: complaintStats?.total?.toString() || "0",
         statIconColor: "bg-red-500",
         showDetails: false,
-        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
+        onClick: () => handleCardClick('complaints', 'Complaint')
       },
       {
         statIconName: "fas fa-clock",
@@ -484,7 +511,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         statTitle: complaintStats?.pending?.toString() || "0",
         statIconColor: "bg-yellow-500",
         showDetails: false,
-        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
+        onClick: () => handleCardClick('complaints', 'Complaint')
       },
       {
         statIconName: "fas fa-check-circle",
@@ -492,7 +519,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         showDetails: false,
         statTitle: complaintStats?.resolved?.toString() || "0",
         statIconColor: "bg-green-500",
-        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
+        onClick: () => handleCardClick('complaints', 'Complaint')
       },
       {
         statIconName: "fas fa-chart-line",
@@ -500,7 +527,7 @@ onClick: () => handleCardClick('gallery', 'Gallery Statistics')
         showDetails: false,
         statTitle: `${complaintStats?.resolutionRate || '0'}%`,
         statIconColor: "bg-lightBlue-600",
-        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
+        onClick: () => handleCardClick('complaints', 'Complaint')
       }
     ]
   };

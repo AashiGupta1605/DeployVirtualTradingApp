@@ -1,3 +1,5 @@
+
+
 // import React, { useState } from 'react';
 // import { Bar, Pie, Doughnut } from 'react-chartjs-2';
 // import { Chart, registerables } from 'chart.js';
@@ -13,11 +15,21 @@
 // }) => {
 //   const [chartType, setChartType] = useState('bar');
 
+//   if (type === 'stocks') {
+//     stats = {
+//       ...stats,
+//       nifty50: stats.nifty50 - 1,
+//       nifty500: stats.nifty500 - 1,
+//       etf: stats.etf - 1,
+//       all: stats.all - 3
+//     };
+//   }
+
 //   // Configuration for different stat types
 //   const config = {
 //     users: {
-//       chartLabels: ['Total', 'Active', 'Deactive', 'Male', 'Female', 'New'],
-//       chartDataKeys: ['total', 'active', 'deactive', 'male', 'female', 'newUsersLastWeek'],
+//       chartLabels: ['Total', 'Active', 'Deactive', 'Male', 'Female', 'New', 'Average Age'],
+//       chartDataKeys: ['total', 'active', 'deactive', 'male', 'female', 'newUsersLastWeek', 'averageAge'],
 //       statsDetails: [
 //         { label: 'Total Users', key: 'total' },
 //         { label: 'Active Users', key: 'active' },
@@ -38,11 +50,12 @@
 //         { label: 'Ongoing Events', key: 'ongoing' },
 //         { label: 'Completed Events', key: 'completed' }
 //       ],
-//       chartTypes: ['bar', 'doughnut']
+//       // chartTypes: ['bar', 'doughnut']
+//       chartTypes: ['bar', 'pie']
 //     },
 //     feedbacks: {
 //       chartLabels: ['Total', 'Avg Rating', 'Recommend %', 'Positive', 'Negative'],
-//       chartDataKeys: ['total', 'averageRating', 'recommendationRate', 'totalPositive', 'totalNegative'],
+//       chartDataKeys: ['total', 'averageRating', '6', 'recommendationRate', 'totalPositive', 'totalNegative'],
 //       statsDetails: [
 //         { label: 'Total Feedback', key: 'total' },
 //         { label: 'Average Rating', key: 'averageRating' },
@@ -95,7 +108,8 @@
 //           defaultValue: 'N/A'
 //         }
 //       ],
-//       chartTypes: ['bar', 'doughnut']
+//       // chartTypes: ['bar', 'doughnut']
+//       chartTypes: ['bar', 'pie']
 //     },
 //     userQueries: {
 //       chartLabels: ['Total Queries', 'Response Rate', 'Recent Queries'],
@@ -123,6 +137,64 @@
 //       ],
 //       chartTypes: ['bar', 'pie']
 //     },
+//     stocks: {
+//       chartLabels: ['All Stocks', 'Nifty50', 'Nifty500', 'ETF'],
+//       chartDataKeys: ['all', 'nifty50', 'nifty500', 'etf'],
+//       statsDetails: [
+//         { label: 'Total Stocks', key: 'all' },
+//         { label: 'Nifty50 Stocks', key: 'nifty50' },
+//         { label: 'Nifty500 Stocks', key: 'nifty500' },
+//         { label: 'ETF Stocks', key: 'etf' },
+//         { 
+//           label: 'Most Active Sector', 
+//           key: 'mostActiveSector', 
+//           defaultValue: 'N/A',
+//           format: (val) => val || 'N/A'
+//         },
+//         { 
+//           label: 'Top Gainer', 
+//           key: 'topGainer.symbol', 
+//           defaultValue: 'N/A',
+//           format: (val, stats) => stats.topGainer?.symbol ? `${stats.topGainer.symbol} (${stats.topGainer.percentageChange || 0}%)` : 'N/A'
+//         },
+//         { 
+//           label: 'Top Loser', 
+//           key: 'topLoser.symbol', 
+//           defaultValue: 'N/A',
+//           format: (val, stats) => stats.topLoser?.symbol ? `${stats.topLoser.symbol} (${stats.topLoser.percentageChange || 0}%)` : 'N/A'
+//         }
+//       ],
+//       // chartTypes: ['bar', 'doughnut']
+//       chartTypes: ['bar', 'pie']
+//     },
+//     gallery: {
+//       chartLabels: ['Total Photos', 'Total Categories', 'Total Albums'],
+//       chartDataKeys: ['totalPhotos', 'totalCategories', 'totalAlbums'],
+//       statsDetails: [
+//         { label: 'Total Photos', key: 'totalPhotos' },
+//         { label: 'Total Categories', key: 'totalCategories' },
+//         { label: 'Total Albums', key: 'totalAlbums' },
+//         { 
+//           label: 'Most Popular Category', 
+//           key: 'mostPopularCategory', 
+//           defaultValue: 'N/A',
+//           format: (val) => val || 'N/A'
+//         },
+//         { 
+//           label: 'Recent Uploads', 
+//           key: 'recentUploads', 
+//           defaultValue: '0',
+//           format: (val) => val?.toString() || '0'
+//         },
+//         { 
+//           label: 'Average Photos per Album', 
+//           key: 'avgPhotosPerAlbum', 
+//           defaultValue: '0',
+//           format: (val) => val ? Math.round(val).toString() : '0'
+//         }
+//       ],
+//       chartTypes: ['bar', 'pie']
+//     }
 //   };
 
 //   const { chartLabels, chartDataKeys, statsDetails, chartTypes } = config[type] || config.users;
@@ -132,7 +204,19 @@
 //     labels: chartLabels,
 //     datasets: [{
 //       label: title,
-//       data: chartDataKeys.map(key => stats?.[key] || 0),
+//       data: chartDataKeys.map(key => {
+//         // Handle nested keys if needed
+//         if (key.includes('.')) {
+//           const keys = key.split('.');
+//           let value = stats;
+//           for (const k of keys) {
+//             value = value?.[k];
+//             if (value === undefined) break;
+//           }
+//           return value || 0;
+//         }
+//         return stats?.[key] || 0;
+//       }),
 //       backgroundColor: [
 //         'rgba(54, 162, 235, 0.5)',
 //         'rgba(75, 192, 192, 0.5)',
@@ -230,8 +314,8 @@
 //                 <span>{detail.label}:</span>
 //                 <span className="font-medium">
 //                   {detail.format 
-//                     ? detail.format(stats?.[detail.key], stats) 
-//                     : stats?.[detail.key] ?? detail.defaultValue ?? '0'}
+//                     ? detail.format(getNestedValue(stats, detail.key), stats) 
+//                     : getNestedValue(stats, detail.key) ?? detail.defaultValue ?? '0'}
 //                   {detail.unit ? ` ${detail.unit}` : ''}
 //                 </span>
 //               </div>
@@ -243,14 +327,37 @@
 //   );
 // };
 
+// // Helper function to get nested values from object
+// function getNestedValue(obj, key) {
+//   if (!key.includes('.')) return obj?.[key];
+  
+//   const keys = key.split('.');
+//   let value = obj;
+//   for (const k of keys) {
+//     value = value?.[k];
+//     if (value === undefined) break;
+//   }
+//   return value;
+// }
+
 // OrganizationStatsGraph.propTypes = {
 //   stats: PropTypes.object.isRequired,
 //   title: PropTypes.string.isRequired,
-//   type: PropTypes.oneOf(['users', 'events', 'feedbacks', 'complaints', 'userFeedbacks', 'userQueries']).isRequired,
+//   type: PropTypes.oneOf([
+//     'users', 
+//     'events', 
+//     'feedbacks', 
+//     'complaints', 
+//     'userFeedbacks', 
+//     'userQueries',
+//     'stocks',
+//     'gallery'
+//   ]).isRequired,
 //   unit: PropTypes.string
 // };
 
 // export default OrganizationStatsGraph;
+
 
 
 import React, { useState } from 'react';
@@ -295,15 +402,24 @@ const OrganizationStatsGraph = ({
       chartTypes: ['bar', 'pie']
     },
     events: {
-      chartLabels: ['Total', 'Upcoming', 'Ongoing', 'Completed'],
-      chartDataKeys: ['total', 'upcoming', 'ongoing', 'completed'],
+      chartLabels: ['Participants', 'Participation Rate', 'Certificates Issued'],
+      chartDataKeys: ['participatingUsers', 'participationRate', 'certificatesIssued'],
       statsDetails: [
-        { label: 'Total Events', key: 'total' },
-        { label: 'Upcoming Events', key: 'upcoming' },
-        { label: 'Ongoing Events', key: 'ongoing' },
-        { label: 'Completed Events', key: 'completed' }
+        { label: 'Total Participants', key: 'participatingUsers' },
+        { label: 'Participation Rate', key: 'participationRate', unit: '%' },
+        { label: 'Certificates Issued', key: 'certificatesIssued' },
+        // { 
+        //   label: 'Most Active Participant', 
+        //   key: 'mostActiveParticipant.name', 
+        //   defaultValue: 'N/A',
+        //   format: (val, stats) => stats.mostActiveParticipant?.name || 'N/A'
+        // },
+        // { 
+        //   label: 'Participations', 
+        //   key: 'mostActiveParticipant.count', 
+        //   defaultValue: '0'
+        // }
       ],
-      // chartTypes: ['bar', 'doughnut']
       chartTypes: ['bar', 'pie']
     },
     feedbacks: {
@@ -341,6 +457,35 @@ const OrganizationStatsGraph = ({
       ],
       chartTypes: ['bar', 'pie']
     },
+    userComplaints: {
+      chartLabels: ['Total', 'Pending', 'Resolved', 'Resolution Rate'],
+      chartDataKeys: ['total', 'pending', 'resolved', 'resolutionRate'],
+      statsDetails: [
+        { label: 'Total Complaints', key: 'total' },
+        { label: 'Pending Complaints', key: 'pending' },
+        { label: 'Resolved Complaints', key: 'resolved' },
+        { label: 'Resolution Rate', key: 'resolutionRate', unit: '%' },
+        { 
+          label: 'Average Resolution Time', 
+          key: 'avgResolutionTime', 
+          defaultValue: 'N/A',
+          format: (val) => val ? `${val} days` : 'N/A'
+        },
+        { 
+          label: 'Most Common Issue', 
+          key: 'mostCommonIssue', 
+          defaultValue: 'N/A',
+          format: (val) => val || 'N/A'
+        },
+        { 
+          label: 'Top Complainant', 
+          key: 'topComplainant.name', 
+          defaultValue: 'N/A',
+          format: (val, stats) => stats.topComplainant?.name || 'N/A'
+        }
+      ],
+      chartTypes: ['bar', 'pie']
+    },
     userFeedbacks: {
       chartLabels: ['Total', 'Avg Rating', 'Recommend %', 'Participation %'],
       chartDataKeys: ['total', 'averageRating', 'recommendationRate', 'participationRate'],
@@ -361,7 +506,6 @@ const OrganizationStatsGraph = ({
           defaultValue: 'N/A'
         }
       ],
-      // chartTypes: ['bar', 'doughnut']
       chartTypes: ['bar', 'pie']
     },
     userQueries: {
@@ -417,7 +561,6 @@ const OrganizationStatsGraph = ({
           format: (val, stats) => stats.topLoser?.symbol ? `${stats.topLoser.symbol} (${stats.topLoser.percentageChange || 0}%)` : 'N/A'
         }
       ],
-      // chartTypes: ['bar', 'doughnut']
       chartTypes: ['bar', 'pie']
     },
     gallery: {
@@ -601,6 +744,7 @@ OrganizationStatsGraph.propTypes = {
     'events', 
     'feedbacks', 
     'complaints', 
+    'userComplaints',
     'userFeedbacks', 
     'userQueries',
     'stocks',

@@ -36,7 +36,8 @@ export const loginUser = createAsyncThunk(
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           },
-          token: "admin-token"
+          // token: "admin-token"
+          token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDQ5YTMxMjlkN2Q4YjdhY2ZiY2EyMiIsImlhdCI6MTc0NjI5MjEyOSwiZXhwIjoxNzQ2Mjk1NzI5fQ.tnWkqkfsTy24sSDFkMdKaiE9J7B5aua1Mr-FjD6483c"
         };
         return adminData;
       }
@@ -149,11 +150,13 @@ const authSlice = createSlice({
       state.error = null;
       state.isAuthenticated = false;
       state.sessionExpiry = null;
+      state.role = null;
       
       // Clear localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('lastLogin');
+      localStorage.removeItem('role');
     },
     clearError: (state) => {
       state.error = null;
@@ -180,11 +183,16 @@ const authSlice = createSlice({
         state.error = null;
         state.isAuthenticated = true;
         state.lastLogin = new Date().toISOString();
+          // Set role based on user data
+        const role = action.payload.user?.role || 'user';
+        state.role = role;
+
 
         // Update localStorage
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('user', JSON.stringify(action.payload.user));
         localStorage.setItem('lastLogin', new Date().toISOString());
+        localStorage.setItem('role', role); 
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';

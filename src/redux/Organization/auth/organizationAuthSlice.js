@@ -484,6 +484,7 @@ const initialState = {
   token: localStorage.getItem("token") || null,
   orgId: localStorage.getItem("orgId") || null,
   orgName: localStorage.getItem("orgName") || null,
+  role:localStorage.getItem("role") || null,
   loading: false, // Specifically for auth actions (login, register, password changes)
   authError: null, // Error MESSAGE for auth actions (string or null)
   errorType: null, // Specific error TYPE for auth actions (string or null, e.g., 'PENDING_APPROVAL')
@@ -510,6 +511,7 @@ const organizationAuthSlice = createSlice({
       state.currentOrgStatus = 'idle';
       state.updateStatus = 'idle';
       state.listStatus = 'idle';
+      state.role = null;
     },
     logoutOrganization: (state) => {
       state.currentOrg = null;
@@ -519,11 +521,13 @@ const organizationAuthSlice = createSlice({
       state.loading = false;
       state.authError = null;
       state.errorType = null;
+      state.role = null;
       state.successMessage = null;
       localStorage.removeItem('org');
       localStorage.removeItem('token');
       localStorage.removeItem('orgId');
       localStorage.removeItem('orgName');
+      localStorage.removeItem('role');
     },
     addOrganization: (state, action) => {
       state.list.push(action.payload);
@@ -614,6 +618,7 @@ const organizationAuthSlice = createSlice({
         state.token = action.payload.token;
         state.orgId = action.payload.orgId;
         state.orgName = action.payload.orgName;
+        state.role = action.payload.role || "organization";
         state.authError = null; // Clear error on success
         state.errorType = null;
         state.successMessage = action.payload.message || "Login successful";
@@ -621,6 +626,7 @@ const organizationAuthSlice = createSlice({
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('orgId', action.payload.orgId);
         localStorage.setItem('orgName', action.payload.orgName);
+        localStorage.setItem('role', action.payload.role || "organization");
       })
       .addCase(loginOrganization.rejected, (state, action) => {
         state.loading = false;
@@ -642,6 +648,7 @@ const organizationAuthSlice = createSlice({
         localStorage.removeItem('token');
         localStorage.removeItem('orgId');
         localStorage.removeItem('orgName');
+        localStorage.removeItem('role');
       })
 
       // Register Cases
