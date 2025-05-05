@@ -188,10 +188,11 @@ const OrganizationUsersFeedbacks = () => {
                 >
                   <Filter size={16} />
                   {appliedFiltersCount > 0 && (
-                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
                       {appliedFiltersCount}
                     </span>
                   )}
+                   {isFilterOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
               </div>
               
@@ -227,7 +228,22 @@ const OrganizationUsersFeedbacks = () => {
               </h2>
               
               <div className="flex items-center space-x-4">
-                <div className="relative w-48">
+              <button
+                  onClick={() => setFilterOpen(!isFilterOpen)}
+                  className="h-9 px-4 mr-4 rounded-lg border border-gray-400 
+                    hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
+                    transition-colors flex items-center space-x-1"
+                >
+                  <Filter size={16} className="mr-2"/>
+                  {appliedFiltersCount > 0 && (
+                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2.5 py-0.5 text-xs font-medium">
+                      {appliedFiltersCount}
+                    </span>
+                  )}
+                  {isFilterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+
+                <div className="relative w-70">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <SearchIcon size={16} className="text-gray-400" />
                   </div>
@@ -250,75 +266,68 @@ const OrganizationUsersFeedbacks = () => {
                   )}
                 </div>
 
-                <button
-                  onClick={() => setFilterOpen(!isFilterOpen)}
-                  className="h-9 px-3 rounded-lg border border-gray-400 
-                    hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lightBlue-600 
-                    transition-colors flex items-center space-x-1"
-                >
-                  <Filter size={16} />
-                  {appliedFiltersCount > 0 && (
-                    <span className="ml-1 bg-lightBlue-600 text-white rounded-full px-2 py-0.5 text-xs font-medium">
-                      {appliedFiltersCount}
-                    </span>
-                  )}
-                  {isFilterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
+               
               </div>
             </div>
           </div>
 
           {/* Filter Section */}
           {isFilterOpen && (
-            <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-4 md:p-6 z-50">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full space-y-4 md:space-y-0">
-                {/* Date Range filter */}
-                <div className="w-full md:w-auto">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date Range
-                  </label>
-                  <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
-                    <DatePicker
-                      selected={localStartDate}
-                      onChange={handleStartDateChange}
-                      selectsStart
-                      startDate={localStartDate}
-                      endDate={localEndDate}
-                      placeholderText="Start Date"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
-                    />
-                    <DatePicker
-                      selected={localEndDate}
-                      onChange={handleEndDateChange}
-                      selectsEnd
-                      startDate={localStartDate}
-                      endDate={localEndDate}
-                      minDate={localStartDate}
-                      placeholderText="End Date"
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
-                    />
-                  </div>
-                </div>
+  <div className="bg-gray-50 shadow-inner mt-0 overflow-hidden transition-max-height duration-300 ease-in-out max-h-96 p-4 md:p-6 z-50">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full space-y-4 md:space-y-0">
+      {/* Date Range filter */}
+      <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
+        <div className="w-full md:w-60">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Start Date
+          </label>
+          <DatePicker
+            selected={localStartDate}
+            onChange={handleStartDateChange}
+            selectsStart
+            startDate={localStartDate}
+            endDate={localEndDate}
+            placeholderText="Start Date"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
+          />
+        </div>
+        <div className="w-full md:w-60">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            End Date
+          </label>
+          <DatePicker
+            selected={localEndDate}
+            onChange={handleEndDateChange}
+            selectsEnd
+            startDate={localStartDate}
+            endDate={localEndDate}
+            minDate={localStartDate}
+            placeholderText="End Date"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-600 h-[38px] text-sm"
+          />
+        </div>
+      </div>
 
-                {/* Clear & Apply buttons */}
-                <div className="flex gap-x-2 w-full md:w-auto">
-                  <button
-                    onClick={clearAllFilters}
-                    className="flex items-center justify-center px-3 py-2 h-[38px] w-full md:w-auto rounded-lg border border-gray-300 hover:bg-gray-50 text-sm"
-                  >
-                    <X size={14} className="mr-1" />
-                    Clear
-                  </button>
-                  <button
-                    onClick={handleApplyFilters}
-                    className="px-3 py-2 h-[38px] w-full md:w-auto rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm"
-                  >
-                    Apply
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+      {/* Clear & Apply buttons aligned to right */}
+      <div className="flex gap-x-4 w-full md:w-auto justify-end items-end">
+        <button
+          onClick={clearAllFilters}
+          className="flex items-center px-4 py-2 h-[42px] rounded-lg border border-gray-300 hover:bg-gray-50 text-sm md:text-base"
+        >
+          <X size={14} className="mr-1" />
+          Clear
+        </button>
+        <button
+          onClick={handleApplyFilters}
+          className="px-4 py-2 h-[42px] rounded-lg bg-lightBlue-600 text-white hover:bg-lightBlue-700 text-sm md:text-base"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
           {/* Applied Filters */}
           {appliedFiltersCount > 0 && (

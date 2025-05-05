@@ -256,9 +256,8 @@ const FILTER_CONFIGS = {
       width: 'w-[200px]',
       options: [
         { value: 'all', label: 'All Status' },
-        { value: 'active', label: 'Active' },
-        { value: 'pending', label: 'Pending' },
-        { value: 'disabled', label: 'Disabled' }
+        { value: 'approved', label: 'Approved' },
+        { value: 'not approved', label: 'Not Approved' },
       ]
     },
     gender: {
@@ -267,7 +266,8 @@ const FILTER_CONFIGS = {
       options: [
         { value: 'all', label: 'All Genders' },
         { value: 'Male', label: 'Male' },
-        { value: 'Female', label: 'Female' }
+        { value: 'Female', label: 'Female' },
+        { value: 'Other', label: 'Other' }
       ]
     },
     dateRange: {
