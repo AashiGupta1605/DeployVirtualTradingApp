@@ -77,13 +77,14 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
 }`}>
       <div className="w-full mx-auto flex flex-wrap items-center justify-between px-4 py-3 md:px-10">
         {/* Logo and Brand */}
-        <Link className="flex items-center"  to="/">
           <button 
             className="lg:hidden p-2 mr-2 rounded-lg hover:bg-gray-100"
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
           >
             <Menu className="h-6 w-6" /> 
           </button>
+        <Link className="flex items-start md:items-center"  to="/">
+
           <img 
             src={logoImage} 
             alt="PGR Logo" 

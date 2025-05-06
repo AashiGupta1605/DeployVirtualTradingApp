@@ -35,7 +35,9 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = n
   const status = useSelector(selectUserStatsStatus);
   const certificate = useSelector(selectAllCertificates);
   console.log(certificate);
-  const holdings = useSelector(selectHoldings);
+  const holdings = useSelector(selectHoldings).length;
+  console.log(holdings);
+  
 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -228,6 +230,62 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = n
         ],
         onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
       },
+
+      {
+        statIconName: "fas fa-birthday-cake",
+        statSubtitle: "COMPLAINT STATS",
+        statTitle: pageType!="dashboard" ?  "345" : "",
+        statIconColor: "bg-yellow-500",
+        showDetails: true,
+        statItems: [
+          { label: "Total", value: stats?.complaints?.total?.toString() || "0" },
+          { label: "Pending", value:  stats?.complaints?.pending?.toString() || "0" },
+        ],
+onClick: () => handleCardClick('complaints', 'Complaint Statistics')
+      },
+
+      
+      {
+        statIconName: "fas fa-crown",
+        statSubtitle: "PLAN STATS",
+        statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
+        showDetails: true,
+        statIconColor: "bg-yellow-500",
+        statItems: [
+          { label: "plan", value: stats?.subscription?.plan?.toString() || "0" },
+          { label: "Time", value:  stats?.subscription?.duration?.toString() || "0" },
+        ],
+        onClick: () => handleCardClick('subscription', 'Your Subscription Details')
+      },
+
+      {
+        statIconName: "fas fa-boxes",
+        statSubtitle: "STOCK STATS",
+        statTitle:pageType!="dashboard" ?  "-" : "",
+        statIconColor: "bg-green-500",
+        showDetails: true,
+        statItems: [
+          { label: "Nifty50", value:nifty50Data.length - 1 || "0" },
+          { label: "Etf", value: etfData.length - 1 || "0" },
+        ],
+onClick: () => handleCardClick('stocks', 'Stock Statistics')
+
+      },
+
+      {
+        statIconName: "fas fa-question-circle",
+        statSubtitle: "HOLDING STATS",
+        statTitle: pageType !== "dashboard" ? holdings?.toString() : "",
+        statIconColor: "bg-pink-400",
+        showDetails: true,
+        statItems: [
+          { label: "Total", value: holdings.toString() || "0" },
+          { label: "Fees", value: ((transactions?.length || 0) * 25).toFixed(2).toString() || "0" },
+        ],
+        onClick: () => handleCardClick('holdings', 'holding Statistics')
+//  `₹${((transactions?.length || 0) * 25).toFixed(2)}`
+      },
+
       
       {
         statIconName: "fas fa-calendar-alt",
@@ -243,58 +301,10 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = n
 
       },
      
-      {
-        statIconName: "fas fa-question-circle",
-        statSubtitle: "QUERY STATS",
-        statTitle: pageType !== "dashboard" ? stats?.queries?.total?.toString() : "",
-        statIconColor: "bg-pink-400",
-        showDetails: true,
-        statItems: [
-          { label: "Total", value: stats?.queries?.total?.toString() || "0" },
-          { label: "Recent", value: stats?.queries?.responded?.toString() || "0" },
-        ],
-        onClick: () => handleCardClick('queries', 'Query Statistics')
+ 
 
-      },
-      {
-                statIconName: "fas fa-boxes",
-                statSubtitle: "STOCK STATS",
-                statTitle:pageType!="dashboard" ?  "-" : "",
-                statIconColor: "bg-green-500",
-                showDetails: true,
-                statItems: [
-                  { label: "Nifty50", value:nifty50Data.length - 1 || "0" },
-                  { label: "Etf", value: etfData.length - 1 || "0" },
-                ],
-        onClick: () => handleCardClick('stocks', 'Stock Statistics')
-
-              },
               
-              {
-                statIconName: "fas fa-birthday-cake",
-                statSubtitle: "COMPLAINT STATS",
-                statTitle: pageType!="dashboard" ?  "345" : "",
-                statIconColor: "bg-yellow-500",
-                showDetails: true,
-                statItems: [
-                  { label: "Total", value: stats?.complaints?.total?.toString() || "0" },
-                  { label: "Pending", value:  stats?.complaints?.pending?.toString() || "0" },
-                ],
-        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
-              },
-
-              {
-                statIconName: "fas fa-crown",
-                statSubtitle: "PLAN STATS",
-                statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
-                showDetails: true,
-                statIconColor: "bg-yellow-500",
-                statItems: [
-                  { label: "plan", value: stats?.subscription?.plan?.toString() || "0" },
-                  { label: "Time", value:  stats?.subscription?.duration?.toString() || "0" },
-                ],
-                onClick: () => handleCardClick('subscription', 'Your Subscription Details')
-              },
+             
 
               {
                 statIconName: "fas fa-crown",

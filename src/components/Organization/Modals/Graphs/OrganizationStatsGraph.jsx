@@ -465,24 +465,24 @@ const OrganizationStatsGraph = ({
         { label: 'Pending Complaints', key: 'pending' },
         { label: 'Resolved Complaints', key: 'resolved' },
         { label: 'Resolution Rate', key: 'resolutionRate', unit: '%' },
-        { 
-          label: 'Average Resolution Time', 
-          key: 'avgResolutionTime', 
-          defaultValue: 'N/A',
-          format: (val) => val ? `${val} days` : 'N/A'
-        },
-        { 
-          label: 'Most Common Issue', 
-          key: 'mostCommonIssue', 
-          defaultValue: 'N/A',
-          format: (val) => val || 'N/A'
-        },
-        { 
-          label: 'Top Complainant', 
-          key: 'topComplainant.name', 
-          defaultValue: 'N/A',
-          format: (val, stats) => stats.topComplainant?.name || 'N/A'
-        }
+        // { 
+        //   label: 'Average Resolution Time', 
+        //   key: 'avgResolutionTime', 
+        //   defaultValue: 'N/A',
+        //   format: (val) => val ? `${val} days` : 'N/A'
+        // },
+        // { 
+        //   label: 'Most Common Issue', 
+        //   key: 'mostCommonIssue', 
+        //   defaultValue: 'N/A',
+        //   format: (val) => val || 'N/A'
+        // },
+        // { 
+        //   label: 'Top Complainant', 
+        //   key: 'topComplainant.name', 
+        //   defaultValue: 'N/A',
+        //   format: (val, stats) => stats.topComplainant?.name || 'N/A'
+        // }
       ],
       chartTypes: ['bar', 'pie']
     },
