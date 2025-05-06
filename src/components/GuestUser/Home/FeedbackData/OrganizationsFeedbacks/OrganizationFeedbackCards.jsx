@@ -11,6 +11,7 @@ import OrganizationAllFeedbacksTable from "./OrganizationAllFeedbacksTable";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { useMediaQuery } from 'react-responsive';
 
 const OrganizationFeedbackCards = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -18,6 +19,8 @@ const OrganizationFeedbackCards = () => {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -55,7 +58,7 @@ const OrganizationFeedbackCards = () => {
   const CustomPrevArrow = ({ onClick }) => (
     <button 
       onClick={onClick} 
-      className="absolute -left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-50 transition-all duration-300"
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-r-full shadow-lg hover:bg-gray-100 transition-all duration-300"
       aria-label="Previous"
       style={{ boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}
     >
@@ -66,7 +69,7 @@ const OrganizationFeedbackCards = () => {
   const CustomNextArrow = ({ onClick }) => (
     <button 
       onClick={onClick} 
-      className="absolute -right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-lg hover:bg-gray-50 transition-all duration-300"
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white p-3 rounded-l-full shadow-lg hover:bg-gray-100 transition-all duration-300"
       aria-label="Next"
       style={{ boxShadow: '-2px 0 5px rgba(0,0,0,0.1)' }}
     >
@@ -88,184 +91,374 @@ const OrganizationFeedbackCards = () => {
     dotsClass: "slick-dots slick-dots-custom",
     responsive: [
       {
-        breakpoint: 1280,
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1
         }
       },
       {
-        breakpoint: 768,
+        breakpoint: 640,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           arrows: false,
-          dots: true
+          dots: false
         }
       }
     ]
   };
 
-  return (
-    <section className="my-16 bg-white -mt-2 rounded-xl shadow-md overflow-hidden border border-gray-200">
-      <div className="px-6 py-5 mb-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-          <div className='flex items-center'>
-            <div className="bg-blue-100 p-3 rounded-lg mr-4">
-              <BiMessageDetail className="text-lightBlue-600 text-2xl" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-800">Organization Feedbacks</h3>
-              <p className="text-sm text-gray-500">What organizations say about us</p>
-            </div>
+  // Mobile view component
+  const MobileView = () => (
+    <div className="px-4">
+      <div className="flex flex-col gap-4 mb-6">
+        <div className='flex items-center'>
+          <div className="bg-blue-100 p-3 rounded-lg mr-4">
+            <BiMessageDetail className="text-lightBlue-600 text-xl" />
           </div>
-
-          <div className="flex items-center gap-3">
-            <div className="bg-gray-100 px-4 py-2 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">
-                Total: <span className="font-bold text-lightBlue-600">{feedbacks.length}</span>
-              </span>
-            </div>
-            <button 
-              onClick={openModal}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-lightBlue-600 rounded-lg transition-all hover:bg-blue-700 shadow-md"
-            >
-              View All
-              <FiExternalLink className="text-sm" />
-            </button>
+          <div>
+            <h3 className="text-lg font-bold text-gray-800">Organization Feedbacks</h3>
+            <p className="text-xs text-gray-500">What organizations say about us</p>
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          {loading ? (
+        <div className="flex justify-between items-center">
+          <div className="bg-gray-100 px-3 py-1 rounded-lg">
+            <span className="text-xs font-medium text-gray-700">
+              Total: <span className="font-bold text-lightBlue-600">{feedbacks.length}</span>
+            </span>
+          </div>
+          <button 
+            onClick={openModal}
+            className="flex items-center gap-1 px-3 py-1 text-xs font-medium text-white bg-lightBlue-600 rounded-lg transition-all hover:bg-blue-700 shadow-md"
+          >
+            View All
+            <FiExternalLink className="text-xs" />
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {feedbacks.slice(0, 3).map((feedback, index) => {
+          const org = orgData.find(org => org._id === feedback.organizationId?._id);
+          return (
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center h-64 gap-4"
+              key={index}
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-all"
             >
-              <FaSpinner className="animate-spin text-3xl text-lightBlue-600" />
-              <p className="text-gray-600">Loading feedbacks...</p>
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                      <span className="text-lightBlue-600 font-semibold text-sm">
+                        {org ? org.name.charAt(0).toUpperCase() : "O"}
+                      </span>
+                    </div>
+                    <h4 className="text-sm font-semibold text-gray-800">
+                      {org ? org.name.split(' ').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                      ).join(' ') : "Organization"}
+                    </h4>
+                  </div>
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className={`mx-0.5 ${
+                          i < feedback.rating
+                            ? "text-yellow-400 fill-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <p className="text-xs text-gray-600 italic line-clamp-2">
+                    "{feedback.feedbackMessage}"
+                  </p>
+                </div>
+                
+                <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
+                  <span className="text-xs text-gray-500">
+                    {new Date(feedback.createdDate).toLocaleDateString()}
+                  </span>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-xs text-gray-500">Verified</span>
+                    <FaCheckCircle className="w-3 h-3 text-green-500" />
+                  </div>
+                </div>
+              </div>
             </motion.div>
-          ) : err ? (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="flex flex-col items-center justify-center py-12 px-4 bg-red-50 rounded-lg border border-red-100"
-            >
-              <FaRegSadTear className="text-4xl text-red-400 mb-4" />
-              <h4 className="text-lg font-semibold text-gray-800 mb-2">Oops! Something went wrong</h4>
-              <p className="text-gray-600 mb-4 text-center max-w-md text-sm">
-                {err}
-              </p>
-              <button
-                onClick={fetchOrganizationFeedbacks}
-                className="px-5 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  // Tablet view component
+  const TabletView = () => (
+    <div className="px-6 py-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div className='flex items-center'>
+          <div className="bg-blue-100 p-3 rounded-lg mr-4">
+            <BiMessageDetail className="text-lightBlue-600 text-2xl" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-800">Organization Feedbacks</h3>
+            <p className="text-sm text-gray-500">What organizations say about us</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="bg-gray-100 px-3 py-1 rounded-lg">
+            <span className="text-sm font-medium text-gray-700">
+              Total: <span className="font-bold text-lightBlue-600">{feedbacks.length}</span>
+            </span>
+          </div>
+          <button 
+            onClick={openModal}
+            className="flex items-center gap-1 px-3 py-1 text-sm font-medium text-white bg-lightBlue-600 rounded-lg transition-all hover:bg-blue-700 shadow-md"
+          >
+            View All
+            <FiExternalLink className="text-sm" />
+          </button>
+        </div>
+      </div>
+
+      <div className="relative px-4">
+        <Slider {...settings} className="pb-6" slidesToShow={2} slidesToScroll={1}>
+          {feedbacks.map((feedback, index) => {
+            const org = orgData.find(org => org._id === feedback.organizationId?._id);
+            return (
+              <motion.div 
+                key={index}
+                whileHover={{ y: -3 }}
+                className="px-2 outline-none"
               >
-                Retry
-              </button>
-            </motion.div>
-          ) : feedbacks.length > 0 ? (
-            <div className="relative px-8">
-              <Slider {...settings} className="pb-8 pt-2">
-                {feedbacks.map((feedback, index) => {
-                  const org = orgData.find(org => org._id === feedback.organizationId?._id);
-                  return (
-                    <motion.div 
-                      key={index}
-                      whileHover={{ y: -5 }}
-                      className="px-2 outline-none"
-                    >
-                      <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all h-full flex flex-col">
-                        {/* Organization Header */}
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-lightBlue-600 font-semibold text-lg">
-                                  {org ? org.name.charAt(0).toUpperCase() : "O"}
-                                </span>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-gray-800 line-clamp-1">
-                                  {org ? org.name.split(' ').map(word => 
-                                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                                  ).join(' ') : "Organization"}
-                                </h4>
-                                <p className="text-sm text-gray-500">{feedback.feedbackCategory}</p>
-                              </div>
-                            </div>
-                            <div className="flex">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  size={16}
-                                  className={`${
-                                    i < feedback.rating
-                                      ? "text-yellow-400 fill-yellow-400"
-                                      : "text-gray-200"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-all h-full">
+                  <div className="p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                          <span className="text-lightBlue-600 font-semibold text-lg">
+                            {org ? org.name.charAt(0).toUpperCase() : "O"}
+                          </span>
                         </div>
-
-                        {/* Feedback Content */}
-                        <div className="p-6 flex-grow bg-gradient-to-b from-white to-gray-50">
-                          <div className="relative">
-                            <div className="absolute -top-6 -left-2 text-gray-200 text-4xl font-serif">"</div>
-                            <p className="text-gray-600 text-sm leading-relaxed pl-4 italic line-clamp-4">
-                              {feedback.feedbackMessage}
-                            </p>
-                            <div className="absolute -bottom-4 right-0 text-gray-200 text-4xl font-serif">"</div>
-                          </div>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
-                              {/* {new Date(feedback.createdAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric'
-                              })} */}
-                              {new Date(
-                              feedback.createdDate
-                              ).toLocaleDateString()}
-                            </span>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xs text-gray-500">Verified</span>
-                              <FaCheckCircle className="w-4 h-4 text-green-500" />
-                            </div>
-                          </div>
+                        <div>
+                          <h4 className="text-md font-semibold text-gray-800">
+                            {org ? org.name.split(' ').map(word => 
+                              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                            ).join(' ') : "Organization"}
+                          </h4>
+                          <p className="text-xs text-gray-500">{feedback.feedbackCategory}</p>
                         </div>
                       </div>
-                    </motion.div>
-                  );
-                })}
-              </Slider>
-            </div>
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200"
-            >
-              <div className="text-4xl text-gray-300 mb-3">🏢</div>
-              <h4 className="text-md text-gray-500 font-medium">No organization feedbacks available</h4>
-              <p className="text-sm text-gray-400 mt-1">Check back later for updates</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            size={16}
+                            className={`mx-0.5 ${
+                              i < feedback.rating
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="mb-4 relative">
+                      <div className="absolute -top-2 -left-2 text-gray-200 text-3xl font-serif">"</div>
+                      <p className="text-sm text-gray-600 italic line-clamp-3 pl-3">
+                        {feedback.feedbackMessage}
+                      </p>
+                      <div className="absolute -bottom-2 right-0 text-gray-200 text-3xl font-serif">"</div>
+                    </div>
+                    
+                    <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
+                      <span className="text-xs text-gray-500">
+                        {new Date(feedback.createdDate).toLocaleDateString()}
+                      </span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500">Verified</span>
+                        <FaCheckCircle className="w-3 h-3 text-green-500" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </Slider>
       </div>
+    </div>
+  );
+
+  return (
+    <section className={`my-8 md:my-12 lg:my-16 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 ${isMobile ? 'mx-4' : ''}`}>
+      {isMobile ? (
+        <MobileView />
+      ) : isTablet ? (
+        <TabletView />
+      ) : (
+        <div className="px-6 py-5">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div className='flex items-center'>
+              <div className="bg-blue-100 p-3 rounded-lg mr-4">
+                <BiMessageDetail className="text-lightBlue-600 text-2xl" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">Organization Feedbacks</h3>
+                <p className="text-sm text-gray-500">What organizations say about us</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="bg-gray-100 px-4 py-2 rounded-lg">
+                <span className="text-sm font-medium text-gray-700">
+                  Total: <span className="font-bold text-lightBlue-600">{feedbacks.length}</span>
+                </span>
+              </div>
+              <button 
+                onClick={openModal}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-lightBlue-600 rounded-lg transition-all hover:bg-blue-700 shadow-md"
+              >
+                View All
+                <FiExternalLink className="text-sm" />
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {loading ? (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center h-64 gap-4"
+              >
+                <FaSpinner className="animate-spin text-3xl text-lightBlue-600" />
+                <p className="text-gray-600">Loading feedbacks...</p>
+              </motion.div>
+            ) : err ? (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="flex flex-col items-center justify-center py-12 px-4 bg-red-50 rounded-lg border border-red-100"
+              >
+                <FaRegSadTear className="text-4xl text-red-400 mb-4" />
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">Oops! Something went wrong</h4>
+                <p className="text-gray-600 mb-4 text-center max-w-md text-sm">
+                  {err}
+                </p>
+                <button
+                  onClick={fetchOrganizationFeedbacks}
+                  className="px-5 py-2 bg-lightBlue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                >
+                  Retry
+                </button>
+              </motion.div>
+            ) : feedbacks.length > 0 ? (
+              <div className="relative px-8">
+                <Slider {...settings} className="pb-8 pt-2">
+                  {feedbacks.map((feedback, index) => {
+                    const org = orgData.find(org => org._id === feedback.organizationId?._id);
+                    return (
+                      <motion.div 
+                        key={index}
+                        whileHover={{ y: -5 }}
+                        className="px-2 outline-none"
+                      >
+                        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all h-full flex flex-col">
+                          {/* Organization Header */}
+                          <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                  <span className="text-lightBlue-600 font-semibold text-lg">
+                                    {org ? org.name.charAt(0).toUpperCase() : "O"}
+                                  </span>
+                                </div>
+                                <div>
+                                  <h4 className="font-semibold text-gray-800 line-clamp-1">
+                                    {org ? org.name.split(' ').map(word => 
+                                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                                    ).join(' ') : "Organization"}
+                                  </h4>
+                                  <p className="text-sm text-gray-500">{feedback.feedbackCategory}</p>
+                                </div>
+                              </div>
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    size={16}
+                                    className={`${
+                                      i < feedback.rating
+                                        ? "text-yellow-400 fill-yellow-400"
+                                        : "text-gray-200"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Feedback Content */}
+                          <div className="p-6 flex-grow bg-gradient-to-b from-white to-gray-50">
+                            <div className="relative">
+                              <div className="absolute -top-6 -left-2 text-gray-200 text-4xl font-serif">"</div>
+                              <p className="text-gray-600 text-sm leading-relaxed pl-4 italic line-clamp-4">
+                                {feedback.feedbackMessage}
+                              </p>
+                              <div className="absolute -bottom-4 right-0 text-gray-200 text-4xl font-serif">"</div>
+                            </div>
+                          </div>
+
+                          {/* Footer */}
+                          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500">
+                                {new Date(feedback.createdDate).toLocaleDateString()}
+                              </span>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs text-gray-500">Verified</span>
+                                <FaCheckCircle className="w-4 h-4 text-green-500" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </Slider>
+              </div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200"
+              >
+                <div className="text-4xl text-gray-300 mb-3">🏢</div>
+                <h4 className="text-md text-gray-500 font-medium">No organization feedbacks available</h4>
+                <p className="text-sm text-gray-400 mt-1">Check back later for updates</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
       
       {showModal && <OrganizationAllFeedbacksTable closeModal={closeModal} />}
 
-      <style >{`
+      <style jsx>{`
         .slick-dots-custom {
           bottom: -25px;
           display: flex !important;

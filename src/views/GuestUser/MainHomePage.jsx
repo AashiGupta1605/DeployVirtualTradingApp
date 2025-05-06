@@ -1,42 +1,37 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useMediaQuery } from 'react-responsive';
 import {
   FiArrowRight,
   FiTrendingUp,
   FiBarChart2,
   FiDollarSign,
   FiClock,
-  FiTwitter,
-  FiFacebook,
-  FiInstagram,
-  FiGithub,
 } from "react-icons/fi";
-import { FaWhatsapp } from "react-icons/fa"; // Kept as per original code
-
 import HomeCarousel from "../../components/GuestUser/Home/HomeCarousel";
 import OrganizationsSlider from "../../components/GuestUser/Home/OrganizationsData/OrganizationsSlider";
 import InfoCards from "../../components/GuestUser/Home/InfoCards";
 import UserFeedbackCards from "../../components/GuestUser/Home/FeedbackData/UsersFeedbacks/UserFeedbackCards";
 import OrganizationFeedbackCards from "../../components/GuestUser/Home/FeedbackData/OrganizationsFeedbacks/OrganizationFeedbackCards";
 import Stock from "../../assets/stock.jpg";
-import Footer from "../../components/GuestUser/Footers/Footer";
 
 const MainHomePage = () => {
   const scrollContainerRef = useRef();
-  // Animation controls for each section
-  // Using original thresholds and refs
-  const [heroRef, heroInView] = useInView({ threshold: 0.8, triggerOnce: true });
-  const [featuresRef, featuresInView] = useInView({ threshold: 0.8, triggerOnce: true });
-  const [statsRef, statsInView] = useInView({ threshold: 0.8, triggerOnce: true });
-  const [partnersRef, partnersInView] = useInView({ threshold: 0.8, triggerOnce: true });
-  const [testimonialsRef, testimonialsInView] = useInView({ threshold: 0.8, triggerOnce: true }); // Corresponds to Org Slider
-  const [userFeedbackRef, userFeedbackInView] = useInView({ threshold: 0.8, triggerOnce: true }); // Added ref for user feedback section consistency
-  const [orgFeedbackRef, orgFeedbackInView] = useInView({ threshold: 0.8, triggerOnce: true });
-
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
+
+  // Animation controls for each section
+  const [heroRef, heroInView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [featuresRef, featuresInView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [statsRef, statsInView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [partnersRef, partnersInView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [testimonialsRef, testimonialsInView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [userFeedbackRef, userFeedbackInView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [orgFeedbackRef, orgFeedbackInView] = useInView({ threshold: 0.5, triggerOnce: true });
+
   useEffect(() => {
     if (partnersInView) {
       setShouldRefetch(true);
@@ -45,19 +40,7 @@ const MainHomePage = () => {
     }
   }, [partnersInView]);
 
-  // Removed redundant controls logic as useInView is used directly on elements
-  // const controls = useAnimation();
-  // useEffect(() => {
-  //   if (heroInView) {
-  //     controls.start("visible");
-  //   }
-  // }, [controls, heroInView]);
-
-
-  // WhatsApp group link (replace with your actual WhatsApp group invite link)
-  // const whatsappGroupLink = "https://chat.whatsapp.com/GCNCQb6Ul4l5FRwlT5y3Tb"; // Keep commented as original
-
-  // Animation variants (original)
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -144,27 +127,25 @@ const MainHomePage = () => {
   ];
 
   return (
-    // --- KEY CHANGE HERE: Removed h-screen ---
-    // This allows the container to grow vertically to fit all content, including the footer.
-    // Snapping still works for the child sections.
     <motion.div
       ref={scrollContainerRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="snap-y snap-mandatary overflow-y-scroll h-screen relative w-full hide-scrollbar" // Removed h-screen
+      className={`relative w-full hide-scrollbar ${isMobile ? '' : 'snap-y snap-mandatory'}`}
     >
-     
-            {/* Hero Section - RESTORED STRUCTURE */}
-            <section ref={heroRef} className="snap-start w-full relative bg-gradient-to-b from-blue-50 to-white">
-         {/* Content Container - Restored classes */}
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-42 pb-28 text-center h-full flex flex-col justify-center">
+      {/* Hero Section */}
+      <section 
+        ref={heroRef} 
+        className={`w-full relative bg-gradient-to-b from-blue-50 to-white ${isMobile ? 'pt-20 pb-40' : 'snap-start h-screen'}`}
+      >
+        <div className="max-w-7xl sm:-mt-36 mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 md:pt-24 md:pb-28 text-center h-full flex flex-col justify-center">
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}} // Use inView directly
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4"
           >
             Master Virtual Trading with Confidence
           </motion.h1>
@@ -172,21 +153,12 @@ const MainHomePage = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-gray-600 sm:-mb-16 max-w-2xl mx-auto"
           >
             Practice trading with real market data and no financial risk. Perfect for beginners and experts alike.
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col sm:flex-row justify-center gap-4"
-          >
-            {/* Buttons would go here if any */}
-          </motion.div>
         </div>
-        {/* Carousel Container - Restored absolute positioning */}
-        <div className="absolute bottom-0 -mt-4 w-full h-1/2">
+        <div className={`${isMobile ? 'relative mt-8' : 'absolute bottom-0 -mt-4 w-full h-1/2'}`}>
           <HomeCarousel />
         </div>
       </section>
@@ -194,20 +166,19 @@ const MainHomePage = () => {
       {/* Features Section */}
       <section
         ref={featuresRef}
-        className="snap-start h-screen w-full flex items-center justify-center bg-gray-50"
+        className={`w-full flex items-center justify-center bg-gray-50 ${isMobile ? 'py-12' : 'snap-start h-screen'}`}
       >
-         {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <motion.div
             initial="hidden"
-            animate={featuresInView ? "visible" : "hidden"} // Use inView directly
+            animate={featuresInView ? "visible" : "hidden"}
             variants={containerVariants}
-            className="text-center mb-16"
+            className="text-center mb-12 md:mb-16"
           >
-            <motion.h2 variants={fadeInUp} className="text-3xl mt-34 md:text-4xl font-bold text-gray-900 mb-4">
+            <motion.h2 variants={fadeInUp} className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Why Choose <span className="text-lightBlue-600">Our Platform?</span>
             </motion.h2>
-            <motion.p variants={fadeInUp} className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               We provide the tools and insights you need to succeed in today's dynamic markets
             </motion.p>
           </motion.div>
@@ -216,7 +187,7 @@ const MainHomePage = () => {
             initial="hidden"
             animate={featuresInView ? "visible" : "hidden"}
             variants={containerVariants}
-            className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
           >
             {features.map((feature, index) => (
               <motion.div
@@ -256,18 +227,17 @@ const MainHomePage = () => {
       {/* Stock Market Section */}
       <section
         ref={statsRef}
-        className="snap-start h-screen w-full flex items-center justify-center bg-white"
+        className={`w-full flex items-center justify-center bg-white ${isMobile ? 'py-12' : 'snap-start h-screen'}`}
       >
-         {/* Content */}
-        <div className="max-w-7xl mt-24 mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
             initial="hidden"
-            animate={statsInView ? "visible" : "hidden"} // Use inView directly
-            className="flex flex-col lg:flex-row items-center gap-10"
+            animate={statsInView ? "visible" : "hidden"}
+            className="flex flex-col lg:flex-row items-center gap-8 md:gap-10"
           >
             <motion.div
-              className="lg:w-1/2"
-              initial="hidden" // Animate individually
+              className="lg:w-1/2 mb-8 lg:mb-0"
+              initial="hidden"
               animate={statsInView ? "visible" : "hidden"}
               variants={slideInFromLeft}
             >
@@ -276,7 +246,7 @@ const MainHomePage = () => {
                   src={Stock}
                   alt="Stock Market Analytics"
                   className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  initial={{ scale: 1 }} // Keep initial scale if desired
+                  initial={{ scale: 1 }}
                   whileHover={{ scale: 1.05 }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -285,23 +255,22 @@ const MainHomePage = () => {
 
             <motion.div
               className="lg:w-1/2"
-              initial="hidden" // Animate individually
+              initial="hidden"
               animate={statsInView ? "visible" : "hidden"}
-              // Variants applied to children below
             >
-              <motion.h2 variants={fadeInUp} animate={statsInView ? "visible" : "hidden"} className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <motion.h2 variants={fadeInUp} animate={statsInView ? "visible" : "hidden"} className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Track Stock Trends in <span className="text-lightBlue-600">Real Time</span>
               </motion.h2>
 
-              <motion.p variants={fadeInUp} animate={statsInView ? "visible" : "hidden"} transition={{delay: 0.1}} className="text-lg text-gray-600 mb-8">
+              <motion.p variants={fadeInUp} animate={statsInView ? "visible" : "hidden"} transition={{delay: 0.1}} className="text-base sm:text-lg text-gray-600 mb-6 md:mb-8">
                 Stay ahead of the market with our cutting-edge platform that provides real-time stock data, comprehensive analytics, and virtual trading capabilities.
               </motion.p>
 
               <motion.div
-                variants={containerVariants} // Use container variants for staggering list
+                variants={containerVariants}
                 initial="hidden"
                 animate={statsInView ? "visible" : "hidden"}
-                className="space-y-4 mb-8"
+                className="space-y-4 mb-6 md:mb-8"
               >
                 {[
                   "Real-time market data with minimal latency",
@@ -313,7 +282,7 @@ const MainHomePage = () => {
                   <motion.div
                     key={index}
                     className="flex items-start"
-                    variants={itemVariants} // Individual item variant
+                    variants={itemVariants}
                     whileHover={{
                       x: 5,
                       transition: { type: "spring", stiffness: 300 }
@@ -338,30 +307,24 @@ const MainHomePage = () => {
               </motion.div>
 
               <motion.div
-                variants={fadeInUp} // Animate button
+                variants={fadeInUp}
                 animate={statsInView ? "visible" : "hidden"}
-                transition={{delay: 0.6}} // Delay after list
+                transition={{delay: 0.6}}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
-                  <Link to="/about">
-                    <motion.button
-                      whileHover={{
-                        boxShadow: "0 8px 20px -5px rgba(59, 130, 246, 0.4)",
-                        transition: { duration: 0.3 }
-                      }}
-                      className="bg-lightBlue-600 text-white font-semibold px-7 py-3 rounded-lg shadow-md hover:bg-lightBlue-700 transition-all duration-300 flex items-center group" // Added hover effect
-                    >
-                      Learn More
-                      <motion.span
-                        // Removed redundant animate, use parent's animate
-                        whileHover={{ x: 5 }}
-                        transition={{ type: "spring", stiffness: 500 }}
-                      >
-                        <FiArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                      </motion.span>
-                    </motion.button>
-                  </Link>
+                <Link to="/about">
+                  <motion.button
+                    whileHover={{
+                      boxShadow: "0 8px 20px -5px rgba(59, 130, 246, 0.4)",
+                      transition: { duration: 0.3 }
+                    }}
+                    className="bg-lightBlue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-lightBlue-700 transition-all duration-300 flex items-center group"
+                  >
+                    Learn More
+                    <FiArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
+                </Link>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -370,85 +333,89 @@ const MainHomePage = () => {
 
       {/* Info Cards Section */}
       <section
-        ref={partnersRef} // Original ref name
-        className="snap-start h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-lightBlue-50"
+        ref={partnersRef}
+        className={`w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-lightBlue-50 ${isMobile ? 'py-12' : 'snap-start h-screen'}`}
       >
-         {/* Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
             initial="hidden"
-            animate={partnersInView ? "visible" : "hidden"} // Use inView directly
+            animate={partnersInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
             <motion.div
               variants={fadeInUp}
-              className="text-center"
+              className="text-center mb-8 md:mb-12"
             >
-              <h2 className="text-3xl mt-24 md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Our Platform <span className="text-lightBlue-600">Statistics</span>
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8"> {/* Added mb-8 for spacing */}
+              <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                 Trusted by thousands of traders worldwide
               </p>
             </motion.div>
 
-              {/* Ensure InfoCards fits within the section */}
-              <div ref={partnersRef} tabIndex={0}>
-                <InfoCards shouldRefetch={shouldRefetch} />
-              </div>
-            </motion.div>
+            <div ref={partnersRef} tabIndex={0}>
+              <InfoCards shouldRefetch={shouldRefetch} />
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Partnered Organizations Section */}
       <section
-        ref={testimonialsRef} // Original ref name (corresponds to Org Slider)
-        className="snap-start h-screen w-full flex items-center justify-center bg-white"
+        ref={testimonialsRef}
+        className={`w-full flex items-center justify-center bg-white ${isMobile ? 'py-12' : 'snap-start h-screen'}`}
       >
-        {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"> {/* Reduced mt-48 */}
-          <motion.div
-            initial="hidden"
-            animate={testimonialsInView ? "visible" : "hidden"} // Use inView directly
-            variants={containerVariants}
-          >
-            <motion.div
-              variants={fadeInUp}
-              className="text-center mb-12 px-4"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Our Happy <span className="text-lightBlue-600">Clients</span>
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto"> {/* Removed -mb-8 */}
-                Trusted by businesses worldwide for our exceptional services
-              </p>
-            </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible" // Trigger animation when in view
+                    viewport={{ once: true, amount: 0.2 }} // Trigger once, when 20% visible
+                    className="organizations-slider-container" // Add container class for scoped CSS
+                >
+                    {/* Section Header */}
+                    <motion.div
+                        variants={fadeInUp}
+                        className="text-center mb-10 md:mb-14"
+                    >
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+                            Trusted by Leading <span className="text-blue-600">Organizations</span>
+                        </h2>
+                        <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">
+                            We're proud to collaborate with diverse partners who rely on our platform.
+                        </p>
+                    </motion.div>
 
-            <OrganizationsSlider />
-          </motion.div>
-        </div>
-      </section>
+                    {/* Render the improved Organizations Slider */}
+                    {/* The slider component itself handles loading/error/empty states */}
+                    <motion.div variants={fadeInUp}>
+                        <OrganizationsSlider />
+                    </motion.div>
+
+                </motion.div>
+            </div>
+        </section>
 
       {/* Testimonials Section (User Feedback) */}
       <section
-        ref={userFeedbackRef} // Added ref for consistency
-        className="snap-start h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-lightBlue-50"
+        ref={userFeedbackRef}
+        className={`w-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-lightBlue-50 ${isMobile ? 'py-12' : 'snap-start h-screen'}`}
       >
-         {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"> {/* Reduced mt-48 */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
             initial="hidden"
-            animate={userFeedbackInView ? "visible" : "hidden"} // Use inView directly
+            animate={userFeedbackInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
             <motion.div
               variants={fadeInUp}
-              className="text-center mb-12 px-4"
+              className="text-center mb-8 md:mb-12 px-4"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 What Our <span className="text-lightBlue-600">Users Say</span>
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                 Hear from traders who've improved their skills with our platform
               </p>
             </motion.div>
@@ -459,26 +426,24 @@ const MainHomePage = () => {
       </section>
 
       {/* Organization Feedback Section */}
-      {/* --- This is the LAST snap section --- */}
       <section
-        ref={orgFeedbackRef} // Use correct ref
-        className="snap-start h-screen w-full flex items-center justify-center bg-white"
+        ref={orgFeedbackRef}
+        className={`w-full flex items-center justify-center bg-white ${isMobile ? 'py-12' : 'snap-start h-screen'}`}
       >
-         {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"> {/* Reduced mt-50 */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
             initial="hidden"
-            animate={orgFeedbackInView ? "visible" : "hidden"} // Use inView directly
+            animate={orgFeedbackInView ? "visible" : "hidden"}
             variants={containerVariants}
           >
             <motion.div
               variants={fadeInUp}
               className="text-center mb-8 px-4"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Partner <span className="text-lightBlue-600">Testimonials</span>
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                 See what our partner organizations have to say about us
               </p>
             </motion.div>
@@ -487,22 +452,8 @@ const MainHomePage = () => {
           </motion.div>
         </div>
       </section>
-
-    
-
-      {/* --- END OF MOVED FOOTER --- */}
-
-
-      {/* ScrollToTopButton remains relative to the main scrolling div */}
-       {/* <ScrollToTopButton scrollContainerRef={scrollContainerRef} /> */}
-       {/* Note: ScrollToTopButton might need its positioning adjusted (e.g., fixed, bottom-x, right-x)
-           and potentially passed the scrollContainerRef to monitor scroll position correctly */}
-
-    </motion.div> // End of main scrolling div
+    </motion.div>
   );
 };
 
 export default MainHomePage;
-
-
-

@@ -11,6 +11,7 @@ const ShowAllClientsModal = ({ closeModal, clients }) => {
     const [search, setSearch] = useState("");
     const [isRecent, setIsRecent] = useState(true);
     const isMobile = useMediaQuery({ maxWidth: 767 });
+    const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
     const fetchOrganizationsData = async () => {
         try {
@@ -124,17 +125,129 @@ const ShowAllClientsModal = ({ closeModal, clients }) => {
         </div>
     );
 
+    // Tablet view component
+    const TabletView = () => (
+        <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                    <FaBuilding className="text-[#2474ff] text-2xl" />
+                    <h2 className="text-xl font-bold text-gray-600">
+                        Associated Organizations
+                    </h2>
+                </div>
+                <button
+                    onClick={closeModal}
+                    className="p-2 hover:bg-gray-100 rounded-md transition-colors duration-200 focus:outline-none"
+                >
+                    <FaTimes className="text-gray-400 hover:text-gray-600 text-xl" />
+                </button>
+            </div>
+
+            <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="relative w-full md:w-96">
+                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value || "")}
+                        className="border border-gray-400 pl-10 pr-4 py-2 rounded-lg w-full focus:outline-none focus:shadow-md focus:border-black"
+                    />
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <span className="text-sm font-medium text-gray-600">
+                        Total: {orgData.length}
+                    </span>
+                    <button
+                        onClick={() => setIsRecent(!isRecent)}
+                        className="px-4 py-2 bg-lightBlue-600 text-white text-sm shadow-md rounded-md hover:bg-blue-700"
+                    >
+                        {isRecent ? "Recently Associated" : "Previously Associated"}
+                    </button>
+                </div>
+            </div>
+
+            <div className="max-h-[60vh] overflow-y-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50 sticky top-0">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Organization
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Website
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {err ? (
+                            <tr>
+                                <td colSpan="3" className="p-4">
+                                    <div className="flex flex-col items-center justify-center p-4 bg-red-50 rounded-lg">
+                                        <div className="text-red-500 mb-2">
+                                            <FaTimes className="text-xl" />
+                                        </div>
+                                        <p className="text-red-600 text-sm text-center">{err}</p>
+                                        <button
+                                            onClick={() => window.location.reload()}
+                                            className="mt-2 px-3 py-1 bg-red-500 text-white text-xs rounded-md"
+                                        >
+                                            Retry
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : orgData.length > 0 ? (
+                            (isRecent ? [...orgData].reverse() : orgData).map((org, index) => (
+                                <tr key={index} className="hover:bg-gray-50">
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {org.name || 'Organization Name'}
+                                    </td>
+                                    <td className="px-4 py-3 text-sm text-lightBlue-600 truncate max-w-[200px]">
+                                        {org.website ? (
+                                            <a href={org.website} target="_blank" rel="noopener noreferrer">
+                                                {org.website}
+                                            </a>
+                                        ) : 'N/A'}
+                                    </td>
+                                    <td className="px-4 py-3 text-sm text-gray-500">
+                                        {new Date(org.createDate).toISOString().split("T")[0]}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="p-6">
+                                    <div className="flex flex-col items-center justify-center">
+                                        <FolderOpen className="w-10 h-10 text-gray-400 mb-2" />
+                                        <span className="text-sm text-gray-500">No Organizations available</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(17,24,38,0.4)] pt-16"
             onClick={closeModal}
         >
             <div
-                className={`relative bg-white rounded-xl shadow-lg ${isMobile ? 'w-full h-full' : 'w-[85%] h-[83vh]'} flex flex-col`}
+                className={`relative bg-white rounded-xl shadow-lg ${isMobile ? 'w-full h-full' : isTablet ? 'w-[90%] h-[80vh]' : 'w-[85%] h-[83vh]'} flex flex-col`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {isMobile ? (
                     <MobileView />
+                ) : isTablet ? (
+                    <TabletView />
                 ) : (
                     <>
                         <div className="sticky top-0 bg-white left-0 w-full border-b border-gray-100 p-4 mt-1">
