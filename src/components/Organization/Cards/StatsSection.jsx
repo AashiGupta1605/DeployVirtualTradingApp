@@ -393,7 +393,7 @@ onClick: () => handleCardClick('gallery', 'Gallery')
         statIconName: "fas fa-star",
         statSubtitle: "AVG RATING",
         statTitle: (
-          <div className="flex items-center">
+          <div className="flex items-center py-1">
             {[1, 2, 3, 4, 5].map((star) => {
               const avgRating = parseFloat(feedbackStats?.averageRating || 0);
               const showFull = avgRating >= star;
@@ -452,7 +452,7 @@ onClick: () => handleCardClick('gallery', 'Gallery')
         statIconName: "fas fa-star",
         statSubtitle: "AVG RATING",
         statTitle: (
-          <div className="flex items-center">
+          <div className="flex items-center py-1">
             {[1, 2, 3, 4, 5].map((star) => {
               const avgRating = parseFloat(organizationUserFeedbacksStats?.averageRating || 0);
               const showFull = avgRating >= star;

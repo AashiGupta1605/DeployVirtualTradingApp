@@ -12,7 +12,9 @@ const CATEGORY_COLORS = {
 
 const OrganizationComplaintTable = ({ complaints, onDelete, onEdit }) => {
   const {loading, orgId, currentOrg } = useSelector((state) => state.organization.auth);
-
+console.log(complaints);
+const date = new Date(complaints.createdDate);
+console.log(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`);
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
     <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
@@ -58,7 +60,12 @@ const OrganizationComplaintTable = ({ complaints, onDelete, onEdit }) => {
                   {complaint.complaintMessage}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(complaint.complaintDate).toLocaleDateString()}
+                  {/* {new Date(complaint.complaintDate).toLocaleDateString()} */}
+                  {new Date(complaint.createdDate).toLocaleDateString()}
+
+                  {/* {complaint.createdDate} */}
+
+                  
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
