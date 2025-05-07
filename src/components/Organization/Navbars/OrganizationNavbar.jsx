@@ -30,6 +30,7 @@ export default function OrganizationNavbar({ sidebarExpanded, setSidebarExpanded
     <nav className={`sticky top-0 w-full -mb-18 h-auto min-h-[73px] z-30 bg-white shadow-lg transition-all duration-300 ease-in-out ${
       sidebarExpanded ? "lg:pl-" : "lg:pl-0"
     }`}>
+    
       <div className="w-full mx-auto flex items-center justify-between p-4 md:px-10 px-4">
         {/* Mobile Menu Button and Logo */}
         <div className="flex items-center space-x-4">
@@ -108,3 +109,5 @@ export default function OrganizationNavbar({ sidebarExpanded, setSidebarExpanded
     </nav>
   );
 }
+
+

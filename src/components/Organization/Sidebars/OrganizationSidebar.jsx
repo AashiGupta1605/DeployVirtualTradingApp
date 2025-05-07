@@ -214,3 +214,5 @@ const MenuLink = ({ to, icon, label, isActive, sidebarExpanded, onClick }) => (
     {sidebarExpanded && <span className="text-sm font-medium">{label}</span>}
   </Link>
 );
+
+
