@@ -178,7 +178,7 @@ const Participants = () => {
 
   return (
     <div className="mt-12 overflow-hidden">
-      <StatsSection isDashboard={false} pageType="participants" />
+      <StatsSection isDashboard={false} pageType="events" />
 
       <div className="px-8 mx-4 -mt-12">
         <TableFilters
