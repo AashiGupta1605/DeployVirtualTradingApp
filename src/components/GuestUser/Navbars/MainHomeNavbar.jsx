@@ -60,7 +60,7 @@ const MobileMenu = ({
 
   return (
     <div 
-      className={`fixed inset-0 z-40 bg-white transition-all duration-300 ease-in-out ${
+      className={`fixed inset-0 z-20 bg-white transition-all duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "translate-x-full"
       } md:hidden`}
       style={{ top: "64px" }}
@@ -338,7 +338,7 @@ const handleLogout = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+      <nav className={`fixed top-0 z-20 w-full transition-all duration-300 ${
         scrolled ? "bg-white shadow-md" : "bg-white shadow-sm"
       }`}>
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
