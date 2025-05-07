@@ -377,6 +377,11 @@ const UpdateProfileForm = ({ isOpen, onClose, userData }) => {
     }
   };
 
+  const handleRemovePhoto = () => {
+      toast.success("Photo removed. Click on update profile to save the changes");
+      setImage("https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png");
+    };
+
   // Formik setup
   const formik = useFormik({
     initialValues: {
@@ -540,10 +545,19 @@ return(
                   onChange={handleImageChange}
                   className="hidden"
                 />
+                 {image !== "https://cdn.pixabay.com/photo/2021/07/02/04/48/user-6380868_1280.png" && (
+                    <button
+                      type="button"
+                      onClick={handleRemovePhoto}
+                      className="-mt-10 text-sm text-black font-semibold hover:opacity-80 ml-24 px-2 py-2 rounded-xl"
+                    >
+                      Remove Photo
+                    </button>
+                  )}
               </div>
-              {selectedFile && (
+              {/* {selectedFile && (
                 <span className="text-sm text-gray-600">{selectedFile.name}</span>
-              )}
+              )} */}
             </div>
           </div>
           </div>
