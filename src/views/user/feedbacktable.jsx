@@ -273,9 +273,9 @@ export default function FeedbackTable() {
     closeDeleteModal();
   };
 
-  if (feedbackStatus === "loading") {
-    return <div>Loading...</div>;
-  }
+  // if (feedbackStatus === "loading") {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <>
@@ -355,10 +355,10 @@ export default function FeedbackTable() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center flex gap-x-3">
-                          <button className="text-yellow-600 mx-2 hover:text-yellow-900 transition-colors duration-200" onClick={() => handleEditFeedback(feedback._id)}>
+                          <button className="text-yellow-600 hover:text-yellow-900" onClick={() => handleEditFeedback(feedback._id)}>
                             <Edit size={18} />
                           </button>
-                          <button className="text-red-600 mx-2 hover:text-red-900 transition-colors duration-200" onClick={() => openDeleteModal(feedback._id)}>
+                          <button className="text-red-600 hover:text-red-900" onClick={() => openDeleteModal(feedback._id)}>
                             <Trash2 size={18} />
                           </button>
                         </td>
