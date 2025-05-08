@@ -125,7 +125,7 @@ const AboutPage = () => {
         <p className="text-xl italic text-gray-700 max-w-3xl mx-auto">
           "In investing, what is comfortable is rarely profitable. Our platform is designed to help you step beyond comfort and into confidence."
         </p>
-        <p className="mt-4 font-semibold text-blueGray-600">— The DreamNifty Team</p>
+        <p className="mt-4 font-semibold text-blueGray-600">— The PGR - Virtual Tradind App Team</p>
       </div>
     </>
   );
