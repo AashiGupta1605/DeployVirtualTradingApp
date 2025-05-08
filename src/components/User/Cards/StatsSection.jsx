@@ -258,7 +258,7 @@ const dispatch = useDispatch();
       },
 
       {
-        statIconName: "fas fa-birthday-cake",
+        statIconName: "fas fa-exclamation-triangle",
         statSubtitle: "COMPLAINT STATS",
         statTitle: pageType!="dashboard" ?  "345" : "",
         statIconColor: "bg-yellow-500",
@@ -272,7 +272,7 @@ onClick: () => handleCardClick('complaints', 'Complaint Statistics')
 
       
       {
-        statIconName: "fas fa-crown",
+        statIconName: "fas fa-gem",
         statSubtitle: "PLAN STATS",
         statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
         showDetails: true,
@@ -285,7 +285,7 @@ onClick: () => handleCardClick('complaints', 'Complaint Statistics')
       },
 
       {
-        statIconName: "fas fa-boxes",
+        statIconName: "fas fa-coins",
         statSubtitle: "STOCK STATS",
         statTitle:pageType!="dashboard" ?  "-" : "",
         statIconColor: "bg-green-500",
@@ -299,7 +299,7 @@ onClick: () => handleCardClick('stocks', 'Stock Statistics')
       },
 
       {
-        statIconName: "fas fa-question-circle",
+        statIconName: "fas fa-hand-holding-usd",
         statSubtitle: "HOLDING STATS",
         statTitle: pageType !== "dashboard" ? holdings?.toString() : "",
         statIconColor: "bg-pink-400",
@@ -333,7 +333,7 @@ onClick: () => handleCardClick('stocks', 'Stock Statistics')
              
 
               {
-                statIconName: "fas fa-crown",
+                statIconName: "fas fa-award",
                 statSubtitle: "CERTIFICATE STATS",
                 statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
                 showDetails: true,

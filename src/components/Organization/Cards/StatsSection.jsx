@@ -168,7 +168,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         onClick: () => handleCardClick('users', 'User')
       },
       {
-        statIconName: "fas fa-user-plus",
+        statIconName: "fas fa-comment-alt",
         statSubtitle: "FEEDBACK STATS",
         statTitle: pageType !== "dashboard" ? feedbackStats?.total?.toString() : "",
         statIconColor: "bg-orange-500",
@@ -184,7 +184,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         onClick: () => handleCardClick('feedbacks', 'Feedback')
       },
       {
-        statIconName: "fas fa-male",
+        statIconName: "fas fa-exclamation-triangle",
         statSubtitle: "COMPLAINT STATS",
         statTitle: pageType!="dashboard" ?  complaintStats?.total?.toString() : "",
         statIconColor: "bg-blue-400",
@@ -216,7 +216,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
       //   onClick: () => handleCardClick('events', 'User Statistics')
       // },
       {
-        statIconName: "fas fa-female",
+        statIconName: "fas fa-calendar-alt",
         statSubtitle: "EVENT STATS",
         statTitle: pageType!="dashboard" ?  eventParticipationStats?.participatingUsers?.toString() : "",
         statIconColor: "bg-pink-500",
@@ -232,7 +232,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         onClick: () => handleCardClick('events', 'Event')
       },
       {
-        statIconName: "fas fa-user-check",
+        statIconName: "fas fa-comments",
         statSubtitle: "USER FEEDBACKS",
         statTitle: pageType!="dashboard" ?  organizationUserFeedbacksStats?.total?.toString() : "",
         statIconColor: "bg-green-500",
@@ -264,7 +264,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
       //   onClick: () => handleCardClick('userQueries', 'User Statistics')
       // },
       {
-        statIconName: "fas fa-birthday-cake",
+        statIconName: "fas fa-times-circle",
         statSubtitle: "USER COMPLAINTS",
         statTitle: pageType!="dashboard" ?  userComplaintStats?.total?.toString() : "",
         statIconColor: "bg-purple-500",
