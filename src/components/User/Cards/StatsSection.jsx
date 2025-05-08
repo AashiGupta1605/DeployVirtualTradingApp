@@ -11,7 +11,8 @@ import {
   selectHoldings,
   selectStatistics,
   fetchEventSpecificTransactions,
-  selectFilteredTransactions
+  selectFilteredTransactions,
+  fetchHoldings
 } from '../../../redux/User/trading/tradingSlice';
 
 import {
@@ -19,14 +20,21 @@ import {
   selectAllCertificates,
   selectCertificatesStatus,
   selectCertificatesError,
+  fetchUserEvents,
+  selectAllEvents
 } from '../../../redux/User/events/eventsSlice';
+
+import { useDispatch } from 'react-redux';
 
 const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = null }) => {
   const userSubscriptions = useSelector(state => state.user.subscriptionPlan?.userSubscriptions || []);
   const statistics = useSelector(selectStatistics);
   // Use the selector with the eventId parameter
   const transactions = useSelector(state => selectFilteredTransactions(state, eventId));
-  
+const dispatch = useDispatch();
+  // added by deepseek
+  const userId = useSelector(state => state.user.auth?.user?._id);
+  // end deepseek
   const activeSubscription = userSubscriptions.find(sub => 
     sub.status === 'Active' && !sub.isDeleted
   );
@@ -35,7 +43,27 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = n
   const status = useSelector(selectUserStatsStatus);
   const certificate = useSelector(selectAllCertificates);
   console.log(certificate);
-  const holdings = useSelector(selectHoldings);
+  const holdings = useSelector(selectHoldings).length;
+  console.log(holdings);
+  
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchTransactionHistory({ userId, eventId: "none" }));
+      dispatch(fetchHoldings({ userId, subscriptionPlanId: activeSubscription?._id }));
+      dispatch(fetchUserEvents());
+      dispatch(fetchUserCertificates(userId));
+    }
+  }, [dispatch, userId, activeSubscription?._id]);
+
+  const events = useSelector(selectAllEvents);
+    // Get certificates from Redux store
+    const certificates = useSelector(selectAllCertificates);
+  
+  // Calculate ongoing events count
+  const ongoingEventsCount = events.filter(e => {
+    const now = new Date();
+    return new Date(e.startDate) <= now && new Date(e.endDate) >= now;
+  }).length;
 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -228,83 +256,96 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = n
         ],
         onClick: () => handleCardClick('feedbacks', 'Feedback Statistics')
       },
+
+      {
+        statIconName: "fas fa-exclamation-triangle",
+        statSubtitle: "COMPLAINT STATS",
+        statTitle: pageType!="dashboard" ?  "345" : "",
+        statIconColor: "bg-yellow-500",
+        showDetails: true,
+        statItems: [
+          { label: "Total", value: stats?.complaints?.total?.toString() || "0" },
+          { label: "Pending", value:  stats?.complaints?.pending?.toString() || "0" },
+        ],
+onClick: () => handleCardClick('complaints', 'Complaint Statistics')
+      },
+
+      
+      {
+        statIconName: "fas fa-gem",
+        statSubtitle: "PLAN STATS",
+        statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
+        showDetails: true,
+        statIconColor: "bg-yellow-500",
+        statItems: [
+          { label: "plan", value: stats?.subscription?.plan?.toString() || "0" },
+          { label: "Time", value:  stats?.subscription?.duration?.toString() || "0" },
+        ],
+        onClick: () => handleCardClick('subscription', 'Your Subscription Details')
+      },
+
+      {
+        statIconName: "fas fa-coins",
+        statSubtitle: "STOCK STATS",
+        statTitle:pageType!="dashboard" ?  "-" : "",
+        statIconColor: "bg-green-500",
+        showDetails: true,
+        statItems: [
+          { label: "Nifty50", value:nifty50Data.length - 1 || "0" },
+          { label: "Etf", value: etfData.length - 1 || "0" },
+        ],
+onClick: () => handleCardClick('stocks', 'Stock Statistics')
+
+      },
+
+      {
+        statIconName: "fas fa-hand-holding-usd",
+        statSubtitle: "HOLDING STATS",
+        statTitle: pageType !== "dashboard" ? holdings?.toString() : "",
+        statIconColor: "bg-pink-400",
+        showDetails: true,
+        statItems: [
+          { label: "Total", value: holdings.toString() || "0" },
+          { label: "Fees", value:"₹" + ((transactions?.length || 0) * 25).toFixed(2).toString() || "0" },
+        ],
+        onClick: () => handleCardClick('holdings', 'holding Statistics')
+//  `₹${((transactions?.length || 0) * 25).toFixed(2)}`
+      },
+
       
       {
         statIconName: "fas fa-calendar-alt",
         statSubtitle: "EVENT STATS",
-        statTitle: pageType !== "dashboard" ? stats?.events?.total?.toString() : "",
+        statTitle: pageType !== "dashboard" ? events.length.toString() : "",
         statIconColor: "bg-purple-500",
         showDetails: true,
         statItems: [
-          { label: "Total", value: stats?.events?.total?.toString() || "0" },
-          { label: "Upcoming", value: stats?.events?.upcoming?.toString() || "0" },
+          { label: "Total", value: events.length.toString() || "0" },
+          { label: "Ongoing", value: ongoingEventsCount.toString() || "0" },
         ],
         onClick: () => handleCardClick('events', 'Events Statistics')
 
       },
      
-      {
-        statIconName: "fas fa-question-circle",
-        statSubtitle: "QUERY STATS",
-        statTitle: pageType !== "dashboard" ? stats?.queries?.total?.toString() : "",
-        statIconColor: "bg-pink-400",
-        showDetails: true,
-        statItems: [
-          { label: "Total", value: stats?.queries?.total?.toString() || "0" },
-          { label: "Recent", value: stats?.queries?.responded?.toString() || "0" },
-        ],
-        onClick: () => handleCardClick('queries', 'Query Statistics')
+ 
 
-      },
-      {
-                statIconName: "fas fa-boxes",
-                statSubtitle: "STOCK STATS",
-                statTitle:pageType!="dashboard" ?  "-" : "",
-                statIconColor: "bg-green-500",
-                showDetails: true,
-                statItems: [
-                  { label: "Nifty50", value:nifty50Data.length - 1 || "0" },
-                  { label: "Etf", value: etfData.length - 1 || "0" },
-                ],
-        onClick: () => handleCardClick('stocks', 'Stock Statistics')
-
-              },
               
-              {
-                statIconName: "fas fa-birthday-cake",
-                statSubtitle: "COMPLAINT STATS",
-                statTitle: pageType!="dashboard" ?  "345" : "",
-                statIconColor: "bg-yellow-500",
-                showDetails: true,
-                statItems: [
-                  { label: "Total", value: stats?.complaints?.total?.toString() || "0" },
-                  { label: "Pending", value:  stats?.complaints?.pending?.toString() || "0" },
-                ],
-        onClick: () => handleCardClick('complaints', 'Complaint Statistics')
-              },
+             
 
               {
-                statIconName: "fas fa-crown",
-                statSubtitle: "PLAN STATS",
-                statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
-                showDetails: true,
-                statIconColor: "bg-yellow-500",
-                statItems: [
-                  { label: "plan", value: stats?.subscription?.plan?.toString() || "0" },
-                  { label: "Time", value:  stats?.subscription?.duration?.toString() || "0" },
-                ],
-                onClick: () => handleCardClick('subscription', 'Your Subscription Details')
-              },
-
-              {
-                statIconName: "fas fa-crown",
+                statIconName: "fas fa-award",
                 statSubtitle: "CERTIFICATE STATS",
                 statTitle: pageType!="dashboard" ?  stats?.subscription?.plan : "",
                 showDetails: true,
                 statIconColor: "bg-yellow-500",
                 statItems: [
-                  { label: "Total", value:certificate.length || "0" },
-                  { label: "Time", value: "-".toString() || "0" },
+                  { label: "Total", value:certificates.length.toString() || "0" },
+                  { label: "Recent", value: certificates.filter(cert => {
+                    const certDate = new Date(cert.event?.endDate || cert.createdAt);
+                    const threeMonthsAgo = new Date();
+                    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+                    return certDate >= threeMonthsAgo;
+                  }).length.toString() || "0" },
                 ],
                 onClick: () => handleCardClick('subscription', 'Your Subscription Details')
               },
@@ -709,76 +750,83 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard', eventId = n
               //   },
               // ]
             },
+            // {
+            //   statIconName: "fas fa-chart-line",
+            //   statSubtitle: "PERFORMANCE",
+            //   statTitle: (() => {
+            //     // Get all buy and sell trades
+            //     const buyTrades = transactions?.filter(t => t.type === 'buy');
+            //     const sellTrades = transactions?.filter(t => t.type === 'sell');
+          
+            //     // Count profitable trades
+            //     const profitableTrades = sellTrades?.filter(sellTrade => {
+            //       // Find the matching buy trade for this stock
+            //       const buyTrade = buyTrades?.find(bt => 
+            //         bt.companySymbol === sellTrade.companySymbol
+            //       );
+          
+            //       if (buyTrade) {
+            //         // Calculate total sell value and buy value
+            //         const sellValue = sellTrade.price * sellTrade.numberOfShares;
+            //         const buyValue = buyTrade.price * sellTrade.numberOfShares;
+                    
+            //         // A trade is profitable if sell value > buy value + portal fee
+            //         return (sellValue - buyValue - 25) > 0;
+            //       }
+            //       return false;
+            //     }).length;
+          
+            //     // Calculate success rate
+            //     const totalSellTrades = sellTrades?.length || 0;
+            //     const successRate = totalSellTrades > 0 
+            //       ? ((profitableTrades / totalSellTrades) * 100).toFixed(2) 
+            //       : "0.00";
+          
+            //     // Return with color coding
+            //     return (
+            //       <span className={Number(successRate) > 0 ? 'text-green-500' : 'text-red-500'}>
+            //         {successRate}%
+            //       </span>
+            //     );
+            //   })(),
+            //   statIconColor: "bg-green-400",
+            //   showDetails: true,
+            //   // statItems: [
+            //   //   { 
+            //   //     label: "Buy Trades", 
+            //   //     value: transactions?.filter(t => t.type === 'buy')?.length || 0 
+            //   //   },
+            //   //   { 
+            //   //     label: "Sell Trades", 
+            //   //     value: transactions?.filter(t => t.type === 'sell')?.length || 0 
+            //   //   },
+            //   //   { 
+            //   //     label: "Profitable Trades",
+            //   //     value: (() => {
+            //   //       const buyTrades = transactions?.filter(t => t.type === 'buy');
+            //   //       const sellTrades = transactions?.filter(t => t.type === 'sell');
+                    
+            //   //       return sellTrades?.filter(sellTrade => {
+            //   //         const buyTrade = buyTrades?.find(bt => 
+            //   //           bt.companySymbol === sellTrade.companySymbol
+            //   //         );
+            //   //         if (buyTrade) {
+            //   //           const sellValue = sellTrade.price * sellTrade.numberOfShares;
+            //   //           const buyValue = buyTrade.price * sellTrade.numberOfShares;
+            //   //           return (sellValue - buyValue - 25) > 0;
+            //   //         }
+            //   //         return false;
+            //   //       }).length || 0;
+            //   //     })()
+            //   //   }
+            //   // ]
+            // },
             {
-              statIconName: "fas fa-chart-line",
-              statSubtitle: "PERFORMANCE",
-              statTitle: (() => {
-                // Get all buy and sell trades
-                const buyTrades = transactions?.filter(t => t.type === 'buy');
-                const sellTrades = transactions?.filter(t => t.type === 'sell');
-          
-                // Count profitable trades
-                const profitableTrades = sellTrades?.filter(sellTrade => {
-                  // Find the matching buy trade for this stock
-                  const buyTrade = buyTrades?.find(bt => 
-                    bt.companySymbol === sellTrade.companySymbol
-                  );
-          
-                  if (buyTrade) {
-                    // Calculate total sell value and buy value
-                    const sellValue = sellTrade.price * sellTrade.numberOfShares;
-                    const buyValue = buyTrade.price * sellTrade.numberOfShares;
-                    
-                    // A trade is profitable if sell value > buy value + portal fee
-                    return (sellValue - buyValue - 25) > 0;
-                  }
-                  return false;
-                }).length;
-          
-                // Calculate success rate
-                const totalSellTrades = sellTrades?.length || 0;
-                const successRate = totalSellTrades > 0 
-                  ? ((profitableTrades / totalSellTrades) * 100).toFixed(2) 
-                  : "0.00";
-          
-                // Return with color coding
-                return (
-                  <span className={Number(successRate) > 0 ? 'text-green-500' : 'text-red-500'}>
-                    {successRate}%
-                  </span>
-                );
-              })(),
-              statIconColor: "bg-green-400",
-              showDetails: true,
-              // statItems: [
-              //   { 
-              //     label: "Buy Trades", 
-              //     value: transactions?.filter(t => t.type === 'buy')?.length || 0 
-              //   },
-              //   { 
-              //     label: "Sell Trades", 
-              //     value: transactions?.filter(t => t.type === 'sell')?.length || 0 
-              //   },
-              //   { 
-              //     label: "Profitable Trades",
-              //     value: (() => {
-              //       const buyTrades = transactions?.filter(t => t.type === 'buy');
-              //       const sellTrades = transactions?.filter(t => t.type === 'sell');
-                    
-              //       return sellTrades?.filter(sellTrade => {
-              //         const buyTrade = buyTrades?.find(bt => 
-              //           bt.companySymbol === sellTrade.companySymbol
-              //         );
-              //         if (buyTrade) {
-              //           const sellValue = sellTrade.price * sellTrade.numberOfShares;
-              //           const buyValue = buyTrade.price * sellTrade.numberOfShares;
-              //           return (sellValue - buyValue - 25) > 0;
-              //         }
-              //         return false;
-              //       }).length || 0;
-              //     })()
-              //   }
-              // ]
+              statIconName: "fas fa-tags",
+              statSubtitle: "HOLDINGS",
+              statTitle: holdings?.toString() , // Replace with actual data
+              statIconColor: "bg-gray-400",
+              showDetails: false
             },
             {
               statIconName: "fas fa-tags",

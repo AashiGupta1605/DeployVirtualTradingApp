@@ -276,7 +276,7 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
         onClick: () => handleCardClick('gallery', 'Gallery Statistics')
               },
               {
-                statIconName: "fas fa-birthday-cake",
+                statIconName: "fas fa-exclamation-triangle",
                 statSubtitle: "COMPLAINT STATS",
                 statTitle: pageType!="dashboard" ?  "345" : "",
                 statIconColor: "bg-yellow-500",
@@ -609,6 +609,37 @@ const StatsSection = ({ isDashboard = false, pageType = 'dashboard' }) => {
             }
           ],
           galleryCategories: [
+            {
+              statIconName: "fas fa-inbox",
+              statSubtitle: "CATEGORY",
+              statTitle: stats?.gallery?.totalCategories?.toString() || "0",
+              statIconColor: "bg-purple-500",
+              showDetails: false
+            },
+            {
+              statIconName: "fas fa-clock",
+              statSubtitle: "ACTIVE",
+              statTitle: "-", // Replace with actual data
+              statIconColor: "bg-blue-400",
+              showDetails: false
+            },
+            {
+              statIconName: "fas fa-chart-line",
+              statSubtitle: "DELETED",
+              statTitle: "-",// Replace with actual data
+              statIconColor: "bg-green-400",
+              showDetails: false
+            },
+            {
+              statIconName: "fas fa-tags",
+              statSubtitle: "NEW",
+              statTitle: "-", // Replace with actual data
+              statIconColor: "bg-gray-400",
+              showDetails: false
+            }
+          ],
+
+          participants: [
             {
               statIconName: "fas fa-inbox",
               statSubtitle: "CATEGORY",
