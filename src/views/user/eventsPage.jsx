@@ -535,7 +535,7 @@ const EventsPage = () => {
           <div className="absolute top-0 right-8 sm:right-20 w-24 h-24 sm:w-32 sm:h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
 
           <div className="relative mt-6 pt-10">
-            <h1 className="text-2xl mt-4 sm:text-3xl md:text-4xl font-extrabold text-gray-900">
+            <h1 className="text-2xl mt-24 sm:text-3xl md:text-4xl font-extrabold text-gray-900">
               DreamNifty Trading Events
             </h1>
             <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">

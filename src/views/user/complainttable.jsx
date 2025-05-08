@@ -252,7 +252,7 @@ export default function ComplaintTable() {
     closeDeleteModal();
   };
 
-  if (complaintStatus === "loading") return <div>Loading...</div>;
+  // if (complaintStatus === "loading") return <div>Loading...</div>;
 
   return (
     <>
