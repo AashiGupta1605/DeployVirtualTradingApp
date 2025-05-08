@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../utils/BaseUrl';
-import { updateSubscription } from '../userSubscriptionPlan/userSubscriptionPlansSlice';
 
 const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) => {
-  if (!transactions.length) {
+  if (!transactions.length || !holdings?.length) {
     return {
       totalInvestment: 0,
       currentHoldingsValue: 0,
@@ -22,28 +21,28 @@ const calculateAnalytics = (transactions = [], holdings = [], currentPrice = 0) 
     const sellTransactions = transactions.filter(t => t.type === 'sell');
 
     const buyTrades = buyTransactions.reduce((total, transaction) => 
-      total + transaction.numberOfShares, 0);
+      total + (transaction.numberOfShares || 0), 0);
     
     const sellTrades = sellTransactions.reduce((total, transaction) => 
-      total + transaction.numberOfShares, 0);
+      total + (transaction.numberOfShares || 0), 0);
 
     const totalInvestment = holdings.reduce((sum, holding) => 
-      sum + (holding.quantity * holding.averageBuyPrice), 0);
+      sum + ((holding.quantity || 0) * (holding.averageBuyPrice || 0)), 0);
 
     const totalHoldingsValue = holdings.reduce((sum, holding) => 
-      sum + (holding.quantity * (currentPrice || holding.averageBuyPrice)), 0);
+      sum + ((holding.quantity || 0) * (currentPrice || (holding.averageBuyPrice || 0))), 0);
 
     const realizedPL = sellTransactions.reduce((sum, trade) => {
       const buyPrice = buyTransactions.find(bt => bt.companySymbol === trade.companySymbol)?.price || 0;
-      return sum + ((trade.price - buyPrice) * trade.numberOfShares);
+      return sum + ((trade.price - buyPrice) * (trade.numberOfShares || 0));
     }, 0);
 
     const currentHoldingsValue = holdings.reduce((sum, holding) => 
-      sum + (holding.quantity * currentPrice), 0);
+      sum + ((holding.quantity || 0) * (currentPrice || 0)), 0);
 
     const successfulTrades = sellTransactions.filter(trade => {
       const buyPrice = buyTransactions.find(bt => bt.companySymbol === trade.companySymbol)?.price || 0;
-      return trade.price > buyPrice;
+      return (trade.price || 0) > buyPrice;
     }).length;
 
     const successRate = sellTransactions.length > 0
@@ -98,21 +97,18 @@ const initialState = {
   }
 };
 
-// In tradingSlice.js, update fetchHoldings:
 export const fetchHoldings = createAsyncThunk(
   'trading/fetchHoldings',
   async ({ userId, subscriptionPlanId }, { rejectWithValue }) => {
     try {
-      // Validate IDs
-      if (!mongoose.Types.ObjectId.isValid(userId) || 
-          !mongoose.Types.ObjectId.isValid(subscriptionPlanId)) {
-        throw new Error('Invalid user ID or subscription plan ID');
+      if (!userId || !subscriptionPlanId) {
+        throw new Error('User ID and Subscription Plan ID are required');
       }
 
       const response = await axios.get(
         `${BASE_API_URL}/user/trading/holdings/${userId}/${subscriptionPlanId}`
       );
-      return response.data || [];
+      return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || 
@@ -121,38 +117,56 @@ export const fetchHoldings = createAsyncThunk(
     }
   }
 );
-
-// In tradingSlice.js
 export const placeOrder = createAsyncThunk(
   'trading/placeOrder',
   async (orderDetails, { rejectWithValue }) => {
     try {
-      // Validate required fields including type
-      const requiredFields = ['userId', 'symbol', 'type', 'numberOfShares', 'price'];
+      const requiredFields = [
+        'userId', 
+        'subscriptionPlanId', 
+        'symbol', 
+        'type', 
+        'numberOfShares', 
+        'price', 
+        'stockType'
+      ];
+      
+      // Validate stockType specifically
+      if (!orderDetails.stockType || !['nifty50', 'nifty500', 'etf'].includes(orderDetails.stockType)) {
+        throw new Error('Valid stockType is required (nifty50, nifty500, or etf)');
+      }
+
       const missingFields = requiredFields.filter(field => !orderDetails[field]);
       
       if (missingFields.length) {
         throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
       }
 
-      const response = await axios.post(`${BASE_API_URL}/user/trading/trade`, orderDetails);
+      const response = await axios.post(
+        `${BASE_API_URL}/user/trading/trade`, 
+        orderDetails
+      );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(
+        error.response?.data || 
+        error.message || 
+        'Failed to place order'
+      );
     }
   }
 );
 
 export const fetchTransactionHistory = createAsyncThunk(
   'trading/fetchHistory',
-  async ({ userId, eventId }, { rejectWithValue }) => {
+  async ({ userId, symbol, eventId }, { rejectWithValue }) => {
     try {
       let url = `${BASE_API_URL}/user/trading/history/${userId}`;
-      if (eventId === 'none') {
-        url = `${BASE_API_URL}/user/trading/history/${userId}?eventFilter=none`;
-      } else if (eventId) {
-        url = `${BASE_API_URL}/user/trading/history/${userId}?eventId=${eventId}`;
-      }
+      
+      const params = new URLSearchParams();
+      if (symbol) params.append('symbol', symbol);
+      if (eventId) params.append('eventId', eventId);
+      if (params.toString()) url += `?${params.toString()}`;
       
       const response = await axios.get(url);
       return {
@@ -167,9 +181,6 @@ export const fetchTransactionHistory = createAsyncThunk(
     }
   }
 );
-
-// Update the selector to properly filter transactions
-
 
 export const fetchEventSpecificTransactions = createAsyncThunk(
   'trading/fetchEventSpecificTransactions',
@@ -201,10 +212,10 @@ const tradingSlice = createSlice({
       );
     },
     updateHoldings: (state, action) => {
-      state.holdings = action.payload;
+      state.holdings = Array.isArray(action.payload) ? action.payload : [];
       state.statistics = calculateAnalytics(
         state.transactions,
-        action.payload,
+        state.holdings,
         action.payload.currentPrice
       );
     },
@@ -213,27 +224,27 @@ const tradingSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchHoldings.pending, (state) => {
-        state.loading = true;
+        state.loading.general = true;
       })
       .addCase(fetchHoldings.fulfilled, (state, action) => {
-        state.loading = false;
-        state.holdings = action.payload;
+        state.loading.general = false;
+        state.holdings = Array.isArray(action.payload) ? action.payload : [];
         state.statistics = calculateAnalytics(
           state.transactions,
-          action.payload
+          state.holdings
         );
       })
       .addCase(fetchHoldings.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.error = action.payload;
       })
       .addCase(placeOrder.pending, (state) => {
-        state.loading = true;
+        state.loading.trading = true;
         state.error = null;
         state.orderStatus = 'pending';
       })
       .addCase(placeOrder.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.trading = false;
         state.orderStatus = 'success';
         
         if (!Array.isArray(state.transactions)) {
@@ -252,16 +263,16 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(placeOrder.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.trading = false;
         state.error = action.payload;
         state.orderStatus = 'failed';
       })
       .addCase(fetchTransactionHistory.pending, (state) => {
-        state.loading = true;
+        state.loading.general = true;
         state.error = null;
       })
       .addCase(fetchTransactionHistory.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.transactions = action.payload.transactions;
         state.holdings = action.payload.holdings;
         state.statistics = calculateAnalytics(
@@ -270,14 +281,14 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(fetchTransactionHistory.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.error = action.payload;
       })
       .addCase(fetchEventSpecificTransactions.pending, (state) => {
-        state.loading = true;
+        state.loading.general = true;
       })
       .addCase(fetchEventSpecificTransactions.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.transactions = action.payload.transactions;
         state.holdings = action.payload.holdings;
         state.statistics = calculateAnalytics(
@@ -286,57 +297,73 @@ const tradingSlice = createSlice({
         );
       })
       .addCase(fetchEventSpecificTransactions.rejected, (state, action) => {
-        state.loading = false;
+        state.loading.general = false;
         state.error = action.payload;
       });
   }
 });
 
 // Selectors
-// In your tradingSlice.js
-export const selectTransactions = (state) => state.user.tradingModal.transactions || [];
+export const selectTransactions = (state) => 
+  Array.isArray(state.user.tradingModal.transactions) ? 
+    state.user.tradingModal.transactions : 
+    [];
 
 export const selectFilteredTransactions = createSelector(
-  [selectTransactions, (state, eventId) => eventId],
-  (transactions, eventId) => {
-    if (eventId === 'none') {
-      // Only show transactions with no eventId or null eventId
-      return transactions.filter(t => 
-        t.eventId === null || t.eventId === undefined
-      );
-    }
-    if (eventId) {
-      // Show only transactions for this specific event
-      return transactions.filter(t => t.eventId === eventId);
-    }
-    // If no eventId parameter, show all transactions
-    return transactions;
+  [selectTransactions, (state, filters) => filters],
+  (transactions, filters) => {
+    const { symbol, eventId } = filters || {};
+    
+    return transactions.filter(transaction => {
+      const symbolMatch = symbol 
+        ? transaction.companySymbol?.toLowerCase() === symbol.toLowerCase()
+        : true;
+      
+      const eventMatch = eventId === 'none'
+        ? !transaction.eventId
+        : eventId
+          ? transaction.eventId === eventId
+          : true;
+      
+      return symbolMatch && eventMatch;
+    });
   }
 );
 
-export const selectHoldings = (state) => state.user.tradingModal.holdings || [];
-export const selectStatistics = (state) => state.user.tradingModal.statistics;
-export const selectLoadingState = (state) => {
-  const loading = state.user.tradingModal.loading;
-  const orderStatus = state.user.tradingModal.orderStatus;
+export const selectHoldings = (state) => 
+  Array.isArray(state.user.tradingModal.holdings) ? 
+    state.user.tradingModal.holdings : 
+    [];
 
-  return {
-    loading: typeof loading === 'object' 
-      ? (loading.general || loading.trading || false)
-      : (loading || false),
-    orderStatus: orderStatus || null
-  };
-};
+export const selectTotalHoldingsValue = createSelector(
+  [selectHoldings],
+  (holdings) => {
+    if (!Array.isArray(holdings)) return 0;
+    return holdings.reduce((total, holding) => {
+      const quantity = Number(holding.quantity) || 0;
+      const avgPrice = Number(holding.averageBuyPrice) || 0;
+      return total + (quantity * avgPrice);
+    }, 0);
+  }
+);
+export const selectStatistics = (state) => state.user.tradingModal.statistics;
+
+export const selectLoadingState = createSelector(
+  [(state) => state.user.tradingModal],
+  (tradingModal) => ({
+    loading: tradingModal.loading.general || tradingModal.loading.trading || false,
+    orderStatus: tradingModal.orderStatus || null
+  })
+);
+
 export const selectError = (state) => state.user.tradingModal.error;
+
 export const selectHoldingBySymbol = createSelector(
-  [(state) => state.user.tradingModal.holdings || [], (state, symbol) => symbol],
+  [selectHoldings, (state, symbol) => symbol],
   (holdings, symbol) => holdings.find(h => 
-    h.companySymbol.toLowerCase() === symbol?.toLowerCase()
+    h.companySymbol?.toLowerCase() === symbol?.toLowerCase()
   )
 );
-export const selectTotalHoldingsValue = (state) => 
-  (state.user.tradingModal.holdings || []).reduce((total, holding) => 
-    total + (holding.quantity * holding.averageBuyPrice), 0);
 
 export const { 
   clearOrderStatus, 

@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { BASE_API_URL } from '../../utils/BaseUrl';
 import axios from "axios";
-
 
 const formatDateForDisplay = (dateString) => {
   if (!dateString) return null;
@@ -13,6 +12,60 @@ const formatDateForDisplay = (dateString) => {
   
   const date = new Date(dateString);
   return isNaN(date.getTime()) ? null : date.toISOString();
+};
+
+// Price analysis helper
+const analyzePriceData = (data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return {
+      currentPrice: 0,
+      averagePrice: 0,
+      percentageDiff: 0,
+      recommendation: 'HOLD'
+    };
+  }
+
+  const currentPrice = data[data.length - 1].close;
+  const prices = data.map(item => item.close);
+  const averagePrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+  const percentageDiff = ((currentPrice - averagePrice) / averagePrice) * 100;
+
+  let recommendation = 'HOLD';
+  if (percentageDiff > 5) recommendation = 'SELL';
+  if (percentageDiff < -5) recommendation = 'BUY';
+
+  return {
+    currentPrice,
+    averagePrice,
+    percentageDiff,
+    recommendation
+  };
+};
+
+// Calculate technical indicators
+const calculateTechnicalIndicators = (data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return {
+      sma20: [],
+      sma50: [],
+      sma200: []
+    };
+  }
+
+  const calculateSMA = (period) => {
+    return data.map((_, index) => {
+      if (index < period - 1) return null;
+      const slice = data.slice(index - period + 1, index + 1);
+      const sum = slice.reduce((acc, val) => acc + val.close, 0);
+      return sum / period;
+    });
+  };
+
+  return {
+    sma20: calculateSMA(20),
+    sma50: calculateSMA(50),
+    sma200: calculateSMA(200)
+  };
 };
 
 // Enhanced helper function to normalize historical data
@@ -34,15 +87,15 @@ const normalizeHistoricalData = (data, symbol) => {
 
   console.log(`Found ${dataArray.length} records for ${symbol}`);
 
-  return dataArray.map(item => {
+  return dataArray.map((item, index) => {
+    // Ensure we always have a date or fallback to index
+    let date = item.fetchTime || item.date || item.lastUpdateTime || new Date().toISOString();
     // Handle different API response formats
     const open = Number(item.open) || Number(item.dayOpen) || 0;
     const high = Number(item.high) || Number(item.dayHigh) || 0;
     const low = Number(item.low) || Number(item.dayLow) || 0;
     const close = Number(item.close) || Number(item.lastPrice) || 0;
     const volume = Number(item.volume) || Number(item.totalTradedVolume) || 0;
-    
-    let date = item.fetchTime || item.date || item.lastUpdateTime;
     
     // Convert Indian date format (DD-MM-YYYY) to ISO format if needed
     if (date && date.match(/^\d{2}-\d{2}-\d{4}$/)) {
@@ -63,7 +116,7 @@ const normalizeHistoricalData = (data, symbol) => {
     }
 
     return {
-      id: item._id || `${symbol}-${date}`,
+      id: item._id || `${symbol}-${date}-${index}`,
       symbol: symbol,
       date: date,
       open: open,
@@ -105,83 +158,75 @@ const filterDataByTimeRange = (data, timeRange) => {
   }
 
   return data.filter(item => {
-    let itemDate;
-    
-    // Handle different date formats
-    if (item.date instanceof Date) {
-      itemDate = item.date;
-    } else if (typeof item.date === 'string') {
-      // Handle ISO format
-      if (item.date.includes('T')) {
-        itemDate = new Date(item.date);
-      } 
-      // Handle DD-MM-YYYY format
-      else if (item.date.match(/^\d{2}-\d{2}-\d{4}$/)) {
-        const [day, month, year] = item.date.split('-');
-        itemDate = new Date(`${year}-${month}-${day}`);
-      }
-      // Handle Unix timestamp
-      else if (/^\d+$/.test(item.date)) {
-        itemDate = new Date(parseInt(item.date, 10));
-      }
-    }
-
-    return itemDate && itemDate >= cutoffDate;
+    const itemDate = new Date(item.date);
+    return itemDate >= cutoffDate;
   });
 };
 
-// Calculate technical indicators
-const calculateTechnicalIndicators = (data) => {
-  if (!Array.isArray(data) || data.length === 0) {
-    return {
-      sma20: [],
-      sma50: [],
-      sma200: []
-    };
+const normalizeNiftyHistoricalData = (data, symbol) => {
+  if (!Array.isArray(data)) {
+    if (data && Array.isArray(data.data)) {
+      data = data.data;
+    } else {
+      return [];
+    }
   }
 
-  const calculateSMA = (period) => {
-    return data.map((_, index) => {
-      if (index < period - 1) return null;
-      const slice = data.slice(index - period + 1, index + 1);
-      const sum = slice.reduce((acc, val) => acc + val.close, 0);
-      return sum / period;
-    });
-  };
+  return data.map((item, index) => {
+    // Ensure we have a valid date
+    let date = item.date || item.timestamp || item.lastUpdateTime || item.fetchTime;
+    
+    // Handle different date formats
+    if (date.match(/^\d{2}-\d{2}-\d{4}$/)) {
+      // DD-MM-YYYY format
+      const [day, month, year] = date.split('-');
+      date = new Date(`${year}-${month}-${day}`);
+    } else if (typeof date === 'string' && !date.includes('T')) {
+      // Assume it's a timestamp string
+      date = new Date(parseInt(date, 10));
+    } else if (typeof date === 'number') {
+      // Unix timestamp
+      date = new Date(date);
+    } else {
+      // ISO string or other format
+      date = new Date(date);
+    }
 
-  return {
-    sma20: calculateSMA(20),
-    sma50: calculateSMA(50),
-    sma200: calculateSMA(200)
-  };
+    return {
+      id: item._id || `${symbol}-${date.getTime()}-${index}`,
+      symbol: symbol,
+      date: date.toISOString(),
+      open: Number(item.open) || Number(item.dayOpen) || 0,
+      high: Number(item.high) || Number(item.dayHigh) || 0,
+      low: Number(item.low) || Number(item.dayLow) || 0,
+      close: Number(item.close) || Number(item.lastPrice) || 0,
+      volume: Number(item.volume) || Number(item.totalTradedVolume) || 0,
+      pChange: Number(item.pChange) || Number(item.changePercent) || 0,
+      value: Number(item.value) || (Number(item.close) * Number(item.volume)) || 0
+    };
+  });
 };
 
-// Price analysis helper
-const analyzePriceData = (data) => {
-  if (!Array.isArray(data) || data.length === 0) {
+const normalizeETFHistoricalData = (data, symbol) => {
+  if (!Array.isArray(data)) return [];
+  
+  return data.map((item, index) => {
+    // Ensure we always have a date or fallback to index
+    const date = item.date || item.timestamp || new Date().toISOString();
+    
     return {
-      currentPrice: 0,
-      averagePrice: 0,
-      percentageDiff: 0,
-      recommendation: 'HOLD'
+      id: item._id || `${symbol}-${date}-${index}`,
+      symbol: symbol,
+      date: date,
+      open: Number(item.open) || Number(item.dayOpen) || 0,
+      high: Number(item.high) || Number(item.dayHigh) || 0,
+      low: Number(item.low) || Number(item.dayLow) || 0,
+      close: Number(item.close) || Number(item.lastPrice) || 0,
+      volume: Number(item.volume) || Number(item.totalTradedVolume) || 0,
+      pChange: Number(item.pChange) || Number(item.changePercent) || 0,
+      value: Number(item.value) || (Number(item.close) * Number(item.volume)) || 0
     };
-  }
-
-  const currentPrice = data[data.length - 1].close;
-  const prices = data.map(item => item.close);
-  const averagePrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-  const percentageDiff = ((currentPrice - averagePrice) / averagePrice) * 100;
-
-  let recommendation = 'HOLD';
-  if (percentageDiff > 5) recommendation = 'SELL';
-  if (percentageDiff < -5) recommendation = 'BUY';
-
-  return {
-    currentPrice,
-    averagePrice,
-    percentageDiff,
-    recommendation
-  };
+  });
 };
 
 const initialState = {
@@ -277,42 +322,39 @@ export const fetchCompanyDetails = createAsyncThunk(
   }
 );
 
-// Helper function to format dates
-
-
 // Fetch historical data thunk
 export const fetchHistoricalData = createAsyncThunk(
   'companyDetails/fetchHistoricalData',
-  async ({ symbol, type, timeRange = '1D' }, { rejectWithValue }) => {
+  async ({ symbol, type }, { rejectWithValue }) => {
     try {
       let endpoint, response;
       
       switch (type) {
         case 'nifty50':
           endpoint = `${BASE_API_URL}/admin/nifty/company/history/${symbol}`;
-          response = await axios.get(endpoint, { params: { timeRange } });
+          response = await axios.get(endpoint);
           return {
-            rawData: response.data,
-            processedData: normalizeNiftyHistoricalData(response.data, symbol),
-            timeRange
+            rawData: response.data.data || response.data,
+            processedData: normalizeNiftyHistoricalData(response.data.data || response.data, symbol),
+            timeRange: 'ALL'
           };
           
         case 'nifty500':
           endpoint = `${BASE_API_URL}/admin/nifty500/company/history/${symbol}`;
-          response = await axios.get(endpoint, { params: { timeRange } });
+          response = await axios.get(endpoint);
           return {
-            rawData: response.data,
-            processedData: normalizeNiftyHistoricalData(response.data, symbol),
-            timeRange
+            rawData: response.data.data || response.data,
+            processedData: normalizeNiftyHistoricalData(response.data.data || response.data, symbol),
+            timeRange: 'ALL'
           };
           
         case 'etf':
           endpoint = `${BASE_API_URL}/admin/etf/historical/${symbol}`;
-          response = await axios.get(endpoint, { params: { timeRange } });
+          response = await axios.get(endpoint);
           return {
-            rawData: response.data,
-            processedData: normalizeETFHistoricalData(response.data, symbol),
-            timeRange
+            rawData: response.data.data || response.data,
+            processedData: normalizeETFHistoricalData(response.data.data || response.data, symbol),
+            timeRange: 'ALL'
           };
           
         default:
@@ -324,48 +366,14 @@ export const fetchHistoricalData = createAsyncThunk(
   }
 );
 
-const normalizeNiftyHistoricalData = (data, symbol) => {
-  if (!Array.isArray(data)) return [];
-  
-  return data.map(item => ({
-    id: item._id || `${symbol}-${item.date}`,
-    symbol: symbol,
-    date: item.date || item.timestamp,
-    open: Number(item.open) || 0,
-    high: Number(item.high) || 0,
-    low: Number(item.low) || 0,
-    close: Number(item.close) || 0,
-    volume: Number(item.volume) || 0,
-    pChange: Number(item.pChange) || 0,
-    value: Number(item.value) || (Number(item.close) * Number(item.volume)) || 0
-  }));
-};
-
-const normalizeETFHistoricalData = (data, symbol) => {
-  if (!Array.isArray(data)) return [];
-  
-  return data.map(item => ({
-    id: item._id || `${symbol}-${item.date}`,
-    symbol: symbol,
-    date: item.date || item.timestamp,
-    open: Number(item.open) || Number(item.dayOpen) || 0,
-    high: Number(item.high) || Number(item.dayHigh) || 0,
-    low: Number(item.low) || Number(item.dayLow) || 0,
-    close: Number(item.close) || Number(item.lastPrice) || 0,
-    volume: Number(item.volume) || Number(item.totalTradedVolume) || 0,
-    pChange: Number(item.pChange) || Number(item.changePercent) || 0,
-    value: Number(item.value) || (Number(item.close) * Number(item.volume)) || 0
-  }));
-};
-
 // Refresh market data thunk
 export const refreshMarketData = createAsyncThunk(
   'companyDetails/refreshMarketData',
-  async ({ symbol, type, timeRange = '1D' }, { dispatch }) => {
+  async ({ symbol, type }, { dispatch }) => {
     try {
       const [companyDetails, historicalData] = await Promise.all([
         dispatch(fetchCompanyDetails({ symbol, type })).unwrap(),
-        dispatch(fetchHistoricalData({ symbol, type, timeRange })).unwrap()
+        dispatch(fetchHistoricalData({ symbol, type })).unwrap()
       ]);
 
       return {
@@ -432,8 +440,8 @@ const companyDetailsSlice = createSlice({
           processedData: action.payload.processedData,
           timeRange: action.payload.timeRange
         };
-        state.technicalIndicators = action.payload.technicalIndicators;
-        state.priceAnalysis = action.payload.priceAnalysis;
+        state.technicalIndicators = calculateTechnicalIndicators(action.payload.processedData);
+        state.priceAnalysis = analyzePriceData(action.payload.processedData);
         state.error = null;
         state.lastUpdated = new Date().toISOString();
       })
@@ -474,20 +482,19 @@ export const selectTechnicalIndicators = (state) =>
   state.common.companyDetails?.technicalIndicators;
 export const selectPriceAnalysis = (state) => 
   state.common.companyDetails?.priceAnalysis;
-export const selectLoadingState = (state) => ({
-  loading: state.common.companyDetails?.loading || false,
-  historicalLoading: state.common.companyDetails?.historicalLoading || false,
-  isRefreshing: state.common.companyDetails?.isRefreshing || false
-});
 export const selectLastUpdated = (state) => 
   state.common.companyDetails?.lastUpdated;
 
-export const selectLoadingStates = (state) => ({
-  loading: state.common.companyDetails?.loading || false,
-  historicalLoading: state.common.companyDetails?.historicalLoading || false,
-  isRefreshing: state.common.companyDetails?.isRefreshing || false
-});
- 
+export const selectLoadingStates = createSelector(
+  (state) => state.common.companyDetails,
+  (companyDetails) => ({
+    loading: companyDetails?.loading || false,
+    historicalLoading: companyDetails?.historicalLoading || false,
+    isRefreshing: companyDetails?.isRefreshing || false
+  })
+);
+
+export const selectLoadingState = selectLoadingStates;
 
 export const {
   setActiveTab,

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   ArrowUp, 
   ArrowDown, 
@@ -33,26 +33,30 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
     state.user.subscriptionPlan?.activeSubscription?._id
   );
 
-  // Enhanced stock type detection
+  // Improved stock type detection
   const getStockType = (symbol, stockType, transactions = []) => {
-    // Priority 1: Explicitly provided type
+    // Priority 1: Use explicitly provided type
     if (stockType) return stockType;
     
-    // Priority 2: Type from transactions
-    const tx = transactions.find(t => t.companySymbol === symbol);
-    if (tx?.stockType) return tx.stockType;
+    // Priority 2: Get type from transactions (most recent first)
+    const sortedTxs = [...transactions].sort((a, b) => 
+      new Date(b.createdAt) - new Date(a.createdAt));
+    const txWithType = sortedTxs.find(t => t.companySymbol === symbol);
+    if (txWithType?.stockType) return txWithType.stockType;
     
-    // Priority 3: ETF detection
-    const etfKeywords = ['BEES', 'ETF', 'GOLD', 'LIQUID', 'MOMENTUM'];
-    if (etfKeywords.some(kw => symbol.includes(kw))) return 'etf';
+    // Priority 3: Get type from holdings
+    const holdingWithType = holdings.find(h => h.companySymbol === symbol);
+    if (holdingWithType?.stockType) return holdingWithType.stockType;
     
-    // Priority 4: Known Nifty 50 stocks
-    const nifty50Stocks = ['NIFTY 50', 'RELIANCE', 'HDFC', 'INFY', 'TCS'];
-    if (nifty50Stocks.includes(symbol)) return 'nifty50';
+    // Priority 4: Check if it's an ETF (case-insensitive)
+    if (typeof symbol === 'string' && symbol.toUpperCase().includes('ETF')) {
+      return 'etf';
+    }
     
-    // Default to nifty500
+    // Default to nifty500 (since it's the largest universe)
     return 'nifty500';
   };
+
   // Fetch data
   useEffect(() => {
     const fetchData = async () => {
@@ -93,7 +97,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
         totalTrades: stockTransactions.length,
         buyTrades: totalBuyShares,
         sellTrades: totalSellShares,
-        type: getStockType(symbol)
+        type: getStockType(symbol, null, transactions)
       };
     } catch (error) {
       console.error('Error calculating stock stats:', error);
@@ -101,25 +105,28 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
     }
   };
 
-  // Combine holdings and transactions
+  // Combine holdings and transactions with proper type handling
   const combinedStocks = useMemo(() => {
     try {
+      // Create a map of holdings with their types
       const holdingsMap = new Map(
         holdings.map(holding => [
           holding?.companySymbol,
           {
             ...holding,
-            type: holding?.stockType || getStockType(holding?.companySymbol)
+            type: holding?.stockType || getStockType(holding?.companySymbol, null, transactions)
           }
         ])
       );
 
+      // Get unique symbols from transactions
       const transactionSymbols = new Set(
         transactions
           .map(t => t?.companySymbol)
           .filter(Boolean)
       );
 
+      // Combine and deduplicate
       return [...holdingsMap.keys(), ...transactionSymbols]
         .filter((symbol, index, self) => 
           symbol && self.indexOf(symbol) === index
@@ -134,7 +141,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
               .sort((a, b) => 
                 new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0)
               )[0]?.createdAt || new Date(),
-            type: getStockType(symbol)
+            type: getStockType(symbol, null, transactions)
           };
 
           return holding;
@@ -172,7 +179,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
 
   const handleStockClick = (symbol, type) => {
     if (onStockClick) {
-      onStockClick(symbol, type || getStockType(symbol));
+      onStockClick(symbol, type || getStockType(symbol, null, transactions));
     }
   };
 
@@ -249,11 +256,7 @@ const PortfolioTable = ({ transactions = [], holdings = [], onStockClick }) => {
               const isSoldOut = stock.quantity === 0;
 
               return (
-                <tr
-                  key={stock.companySymbol}
-                  className={`hover:bg-gray-50 cursor-pointer ${isSoldOut ? 'opacity-50' : ''}`}
-                  onClick={() => handleStockClick(stock.companySymbol, stock.type)}
-                >
+                <tr key={stock.companySymbol} onClick={() => handleStockClick(stock.companySymbol, stock.type)}>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">
                       {stock.companySymbol}

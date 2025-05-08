@@ -11,7 +11,7 @@ import OrganizationFeedback from "../views/Organization/OrganizationDetails/Orga
 import OrganizationComplaint from "../views/Organization/OrganizationDetails/OrganizationComplaint";
 import ProtectedRoute from "../components/Organization/ProtectedRoutes/ProtectedRoute";
 import ResetPasswordModal from "../views/auth/ResetPasswordModal";
-import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
+// import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
 import { logoutOrganization } from "../redux/Organization/auth/organizationAuthSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -23,16 +23,16 @@ export default function Org() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const handleSessionExpired = () => {
-      setShowSessionExpiredModal(true);
-    };
+  // useEffect(() => {
+  //   const handleSessionExpired = () => {
+  //     setShowSessionExpiredModal(true);
+  //   };
 
-    window.addEventListener('show-session-expired-modal', handleSessionExpired);
-    return () => {
-      window.removeEventListener('show-session-expired-modal', handleSessionExpired);
-    };
-  }, []);
+  //   window.addEventListener('show-session-expired-modal', handleSessionExpired);
+  //   return () => {
+  //     window.removeEventListener('show-session-expired-modal', handleSessionExpired);
+  //   };
+  // }, []);
 
   const handleLogout = () => {
     dispatch(logoutOrganization());
@@ -75,13 +75,13 @@ export default function Org() {
         <OrganizationFooter />
       </div>
 
-      <SessionExpiredModal
+      {/* <SessionExpiredModal
         show={showSessionExpiredModal}
         onHide={() => {
           setShowSessionExpiredModal(false);
           handleLogout();
         }}
-      />
+      /> */}
     </div>
   );
 }
