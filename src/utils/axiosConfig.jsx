@@ -35,7 +35,7 @@
 import axios from 'axios';
 import { BASE_API_URL } from './BaseUrl';
 import React, { useState } from 'react';
-import SessionExpiredModal from '../components/Organization/Session/SessionExpiredModal'; // Import the modal component
+// import SessionExpiredModal from '../components/Organization/Session/SessionExpiredModal'; // Import the modal component
 
 // Create an axios instance
 const axiosInstance = axios.create({

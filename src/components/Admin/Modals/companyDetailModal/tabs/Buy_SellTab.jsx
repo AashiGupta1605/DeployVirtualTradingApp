@@ -1,4 +1,3 @@
-// BuySellTab.jsx - Part 1
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,7 +28,6 @@ import TradingControls from './TradingControls';
 import MarketStatusOverlay from './../parts/MarketStatusOverlay';
 import { isMarketOpen } from '../../../../../utils/marketStatus';
 
-// Helper function to format currency
 const formatCurrency = (amount) => {
   if (!amount || isNaN(amount)) return '₹0.00';
   return new Intl.NumberFormat('en-IN', {
@@ -40,35 +38,124 @@ const formatCurrency = (amount) => {
   }).format(amount);
 };
 
-// Helper function to validate order
 const validateOrder = (orderDetails, holdings, remainingBalance) => {
-  const { type, numberOfShares, price, currentMarketPrice, symbol } = orderDetails;
-  const orderValue = numberOfShares * (price || currentMarketPrice);
-
-  if (!numberOfShares || numberOfShares <= 0) {
+  const { type, numberOfShares, price, currentMarketPrice, symbol, stockType } = orderDetails;
+  
+  if (!numberOfShares || isNaN(numberOfShares)) {
     throw new Error('Please enter a valid number of shares');
   }
+
+  if (numberOfShares <= 0) {
+    throw new Error('Number of shares must be greater than zero');
+  }
+
+  const orderValue = numberOfShares * (price || currentMarketPrice);
 
   if (type === 'buy') {
     if (orderValue > remainingBalance) {
       throw new Error('Insufficient balance for this order');
     }
+    
+    if (!stockType || !['nifty50', 'nifty500', 'etf'].includes(stockType)) {
+      throw new Error('Please select a valid stock type for purchase');
+    }
   } else if (type === 'sell') {
-    // Case-insensitive symbol matching and proper quantity check
     const currentHolding = holdings.find(h => 
       h.companySymbol.toLowerCase() === symbol.toLowerCase()
     );
     
     if (!currentHolding) {
-      throw new Error(`No holdings found for ${symbol}`);
+      throw new Error(`You don't have any ${symbol} shares to sell`);
     }
     
     if (currentHolding.quantity < numberOfShares) {
-      throw new Error(`Insufficient shares to sell. You only have ${currentHolding.quantity} shares`);
+      throw new Error(`Insufficient shares. You only have ${currentHolding.quantity} shares`);
+    }
+
+    if (!currentHolding.stockType) {
+      throw new Error(`Invalid stock type in your holdings`);
     }
   }
 
   return true;
+};
+
+const handlePlaceOrder = async () => {
+  try {
+    if (!activeSubscription?._id) {
+      throw new Error('No active subscription found');
+    }
+
+    const orderValue = calculateOrderValue();
+    const PORTAL_FEE = 25;
+    const totalWithFee = activeTab === 'buy' 
+      ? orderValue + PORTAL_FEE 
+      : orderValue - PORTAL_FEE;
+
+    // Determine stockType based on buy/sell
+    const stockType = activeTab === 'buy'
+      ? ['nifty50', 'nifty500', 'etf'].includes(data?.type) 
+        ? data.type 
+        : 'nifty50'
+      : currentHolding?.stockType || 'nifty50';
+
+    const orderDetails = {
+      userId,
+      subscriptionPlanId: activeSubscription._id,
+      symbol: symbol,
+      type: activeTab,
+      stockType,
+      numberOfShares: quantity,
+      price: orderType === 'market' ? currentMarketPrice : price,
+      total: orderValue,
+      currentMarketPrice,
+      orderType,
+      eventId: activeEvent?._id,
+      portalFee: PORTAL_FEE,
+      totalWithFee
+    };
+
+    // Validate before placing order
+    try {
+      validateOrder(orderDetails, holdings, calculateRemainingBalance);
+    } catch (validationError) {
+      toast.error(validationError.message);
+      setShowConfirmation(false);
+      return;
+    }
+
+    // Dispatch the order
+    const result = await dispatch(placeOrder(orderDetails)).unwrap();
+
+    toast.success(
+      `Successfully ${activeTab === 'buy' ? 'bought' : 'sold'} ` +
+      `${quantity} shares of ${symbol}` +
+      `for ₹${totalWithFee.toFixed(2)}`,
+      { duration: 3000 }
+    );
+
+    // Reset form
+    setShowConfirmation(false);
+    setQuantity(0);
+    setOrderType('market');
+    setPrice(currentMarketPrice);
+    setStopPrice(currentMarketPrice);
+
+    // Refresh data
+    if (userId) {
+      await Promise.all([
+        dispatch(fetchHoldings({ userId, subscriptionPlanId: activeSubscription._id })),
+        dispatch(fetchTransactionHistory({ userId }))
+      ]);
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Order error:', error);
+    toast.error(error.message || 'Failed to place order');
+    setShowConfirmation(false);
+    throw error;
+  }
 };
 
 const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) => {
@@ -122,9 +209,6 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
 
   const marketOpen = isMarketOpen();
 
-  // BuySellTab.jsx - Part 2
-
-  // Effects
   useEffect(() => {
     const initializeData = async () => {
       if (symbol && userId) {
@@ -158,14 +242,12 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
   }, [currentMarketPrice]);
 
   useEffect(() => {
-    // Reset form when tab changes
     setQuantity(0);
     setOrderType('market');
     setPrice(currentMarketPrice);
     setStopPrice(currentMarketPrice);
   }, [activeTab, currentMarketPrice]);
 
-  // Handlers
   const handleQuantityChange = (value) => {
     let newValue = Math.max(0, parseInt(value) || 0);
     
@@ -203,63 +285,75 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
     return quantity * orderPrice;
   };
   
-  const handlePlaceOrder = async (orderDetails) => {
+  const handlePlaceOrder = async () => {
     try {
-      const enrichedOrderDetails = {
-        ...orderDetails,
-        symbol,
-        stockType: data?.type || 'nifty50', // This is for the stock type
-        currentMarketPrice,
-        eventId: activeEvent?._id,
-        orderValue: calculateOrderValue(),
-        timestamp: new Date().toISOString(),
-        subscriptionPlanId: activeSubscription._id,
-        // Don't include type here as it's already in orderDetails from TradingControls
-      };
-  
-      await dispatch(placeOrder(enrichedOrderDetails)).unwrap();
+      if (!activeSubscription?._id) {
+        throw new Error('No active subscription found');
+      }
 
-      // Show success message
+      const orderValue = calculateOrderValue();
       const PORTAL_FEE = 25;
-      const orderTotal = orderDetails.total;
-      const totalWithFee = orderDetails.type === 'buy' 
-        ? orderTotal + PORTAL_FEE 
-        : orderTotal - PORTAL_FEE;
-  
+      const totalWithFee = activeTab === 'buy' 
+        ? orderValue + PORTAL_FEE 
+        : orderValue - PORTAL_FEE;
+
+      // Determine stockType based on buy/sell
+      const stockType = activeTab === 'buy'
+        ? ['nifty50', 'nifty500', 'etf'].includes(data?.type) 
+          ? data.type 
+          : 'nifty50'
+        : currentHolding?.stockType || 'nifty50';
+
+      const orderDetails = {
+        userId,
+        subscriptionPlanId: activeSubscription._id,
+        symbol: symbol,
+        type: activeTab,
+        stockType,
+        numberOfShares: quantity,
+        price: orderType === 'market' ? currentMarketPrice : price,
+        total: orderValue,
+        currentMarketPrice,
+        orderType,
+        eventId: activeEvent?._id,
+        portalFee: PORTAL_FEE,
+        totalWithFee
+      };
+
+      // Validate before placing order
+      validateOrder(orderDetails, holdings, calculateRemainingBalance);
+
+      // Dispatch the order
+      const result = await dispatch(placeOrder(orderDetails)).unwrap();
+
       toast.success(
-        `Successfully ${orderDetails.type}${orderDetails.type === 'sell' ? 'sold' : 'bought'} ${orderDetails.numberOfShares} shares of ${symbol} for ₹${totalWithFee.toFixed(2)} (including ₹${PORTAL_FEE} portal fee)`,
-        {
-          position: 'top-center',
-          duration: 3000,
-          style: {
-            backgroundColor: '#fff',
-            padding: '16px',
-            color: '#333',
-            borderRadius: '8px',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-          }
-        }
+        `Successfully ${activeTab === 'buy' ? 'bought' : 'sold'} ` +
+        `${quantity} shares of ${symbol} (${stockType}) ` +
+        `for ₹${totalWithFee.toFixed(2)}`,
+        { duration: 3000 }
       );
 
-      // Reset form and close confirmation
+      // Reset form
       setShowConfirmation(false);
       setQuantity(0);
       setOrderType('market');
       setPrice(currentMarketPrice);
       setStopPrice(currentMarketPrice);
-      
-      // Refresh holdings and transaction history
+
+      // Refresh data
       if (userId) {
         await Promise.all([
-          dispatch(fetchHoldings(userId)),
-          dispatch(fetchTransactionHistory({ userId, symbol }))
+          dispatch(fetchHoldings({ userId, subscriptionPlanId: activeSubscription._id })),
+          dispatch(fetchTransactionHistory({ userId }))
         ]);
       }
+
+      return result;
     } catch (error) {
-      toast.error(error.message || 'Failed to place order. Please try again.', {
-        position: 'top-center',
-      });
+      console.error('Order error:', error);
+      toast.error(error.message || 'Failed to place order');
       setShowConfirmation(false);
+      throw error;
     }
   };
 
@@ -373,13 +467,13 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
   }
 
   // Main Render
-  return (
-    <div className="w-full bg-white rounded-xl shadow-lg p-4 sm:p-6 space-y-4 sm:space-y-6 relative">
-      {!marketOpen && <MarketStatusOverlay tradingPreference={activeSubscription?.tradingPreference} />}
-
-      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-        {/* Left Side - Trading Controls */}
-        <div className="flex-1 bg-gray-50 rounded-xl p-4 sm:p-6">
+    return (
+      <div className="w-full bg-white rounded-xl shadow-lg p-4 sm:p-6 space-y-4 sm:space-y-6 relative">
+        {!marketOpen && <MarketStatusOverlay tradingPreference={activeSubscription?.tradingPreference} />}
+  
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+          {/* Left Side - Trading Controls */}
+          <div className="flex-1 bg-gray-50 rounded-xl p-4 sm:p-6">
           {renderTradingStats()}
           {renderTradingTabs()}
 
@@ -430,19 +524,7 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
         <ConfirmationModal
           isOpen={showConfirmation}
           onClose={() => setShowConfirmation(false)}
-          onConfirm={() =>
-            handlePlaceOrder({
-              userId,
-              subscriptionPlanId: activeSubscription._id,
-              symbol,
-              type: activeTab,
-              numberOfShares: quantity,
-              price: orderType === 'market' ? currentMarketPrice : price,
-              orderType,
-              total: calculateOrderValue(),
-              currentMarketPrice,
-            })
-          }
+          onConfirm={handlePlaceOrder}
           title="Confirm Order"
           stockName={data?.companyName || symbol}
           quantity={quantity}
@@ -456,9 +538,8 @@ const BuySellTab = ({ symbol, data, loading, error, onOpenSubscriptionModal }) =
 
 BuySellTab.propTypes = {
   symbol: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']).isRequired,
   data: PropTypes.shape({
-    type: PropTypes.string,
+    type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']),
     companyName: PropTypes.string,
     currentPrice: PropTypes.number,
     lastPrice: PropTypes.number,

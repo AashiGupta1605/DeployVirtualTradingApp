@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import DashboardFooter from "../components/User/Footers/DashboardFooter";
 import UserNavbar from "../components/User/Navbars/UserNavbar";
 import UserSidebar from "../components/User/Sidebar/UserSidebar";
-import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
+// import SessionExpiredModal from "../components/Organization/Session/SessionExpiredModal";
 
 // Views
 import Dashboard from "../views/user/userDashboard";
@@ -51,16 +51,16 @@ export default function User() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const handleSessionExpired = () => {
-      setShowSessionExpiredModal(true);
-    };
+  // useEffect(() => {
+  //   const handleSessionExpired = () => {
+  //     setShowSessionExpiredModal(true);
+  //   };
 
-    window.addEventListener("show-session-expired-modal", handleSessionExpired);
-    return () => {
-      window.removeEventListener("show-session-expired-modal", handleSessionExpired);
-    };
-  }, []);
+  //   window.addEventListener("show-session-expired-modal", handleSessionExpired);
+  //   return () => {
+  //     window.removeEventListener("show-session-expired-modal", handleSessionExpired);
+  //   };
+  // }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -111,13 +111,13 @@ export default function User() {
         <DashboardFooter />
       </div>
 
-      <SessionExpiredModal
+      {/* <SessionExpiredModal
         show={showSessionExpiredModal}
         onHide={() => {
           setShowSessionExpiredModal(false);
           handleLogout();
         }}
-      />
+      /> */}
     </>
   );
 }

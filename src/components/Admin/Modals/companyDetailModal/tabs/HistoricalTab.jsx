@@ -19,7 +19,8 @@ import {
   selectLoadingStates,
   selectHistoricalTimeRange,
   setActiveFilter,
-  fetchHistoricalData
+  fetchHistoricalData,
+  
 } from '../../../../../redux/Common/companyDetailsSlice';
 
 // Utility Functions
@@ -98,9 +99,9 @@ const TableHeader = ({ column, sortColumn, sortDirection, onSort }) => {
   );
 };
 
-// Loading Skeleton Component
+// Loading Skeleton Component - Updated to use tr directly
 const TableSkeleton = ({ columns }) => (
-  <div className="animate-pulse">
+  <>
     {[...Array(5)].map((_, rowIndex) => (
       <tr key={rowIndex} className="border-b border-gray-200">
         {[...Array(columns)].map((_, colIndex) => (
@@ -110,7 +111,7 @@ const TableSkeleton = ({ columns }) => (
         ))}
       </tr>
     ))}
-  </div>
+  </>
 );
 
 const HistoricalTab = ({ symbol, type }) => {
@@ -197,44 +198,85 @@ const HistoricalTab = ({ symbol, type }) => {
     }
   }, [symbol, type, activeTimeRange, dispatch]);
 
-  // Memoized Data Processing
-  const processedData = useMemo(() => {
-    if (!Array.isArray(historicalData)) return [];
+  // Fixed processedData useMemo with proper array handling
+// Update the processedData useMemo to handle all data types
+const processedData = useMemo(() => {
+  if (!Array.isArray(historicalData)) return [];
+  
+  // Create a copy of the array to avoid mutating the original
+  let filteredData = [...historicalData];
+  
+  // Apply time range filtering if activeTimeRange is set
+  if (activeTimeRange) {
+    const now = new Date();
+    let cutoffDate = new Date(now);
+
+    switch (activeTimeRange) {
+      case '1D':
+        cutoffDate.setDate(cutoffDate.getDate() - 1);
+        break;
+      case '1W':
+        cutoffDate.setDate(cutoffDate.getDate() - 7);
+        break;
+      case '1M':
+        cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+        break;
+      case '3M':
+        cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+        break;
+      case 'YTD':
+        cutoffDate = new Date(cutoffDate.getFullYear(), 0, 1);
+        break;
+      default:
+        // No filtering needed for 'ALL'
+        break;
+    }
+
+    if (activeTimeRange !== 'ALL') {
+      filteredData = filteredData.filter(item => {
+        const itemDate = new Date(item.date);
+        return itemDate >= cutoffDate;
+      });
+    }
+  }
+
+  // Apply search filter if needed
+  if (searchTerm) {
+    filteredData = filteredData.filter(item => 
+      Object.values(item).some(value => 
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    ));
+  }
+  
+  // Apply sorting (create new array to avoid mutating)
+  return [...filteredData].sort((a, b) => {
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
     
-    let filtered = [...historicalData];
-    
-    // Apply search filter if needed
-    if (searchTerm) {
-      filtered = filtered.filter(item => 
-        Object.values(item).some(value => 
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      ));
+    if (sortColumn === 'date') {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
     }
     
-    // Apply sorting
-    filtered.sort((a, b) => {
-      const aValue = a[sortColumn];
-      const bValue = b[sortColumn];
-      
-      if (sortColumn === 'date') {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
-      }
-      
-      return sortDirection === 'asc' 
-        ? (aValue > bValue ? 1 : -1)
-        : (aValue < bValue ? 1 : -1);
-    });
-    
-    return filtered;
-  }, [historicalData, searchTerm, sortColumn, sortDirection]);
+    return sortDirection === 'asc' 
+      ? (aValue > bValue ? 1 : -1)
+      : (aValue < bValue ? 1 : -1);
+  });
+}, [historicalData, searchTerm, sortColumn, sortDirection, activeTimeRange]);
+
 
   // Pagination
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return processedData.slice(startIndex, startIndex + itemsPerPage);
   }, [processedData, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    console.log('Historical Data in Component:', historicalData);
+    console.log('Processed Data:', processedData);
+    console.log('Paginated Data:', paginatedData);
+  }, [historicalData, processedData, paginatedData]);
 
   // Event Handlers
   const handleTimeRangeChange = (range) => {
@@ -256,8 +298,6 @@ const HistoricalTab = ({ symbol, type }) => {
     setCurrentPage(1);
   };
 
-    // Continuing from Part 2...
-  
   // Error Component
   const ErrorDisplay = ({ message, onRetry }) => (
     <div className="flex flex-col items-center justify-center p-8 bg-red-50 rounded-lg">
@@ -372,7 +412,10 @@ const HistoricalTab = ({ symbol, type }) => {
                 </tr>
               ) : (
                 paginatedData.map((row, index) => (
-                  <tr key={row.id || index} className="hover:bg-gray-50 transition-colors duration-200">
+                  <tr 
+                    key={row.id || `${symbol}-${row.date}-${index}`}
+                    className="hover:bg-gray-50 transition-colors duration-200"
+                  >
                     {columns.map(column => (
                       <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {column.format ? column.format(row[column.key]) : row[column.key]}

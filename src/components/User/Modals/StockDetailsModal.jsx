@@ -236,15 +236,15 @@ const StockDetailsModal = ({ stock, onClose }) => {
       {/* Company Detail Modal */}
       {showCompanyModal && (
         <CompanyDetailModal
-          isOpen={showCompanyModal}
-          onClose={() => setShowCompanyModal(false)}
-          symbol={stock.symbol}
-          type={stock.type || 'nifty50'} // Pass the type from stock or default to nifty50
-          userData={{
-            ...user,
-            subscriptionPlanId: activeSubscription?._id
-          }}
-        />
+        isOpen={showCompanyModal}
+        onClose={() => setShowCompanyModal(false)}
+        symbol={stock.symbol}
+        type={stock.type || 'nifty50'} // Use the type from stock or default to nifty50
+        userData={{
+          ...user,
+          subscriptionPlanId: activeSubscription?._id
+        }}
+      />
       )}
     </div>
   );
