@@ -121,13 +121,13 @@ const ContactPage = () => {
         to="mailto:support@stocksphere.com"
         className="text-blueGray-500 font-semibold"
       >
-        {" "}support@stocksphere.com{" "}
+        {" "}guptapriyank87@gmail.com{" "}
       </Link>
     </p>
     <p className="text-lg leading-relaxed opacity-80 mt-2">
       Call us at:{" "}
       <span className="text-blueGray-500 font-semibold">
-        +1 (800) 123-4567
+      + 91 83193 35916
       </span>
     </p>
 
@@ -180,11 +180,11 @@ const ContactPage = () => {
         
       </div>
       <h3 className="text-xl font-semibold mb-2">Email & Call</h3>
-      <p className="text-gray-600">support@stocksphere.com</p>
+      <p className="text-gray-600">guptapriyank87@gmail.com</p>
       <Link to="mailto:support@stocksphere.com" className="text-lightBlue-600 underline text-sm block mb-2">
         Send a Message
       </Link>
-      <p className="text-gray-600">+1 (800) 123-4567</p>
+      <p className="text-gray-600">+ 91 83193 35916</p>
       <a href="tel:+18001234567" className="text-lightBlue-600 underline text-sm">
         Call Now
       </a>
@@ -196,8 +196,8 @@ const ContactPage = () => {
         <i className="fas fa-map-marker-alt"></i>
       </div>
       <h3 className="text-xl font-semibold mb-2">Our Address</h3>
-      <p className="text-gray-600">123 Market Street</p>
-      <p className="text-gray-600">San Francisco, CA 94105</p>
+      <p className="text-gray-600">First Floor, Garima Arcade, Shinde Ki Chhawani</p>
+      <p className="text-gray-600">Gwalior, Madhya Pradesh (474001)</p>
     </div>
 
     {/* Card 3 - Office Hours */}
