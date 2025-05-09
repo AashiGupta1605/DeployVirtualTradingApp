@@ -67,7 +67,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
           <div className="hidden lg:flex items-center justify-between gap-4">
             {/* Left Side - Symbol and Basic Info */}
             <div className="flex items-center gap-4 min-w-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
+              <div className="w-10 h-10 bg-lightBlue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
                 <span className="text-xl font-bold text-white">{symbol.charAt(0)}</span>
               </div>
               
@@ -166,7 +166,7 @@ const ModalHeader = ({ type, onClose, symbol, data, loading, onRefresh }) => {
           <div className="lg:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
             {/* Left Side - Symbol and Price */}
             <div className="flex items-center gap-4 min-w-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-lightBlue-600 to-lightBlue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-lightBlue-600 rounded-lg flex-shrink-0 flex items-center justify-center shadow-xs">
                 <span className="text-xl font-bold text-white">{symbol.charAt(0)}</span>
               </div>
               
