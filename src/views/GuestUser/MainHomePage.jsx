@@ -127,14 +127,23 @@ const MainHomePage = () => {
   ];
 
   return (
-    <motion.div
-      ref={scrollContainerRef}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`relative w-full hide-scrollbar ${isMobile ? '' : 'snap-y snap-mandatory'}`}
-    >
+    // <motion.div
+    //   ref={scrollContainerRef}
+    //   initial={{ opacity: 0 }}
+    //   animate={{ opacity: 1 }}
+    //   exit={{ opacity: 0 }}
+    //   transition={{ duration: 0.5 }}
+    //   className={`relative w-full hide-scrollbar ${isMobile ? '' : 'snap-y snap-mandatory'}`}
+    // >
+    // In MainHomePage.js
+<motion.div
+  ref={scrollContainerRef}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.5 }}
+  className={`relative w-full hide-scrollbar ${isMobile ? '' : 'snap-y snap-mandatory h-screen overflow-y-auto'}`}
+>
       {/* Hero Section */}
       <section 
         ref={heroRef} 
