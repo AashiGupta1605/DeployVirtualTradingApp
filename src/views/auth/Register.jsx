@@ -179,9 +179,9 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
     <div className="flex flex-col h-full ">
     
       <form onSubmit={formik.handleSubmit} className="flex flex-col h-full">
-      <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex-1 max-h-[350px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Name</label>
           <input
             type="text"
             name="name"
@@ -198,7 +198,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Email</label>
           <input
             type="email"
             name="email"
@@ -215,7 +215,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Password</label>
           <input
             type="password"
             name="password"
@@ -232,7 +232,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+          <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
           <input
             type="password"
             name="confirmPassword"
@@ -249,7 +249,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+          <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Mobile</label>
           <input
             type="text"
             name="mobile"
@@ -266,7 +266,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+          <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Gender</label>
           <select
             name="gender"
             {...formik.getFieldProps("gender")}
@@ -288,7 +288,7 @@ const RegisterModal = ({ onClose, onOpenLogin, initialValues }) => {
 
         <div className="grid grid-cols-1">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+            <label className="block ml-1 text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
             <input
               type="date"
               name="dob"
