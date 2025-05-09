@@ -342,20 +342,25 @@ const UserPortfolioPage = () => {
     }
   }, [dispatch, userId, activeEvent, isLoading]);
 
-  const handleStockClick = (symbol) => {
-    const stockTransactions = transactions
-      .filter((t) => t.companySymbol === symbol)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+const handleStockClick = (symbol, type) => { // 'type' comes from PortfolioTable's onStockClick
+  const stockTransactions = transactions
+    .filter((t) => t.companySymbol === symbol)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    const stockHolding = holdings.find((h) => h.companySymbol === symbol);
-    
-    setSelectedStock({
-      symbol,
-      transactions: stockTransactions,
-      holding: stockHolding,
-    });
-    setShowDetailsModal(true);
-  };
+  const stockHolding = holdings.find((h) => h.companySymbol === symbol);
+  
+  // Log the received type to be sure
+  console.log(`UserPortfolioPage: Clicked ${symbol}, received type: ${type}`);
+
+  setSelectedStock({
+    symbol,
+    transactions: stockTransactions,
+    holding: stockHolding,
+    type: type // Directly use the 'type' passed as an argument
+               // This 'type' was determined by PortfolioTable.jsx
+  });
+  setShowDetailsModal(true);
+};
 
   const generatePDF = async () => {
     try {
