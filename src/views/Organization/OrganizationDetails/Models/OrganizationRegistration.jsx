@@ -79,7 +79,7 @@ const OrganizationRegistration = ({ onClose, onOpenLogin }) => {
   return (
     <div className="flex flex-col h-full">
       <form onSubmit={formik.handleSubmit} className="flex flex-col h-full">
-      <div className="flex-1 max-h-[300px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex-1 max-h-[350px] overflow-y-auto pr-1 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>

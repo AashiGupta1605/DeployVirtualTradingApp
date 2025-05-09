@@ -265,10 +265,10 @@ export default function UserNavbar({ sidebarExpanded, setSidebarExpanded }) {
       // The navbar's content will start AFTER this padding.
       sidebarExpanded ? "" : "" 
     }`}>
-      <div className="w-full mx-auto flex flex-wrap items-center justify-between px-5 py-3">
+      <div className="w-full mx-auto flex flex-wrap items-center justify-between px-3 py-3">
         {/* Left side: Toggle Button + Logo/Brand */}
         {/* The toggle button IS the first element in this div, so it will be at the start of the navbar's content area */}
-        <div className="flex items-center"> 
+        <div className="flex items-center "> 
           {/* Sidebar Toggle Button */}
           <button
             className="p-2 mr-3 rounded-lg hover:bg-gray-100 text-gray-700 focus:outline-none"

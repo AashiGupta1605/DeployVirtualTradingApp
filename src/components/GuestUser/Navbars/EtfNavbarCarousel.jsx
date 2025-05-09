@@ -217,7 +217,7 @@ const EtfNavbarCarousel = () => {
 
   return (
     // ---- CHANGE HERE: Removed mt-0.5 ----
-    <div className="fixed left-0 top-25 w-full bg-white border-b border-gray-200 z-20 h-9">
+    <div className="fixed left-0 top-25 w-full bg-white border-b border-gray-200 z-30 h-9">
     {/* ---- END CHANGE ---- */}
       <div className="max-w-screen-2xl mx-auto px-2 h-full flex items-center">
         {/* ETF Label */}

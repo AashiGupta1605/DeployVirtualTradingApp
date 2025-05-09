@@ -227,7 +227,7 @@ const NiftyNavbarCarousel = () => {
 
   return (
     // ---- CHANGE HERE: Removed mt-1.5, changed top-15 to top-16 ----
-    <div className="fixed left-0 top-16 w-full bg-white border-b border-gray-200 z-20 h-9">
+    <div className="fixed left-0 top-16 w-full bg-white border-b border-gray-200 z-30 h-9">
     {/* ---- END CHANGE ---- */}
       <div className="max-w-screen-2xl mx-auto px-2 h-full flex items-center">
         {/* Nifty Label */}
