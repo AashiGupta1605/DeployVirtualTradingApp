@@ -1,226 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useLocation } from "react-router-dom";
-// import { ChevronDown, BookUser, Download } from "lucide-react";
-// import { jsPDF } from "jspdf";
-// import autoTable from "jspdf-autotable";
-
-// // Redux imports
-// import {
-//   fetchTransactionHistory,
-//   selectHoldings,
-//   selectStatistics,
-//   fetchEventSpecificTransactions,
-//   selectFilteredTransactions,
-// } from "../../../redux/User/trading/tradingSlice";
-// import { getUserSubscriptions } from "../../../redux/User/userSubscriptionPlan/userSubscriptionPlansSlice";
-// import {
-//   selectActiveEvent,
-//   selectActiveEvents,
-//   setActiveEvent,
-//   fetchUserEvents,
-// } from "../../../redux/User/events/eventsSlice";
-
-// // Component imports
-// import StockDetailsModal from "./StockDetailsModal";
-// import PortfolioTable from "./PortfolioTable";
-// import StatsSection from "../Cards/StatsSection";
-// import { useUserStats } from "../../../hooks/userUserStats";
-// import logoImage from "../../../assets/img/PGR_logo.jpeg";
-
-// const UserPortfolioPage = () => {
-//   // State management
-//   const { refetch } = useUserStats();
-//   const dispatch = useDispatch();
-//   const location = useLocation();
-  
-//   // Redux selectors
-//   const activeEvent = useSelector(selectActiveEvent);
-//   const activeEvents = useSelector(selectActiveEvents);
-//   const userId = useSelector((state) => state.user.auth?.user?._id);
-//   const user = useSelector((state) => state.user.auth?.user || {});
-//   const userSubscriptions = useSelector(
-//     (state) => state.user.subscriptionPlan?.userSubscriptions || []
-//   );
-//   const transactions = useSelector((state) =>
-//     selectFilteredTransactions(state, activeEvent?._id || "none")
-//   );
-//   const holdings = useSelector(selectHoldings);
-//   const statistics = useSelector(selectStatistics);
-
-//   // Component state
-//   const [selectedStock, setSelectedStock] = useState(null);
-//   const [showDetailsModal, setShowDetailsModal] = useState(false);
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   // Find active subscription
-//   const activeSubscription = userSubscriptions.find(
-//     (sub) => sub.status === "Active" && !sub.isDeleted
-//   );
-
-//   // Determine stock type based on symbol pattern
-//   const getStockType = (symbol) => {
-//     if (!symbol) return 'nifty50';
-//     if (symbol.includes('.ETF') || symbol.includes('-ETF')) return 'etf';
-//     if (symbol.length <= 4) return 'nifty50';
-//     return 'nifty500';
-//   };
-
-//   // Initialize event from location state
-//   useEffect(() => {
-//     const initializeEvent = async () => {
-//       if (location.state?.eventId) {
-//         try {
-//           let event = activeEvents.find((e) => e._id === location.state.eventId);
-          
-//           if (!event) {
-//             await dispatch(fetchUserEvents());
-//             const updatedEvents = useSelector(selectActiveEvents);
-//             event = updatedEvents.find((e) => e._id === location.state.eventId);
-//           }
-          
-//           if (event) {
-//             dispatch(setActiveEvent(event));
-//           }
-//         } catch (error) {
-//           console.error("Error initializing event:", error);
-//         }
-//       }
-//       setIsLoading(false);
-//     };
-
-//     initializeEvent();
-//   }, [location.state, dispatch]);
-
-//   // Fetch event-specific transactions when event changes
-//   useEffect(() => {
-//     if (location.state?.eventId) {
-//       const event = activeEvents.find((e) => e._id === location.state.eventId);
-//       if (event) {
-//         dispatch(setActiveEvent(event));
-//       } else {
-//         dispatch(fetchUserEvents()).then(() => {
-//           const foundEvent = useSelector(selectActiveEvents).find(
-//             (e) => e._id === location.state.eventId
-//           );
-//           if (foundEvent) {
-//             dispatch(setActiveEvent(foundEvent));
-//           }
-//         });
-//       }
-//     }
-//   }, [location.state, activeEvents, dispatch]);
-
-//   // Fetch data when user or event changes
-//   useEffect(() => {
-//     if (userId && !isLoading) {
-//       dispatch(getUserSubscriptions(userId));
-      
-//       if (activeEvent?._id) {
-//         dispatch(
-//           fetchEventSpecificTransactions({
-//             userId,
-//             eventId: activeEvent._id,
-//           })
-//         );
-//       } else {
-//         dispatch(
-//           fetchTransactionHistory({
-//             userId,
-//             eventId: "none",
-//           })
-//         );
-//       }
-//     }
-//   }, [dispatch, userId, activeEvent, isLoading]);
-
-//   // Handle stock click to show details modal
-//   const handleStockClick = (symbol, type) => {
-//     const stockTransactions = transactions
-//       .filter((t) => t.companySymbol === symbol)
-//       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-//     const stockHolding = holdings.find((h) => h.companySymbol === symbol);
-    
-//     setSelectedStock({
-//       symbol,
-//       type: type || getStockType(symbol), // Use passed type or determine it
-//       transactions: stockTransactions,
-//       holding: stockHolding,
-//     });
-//     setShowDetailsModal(true);
-//   };
-
-//   // Generate PDF report (unchanged)
-//   const generatePDF = async () => {
-//     try {
-//       // ... existing PDF generation code ...
-//     } catch (error) {
-//       console.error("Error generating PDF:", error);
-//     }
-//   };
-
-//   // Event dropdown component (unchanged)
-//   const EventDropdown = ({ activeEvent, onSelectEvent }) => {
-//     // ... existing EventDropdown code ...
-//   };
-
-//   // Main component render
-//   return (
-//     <div className="pb-10">
-//       <div className="-mt-24">
-//         <StatsSection isDashboard={false} pageType="trading" />
-//       </div>
-
-//       <div className="px-4 md:px-8 mx-4 -mt-12">
-//         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-//           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-//             <div className="flex items-center">
-//               <BookUser className="text-gray-600 mr-2" size={24} />
-//               <h2 className="text-xl font-bold text-gray-800">
-//                 {activeEvent
-//                   ? `${activeEvent.title} Portfolio`
-//                   : "Basic Trading Portfolio"}
-//               </h2>
-//             </div>
-//             <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mt-4 md:mt-0 gap-x-3">
-//               <button
-//                 onClick={generatePDF}
-//                 className="flex items-center space-x-2 bg-lightBlue-600 hover:bg-lightBlue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 mb-0 md:mb-0"
-//               >
-//                 <Download size={18} />
-//                 <span>Export PDF Report</span>
-//               </button>
-//               <EventDropdown
-//                 activeEvent={activeEvent}
-//                 onSelectEvent={(event) => dispatch(setActiveEvent(event))}
-//               />
-//             </div>
-//           </div>
-
-//           <div className="overflow-x-auto">
-//             <PortfolioTable
-//               transactions={transactions}
-//               holdings={holdings}
-//               onStockClick={handleStockClick}
-//             />
-//           </div>
-//         </div>
-//       </div>
-
-//       {showDetailsModal && selectedStock && (
-//         <StockDetailsModal
-//           stock={selectedStock}
-//           onClose={() => setShowDetailsModal(false)}
-//         />
-//       )}
-//     </div>
-//   );
-// };
-
-// export default UserPortfolioPage;
-
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -342,25 +119,23 @@ const UserPortfolioPage = () => {
     }
   }, [dispatch, userId, activeEvent, isLoading]);
 
-const handleStockClick = (symbol, type) => { // 'type' comes from PortfolioTable's onStockClick
-  const stockTransactions = transactions
-    .filter((t) => t.companySymbol === symbol)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const handleStockClick = (symbol, type) => {
+    const stockTransactions = transactions
+      .filter((t) => t.companySymbol === symbol)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  const stockHolding = holdings.find((h) => h.companySymbol === symbol);
-  
-  // Log the received type to be sure
-  console.log(`UserPortfolioPage: Clicked ${symbol}, received type: ${type}`);
+    const stockHolding = holdings.find((h) => h.companySymbol === symbol);
+    
+    console.log(`UserPortfolioPage: Clicked ${symbol}, received type: ${type}`);
 
-  setSelectedStock({
-    symbol,
-    transactions: stockTransactions,
-    holding: stockHolding,
-    type: type // Directly use the 'type' passed as an argument
-               // This 'type' was determined by PortfolioTable.jsx
-  });
-  setShowDetailsModal(true);
-};
+    setSelectedStock({
+      symbol,
+      transactions: stockTransactions,
+      holding: stockHolding,
+      type: type
+    });
+    setShowDetailsModal(true);
+  };
 
   const generatePDF = async () => {
     try {
@@ -371,188 +146,234 @@ const handleStockClick = (symbol, type) => { // 'type' comes from PortfolioTable
         format: "a4",
       });
 
-      // Convert logo to base64
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const pageCenter = pageWidth / 2;
+      const margin = 15; // Page margin
+      const contentWidth = pageWidth - 2 * margin;
+      let currentY = 20; // Initial Y position
+
+      // --- Header Section ---
       const getBase64FromImageUrl = async (url) => {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(blob); 
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-        });
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } catch (error) {
+          console.error("Error fetching or converting image:", error);
+          return null;
+        }
       };
 
       const logoBase64 = await getBase64FromImageUrl(logoImage);
-
-      // Add logo and company header (centered)
-      const pageWidth = doc.internal.pageSize.getWidth();
       const logoWidth = 45;
-      const logoX = (pageWidth - logoWidth) / 2;
-      
-      doc.addImage(logoBase64, 'PNG', logoX, 15, logoWidth, logoWidth);
-      
-      // Company name (centered)
-      doc.setFontSize(20);
+      const logoHeight = 45;
+
+      if (logoBase64) {
+        doc.addImage(logoBase64, 'JPEG', pageCenter - logoWidth / 2, currentY, logoWidth, logoHeight);
+        currentY += logoHeight + 8;
+      } else {
+        currentY += 10;
+      }
+
+      doc.setFontSize(18);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(33, 37, 41);
-      doc.text("PGR - Virtual Trading App", pageWidth / 2, 65, { align: "center" });
+      doc.text("PGR - Virtual Trading App", pageCenter, currentY, { align: "center" });
+      currentY += 8;
 
-      // User information (centered)
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
-      doc.text(`User: ${user.name || "N/A"} (ID: ${userId || "N/A"})`, pageWidth / 2, 75, { align: "center" });
-      doc.text(`Portfolio: ${activeEvent ? activeEvent.title : "Basic Trading"}`, pageWidth / 2, 81, { align: "center" });
-      doc.text(`Generated on: ${new Date().toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      })}`, pageWidth / 2, 87, { align: "center" });
+      doc.setTextColor(50, 50, 50);
+      doc.text(`User: ${user.name || "N/A"} (ID: ${user.id || userId || "N/A"})`, pageCenter, currentY, { align: "center" });
+      currentY += 6;
+      doc.text(`Portfolio: ${activeEvent ? activeEvent.title : "Basic Trading"}`, pageCenter, currentY, { align: "center" });
+      currentY += 6;
+      const generatedDate = new Date().toLocaleDateString("en-GB", {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      }).replace(",", "");
+      doc.text(`Generated on: ${generatedDate}`, pageCenter, currentY, { align: "center" });
+      currentY += 10;
 
-      // Divider line (full width)
       doc.setDrawColor(200, 200, 200);
-      doc.line(15, 95, pageWidth - 15, 95);
+      doc.setLineWidth(0.5);
+      doc.line(margin, currentY, pageWidth - margin, currentY);
+      currentY += 12;
 
-      // Portfolio Holdings section (centered)
+      // --- Portfolio Holdings Section ---
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("Portfolio Holdings", pageWidth / 2, 105, { align: "center" });
+      doc.setTextColor(33, 37, 41);
+      doc.text("Portfolio Holdings", margin, currentY);
+      currentY += 6;
 
-      // Prepare holdings data with proper formatting
-      const holdingsData = holdings.map((holding) => {
-        const stockTransactions = transactions
-          .filter((t) => t.companySymbol === holding.companySymbol)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+      const holdingsData = holdings && holdings.length > 0 ? holdings.map((holding) => {
+        const stockTransactions = transactions?.filter(t => t.companySymbol === holding.companySymbol) || [];
         const buyTransactions = stockTransactions.filter(t => t.type === "buy");
         const sellTransactions = stockTransactions.filter(t => t.type === "sell");
+        const avgPrice = holding.averageBuyPrice || 0;
+        const quantity = holding.quantity || 0;
+        const value = quantity * avgPrice;
 
         return [
-          holding.companySymbol,
-          holding.quantity.toString(),
-          { content: `₹${holding.averageBuyPrice.toFixed(2)}`, styles: { halign: 'right', cellWidth: 25 } },
-          { content: `₹${(holding.quantity * holding.averageBuyPrice).toFixed(2)}`, styles: { halign: 'right', cellWidth: 25 } },
-          buyTransactions.length.toString(),
-          sellTransactions.length.toString(),
-          new Date(holding.lastUpdated).toLocaleDateString(),
+          holding.companySymbol || "N/A",
+          quantity,
+          `₹${avgPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          buyTransactions.length,
+          sellTransactions.length,
+          holding.lastUpdated ? new Date(holding.lastUpdated).toLocaleDateString('en-GB') : "N/A",
         ];
-      });
+      }) : [["No holdings data available.", "", "", "", "", "", ""]];
 
-      // Holdings table (centered with proper cell formatting)
       autoTable(doc, {
-        startY: 110,
-        head: [
-          [
-            { content: "Symbol", styles: { halign: 'center', cellWidth: 25 } },
-            { content: "Qty", styles: { halign: 'center', cellWidth: 15 } },
-            { content: "Avg Price", styles: { halign: 'center', cellWidth: 25 } },
-            { content: "Value", styles: { halign: 'center', cellWidth: 25 } },
-            { content: "Buys", styles: { halign: 'center', cellWidth: 15 } },
-            { content: "Sells", styles: { halign: 'center', cellWidth: 15 } },
-            { content: "Last Updated", styles: { halign: 'center', cellWidth: 30 } },
-          ]
-        ],
+        startY: currentY,
+        head: [["Symbol", "Qty", "Avg Price", "Value", "Buys", "Sells", "Last Updated"]],
         body: holdingsData,
         theme: "grid",
-        tableWidth: 'auto',
-        margin: { left: 15, right: 15 },
         headStyles: {
-          fillColor: [13, 110, 253],
+          fillColor: [22, 162, 184],
           textColor: 255,
           fontStyle: "bold",
           halign: "center",
         },
-        bodyStyles: {
-          fontSize: 9,
-          cellPadding: 3,
-          overflow: 'linebreak',
-        },
         columnStyles: {
-          0: { cellWidth: 25, halign: 'left' },
-          1: { cellWidth: 15, halign: 'right' },
-          2: { cellWidth: 25, halign: 'right' },
-          3: { cellWidth: 25, halign: 'right' },
-          4: { cellWidth: 15, halign: 'center' },
-          5: { cellWidth: 15, halign: 'center' },
-          6: { cellWidth: 30, halign: 'center' },
+          0: { cellWidth: 35, halign: "left" },
+          1: { cellWidth: 20, halign: "left" },
+          2: { cellWidth: 35, halign: "left" },
+          3: { cellWidth: 35, halign: "left" },
+          4: { cellWidth: 20, halign: "left" },
+          5: { cellWidth: 20, halign: "left" },
+          6: { cellWidth: 30, halign: "left" },
         },
         styles: {
           fontSize: 9,
-          cellPadding: 3,
-          overflow: 'linebreak',
+          cellPadding: 2.5,
+          valign: 'middle',
         },
-        didDrawPage: function(data) {
-          // Footer on every page
-          const footerY = doc.internal.pageSize.getHeight() - 10;
-          doc.setFontSize(10);
-          doc.setTextColor(100);
-          doc.setFont("helvetica", "normal");
-          doc.text("Contact: support@pgr-virtualtrading.com | Phone: +1 (555) 123-4567", 
-                  pageWidth / 2, footerY, { align: "center" });
-        }
+        margin: { left: margin, right: margin },
       });
 
-      // Add new page for statistics
-      doc.addPage();
+      currentY = doc.lastAutoTable.finalY + 12;
 
-      // Portfolio Statistics section (centered on new page)
+      // --- Portfolio Statistics Section ---
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.5);
+      doc.line(margin, currentY, pageWidth - margin, currentY);
+      currentY += 12;
+
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("Portfolio Statistics", pageWidth / 2, 30, { align: "center" });
+      doc.text("Portfolio Statistics", margin, currentY);
+      currentY += 6;
 
-      // Calculate values
-      const totalFees = transactions.length * 25;
-      const virtualBalance = activeSubscription?.vertualAmount?.toFixed(2) || "0.00";
-      const profitLoss = statistics.realizedPL.toFixed(2);
+      const feePerTransaction = 25;
+      const totalFees = (transactions?.length || 0) * feePerTransaction;
+      const virtualBalance = activeSubscription?.vertualAmount || 0;
+      const realizedPL = statistics?.realizedPL || 0;
 
-      // Statistics table (centered)
+      const statsBody = [
+        ["Total Holdings", holdings?.length || 0],
+        ["Virtual Balance", `₹${virtualBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`],
+        ["Total Fees Paid", `₹${totalFees.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`],
+        ["Net Realized P/L", `₹${realizedPL.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`],
+      ];
+
       autoTable(doc, {
-        startY: 40,
-        head: [
-          [
-            { content: "Metric", styles: { halign: 'left', fontStyle: 'bold', cellWidth: 60 } },
-            { content: "Value", styles: { halign: 'right', cellWidth: 40 } }
-          ]
-        ],
-        body: [
-          ["Total Holdings", holdings.length.toString()],
-          ["Virtual Balance", `₹${virtualBalance}`],
-          ["Total Fees Paid", `₹${totalFees.toFixed(2)}`],
-          ["Net Profit/Loss", `₹${profitLoss}`],
-        ],
-        theme: "plain",
-        tableWidth: 'auto',
-        margin: { left: (pageWidth - 100) / 2 }, // Center the table
+        startY: currentY,
+        body: statsBody,
+        theme: 'plain',
         columnStyles: {
           0: { fontStyle: "bold", cellWidth: 60, halign: 'left' },
-          1: { halign: "right", cellWidth: 40 },
+          1: { halign: "right", cellWidth: contentWidth - 60 },
         },
         styles: {
-          fontSize: 12,
-          cellPadding: 5,
+          fontSize: 11,
+          cellPadding: 3,
         },
-        didDrawPage: function(data) {
-          // Footer on every page
-          const footerY = doc.internal.pageSize.getHeight() - 10;
-          doc.setFontSize(10);
-          doc.setTextColor(100);
-          doc.setFont("helvetica", "normal");
-          doc.text("© 2023 PGR Virtual Trading App. All rights reserved.", 
-                  pageWidth / 2, footerY, { align: "center" });
-        }
+        margin: { left: margin, right: margin },
+        tableWidth: 'auto',
       });
 
-      // Save PDF
-      doc.save(
-        `PGR_Portfolio_${user.name || "User"}${activeEvent ? activeEvent.title.replace(/[^a-z0-9]/gi, "") : "Basic"}_${new Date()
-          .toISOString()
-          .slice(0, 10)}.pdf`
-      );
+      currentY = doc.lastAutoTable.finalY + 12;
+
+      // --- Stock Activity History Section ---
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.5);
+      doc.line(margin, currentY, pageWidth - margin, currentY);
+      currentY += 12;
+
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("Stock Activity History", margin, currentY);
+      currentY += 6;
+
+      const activityData = transactions && transactions.length > 0 ? transactions.map((transaction) => {
+        const transactionAmount = (transaction.price || 0) * (transaction.numberOfShares || 0);
+        return [
+          transaction.createdAt ? new Date(transaction.createdAt).toLocaleDateString('en-GB') : "N/A",
+          transaction.createdAt ? new Date(transaction.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "N/A",
+          transaction.companySymbol || "N/A",
+          transaction.type?.toUpperCase() || "N/A",
+          transaction.numberOfShares || 0,
+          `₹${(transaction.price || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          `₹${transactionAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          `₹${feePerTransaction.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        ];
+      }) : [["No transaction data available.", "", "", "", "", "", "", ""]];
+
+      autoTable(doc, {
+        startY: currentY,
+        head: [["Date", "Time", "Symbol", "Type", "Qty", "Price", "Amount", "Fee"]],
+        body: activityData,
+        theme: "grid",
+        headStyles: {
+          fillColor: [22, 162, 184],
+          textColor: 255,
+          fontStyle: "bold",
+          halign: "center",
+        },
+        columnStyles: {
+          0: { cellWidth: 20, halign: "left" },
+          1: { cellWidth: 20, halign: "left" },
+          2: { cellWidth: 35, halign: "left" },
+          3: { cellWidth: 15, halign: "left" },
+          4: { cellWidth: 15, halign: "left" },
+          5: { cellWidth: 35, halign: "left" },
+          6: { cellWidth: 35, halign: "left" },
+          7: { cellWidth: 25, halign: "left" },
+        },
+        styles: {
+          fontSize: 8.5,
+          cellPadding: 2,
+          valign: 'middle',
+        },
+        margin: { left: margin, right: margin },
+      });
+
+      // --- Footer ---
+      const footerY = pageHeight - 18;
+      doc.setFontSize(9);
+      doc.setTextColor(100);
+      doc.setFont("helvetica", "normal");
+      doc.text("Contact Us:", pageCenter, footerY, { align: "center" });
+      doc.text("Email: praedicoglobalresearch@gmail.com | Phone: +91 (555) 123-4567", pageCenter, footerY + 4, { align: "center" });
+      doc.text("© 2025 PGR Virtual Trading App. All rights reserved.", pageCenter, footerY + 8, { align: "center" });
+
+      // --- Save PDF ---
+      const filename = `PGR_Portfolio_${user.name || "User"}_${activeEvent ? activeEvent.title.replace(/[^a-z0-9]/gi, "_") : "Basic"}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      doc.save(filename);
+
     } catch (error) {
       console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF report. Please check the console for errors.");
     }
   };
 
