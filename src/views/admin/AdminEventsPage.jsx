@@ -135,19 +135,41 @@ const AdminEventsPage = () => {
     }
   };
 
-  const handleCreateEvent = async (eventData) => {
-    try {
-      await dispatch(createEvent(eventData)).unwrap();
-      dispatch(setModal({ isFormOpen: false }));
-      toast.success('Event created successfully');
-      await Promise.all([
-        dispatch(fetchEvents()),
-        dispatch(fetchDashboardStats())
-      ]);
-    } catch (error) {
-      toast.error(error.message || 'Failed to create event');
+const handleCreateEvent = async (eventData) => {
+  const loadingToast = toast.loading('Creating event...');
+  try {
+    const response = await dispatch(createEvent(eventData)).unwrap();
+    toast.success('Event created successfully', { id: loadingToast });
+    dispatch(setModal({ isFormOpen: false }));
+    await Promise.all([
+      dispatch(fetchEvents()),
+      dispatch(fetchDashboardStats())
+    ]);
+  } catch (error) {
+    toast.dismiss(loadingToast);
+    
+    if (error.payload?.errors) {
+      // Group errors by field for better display
+      const fieldErrors = {};
+      error.payload.errors.forEach(err => {
+        if (!fieldErrors[err.field]) {
+          fieldErrors[err.field] = [];
+        }
+        fieldErrors[err.field].push(err.message);
+      });
+
+      // Display grouped errors
+      Object.entries(fieldErrors).forEach(([field, messages]) => {
+        toast.error(`${field}: ${messages.join(', ')}`, {
+          duration: 6000,
+          position: 'top-right'
+        });
+      });
+    } else {
+      toast.error(error.payload?.message || error.message || 'Failed to create event');
     }
-  };
+  }
+};
 
   const handleUpdateEvent = async (eventData) => {
     if (!selectedEvent?._id) return;

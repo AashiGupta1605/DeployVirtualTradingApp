@@ -41,76 +41,24 @@ export const createEvent = createAsyncThunk(
   'adminEventTable/createEvent',
   async (eventData, { dispatch, rejectWithValue }) => {
     try {
-      // Log the exact data being sent
-      console.log('Creating event with data:', eventData);
-
-      // Validate and prepare the data
-      const preparedData = {
-        title: eventData.title,
-        type: eventData.type,
-        description: eventData.description,
-        startDate: new Date(eventData.startDate),
-        endDate: new Date(eventData.endDate),
-        prize: eventData.prize,
-        difficulty: eventData.difficulty,
-        entryFee: Number(eventData.entryFee) || 0,
-        participants: 0,
-        cashbackPercentage: 0,
-        rewards: [],
-        prizeBreakdown: [],
-        requirements: '',
-        progress: 0,
-        progressText: '',
-        icon: 'Trophy',
-        backgroundColor: 'bg-gradient-to-br from-blue-50 to-blue-100',
-        highlight: '',
-        rewardTiers: eventData.rewardTiers || [
-          {
-            tier: '5%+ Gain',
-            description: '50% of entry fee returned'
-          },
-          {
-            tier: '10%+ Gain',
-            description: 'Full entry fee returned + bonus from prize pool'
-          },
-          {
-            tier: '20%+ Gain',
-            description: '200% of entry fee + larger bonus from prize pool'
-          }
-        ]
-      };
-
-      const additionalFields = Object.keys(eventData).reduce((acc, key) => {
-        if (!(key in preparedData)) {
-          acc[key] = eventData[key];
-        }
-        return acc;
-      }, {});
-
-      const finalData = {
-        ...preparedData,
-        ...additionalFields
-      };
-
-      const response = await axios.post(`${BASE_API_URL}/admin/events`, finalData);
-      
-      // toast.success('Event created successfully!');
-      dispatch(fetchEvents());
+      const response = await axios.post(`${BASE_API_URL}/admin/events`, eventData);
       return response.data.event;
     } catch (error) {
-      console.error('Event creation error:', error.response?.data || error.message);
-      
-      toast.error(
-        error.response?.data?.message || 
-        error.message || 
-        "Event creation failed"
-      );
-      
-      return rejectWithValue(
-        error.response?.data?.message || 
-        error.message || 
-        "Event creation failed"
-      );
+      // More robust error handling
+      if (error.response?.data) {
+        if (Array.isArray(error.response.data.errors)) {
+          return rejectWithValue({ 
+            message: error.response.data.message || 'Validation failed',
+            errors: error.response.data.errors
+          });
+        }
+        return rejectWithValue({
+          message: error.response.data.message || 'Event creation failed'
+        });
+      }
+      return rejectWithValue({
+        message: error.message || 'Event creation failed'
+      });
     }
   }
 );

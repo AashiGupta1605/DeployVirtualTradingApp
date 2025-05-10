@@ -166,141 +166,65 @@ const EventModal = ({ event, onClose, onSubmit }) => {
       progressText: '',
       icon: 'Trophy',
     },
-    // validate: (values) => {
-    //   const errors = {};
-      
-    //   if (!values.title) errors.title = 'Required';
-    //   if (!values.type) errors.type = 'Required';
-    //   if (!values.prize) errors.prize = 'Required';
-    //   if (!values.startDate) errors.startDate = 'Required';
-    //   if (!values.endDate) errors.endDate = 'Required';
-    //   if (!values.entryFee && values.entryFee !== 0) errors.entryFee = 'Required'
-    //   if (!values.participants && values.participants !== 0) errors.participants = 'Required';
-      
-    //   if (values.startDate && values.endDate) {
-    //     const start = new Date(values.startDate);
-    //     const end = new Date(values.endDate);
-    //     if (end < start) errors.endDate = 'End date must be after start date';
-    //   }
-      
-    //   if (values.entryFee && isNaN(values.entryFee)) errors.entryFee = 'Must be a number';
-    //   if (values.participants && isNaN(values.participants)) errors.participants = 'Must be a number';
-    //   if (values.cashbackPercentage && (isNaN(values.cashbackPercentage) || values.cashbackPercentage < 0 || values.cashbackPercentage > 100)) {
-    //     errors.cashbackPercentage = 'Must be between 0 and 100';
-    //   }
-      
-    //   return errors;
-    // },
-    validate: (values) => {
-      const errors = {};
-    
-      // Title validation
-      if (!values.title) {
-        errors.title = 'Event title is required.';
-      } else if (values.title.length < 3) {
-        errors.title = 'Title must be at least 3 characters.';
-      } else if (values.title.length > 50) {
-        errors.title = 'Title must not exceed 50 characters.';
-      }
-      if (!values.prize) errors.prize = 'Prize is Required';
-    
-      // Type validation
-      if (!values.type) {
-        errors.type = 'Event type is required.';
-      } else if (!['ongoing', 'upcoming', 'completed'].includes(values.type)) {
-        errors.type = 'Type must be one of ongoing, upcoming, or completed.';
-      }
-    
-      // Description validation
-      if (!values.description) {
-        errors.description = 'Event description is required.';
-      } else if (values.description.length < 10) {
-        errors.description = 'Description must be at least 10 characters.';
-      } else if (values.description.length > 200) {
-        errors.description = 'Description must not exceed 200 characters.';
-      }
-    
-      // Start Date validation
-      if (!values.startDate) {
-        errors.startDate = 'Start date is required.';
-      } else if (isNaN(new Date(values.startDate).getTime())) {
-        errors.startDate = 'Start date must be a valid date.';
-      }
-    
-      // End Date validation
-      if (!values.endDate) {
-        errors.endDate = 'End date is required.';
-      } else if (isNaN(new Date(values.endDate).getTime())) {
-        errors.endDate = 'End date must be a valid date.';
-      }
-    
-      // Check startDate and endDate logical order
-      if (values.startDate && values.endDate) {
-        const start = new Date(values.startDate);
-        const end = new Date(values.endDate);
-        if (start && end && end < start) {
-          errors.endDate = 'End date must be after start date.';
-        }
-      }
-    
-      // Prize - optional, no validation needed
-    
-      // Difficulty - optional, no validation needed
-    
-      // RewardTiers - optional, no validation needed
-    
-      // Participants - optional, but if filled must be number
-      if (values.participants !== undefined && values.participants !== '' && values.participants !== null) {
+   
+validate: (values) => {
+  const errors = {};
+  
+  // Title validation
+  if (!values.title) errors.title = 'Event title is required';
+  else if (values.title.length < 3) errors.title = 'Title must be at least 3 characters';
+  
+  // Description validation
+  if (!values.description) errors.description = 'Description is required';
+  else if (values.description.length < 10) errors.description = 'Description must be at least 10 characters';
+  
+  // Ensure prize is string
+// In your validate function:
+if (!values.prize) errors.prize = 'Prize information is required';
+else if (typeof values.prize !== 'string') errors.prize = 'Prize must be a string';
+else if (!/^\d+$/.test(values.prize.replace(/[^0-9.]/g, ''))) {
+  errors.prize = 'Prize must be a valid number';
+}
 
-        if (isNaN(values.participants)) {
-          errors.participants = 'Participants must be a number.';
-        }
-      }
+  // Date validation
+  if (!values.startDate) errors.startDate = 'Start date is required';
+  if (!values.endDate) errors.endDate = 'End date is required';
+  if (values.startDate && values.endDate) {
+    const start = new Date(values.startDate);
+    const end = new Date(values.endDate);
+    if (end < start) errors.endDate = 'End date must be after start date';
+  }
+  
+  return errors;
+},
     
-      // Entry Fee - optional, but if filled must be number
-      if (values.entryFee && isNaN(values.entryFee)) errors.entryFee = 'Must be a number';
-    
-      // Cashback Percentage - optional, but if filled must be number
-      if (values.cashbackPercentage !== undefined && values.cashbackPercentage !== '' && values.cashbackPercentage !== null) {
-        if (isNaN(values.cashbackPercentage)) {
-          errors.cashbackPercentage = 'Cashback percentage must be a number.';
-        }
-      }
-    
-      // Rewards - optional, no strict validation needed
-    
-      // PrizeBreakdown - optional, no strict validation needed
-    
-      // Requirements - optional, no validation needed
-    
-      // Progress - optional, but if filled must be number
-      if (values.progress !== undefined && values.progress !== '' && values.progress !== null) {
-        if (isNaN(values.progress)) {
-          errors.progress = 'Progress must be a number.';
-        }
-      }
-    
-      // Progress Text - optional, no validation needed
-    
-      // Icon - optional, no validation needed
-    
-      // Background Color - optional, no validation needed
-    
-      // Highlight - optional, no validation needed
-    
-      return errors;
-    },
-    
-    onSubmit: (values) => {
-      const calculated = calculateDistribution(values);
-      const finalValues = {
-        ...values,
-        prizeBreakdown: calculated.prizeBreakdown,
-        rewardTiers: calculated.rewardTiers,
-        rewards: values.rewards.filter(reward => reward.trim() !== '')
-      };
-      onSubmit(finalValues);
-    },
+onSubmit: (values) => {
+  const calculated = calculateDistribution(values);
+  
+// Transform reward tiers to match backend schema
+const transformedRewardTiers = values.rewardTiers.map(tier => ({
+  tier: tier.tier,
+  description: tier.description,
+  cashback: tier.cashback,
+  bonus: tier.bonus
+}));
+const finalValues = {
+  ...values,
+  startDate: new Date(values.startDate).toISOString(),
+  endDate: new Date(values.endDate).toISOString(),
+  prize: String(values.prize).replace(/[^0-9.]/g, ''),
+  prizeBreakdown: calculated.prizeBreakdown,
+  rewardTiers: values.rewardTiers, // Just use the original array
+  rewards: values.rewards.filter(reward => reward.trim() !== ''),
+  difficulty: values.difficulty || 'Beginner',
+  participants: parseInt(values.participants) || 0,
+  entryFee: parseFloat(values.entryFee) || 0,
+  cashbackPercentage: parseFloat(values.cashbackPercentage) || 0,
+  progress: parseInt(values.progress) || 0,
+};
+  
+  onSubmit(finalValues);
+},
   });
 
   // Update distributions when relevant fields change
@@ -338,7 +262,7 @@ const EventModal = ({ event, onClose, onSubmit }) => {
   const addRewardTier = () => {
     formik.setFieldValue('rewardTiers', [
       ...formik.values.rewardTiers,
-      { tier: '', description: '' }
+      { tier: '', description: '', cashback: 0, bonus: 0 }
     ]);
   };
 
@@ -584,14 +508,23 @@ const EventModal = ({ event, onClose, onSubmit }) => {
               <div className="md:col-span-2 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
-                  <textarea
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    placeholder="Event description"
-                    className="w-full px-4 py-3 !rounded-xl border !border-gray-200 bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200"
-                    rows="3"
-                  />
+<textarea
+  name="description"
+  value={formik.values.description}
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  placeholder="Event description (minimum 10 characters)"
+  className={`w-full px-4 py-3 rounded-xl border ${
+    formik.errors.description && formik.touched.description 
+      ? 'border-red-500' 
+      : 'border-gray-200'
+  } bg-white text-gray-900 focus:border-lightBlue-500 focus:ring-2 focus:ring-lightBlue-500/20 focus:outline-none transition-all duration-200`}
+  rows="3"
+  minLength="10"
+/>
+{formik.errors.description && formik.touched.description && (
+  <p className="mt-1 text-sm text-red-600">{formik.errors.description}</p>
+)}
                 </div>
 
                 <div>
