@@ -1,6 +1,7 @@
 import Loader from '../Common/Loader';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PropTypes from 'prop-types';
 import { useDebounce } from 'use-debounce';
 import { 
   ChevronDown, 
@@ -29,7 +30,7 @@ import {
 import CompanyDetailModal from "../Admin/Modals/companyDetailModal/index";
 import "../../assets/styles/table.css";
 
-const StockTable = ({ userData }) => {
+const StockTable = ({ userData, isGuestUser = false  }) => {
   const dispatch = useDispatch();
  
 
@@ -404,9 +405,20 @@ const StockTable = ({ userData }) => {
         }}
         type="etf"
         userData={userData}
+        isGuestUser={isGuestUser}
       />
     </>
   );
 };
 
 export default StockTable;
+
+StockTable.propTypes = {
+  // ... existing propTypes ...
+  isGuestUser: PropTypes.bool,
+};
+
+StockTable.defaultProps = {
+  // ... existing defaultProps ...
+  isGuestUser: false,
+};

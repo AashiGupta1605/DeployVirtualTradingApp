@@ -1,6 +1,7 @@
 import Loader from '../Common/Loader';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { 
   X, 
   Search as SearchIcon,
@@ -40,7 +41,7 @@ import {
 
 import CompanyDetailModal from '../Admin/Modals/companyDetailModal/index';
 
-const CardTable = ({ tableType = 'nifty50', userData }) => {
+const CardTable = ({ tableType = 'nifty50', userData, isGuestUser = false  }) => {
   const dispatch = useDispatch();
   
   // Select the appropriate state based on tableType
@@ -457,9 +458,21 @@ const CardTable = ({ tableType = 'nifty50', userData }) => {
         }}
         type={tableType}
         userData={userData}
+        isGuestUser={isGuestUser}
       />
     </>
   );
 };
 
 export default CardTable;
+
+
+CardTable.propTypes = {
+  // ... existing propTypes ...
+  isGuestUser: PropTypes.bool,
+};
+
+CardTable.defaultProps = {
+  // ... existing defaultProps ...
+  isGuestUser: false,
+};

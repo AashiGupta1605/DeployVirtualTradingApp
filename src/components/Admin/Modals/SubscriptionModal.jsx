@@ -43,7 +43,7 @@ const calculateEndDate = (startDate, duration) => {
 // Plan configurations
 const PLAN_CONFIGS = subscriptionData.configs;
 
-const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
+const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess, isGuestUser = false }) => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
   const error = useSelector(selectError);
@@ -414,7 +414,9 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess }) => {
           borderRadius: '1rem',
           clipPath: 'inset(0 0 0 0 round 1rem)',
         }}
-        className="relative hello w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl flex flex-col"
+        // className="relative hello w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl flex flex-col"
+        className={`relative hello w-full max-w-5xl mx-auto my-8 bg-white rounded-2xl shadow-2xl flex flex-col  ${isGuestUser ? 'mt-60' : 'mt-0'}`}
+
       >
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-lightBlue-50 to-lightBlue-100 rounded-t-2xl sticky top-0 z-10">
