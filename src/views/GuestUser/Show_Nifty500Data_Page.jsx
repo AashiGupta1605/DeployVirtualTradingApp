@@ -89,7 +89,7 @@ const Show_Nifty500Data_Page = () => {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="bg-white rounded-xl -mt-5 pt-20 shadow-lg overflow-hidden border border-gray-100 relative z-10"
       >
-        <CardTable tableType="nifty500" />
+        <CardTable tableType="nifty500" isGuestUser={true} />
       </motion.div>
 
       {/* Footer Section */}

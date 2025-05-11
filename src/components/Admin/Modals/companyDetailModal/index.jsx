@@ -64,7 +64,7 @@ const ErrorDisplay = ({ error, onRetry, onClose }) => (
   </div>
 );
 
-const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50' }) => {
+const CompanyDetailModal = ({ isOpen, onClose, symbol, type = 'nifty50',isGuestUser = false  }) => {
   const dispatch = useDispatch();
 
   // User ID selector
@@ -343,7 +343,9 @@ case 'trading':
       />
 
       <div className="fixed inset-0 flex items-center justify-center z-10">
-        <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        {/* <div className="relative w-full max-w-6xl h-full max-h-[90vh] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden"> */}
+        <div className={`relative w-full max-w-6xl h-full max-h-[90vh] bg-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden  ${isGuestUser ? 'mt-50' : 'mt-0'}`}>
+
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full transition-all duration-200 z-10 group"
@@ -410,6 +412,7 @@ case 'trading':
           toast.success('Subscription updated successfully');
           setIsSubscriptionModalOpen(false);
         }}
+        isGuestUser={isGuestUser}
       />
     </div>
   );
@@ -479,10 +482,12 @@ CompanyDetailModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   symbol: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['nifty50', 'nifty500', 'etf']),
+  isGuestUser: PropTypes.bool,
 };
 
 CompanyDetailModal.defaultProps = {
   type: 'nifty50',
+  isGuestUser: false,
 };
 
 export default CompanyDetailModal;

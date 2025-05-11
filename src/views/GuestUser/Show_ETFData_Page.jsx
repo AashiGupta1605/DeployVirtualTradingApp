@@ -76,7 +76,7 @@ const Show_ETFData_Page = () => {
       transition={{ delay: 0.4, duration: 0.5 }}
       className="bg-white pt-50 rounded-xl shadow-lg overflow-hidden border border-gray-100 relative z-10"
     >
-      <StockTable />
+      <StockTable isGuestUser={true} />
     </motion.div>
 
     {/* Footer Section */}
