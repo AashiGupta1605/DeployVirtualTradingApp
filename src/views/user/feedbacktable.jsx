@@ -4,8 +4,8 @@
 //   ChevronDown,
 //   ChevronUp,
 //   PlusCircle,
-  
-  
+
+
 //   Building2,
 //   MessageSquare,
 //   Calendar,
@@ -61,19 +61,19 @@
 //     setSelectedFeedbackId(feedbackId);
 //     setIsDeleteModalOpen(true);
 //   };
-  
+
 //   const closeDeleteModal = () => {
 //     setIsDeleteModalOpen(false);
 //     setSelectedFeedbackId(null);
 //   };
-  
+
 //   const handleDeleteFeedback = (feedbackId) => {
 //     if (!feedbackId) return;
 //     dispatch(deleteFeedback(feedbackId));
 //     closeDeleteModal();
 //     dispatch(fetchFeedback());
 //   };
-  
+
 
 //   if (feedbackStatus === "loading") {
 //     return <div>Loading...</div>;
@@ -81,7 +81,7 @@
 
 //   return (
 //     <>
-   
+
 //         <StatsSection isDashboard={false} pageType="feedbacks" />
 //       {/* </div> */}
 
@@ -90,7 +90,7 @@
 //           <MessageSquare className="mr-2 text-lightBlue-600" size={24} />
 //             My Feedbacks
 //             </h2>
-       
+
 //         <button
 //           onClick={() => setIsModalOpen(true)}
 //           className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
@@ -120,7 +120,7 @@
 //                 <tbody className="divide-y divide-gray-200">
 //   {feedbackData.length > 0 ? (
 //     feedbackData.map((feedback) => (
-      
+
 //       <tr key={feedback._id} className="hover:bg-gray-50">
 //         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 //           {feedback.userId?.name || "N/A"}
@@ -198,7 +198,7 @@
 
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { 
+import {
   ChevronDown,
   ChevronUp,
   PlusCircle,
@@ -230,7 +230,7 @@ export default function FeedbackTable() {
   const [selectedFeedbackId, setSelectedFeedbackId] = React.useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [editFeedback, setEditFeedback] = React.useState(null);
-  
+
   const CATEGORY_COLORS = {
     "Website UI/UX": "bg-blue-100 text-blue-800",
     "Trading Features": "bg-green-100 text-green-800",
@@ -259,12 +259,12 @@ export default function FeedbackTable() {
     setSelectedFeedbackId(feedbackId);
     setIsDeleteModalOpen(true);
   };
-  
+
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setSelectedFeedbackId(null);
   };
-  
+
   const handleDeleteFeedback = async (feedbackId) => {
     if (!feedbackId) return;
     await dispatch(deleteFeedback(feedbackId));
@@ -281,12 +281,12 @@ export default function FeedbackTable() {
     <>
       <StatsSection isDashboard={false} pageType="feedbacks" />
 
-      <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">   
+      <div className="px-8 mx-8 -mt-12 bg-gray-50 rounded-lg h-19 p-4 mb-8.5 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-800 flex items-center">
           <MessageSquare className="mr-2 text-lightBlue-600" size={24} />
           My Feedbacks
         </h2>
-       
+
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex items-center bg-lightBlue-600 text-white px-4 py-2 rounded-lg hover:bg-lightBlue-700 transition-colors"
@@ -303,7 +303,7 @@ export default function FeedbackTable() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    {["Name", "Email","Category", "Feedback", "Rating", "Recommendation", "Date", "Status", "Actions"].map((header) => (
+                    {["Name", "Email", "Category", "Feedback", "Rating", "Recommendation", "Date", "Status", "Actions"].map((header) => (
                       <th
                         key={header}
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -328,15 +328,17 @@ export default function FeedbackTable() {
                             {feedback.feedbackCategory}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate whitespace-nowrap overflow-hidden">
                           {feedback.feedbackMessage}
                         </td>
-                        <td className="px-6 py-4 text-sm">
-                          {[...Array(feedback.rating)].map((_, index) => (
-                            <Star key={`${feedback._id}-star-${index}`} size={20} fill="#FFD700" stroke="#FFD700" className="inline-block" />
-                          ))}
+                        <td className=" px-6 py-4 text-sm ">
+                          <span className="flex items-center">
+                            {[...Array(feedback.rating)].map((_, index) => (
+                              <Star key={`${feedback._id}-star-${index}`} size={20} fill="#FFD700" stroke="#FFD700" className="inline-block" />
+                            ))}
+                          </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 ">
                           {feedback.recommend ? (
                             <ThumbsUp size={20} className="text-green-500" />
                           ) : (
@@ -354,7 +356,7 @@ export default function FeedbackTable() {
                             {feedback.status || "Approved"}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center flex gap-x-3">
+                        <td className="px-6 py-4 whitespace-nowrap flex items-center text-center gap-x-3">
                           <button className="text-yellow-600 hover:text-yellow-900" onClick={() => handleEditFeedback(feedback._id)}>
                             <Edit size={18} />
                           </button>
@@ -377,25 +379,25 @@ export default function FeedbackTable() {
       </div>
 
       {isModalOpen && (
-        <FeedbackModal 
-          onFeedbackSubmit={handleFeedbackUpdate} 
-          onClose={() => setIsModalOpen(false)} 
+        <FeedbackModal
+          onFeedbackSubmit={handleFeedbackUpdate}
+          onClose={() => setIsModalOpen(false)}
         />
       )}
-      
+
       {isEditModalOpen && (
-        <FeedbackModal 
-          onFeedbackSubmit={handleFeedbackUpdate} 
-          onClose={() => setIsEditModalOpen(false)} 
-          feedbackData={editFeedback} 
+        <FeedbackModal
+          onFeedbackSubmit={handleFeedbackUpdate}
+          onClose={() => setIsEditModalOpen(false)}
+          feedbackData={editFeedback}
         />
       )}
-      
+
       {isDeleteModalOpen && selectedFeedbackId && (
-        <ConfirmationModal 
-          isOpen={isDeleteModalOpen} 
-          onClose={closeDeleteModal} 
-          onConfirm={() => handleDeleteFeedback(selectedFeedbackId)} 
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onConfirm={() => handleDeleteFeedback(selectedFeedbackId)}
           message="Are you sure you want to delete this feedback?"
         />
       )}
