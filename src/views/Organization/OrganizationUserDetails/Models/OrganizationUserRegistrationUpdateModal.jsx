@@ -412,11 +412,26 @@ const OrganizationUserRegistration = ({ isOpen, onClose, initialValues, refreshS
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
                   <DatePicker
+                  // popperPlacement="bottom-start"
+                  // popperModifiers={[
+                  //   {
+                  //     name: 'flip',
+                  //     options: {
+                  //       fallbackPlacements: ['top-start', 'bottom-start'],
+                  //     },
+                  //   },
+                  //   {
+                  //     name: 'preventOverflow',
+                  //     options: {
+                  //       boundary: 'clippingParents',
+                  //     },
+                  //   },
+                  // ]}
                     selected={formik.values.dob ? new Date(formik.values.dob) : null}
                     onChange={(date) => formik.setFieldValue("dob", date)}
                     onBlur={() => formik.setFieldTouched("dob", true)} name="dob" dateFormat="yyyy-MM-dd"
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-lightBlue-600 focus:ring-2 focus:ring-lightBlue-600/20 transition-all duration-200"
-                    placeholderText="Select date of birth" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={100} required
+                    placeholderText="Select date of birth" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={100} required popperClassName="z-[6000]" 
                   />
                   {formik.touched.dob && formik.errors.dob ? (<div className="text-red-500 text-xs sm:text-sm mt-1">{formik.errors.dob}</div>) : null}
                 </div>
