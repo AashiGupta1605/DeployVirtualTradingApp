@@ -816,7 +816,7 @@ const SubscriptionModal = ({ isOpen, onClose, selectedUser, onSuccess, isGuestUs
                   </button>
                 )}
               </div> */}
-                <div className="fixed bottom-4 left-0 right-0 w-full  bg-white  border-t border-gray-200 p-4 shadow-lg z-50 flex justify-end">
+                <div className="fixed bottom-8 left-0 right-0 w-full  bg-white  border-t border-gray-200 p-4 shadow-lg z-50 flex justify-end">
                   <button
                     type="button"
                     onClick={() => {
