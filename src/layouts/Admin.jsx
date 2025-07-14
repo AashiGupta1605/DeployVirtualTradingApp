@@ -9,7 +9,7 @@ import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 // Views
 import Dashboard from "../views/admin/Dashboard";
 import Settings from "../views/admin/Settings";
-import OrgRegister from "../views/Admin/OrganizationList";
+import OrgRegister from "../views/admin/OrganizationList";
 import ETFTable from "../views/admin/EtfTable";
 import NiftyTable from "../views/admin/NiftyTable";
 import Nifty500Table from "../views/admin/nifty500table";
