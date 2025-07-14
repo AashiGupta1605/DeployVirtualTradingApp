@@ -7,7 +7,8 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerOrganization, resetAuthState } from '../../../../redux/Organization/auth/organizationAuthSlice';
 import toast from 'react-hot-toast';
-import OTPModal from './OtpModal';
+// import OTPModal from './OtpModal';
+import OTPModal from './OTPModal';
 
 const validationSchema = Yup.object({
   name: Yup.string()
