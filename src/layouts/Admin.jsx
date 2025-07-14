@@ -9,13 +9,13 @@ import FooterAdmin from "../components/Admin/Footers/FooterAdmin";
 // Views
 import Dashboard from "../views/admin/Dashboard";
 import Settings from "../views/admin/Settings";
-import OrgRegister from "../views/Admin/OrganizationList";
+import OrgRegister from "../views/admin/OrganizationList";
 import ETFTable from "../views/admin/EtfTable";
 import NiftyTable from "../views/admin/NiftyTable";
 import Nifty500Table from "../views/admin/nifty500table";
-import RegisteredUsers from "../views/Admin/UserList";
-import Queries from "../views/Admin/QueryList";
-import FeedbackList from "../views/Admin/FeedbackList";
+import RegisteredUsers from "../views/admin/UserList";
+import Queries from "../views/admin/QueryList";
+import FeedbackList from "../views/admin/FeedbackList";
 import ComplaintList from "../views/admin/ComplaintList";
 import OrgComplaintList from "../views/admin/OrgComplaintList";
 import GalleryImages from "../views/admin/gallery/GalleryImages";
